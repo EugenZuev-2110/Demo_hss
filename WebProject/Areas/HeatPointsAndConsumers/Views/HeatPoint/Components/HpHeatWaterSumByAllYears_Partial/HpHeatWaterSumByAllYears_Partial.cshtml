@@ -1,0 +1,21 @@
+﻿@model List<WebProject.Areas.HeatPointsAndConsumers.Models.HP_NameListUnit>
+@{
+	Layout = null;
+}
+
+@foreach (var tz_list in Model)
+{
+	<tr data-hp_status="@tz_list.hp_names_list_year">
+		<td id="hp_perspective_year">@tz_list.hp_names_list_year</td>
+
+		<td>@tz_list.hp_names_list_unom_source_before</td>
+		<td>@tz_list.hp_names_list_owner_name_before</td>
+		<td>@tz_list.hp_names_list_output_before</td>
+		<td>@tz_list.hp_names_list_summary_before</td>
+
+		<td id="unom_source_@tz_list.hp_names_list_year">@tz_list.hp_names_list_unom_source_after</td>
+		<td id="owner_name_@tz_list.hp_names_list_year">@tz_list.hp_names_list_owner_name_after</td>
+		<td id="output_@tz_list.hp_names_list_year">@tz_list.hp_names_list_output_after</td>
+		<td id="summary_@tz_list.hp_names_list_year">@tz_list.hp_names_list_summary_after</td>
+	</tr>
+}

@@ -1,0 +1,110 @@
+﻿@model DataBase.Models.Sources.Dict_FuelTypes
+@{
+	string btn_disable = string.Empty;
+}
+@if (Model.Id == 0)
+{
+	btn_disable = "disabled";
+}
+<div class="modal-dialog modal-dialog-centered">
+	<div class="modal-content">
+		<div class="modal-header">
+			<h3 class="modal-title" id="editDataLabel">Вид топлива</h3>
+			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="RefreshTable()"></button>
+		</div>
+		<div class="modal-body">
+			<form class="needs-validation" novalidate asp-controller="Fuel" asp-action="Fuel_Save" asp-antiforgery="true" asp-area="DictionaryTables" id="Fuel_form"
+				data-ajax-failure="onFailedFormTZ" data-ajax-success="onSuccessFormFuel" data-ajax-begin="onBeginFormTZ" data-ajax="true" data-ajax-method="POST">
+				<input type="hidden" name="Id" value="@Model.Id" id="fuel_id" />
+			<div class="data-block static-block data-params">
+				<div class="data-row">
+					<div class="data-item">
+						<label class="data-label lm-fix">Уникальный номер вида топлива</label>
+							<select class="selectpicker data-value xxl-stretch" data-live-search="true" id="paramNumberFuel" placeholder="Выберите УНОМ вида топлива">
+							@if (@Model.Id == 0 )
+							{
+								<option value="" selected disabled>При добавлении нового топлива, УНОМ генерируется автоматически</option>
+							}
+							@foreach (var fuel in ViewBag.Fuel)
+							{
+								if (fuel.Id == Model.Id)
+								{
+										<option value="@fuel.Id" selected>@fuel.Id (@fuel.fuel_type_name)</option>
+								}
+								else
+								{
+										<option value="@fuel">@fuel.Id (@fuel.fuel_type_name).</option>
+								}
+							}
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="data-block">
+				<div class="data-row">
+					<div class="data-item">
+						<label class="data-label lm-fix">Наименование вида топлива: полное</label>
+						<input type="text" class="data-value xxl-stretch" name="fuel_type_name" required value="@Model.fuel_type_name"></input>
+							<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Это поле должно быть заполнено"></a>
+					</div>
+					<div class="data-item">
+						<label class="data-label">Краткое</label>
+							<input type="text" class="data-value xxl-stretch" name="fuel_type_short" required value="@Model.fuel_type_short"></input>
+							<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Это поле должно быть заполнено"></a>
+					</div>
+				</div>
+				<div class="data-row">
+					<div class="data-item">
+						<label class="data-label lm-fix">Расчетная низшая теплота сгорания топлива</label>
+							<input type="text" class="data-value lg-stretch  double" name="calc_low_combus_ht" required value="@Model.calc_low_combus_ht"></input>
+							<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Это поле должно быть заполнено"></a>
+						<span class="data-unit">ккал/м<sup>3</sup> или ккал/кг</span>
+					</div>
+				</div>
+			</div>
+			</form>
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="bttn" data-bs-dismiss="modal">Отмена</button>
+			<button type="submit" class="bttn bttn-color" form="Fuel_form">Сохранить</button>
+			<button type="button" class="bttn bttn-color" onclick="OpenFuel(@Model.Id, 'copy')" @btn_disable>Создать копию</button>
+		</div>
+	</div>
+</div>
+
+
+<script type="text/javascript" src="@Url.Content("~/hss/js/popup_common_scripts.js")"></script>
+<script>
+
+	$(document).ready(function () {
+		document.querySelector('#paramNumberFuel').addEventListener('change', (event) => {
+			OpenIzolTypes($("#paramNumberFuel").val());
+		});
+	});
+
+	function RefreshTable() {
+		if ($("#refresh_FuelTypes_table").val() === "1") {
+			$("#refresh_FuelTypes_table").val(0);
+			GetListOnPage();
+		}
+	}
+
+	var onSuccessFormFuel = function (xhr) {
+		if (xhr.success == true) {
+			showMessage('Данные сохранены.', 'modal', 'success');
+			$("#refresh_FuelTypes_table").val(1);
+			if (xhr.is_new == true) {
+				OpenFuel(xhr.fuel_id);
+			}
+		}
+		else {
+			if (xhr.message === undefined) {
+				xhr.message = 'Ошибка сохранения данных'
+			}
+			showMessage(xhr.message, 'modal', 'fault');
+		}
+		hidePreloader();
+	};
+
+
+</script>

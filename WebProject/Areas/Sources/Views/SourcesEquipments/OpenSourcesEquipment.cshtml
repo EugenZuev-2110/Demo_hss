@@ -1,0 +1,203 @@
+﻿@model WebProject.Areas.Sources.Models.SourcesOneDataViewModel
+@{
+	var o = 0;
+}
+<div class="modal-dialog">
+	<div class="modal-content">
+		<div class="modal-header">
+			<h3 class="modal-title" id="editDataLabel">Редактирование данных оборудования</h3>
+			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		</div>
+		<div class="modal-body">
+			<div class="data-row static-block">
+				<div class="data-item ">
+					<label class="data-label md-fix">Уникальный номер источника</label>
+					<select class="selectpicker data-value xxl-stretch" data-live-search="true" placeholder="Выберите..." title="УНОМ источника">
+						<option value="2020">2020</option>
+						<option value="2021">2021</option>
+						<option value="2022">2022</option>
+						<option value="2023">2023</option>
+					</select>
+				</div>
+				<div class="data-item ">
+					<label class="data-label md-fix">Наименование</label>
+					<select class="selectpicker data-value xxl-stretch" data-live-search="true" placeholder="Выберите..." title="Наименование сточника">
+						<option value="2020">Наименование 1</option>
+						<option value="2021">Наименование 2</option>
+						<option value="2022">Наименование 3</option>
+						<option value="2023">Наименование 4</option>
+					</select>
+				</div>
+				<div class="data-item ">
+					<label class="data-label md-fix">Адрес</label>
+					<select class="selectpicker data-value xxl-stretch" data-live-search="true" placeholder="Выберите..." title="Адрес источника">
+						<option value="2020">Адрес 1</option>
+						<option value="2021">Адрес 2</option>
+						<option value="2022">Адрес 3</option>
+						<option value="2023">Адрес 4</option>
+					</select>
+				</div>
+				<div class="data-item ">
+					<label class="data-label md-fix">Тип источника</label>
+					<select class="selectpicker data-value lg-stretch" data-live-search="true" placeholder="Выберите..." title="Тип источника">
+						<option value="2020">Тип 1</option>
+						<option value="2021">Тип 2</option>
+						<option value="2022">Тип 3</option>
+						<option value="2023">Тип 4</option>
+					</select>
+				</div>
+				<div class="data-item">
+					<label class="data-label md-fix">Тарифная зона</label>
+					<select class="selectpicker data-value lg-stretch" data-live-search="true" placeholder="Выберите..." title="Тарифная зона">
+						<option value="2020">ТЗ 1</option>
+						<option value="2021">ТЗ 2</option>
+						<option value="2022">ТЗ 3</option>
+						<option value="2023">ТЗ 4</option>
+					</select>
+				</div>
+				<div class="data-row">
+					<div class="data-item">
+						<label class="data-label md-fix">Расчётный год</label>
+						<select class="selectpicker md-fix">
+							<option value="2020">01.01.2021</option>
+							<option value="2021">01.01.2022</option>
+							<option value="2022" selected>01.01.2023</option>
+							<option value="2023">01.01.2024</option>
+						</select>
+					</div>
+					<div class="data-item">
+						<div class="note">Базовый год - <span class="note-base-year">2022 (01.01.2023)</span>.</div>
+					</div>
+				</div>
+				<div class="data-row stretch justify-content-end align-self-center">
+					<div class="data-item">
+						<label class="data-label">∑ N<sub>уст</sub></label> = <span class="data-value mark-color">10</span><span class="data-unit">МВт</span>
+					</div>
+					<div class="data-item">
+						<label class="data-label">∑ Q<sub>уст</sub></label> = <span class="data-value mark-color">10</span><span class="data-unit">Гкал/ч</span>
+					</div>
+				</div>
+			</div>
+			<div class="scroll-block-wrapper" style="max-height: 65vh;">
+				<div class="data-block scroll-block">
+					<div class="accordion data-block">
+						<div class="border-block">
+							<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel1" aria-expanded="false">Турбоагрегаты</button>
+							<div id="panel1" class="accordion-collapse collapse">
+								<div class="accordion-body">
+									<div class="data-block">
+										
+										
+											@await Component.InvokeAsync("OpenSourcesTurbine_Partial")
+									
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<div class="dropdown bttn-dropdown me-auto">
+				<button class="bttn bttn-color dropdown-toggle" data-bs-toggle="dropdown">Перейти на</button>
+				<ul class="dropdown-menu">
+					<li><a href="#" class="dropdown-item">Перечень источников</a></li>
+					<li><a href="#" class="dropdown-item">Ресурсоснабжение</a></li>
+					<li><a href="#" class="dropdown-item">ВПУ</a></li>
+					<li><a href="#" class="dropdown-item">ТЭПы</a></li>
+					<li><a href="#" class="dropdown-item">Отказы</a></li>
+					<li><a href="#" class="dropdown-item">Калькуляция затрат</a></li>
+					<li><a href="#" class="dropdown-item">Экологические показатели</a></li>
+				</ul>
+			</div>
+			<button type="button" class="bttn" data-bs-dismiss="modal">Отмена</button>
+			<button type="button" class="bttn bttn-color" data-bs-dismiss="modal">Сохранить</button>
+			<button type="button" class="bttn bttn-color" data-bs-dismiss="modal">Создать копию</button>
+			<button type="button" class="bttn bttn-color" data-bs-dismiss="modal">Удалить</button>
+		</div>
+	</div>
+</div>
+@section pageJs{
+<script type="text/javascript" src="@Url.Content("~/hss/js/datatables_common_scripts.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/hss/js/popup_common_scripts.js")"></script>
+<script>
+
+	// document.querySelector('#source_unom_list').addEventListener('change', (event) => {
+	// 	OpenPopupSource($('#source_unom_list').val());
+	//});
+
+
+	var onSuccessFormSource = function (xhr) {
+		//hidePreloader();
+		debugger
+		let is_success = 1;
+		if (xhr.success == true) {
+			$("#refresh_sourcelist_table").val(1);
+			let select_id = "source_unom_list";
+
+			if (xhr.is_new == true) {
+				$('#' + select_id).append('<option value=' + xhr.sources_id + ' selected>' + xhr.unom_source + '</option>');
+				RefreshSelectByIdWithVal(select_id, xhr.sources_id);
+				$("#YearImplementSchemeParam_Save").prop('disabled', false);
+
+				$("#source_persp_id").val(xhr.sources_id);
+				$("#source_p_id").val(xhr.sources_id);
+
+			}
+			else if (xhr.is_new_per == true) {
+				$("#SourceHeatPowerOutput_Save").prop('disabled', false);
+			}
+
+			else {
+
+				$("select[id=source_unom_list] option[value=" + $('#source_id').val() + "]").text(xhr.unom_source);
+				RefreshSelectById('source_unom_list');
+			}
+
+		}
+		else {
+			if (xhr.message === undefined) {
+				xhr.message = 'Ошибка сохранения данных'
+			}
+			is_success = 0;
+			showMessage(xhr.message, 'modal', 'fault');
+		}
+		if (xhr.is_per_save == true) {
+			SelectValue();
+			let form = $('#Source_HeatPowerOutput');
+			if (document.getElementById('Source_HeatPowerOutput').checkValidity() === true) {
+
+				$.ajax({
+					url: form.attr('action'),
+					type: 'html',
+					data: form.serialize(),
+					success: function (data) {
+						// Обработка ответа после отправки второй формы
+						onSuccessFormSource(data);
+					},
+					error: function () {
+						showMessage('Ошибка отправки формы', 'modal', 'fault');
+
+					}
+				});
+			}
+			else {
+				is_success = 0;
+				if (xhr.message === undefined) {
+					xhr.message = 'Ошибка сохранения данных "Выдача тепловой мощности"\nПроверти введенные данные'
+				}
+				showMessage(xhr.message, 'modal', 'fault');
+			}
+
+		}
+
+		if (is_success == 1)
+			showMessage('Данные сохранены.', 'modal', 'success');
+
+
+
+		//hidePreloader();
+	};
+</script>
+}

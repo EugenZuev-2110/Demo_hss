@@ -1,0 +1,125 @@
+﻿@model WebProject.Areas.TSO.Models.TSOResponsiblePersonsViewModel
+@{
+    Layout = null;
+}
+
+<div class="data-row pb-1 mt-1">
+	<h4>Ответственное лицо за подготовку данных по схеме</h4>
+</div>
+<input type="hidden" name="tso_Id" value="@Model.tso_Id" id="rp_tso_id_input" />
+<input type="hidden" name="data_status" value="@Model.data_status" id="rp_tso_ds_input" />
+@{
+	string disable = "";
+}
+@if (Model.tso_Id == 0)
+{
+	disable = "disabled";
+}
+<table id="responseTable" class="display nowrap compact table-inp-stretch" style="width:100%">
+	<thead>
+		<tr>
+			<th>Должность</th>
+			<th>Фамилия</th>
+			<th>Имя</th>
+			<th>Отчество</th>
+			<th>Телефон</th>
+			<th>Адрес эл. почты</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var tso_resp_pers in Model.TSOResponsiblePersonsList)
+		{
+			<tr id="tr_id_@tso_resp_pers.person_num">
+				<td><input type="text" class="data-value" id="position_respons_pers_@tso_resp_pers.person_num" value="@tso_resp_pers.position_respons_pers"></td>
+				<td><input type="text" class="data-value" id="l_name_respons_pers_@tso_resp_pers.person_num" value="@tso_resp_pers.l_name_respons_pers"></td>
+				<td><input type="text" class="data-value" id="f_name_respons_pers_@tso_resp_pers.person_num" value="@tso_resp_pers.f_name_respons_pers"></td>
+				<td><input type="text" class="data-value" id="m_name_respons_pers_@tso_resp_pers.person_num" value="@tso_resp_pers.m_name_respons_pers"></td>
+				<td><input type="text" class="data-value" id="phones_respons_pers_@tso_resp_pers.person_num" value="@tso_resp_pers.phones_respons_pers"></td>
+				<td><input type="text" class="data-value" id="emails_respons_pers_@tso_resp_pers.person_num" value="@tso_resp_pers.emails_respons_pers"></td>
+				<td>
+					<button class="bttn bttn-square bttn-icon-save" type="button" title="Сохранить" onclick="SavePerson(@tso_resp_pers.person_num);">
+					</button>
+					<button class="bttn bttn-square bttn-icon-del" type="button" title="Удалить" onclick="DeletePerson(@tso_resp_pers.person_num);">
+					</button>
+				</td>
+			</tr>
+		}
+		<tr class="add-row" id="tr_id_0">
+			<td><input type="text" class="data-value xl-full" id="position_respons_pers_0"></td>
+			<td><input type="text" class="data-value lg-full" id="l_name_respons_pers_0"></td>
+			<td><input type="text" class="data-value md-full" id="f_name_respons_pers_0"></td>
+			<td><input type="text" class="data-value lg-full" id="m_name_respons_pers_0"></td>
+			<td><input type="text" class="data-value xxl-full" id="phones_respons_pers_0"></td>
+			<td><input type="text" class="data-value xl-full" id="emails_respons_pers_0"></td>
+			<td>
+				<button class="bttn bttn-square bttn-icon-save" type="button" title="Сохранить" id="btnSubmitRespPerson" onclick="SavePerson(0);" @disable>
+				</button>
+				<button class="bttn bttn-square bttn-icon-del" type="button" title="Удалить" disabled>
+				</button>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<script type="text/javascript">
+
+	function SavePerson(person_num) {
+		showPreloader();
+		$.ajax({
+			url: '@Html.Raw(Url.Action("TSO_SavePerson", "Main", new { Area = "TSO" }))',
+			type: 'POST',
+			data: { 
+				tso_Id: $('#rp_tso_id_input').val(),
+				data_status: $('#rp_tso_ds_input').val(),
+				person_num: person_num,
+				position_respons_pers: $('#position_respons_pers_' + person_num).val(),
+				l_name_respons_pers: $('#l_name_respons_pers_' + person_num).val(),
+				f_name_respons_pers: $('#f_name_respons_pers_' + person_num).val(),
+				m_name_respons_pers: $('#m_name_respons_pers_' + person_num).val(),
+				phones_respons_pers: $('#phones_respons_pers_' + person_num).val(),
+				emails_respons_pers: $('#emails_respons_pers_' + person_num).val()
+			}
+		}).done(function () {
+			UpdateTSORespPers();
+			hidePreloader();
+		});
+
+	}
+
+	function DeletePerson(person_num) {
+		showPreloader();
+		$.ajax({
+			url: '@Html.Raw(Url.Action("TSO_DeletePerson", "Main", new { Area = "TSO" }))',
+			type: 'POST',
+			data: { 
+				tso_Id: $('#rp_tso_id_input').val(),
+				data_status: $('#rp_tso_ds_input').val(),
+				person_num: person_num
+			}
+		}).done(function () {
+			UpdateTSORespPers();
+			hidePreloader();
+		});
+
+	}
+
+	function UpdateTSORespPers() {
+		$.ajax({
+			type: 'GET',
+			url: '@Html.Raw(Url.Action("OnGetCallTSO_RespPersList_PartialViewComponent", "Main", new { Area = "TSO" }))',
+			data: {
+				data_status: $('#rp_tso_ds_input').val(),
+				tso_id: $('#rp_tso_id_input').val()
+			},
+			dataType: 'html'
+		}).done(function (result) {
+			var div = $('#tso_resp_pers_table');
+			div.html("");
+			div.html(result);
+			initDataTable('responseTable', 'simple-scroll', '210px');
+			adjustColumns('responseTable');
+		});
+	}
+
+</script>

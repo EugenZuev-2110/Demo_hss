@@ -1,0 +1,320 @@
+﻿@model List<WebProject.Areas.Events.Models.EventsViewModel>
+@{
+    Layout = null;
+}
+<style>
+    .td-thStyle {
+        text-align: center;
+    }
+
+    .modal_load {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        background: rgba( 255, 255, 255, .8 ) url('http://i.stack.imgur.com/FhHRx.gif') 50% 50% no-repeat;
+    }
+
+    body.loading {
+        overflow: hidden;
+    }
+
+        body.loading .modal_load {
+            display: block;
+        }
+</style>
+
+<div class="modal_load"><!-- Place at bottom of page --></div>
+<table class="table datatable dataTable no-footer table-hover" id="table-part" role="grid">
+    <thead>
+        <tr role="row">
+            <th class="sorting" tabindex="0">*</th>
+            <th class="sorting" tabindex="1">УНОМ мероприятия</th>
+            <th class="sorting" tabindex="1">Наименование мероприятия</th>
+            <th class="sorting" tabindex="2">№ проекта ИП</th>
+            <th class="sorting" tabindex="2">Городская собственность (аренда да/нет)</th>
+            @if (ViewBag.ObjectType == 1)
+            {
+                <th class="sorting" tabindex="3">Id оборудования</th>
+            }
+            @if (ViewBag.ObjectType == 2 || ViewBag.ObjectType == 3)
+            {
+                <th class="sorting" tabindex="3">Sys</th>
+            }
+            <th class="sorting" tabindex="4">Номер источника</th>
+            <th class="sorting" tabindex="5">Код ЕТО</th>
+            <th class="sorting" tabindex="6">Код системы</th>
+            <th class="sorting" tabindex="7">Код ТСО объекта</th>
+            <th class="sorting" tabindex="8">Наименование объекта</th>
+            <th class="sorting" tabindex="9">Наименование назначения</th>
+            <th class="sorting" tabindex="10">Наименование вида мероприятия</th>
+            <th class="sorting" tabindex="11">Наименование источника финансирования</th>
+            <th class="sorting" tabindex="12">Планируемый срок реализации (начало)</th>
+            <th class="sorting" tabindex="13">Планируемый срок реализации (конец)</th>
+            @if (ViewBag.ObjectType == 1)
+            {
+                <th class="sorting" tabindex="14">Адрес</th>
+            }
+            else {
+                <th class="sorting" tabindex="14">Адрес начала</th>
+                <th class="sorting" tabindex="15">Адрес конца</th>
+            }
+            @if (ViewBag.ObjectType == 2 || ViewBag.ObjectType == 3)
+            {
+                <th class="sorting" tabindex="16">Протяжённость (до)</th>
+                <th class="sorting" tabindex="17">Протяжённость (после)</th>
+            }
+            @if (ViewBag.ObjectType == 2 || ViewBag.ObjectType == 3)
+            {
+                <th class="sorting" tabindex="18">Диаметр (до)</th>
+                <th class="sorting" tabindex="19">Диаметр (после)</th>
+            }
+            else if (ViewBag.ObjectType == 1)
+            {
+                <th class="sorting" tabindex="18">Мощность (до)</th>
+                <th class="sorting" tabindex="19">Мощность (после)</th>
+            }
+            @if (ViewBag.ObjectType == 1)
+            {
+                <th class="sorting" tabindex="21">Затраты до (по ИП)</th>
+            }
+            @*<th class="sorting" tabindex="22">КВ на 2022 год </th>
+            <th class="sorting" tabindex="23">КВ на 2023 год </th>
+            <th class="sorting" tabindex="24">КВ на 2024 год </th>
+            <th class="sorting" tabindex="25">КВ на 2025 год </th>
+            <th class="sorting" tabindex="26">КВ на 2026 год </th>*@
+            @if (ViewBag.ObjectType == 2 || ViewBag.ObjectType == 3)
+            {
+                <th class="sorting" tabindex="27">Материальная характеристика по годам</th>
+            }
+            <th class="sorting" tabindex="28">Округ, в котором находится объект</th>
+            @if (ViewBag.ObjectType == 3)
+            {
+                <th class="sorting" tabindex="29">Год прокладки участка тепловой сети</th>
+            }
+            @if (ViewBag.ObjectType > 1)
+            {
+                <th class="sorting" tabindex="30">Кап. вложения в текущих ценах</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Count > 0)
+        {
+            foreach (var events in Model)
+            {
+                <tr style="cursor: pointer" onclick="EventOpen(event, 'edit', @ViewBag.ObjectType, @events.Id)">
+                    <td onclick="EventCopy('copy', @ViewBag.ObjectType, @events.Id)"><a>скопировать</a></td>
+                    <td>@events.unom</td>
+                    <td>@events.event_name</td>
+                    <td>@events.ip_num</td>
+                    <td>@events.is_city_own</td>
+                    @if (ViewBag.ObjectType == 1)
+                    {
+                        <td>@events.equip_id</td>
+                    }
+                    @if (ViewBag.ObjectType == 2 || ViewBag.ObjectType == 3)
+                    {
+                        <td>@events.sys</td>
+                    }
+                    <td>@events.source_num</td>
+                    <td>@events.eto_num</td>
+                    <td>@events.hssn_num</td>
+                    <td>@events.tso_code</td>
+                    <td>@events.obj_name</td>
+                    <td>@events.purpose_name</td>
+                    <td>@events.type_name</td>
+                    <td>@events.sfinance_name</td>
+                    <td>@events.start_realize_year</td>
+                    <td>@events.end_realize_year</td>
+                    @if (ViewBag.ObjectType == 1)
+                    {
+                        <td>@events.address_start</td>
+                    }
+                    else
+                    {
+                        <td>@events.address_start</td>
+                        <td>@events.address_end</td>
+                    }
+                    @if (ViewBag.ObjectType == 2 || ViewBag.ObjectType == 3)
+                    {
+                        <td>@events.length_before</td>
+                        <td>@events.length_after</td>
+                    }
+                    @if (ViewBag.ObjectType < 4)
+                    {
+                        <td>@events.d_p_before</td>
+                        <td>@events.d_p_after</td>
+                    }
+                    @if (ViewBag.ObjectType == 1)
+                    {
+                        <td>@events.cost_before</td>
+                    }
+                    @if (ViewBag.ObjectType == 2 || ViewBag.ObjectType == 3)
+                    {
+                        <td>@events.mat_char</td>
+                    }
+                    <td>@events.reg_name</td>
+                    @if (ViewBag.ObjectType == 3)
+                    {
+                        <td>@events.year_of_laying</td>
+                    }
+                    @if (ViewBag.ObjectType > 1)
+                    {
+                        <td>@events.cap_invest</td>
+                    }
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+
+<script type="text/javascript">
+
+        $body = $("body");
+
+        function ajaxStart() {
+            $body.addClass("loading");
+        }
+        function ajaxStop() {
+            $body.removeClass("loading");
+        }
+
+        $(document).ready(function () {
+
+            //$("#events").addClass("active");
+
+            var table = $('#table-part').DataTable({
+                aaSorting: [],
+                scrollY: 500,
+                scrollX: true,
+                destroy: true,
+                dom: 'Blfrtip',
+                buttons: [
+                    {
+                        extend: 'excelHtml5',
+                        //exportOptions: {
+                        //    columns: ['#upldate', '#idint', '#pr_count', '#network', '#checkhref', '#state', '#user']
+                        //},
+                        className: 'exportExcelFull'
+                    }
+                ],
+                initComplete: function () {
+                    var $buttons = $('.dt-buttons').hide();
+                    $('#excelFull').on('click',
+                        function () {
+                            $buttons.find('.exportExcelFull').click();
+                        });
+                },
+                "language": {
+                    "processing": "Подождите...",
+                    "search": "Поиск:",
+                    "lengthMenu": "Показать _MENU_ записей",
+                    "info": "Записи с _START_ до _END_ из _TOTAL_ записей",
+                    "infoEmpty": "Записи с 0 до 0 из 0 записей",
+                    "infoFiltered": "(отфильтровано из _MAX_ записей)",
+                    "infoPostFix": "",
+                    "loadingRecords": "Загрузка записей...",
+                    "zeroRecords": "Записи отсутствуют.",
+                    "emptyTable": "В таблице отсутствуют данные",
+                    "paginate": {
+                        "first": "Первая",
+                        "previous": "Предыдущая",
+                        "next": "Следующая",
+                        "last": "Последняя"
+                    },
+                    "aria": {
+                        "sortAscending": ": активировать для сортировки столбца по возрастанию",
+                        "sortDescending": ": активировать для сортировки столбца по убыванию"
+                    }
+                }
+            });
+
+        });
+
+        function LoadTable() {
+            GetItems();
+        }
+
+        function Search(e) {
+
+            if (e.keyCode == 13) {
+                GetItems();
+            }
+        }
+
+        function EventOpen(e, action_for, object_type, id) {
+            if (object_type === -1)
+            {
+                object_type = $('#object_type').val();
+            }
+
+            var ind = $(e.target).index();
+            if (ind === 0)
+                return;
+
+            ajx = false;
+            $.ajax({
+                type: 'GET',
+                url: 'Events/Home/OpenEvent',
+                data: {
+                    id: id,
+                    action_for: action_for,
+                    object_type: object_type,
+                    year: $("#year").val()
+                },
+                dataType: 'html'
+            }).done(function(result) {
+                var div = $('#div-open-fd');
+                div.html(result);
+                $("#modal-open-fd").modal('toggle');
+            });
+        }
+
+        function EventCopy(action_for, object_type, id) {
+            if (object_type === -1)
+            {
+                object_type = $('#object_type').val();
+            }
+
+            ajx = false;
+            $.ajax({
+                type: 'GET',
+                url: 'Events/Home/OpenEvent',
+                data: {
+                    id: id,
+                    action_for: action_for,
+                    object_type: object_type,
+                    year: $("#year").val()
+                },
+                dataType: 'html'
+            }).done(function(result) {
+                var div = $('#div-open-fd');
+                div.html(result);
+                $("#modal-open-fd").modal('toggle');
+            });
+        }
+
+        //function GetItems() {
+        //    ajaxStart();
+        //    $.ajax({
+        //        type: 'GET',
+        //        url: '/Home/OnGetCallItemsListViewComponent',
+        //        data: {
+        //            searchText: document.getElementsByName("searchText")[0].value
+        //        },
+        //        dataType: 'html'
+        //    }).done(function (result) {
+        //            var div = $('.panel-body');
+        //            div.html("");
+        //            div.html(result);
+
+        //            ajaxStop();
+        //        });
+        //}
+
+</script>

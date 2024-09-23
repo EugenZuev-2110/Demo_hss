@@ -1,0 +1,35 @@
+﻿@model List<WebProject.Areas.HeatPointsAndConsumers.Models.BuildingConsumerViewModel>
+
+@{
+	string btn_disable = string.Empty;
+}
+	@if(ViewBag.build == "0")
+	{
+		btn_disable = "disabled";
+	}
+
+<div class="data-item data-item-right flex-wrap flex-xl-nowrap">
+	<button type="button" class="bttn bttn-color  mb-1 mb-xl-0 " @btn_disable style=" margin-left: auto; margin-right: 0.2px;" id="btnAddConsumer">Добавить</button>
+</div>
+<div class="table-buttons ConsumersBuildTable-buttons"></div>
+<table id="ConsumersBuildTable" class="display compact" style="width:100%">
+	<thead>
+		<tr>
+			<th>УНОМ ПП</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var cons in Model)
+		{
+			<tr>
+				<td>@cons.unom_pp</td>
+			</tr>
+		}
+	</tbody>
+</table>
+<div class="data-row table-summary">
+	<div class="data-item rows-count">
+		<h5>Всего записей:</h5>
+		<p><span class="mark-color" id="all_cnt_rows_popup"></span></p>
+	</div>
+</div>

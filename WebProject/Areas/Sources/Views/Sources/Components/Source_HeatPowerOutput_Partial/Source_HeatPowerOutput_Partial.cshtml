@@ -1,0 +1,453 @@
+﻿@model List<WebProject.Areas.Sources.Models.SourceHeatPowerOutputViewModel>
+@{
+    short? type_selected_value = 1; string btn_disable = string.Empty;
+}
+
+@if (Model[0].source_id == 0)
+{
+    btn_disable = "disabled";
+}
+<div class="data-block">
+    <form class="needs-validation" encrypte="multypart/for-data"  novalidate asp-controller="Sources" asp-action="Source_HeatPowerOutput_Save" asp-antiforgery="true" asp-area="Sources" id="Source_HeatPowerOutput"
+          data-ajax-failure="onFailedForm" data-ajax-success="onSuccessFormSource" data-ajax-begin="onBeginForm" data-ajax="true" data-ajax-method="POST">
+        <input type="hidden" name="source_id" value="@Model[0].source_id" id="source_p_id" />
+        <input type="hidden" name="data_status" value="@Model[0].data_status" id="data_status" />
+        <input hidden name="HeatOutScheme" id="HeatOutScheme">
+        <input hidden name="TempGraphT1T2" id="TempGraphT1T2">
+        <input hidden name="TempGraphT3T4" id="TempGraphT3T4">
+        <input hidden name="TempGraphT5T6" id="TempGraphT5T6">
+        <div class="data-row">
+            <div class="data-item data-item-right">
+                <button class="bttn disabled" type="button">Привязать данные к электронной модели</button>
+            </div>
+        </div>
+        <div class="scroll-table-wrapper">
+            <table class="table-inp-stretch" style="width:100%;">
+                <thead>
+                    <tr>
+                        <th colspan="6">Фактический температурный график, <span class="data-unit">°С</span></th>
+                        <th colspan="3">Параметры пара внешним потребителям</th>
+                    </tr>
+                    <tr>
+                        <th>T<sub>1</sub><sup>факт</sup></th>
+                        <th>T<sub>2</sub><sup>факт</sup></th>
+                        <th>T<sub>3</sub><sup>факт</sup></th>
+                        <th>T<sub>4</sub><sup>факт</sup></th>
+                        <th>T<sub>5</sub><sup>факт</sup></th>
+                        <th>T<sub>6</sub><sup>факт</sup></th>
+                        <th>T<sub>пар</sub>, <span class="data-unit">°С</span></th>
+                        <th>P<sub>пар</sub>, <span class="data-unit">кгс/см<sup>2</sup></span></th>
+                        <th>Конденсатопровод</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+
+                        <td>
+                            <div class="data-item">
+                                <input type="text" class="data-value" name="temp_supply_fact_T1" id="temp_supply_fact_T1"  value="@Model[0].temp_supply_fact_T1">
+                                
+                            </div>
+                        </td>
+
+                        <td>
+                            <div class="data-item">
+                                <input type="text" class="data-value" name="temp_reverse_fact_T2" id="temp_reverse_fact_T2" value="@Model[0].temp_reverse_fact_T2">
+
+                            </div>
+                        </td>
+                        <td>
+                            <div class="data-item">
+                                <input type="text" class="data-value" name="temp_supply_fact_T3" id="temp_supply_fact_T3"  value="@Model[0].temp_supply_fact_T3">
+                                
+                            </div>
+                        </td>
+                        <td>
+                            <div class="data-item">
+                                <input type="text" class="data-value" name="temp_reverse_fact_T4" id="temp_reverse_fact_T4"  value="@Model[0].temp_reverse_fact_T4">
+                                
+                            </div>
+                        </td>
+                        <td>
+                            <div class="data-item">
+                                <input type="text" class="data-value" name="temp_supply_fact_T5" id="temp_supply_fact_T5"  value="@Model[0].temp_supply_fact_T5">
+
+                            </div>
+                        </td>
+                        <td>
+                            <div class="data-item">
+                                <input type="text" class="data-value" name="temp_reverse_fact_T6" id="temp_reverse_fact_T6"  value="@Model[0].temp_reverse_fact_T6">
+                                
+                            </div>
+                        </td>
+                        <td>
+                            <div class="data-item">
+                                <input type="text" class="data-value" name="temp_steam_consumers" id="temp_steam_consumers"  value="@Model[0].temp_steam_consumers">
+                                
+                            </div>
+                        </td>
+                        <td>
+                            <div class="data-item">
+                                <input type="text" class="data-value" name="pressure_steam_consumers" id="pressure_steam_consumers"  value="@Model[0].pressure_steam_consumers">
+                                
+                            </div>
+                        </td>
+                        <td>
+                            <select class="selectpicker data-value" name="avail_condens_pipe" id="avail_condens_pipe" data-live-search="true">
+
+                                @{
+                                    <option value="" disabled>-</option>
+                                    if (Model[0].avail_condens_pipe == true)
+                                    {
+                                        <option value="true" selected>Да</option>
+                                        <option value="false">Нет</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="true">Да</option>
+                                        <option value="false" selected>Нет</option>
+
+                                    }
+                                }
+                            </select>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="scroll-table-wrapper">
+            <table class="table-inp-stretch" style="width:100%;">
+                <thead>
+                    <tr>
+                        <th rowspan="2">Год</th>
+                        <th rowspan="2">Тип схемы</th>
+                        <th rowspan="2">Выводы, <span class="data-unit">шт.</span></th>
+                        <th rowspan="2">Секции ТФУ, <span class="data-unit">шт.</span></th>
+                        <th colspan="3">Проектный температурный график, <span class="data-unit">°С</span></th>
+
+                        <th colspan="4">Расчетное давление теплоносителя, <span class="data-unit">кгс/см<sup>2</sup></span></th>
+
+                    </tr>
+                    <tr>
+                        <th style="position: static;">T<sub>1</sub>/T<sub>2</sub></th>
+                        <th>T<sub>3</sub>/T<sub>4 отопл</sub></th>
+                        <th>T<sub>5</sub>/T<sub>5 ГВС</sub></th>
+
+                        <th>P<sub>1</sub><sup>секц1</sup></th>
+                        <th>P<sub>2</sub><sup>секц1</sup></th>
+                        <th>P<sub>1</sub><sup>секц2</sup></th>
+                        <th>P<sub>2</sub><sup>секц2</sup></th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var source in Model)
+                    {
+                        <tr>
+                            <input type="hidden" name="perspective_year" value="@source.perspective_year">
+                            <td>@source.perspective_year_dt</td>
+                            <td>
+                                <div class="data-item">
+                                    <select class="selectpicker data-value" name="heat_out_scheme_select" required id="heat_out_scheme_select_@(source.perspective_year)" onchange="SelectChange(event, @source.perspective_year, 'heat_out_scheme')" data-heat_out_scheme="@source.perspective_year">
+                                        @if (source.hn_heat_out_scheme_type_id != null)
+                                        {
+                                            type_selected_value = source.hn_heat_out_scheme_type_id;
+                                        }
+                                        <option value="" disabled>-</option>
+                                        @foreach (var chem in ViewBag.ChemType)
+                                        {
+                                            if (chem.Id == type_selected_value)
+                                            {
+                                                <option value="@chem.Id" selected>@chem.scheme_heat_out_type_name</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@chem.Id">@chem.scheme_heat_out_type_name</option>
+                                            }
+                                        }
+                                    </select>
+                                    <a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Выберите значение из списка"></a>
+                                </div>
+                            </td>
+                            <td><input type="text" class="data-value" disabled value="@source.count_out"></td>
+                            <td><input type="text" class="data-value" disabled value=""></td>
+                            <td>
+                                <div class="data-item">
+                                    <select class="selectpicker data-value" required name="TempGraphT1T2_select" id="TempGraphT1T2_select_@(source.perspective_year)" onchange="SelectChange(event, @source.perspective_year, 'TempGraphT1T2')" data-TempGraphT1T2="@source.perspective_year">
+
+                                        <option value="" selected>Выберите</option>
+
+                                        @foreach (var temp in ViewBag.TempGraph)
+                                        {
+                                            if (source.temp_plan_id != null && temp.temp_graph_id == source.temp_plan_id)
+                                            {
+                                                <option value="@temp.temp_graph_id" selected>@temp.temp_graph_name</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@temp.temp_graph_id">@temp.temp_graph_name</option>
+                                            }
+                                        }
+                                    </select>
+                                    <a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Выберите значение из списка"></a>
+                                </div>
+                            </td>
+                            <td>
+
+                                <div class="data-item">
+                                    <select class="selectpicker data-value" required name="TempGraphT3T4_select" id="TempGraphT3T4_select_@(source.perspective_year)" onchange="SelectChange(event, @source.perspective_year, 'TempGraphT3T4')" data-TempGraphT3T4="@source.perspective_year">
+
+                                        <option value="" selected>Выберите</option>
+                                        @foreach (var temp in ViewBag.TempGraph)
+                                        {
+                                            if (source.temp_plan_heat_id != null && temp.temp_graph_id == source.temp_plan_heat_id)
+                                            {
+                                                <option value="@temp.temp_graph_id" selected>@temp.temp_graph_name</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@temp.temp_graph_id">@temp.temp_graph_name</option>
+                                            }
+                                        }
+                                    </select>
+                                    <a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Выберите значение из списка"></a>
+                                </div>
+                            </td>
+                            <td>
+
+                                <div class="data-item">
+                                    <select class="selectpicker data-value" required name="TempGraphT5T6_select" id="TempGraphT5T6_select_@(source.perspective_year)" onchange="SelectChange(event, @source.perspective_year, 'TempGraphT5T6')" data-TempGraphT5T6="@source.perspective_year">
+
+                                        <option value="" selected>Выберите</option>
+                                        @foreach (var temp in ViewBag.TempGraph)
+                                        {
+                                            if (source.temp_plan_gvs_id != null && temp.temp_graph_id == source.temp_plan_gvs_id)
+                                            {
+                                                <option value="@temp.temp_graph_id" selected>@temp.temp_graph_name</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@temp.temp_graph_id">@temp.temp_graph_name</option>
+                                            }
+                                        }
+                                    </select>
+                                    <a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Выберите значение из списка"></a>
+                                </div>
+                            </td>
+                            <td><input type="text" class="data-value" disabled value=""></td>
+                            <td><input type="text" class="data-value" disabled value=""></td>
+                            <td><input type="text" class="data-value" disabled value=""></td>
+                            <td><input type="text" class="data-value" disabled value=""></td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+        <button type="submit" id="SourceHeatPowerOutput_Save" class="bttn bttn-color ms-auto" @btn_disable>Сохранить</button>
+    </form>
+</div>
+<script>
+
+    $(document).ready(function () {
+        SelectValue();
+    });
+
+
+    function SelectValue() {
+        let elementsArr =
+            [
+                elementsHeatOutScheme = document.getElementsByName("heat_out_scheme_select"),
+                elementsTempGraphT1T2 = document.getElementsByName("TempGraphT1T2_select"),
+                elementsTempGraphT3T4 = document.getElementsByName("TempGraphT3T4_select"),
+                elementsTempGraphT5T6 = document.getElementsByName("TempGraphT5T6_select"),
+                elementsSourceStatus = document.getElementsByName("source_status_select"),
+                elementTempGraphT1 = document.getElementsByName("temp_supply_fact_T1"),
+                elementTempGraphT2 = document.getElementsByName("temp_reverse_fact_T2"),
+                elementTempGraphT3 = document.getElementsByName("temp_supply_fact_T3"),
+                elementTempGraphT4 = document.getElementsByName("temp_reverse_fact_T4"),
+                elementTempGraphT5 = document.getElementsByName("temp_supply_fact_T5"),
+                elementTempGraphT6 = document.getElementsByName("temp_reverse_fact_T6"),
+                elementTempSteamConsumers = document.getElementsByName("temp_steam_consumers"),
+                elementPressureSteamConsumers = document.getElementsByName("pressure_steam_consumers"),
+                elementAvailCondensPipe = document.getElementsByName("avail_condens_pipe")
+            ]
+
+        DisabledandRefreshSelect(elementsArr, true);
+        removeRequiredAttr();
+        DisabledandRefreshSelect(elementsArr, true);
+    }
+
+    function DisabledSelect(element, index, isDisabled) {
+        var elementid = (element[index] !== undefined) ? element[index].getAttribute('id') : element[0].getAttribute('id');
+        $('#' + elementid).prop('disabled', isDisabled)
+    }
+
+    function SetEmptyValue(element, index) {
+        var elementid = (element[index] !== undefined) ? element[index].getAttribute('id') : element[0].getAttribute('id');
+        $('#' + elementid).val('');
+    }
+
+    function SelectRefresh(element, index) {
+        var elementid = (element[index] !== undefined) ? element[index].getAttribute('id') : element[0].getAttribute('id');
+        RefreshSelectById(elementid);
+    }
+
+    function DisabledandRefreshSelect(elementsArr, Disabled) {
+
+        let elementsIdArr = [];
+        for (var j = 0; j < elementsArr.length; j++) {
+
+            for (var i = 0; i < elementsHeatOutScheme.length; i++) {
+                if (elementsArr[4][i].value != '1' && [1, 2, 3, 0].includes(j) && elementsHeatOutScheme[i].value == '') {
+                    DisabledSelect(elementsArr[j], i, false);
+                    var elementid = (elementsArr[j][i] !== undefined) ? elementsArr[j][i].getAttribute('id') : elementsArr[j][0].getAttribute('id');
+                    $('#' + elementid).val('1');
+                }
+
+                //2-х трубная
+                if (elementsHeatOutScheme[i].value == 1 && j == 0) {
+                    DisabledSelect(elementsArr[1], i, false);
+                    DisabledSelect(elementsArr[2], i, true);
+                    DisabledSelect(elementsArr[3], i, true);
+                    SetEmptyValue(elementsArr[2], i);
+                    SetEmptyValue(elementsArr[3], i);
+
+                }
+                //4-х трубная или 6-и трубная
+                if ((elementsHeatOutScheme[i].value == 2 || elementsHeatOutScheme[i].value == 3) && j == 0) {
+                    DisabledSelect(elementsArr[1], i, true);
+                    DisabledSelect(elementsArr[2], i, false);
+                    DisabledSelect(elementsArr[3], i, false);
+                    SetEmptyValue(elementsArr[1], i);
+
+                }
+                //источник выведен
+                if (elementsArr[4][i].value == '1' && [1, 2, 3, 0].includes(j)) {
+                    elementsIdArr = [1, 2, 3, 0]
+                    DisabledSelect(elementsArr[j], i, true);
+                    SetEmptyValue(elementsArr[j], i);
+
+                }
+                // источник выведен на базовый год блокируем верхнюю таблицу
+                if (elementsArr[0][0].value == '' && [5, 6, 7, 8, 9, 10, 11, 12, 13].includes(j)) {
+                    elementsIdArr = [5, 6, 7, 8, 9, 10, 11, 12, 13]
+                    DisabledSelect(elementsArr[j], i, true);
+                    SetEmptyValue(elementsArr[j], i);
+                }
+                // 2-х трубная схема на базовый год
+                if (elementsArr[0][0].value == '1' && [5, 6].includes(j)) {
+                    DisabledSelect(elementsArr[5], i, false);
+                    DisabledSelect(elementsArr[6], i, false);
+                    DisabledSelect(elementsArr[7], i, true);
+                    DisabledSelect(elementsArr[8], i, true);
+                    DisabledSelect(elementsArr[9], i, true);
+                    DisabledSelect(elementsArr[10], i, true);
+                    SetEmptyValue(elementsArr[7], i);
+                    SetEmptyValue(elementsArr[8], i);
+                    SetEmptyValue(elementsArr[9], i);
+                    SetEmptyValue(elementsArr[10], i);
+                }
+                //4-х трубная или 6-и трубная схема на базовый год
+                if ((elementsArr[0][0].value == '2' || elementsArr[0][0].value == '3') && [5, 6].includes(j)) {
+                    DisabledSelect(elementsArr[5], i, true);
+                    DisabledSelect(elementsArr[6], i, true);
+                    DisabledSelect(elementsArr[7], i, false);
+                    DisabledSelect(elementsArr[8], i, false);
+                    DisabledSelect(elementsArr[9], i, false);
+                    DisabledSelect(elementsArr[10], i, false);
+                    SetEmptyValue(elementsArr[5], i);
+                    SetEmptyValue(elementsArr[6], i);
+                }
+                SelectRefresh(elementsArr[j], i);
+                SetInput(elementsArr[0], elementsArr[1], elementsArr[2], elementsArr[3], i)
+            }
+
+
+        }
+    }
+
+
+    function SetInput(selectHeatOutScheme, selectTempGraphT1T2, selectTempGraphT3T4, selectTempGraphT5T6, index) {
+        var elementHeatOutSchemeid = (selectHeatOutScheme[index] !== undefined) ? selectHeatOutScheme[index].getAttribute('id') : selectHeatOutScheme[0].getAttribute('id');
+        var elementT1T2id = (selectTempGraphT1T2[index] !== undefined) ? selectTempGraphT1T2[index].getAttribute('id') : selectTempGraphT1T2[0].getAttribute('id');
+        var elementT3T4id = (selectTempGraphT3T4[index] !== undefined) ? selectTempGraphT3T4[index].getAttribute('id') : selectTempGraphT3T4[0].getAttribute('id');
+        var elementT5T6id = (selectTempGraphT5T6[index] !== undefined) ? selectTempGraphT5T6[index].getAttribute('id') : selectTempGraphT5T6[0].getAttribute('id');
+
+        if (index == 0) {
+            $('#HeatOutScheme').val($('#' + elementHeatOutSchemeid).val())
+            $('#TempGraphT1T2').val($('#' + elementT1T2id).val())
+            $('#TempGraphT3T4').val($('#' + elementT3T4id).val())
+            $('#TempGraphT5T6').val($('#' + elementT5T6id).val())
+        }
+        else {
+            $('#HeatOutScheme').val($('#HeatOutScheme').val() + ',' + $('#' + elementHeatOutSchemeid).val())
+            $('#TempGraphT1T2').val($('#TempGraphT1T2').val() + ',' + $('#' + elementT1T2id).val())
+            $('#TempGraphT3T4').val($('#TempGraphT3T4').val() + ',' + $('#' + elementT3T4id).val())
+            $('#TempGraphT5T6').val($('#TempGraphT5T6').val() + ',' + $('#' + elementT5T6id).val())
+        }
+    }
+
+    function SelectChange(event, perspective_year, select_name) {
+        ChangeSelectValuePerspective(event, perspective_year, select_name);
+        SelectValue();
+    }
+
+    //Добавить и удалить аттрибут required
+    function removeRequiredAttr() {
+        let names = [
+            'heat_out_scheme_select',
+            'TempGraphT1T2_select',
+            'TempGraphT3T4_select',
+            'TempGraphT5T6_select'
+        ];
+        for (var i = 0; i < names.length; i++) {
+            if (!removeRequiredAttrPost(names[i])) {
+                requiredAttrSet(names[i], global_array, 'add');
+            }
+        }
+    }
+
+    function removeRequiredAttrPost(name) {
+        global_array = getArray(name);
+        add_remove_yisp_temp_ht_plan_select_required = checkIsEmptyColumns(global_array);
+        if (add_remove_yisp_temp_ht_plan_select_required) {
+            requiredAttrSet(name, global_array, 'remove');
+            return true;
+        }
+        return false;
+    }
+
+    function requiredAttrSet(name, array, operation) {
+        var years = getArray('perspective_year');
+        for (var i = 0; i < array.length; i++) {
+            var item = document.getElementById(name + '_' + years[i]);
+            if (operation == 'remove') {
+                $("#" + name + "_" + years[i]).removeAttr("required");
+            }
+            else if (operation == 'add') {
+                $("#" + name + "_" + years[i]).prop("required", true);
+            }
+        }
+    }
+
+    function checkIsEmptyColumns(array) {
+        if (array.filter(item => item === '').length == array.length) {
+            return true;
+        }
+        return false;
+    }
+
+    function getArray(name) {
+        var array = [];
+        var list = document.getElementsByName(name);
+        if (name == 'perspective_year') {
+            list = list[0];
+        }
+        for (var i = 0; i < list.length; i++) {
+            array.push(list[i].value);
+        }
+        return array;
+    }
+</script>

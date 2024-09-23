@@ -1,0 +1,108 @@
+﻿@model DataBase.Models.DictionaryTables.DataBaseDictionaryTablesModel.Dict_IzolTypes
+@{
+	string btn_disable = string.Empty;
+}
+@if (Model.Id == 0)
+{
+	btn_disable = "disabled";
+}
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h3 class="modal-title" id="editDataLabel">Тепловая изоляция тепловых сетей</h3>
+			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="RefreshTable()"></button>
+			</div>
+			<div class="modal-body">
+			<form class="needs-validation" novalidate asp-controller="IzolTypes" asp-action="IzolTypes_Save" asp-antiforgery="true" asp-area="DictionaryTables" id="IzolTypes_form"
+				data-ajax-failure="onFailedFormTZ" data-ajax-success="onSuccessFormDiameters" data-ajax-begin="onBeginFormTZ" data-ajax="true" data-ajax-method="POST">
+				<input type="hidden" name="Id" value="@Model.Id" id="izoltypes_id" />
+				<div class="data-block static-block data-params">
+					<div class="data-row">
+						<div class="data-item">
+							<label class="data-label">Уникальный номер тепловой изоляции</label>
+							<select class="selectpicker data-value xxl-stretch" data-live-search="true" id="paramNumberIzol" placeholder="Выберите УНОМ тепловой изоляции">
+								@foreach (var izol in ViewBag.Dict_IzolTypesist)
+								{
+									if(izol.Id == Model.Id)
+									{
+										<option value="@izol.Id" selected>@izol.Id (@izol.izol_type_name)</option>
+									}
+									else
+									{
+										<option value="@izol.Id">@izol.Id (@izol.izol_type_name)</option>
+									}
+								}
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="data-block">
+					<div class="data-row">
+						<div class="data-item">
+							<label class="data-label">Наименование типа изоляции</label>
+							<input type="text" class="data-value xxl-stretch" required name="izol_type_name" value="@Model.izol_type_name" />
+							<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Это поле должно быть заполнено"></a>
+						</div>
+					</div>
+					<div class="data-row">
+						<div class="data-item">
+							<label class="data-label">Коэффициент теплопроводности (λ)</label>
+							<input type="text" class="data-value smx-fix" name="ht_conduct_coef" required value="@Model.ht_conduct_coef" />
+							<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Это поле должно быть заполнено"></a>
+							<span class="data-unit">Вт / (м · °С)</span>
+						</div>
+						<div class="data-item">
+							<label class="data-label">Коэффициент теплопередачи (К)</label>
+							<input type="text" class="data-value smx-fix" name="ht_trasfer_coef" required value="@Model.ht_trasfer_coef" />
+							<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Это поле должно быть заполнено"></a>
+							<span class="data-unit">Вт / (м<sup>2</sup> · °С)</span>
+						</div>
+					</div>
+				</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="bttn" data-bs-dismiss="modal">Отмена</button>
+				<button type="submit" class="bttn bttn-color" form="IzolTypes_form">Сохранить</button>
+			<button type="button" class="bttn bttn-color" onclick="OpenIzolTypes(@Model.Id, 'copy')" @btn_disable>Создать копию</button>
+			</div>
+		</div>
+	</div>
+
+
+<script type="text/javascript" src="@Url.Content("~/hss/js/popup_common_scripts.js")"></script>
+<script>
+
+	$(document).ready(function () {
+		document.querySelector('#paramNumberIzol').addEventListener('change', (event) => {
+			OpenIzolTypes($("#paramNumberIzol").val());
+		});
+	});
+
+	function RefreshTable() {
+		if ($("#refresh_izolTypes_table").val() === "1") {
+			$("#refresh_izolTypes_table").val(0);
+			GetListOnPage();
+		}
+	}
+
+	var onSuccessFormDiameters = function (xhr) {
+		if (xhr.success == true) {
+			showMessage('Данные сохранены.', 'modal', 'success');
+			$("#refresh_izolTypes_table").val(1);
+			if(xhr.is_new == true)
+			{
+				OpenIzolTypes(xhr.izol_id);
+			}
+		}
+		else {
+			if (xhr.message === undefined) {
+				xhr.message = 'Ошибка сохранения данных'
+			}
+			showMessage(xhr.message, 'modal', 'fault');
+		}
+		hidePreloader();
+	};
+
+
+</script>

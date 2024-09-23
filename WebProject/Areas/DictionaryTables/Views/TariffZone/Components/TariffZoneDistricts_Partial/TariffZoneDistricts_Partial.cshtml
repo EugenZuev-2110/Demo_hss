@@ -1,0 +1,33 @@
+﻿@model WebProject.Areas.DictionaryTables.Models.TariffZoneDistrictViewModal
+
+<div class="data-block border-block">
+	<div class="data-row">
+		<div class="data-item">
+			<label class="data-label">Район (поселение)</label>
+			<select class="selectpicker data-value lg-stretch" data-live-search="true" placeholder="Выберите..." multiple="true">
+				@foreach (var distr in ViewBag.Districts)
+				{
+					<option value="@distr.distr_id">@distr.distr_name</option>
+				}
+			</select>
+		</div>
+
+	</div>
+	<table id="TZdistrictsTable" class="display compact table-inp-stretch" style="width:100%">
+		<thead>
+			<tr>
+				<th>Округ</th>
+				<th>Районы</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach(var distr in Model.TariffZoneDistrictList )
+			{
+				<tr>
+					<td>@distr.region</td>
+					<td>@distr.territories</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>

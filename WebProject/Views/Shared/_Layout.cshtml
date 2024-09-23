@@ -1,0 +1,83 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using Microsoft.AspNetCore.Identity
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/Content/Site.css">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    @*<link rel="stylesheet" href="~/css/datatables.css">*@
+    <link rel="stylesheet" href="~/Content/bootstrap.css">
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/autofill/2.4.0/css/autoFill.dataTables.min.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.2.3/css/buttons.dataTables.css"/>
+@*<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/colreorder/1.5.6/css/colReorder.dataTables.css"/>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/datetime/1.1.2/css/dataTables.dateTime.css"/>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/fixedcolumns/4.1.0/css/fixedColumns.dataTables.css"/>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/fixedheader/3.2.4/css/fixedHeader.dataTables.css"/>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/keytable/2.7.0/css/keyTable.dataTables.css"/>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.3.0/css/responsive.dataTables.css"/>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/rowgroup/1.2.0/css/rowGroup.dataTables.css"/>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/rowreorder/1.2.8/css/rowReorder.dataTables.css"/>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/scroller/2.0.7/css/scroller.dataTables.css"/>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/searchbuilder/1.3.4/css/searchBuilder.dataTables.css"/>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/searchpanes/2.0.2/css/searchPanes.dataTables.css"/>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.4.0/css/select.dataTables.css"/>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/staterestore/1.1.1/css/stateRestore.dataTables.css"/>*@
+
+    <link rel="stylesheet" type="text/css" href="~/Content/bootstrap-select.css" />
+    
+    <partial name="_ValidationScriptsPartial" />
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li id="unoms"><a asp-controller="Home" asp-action="Index" asp-area="">Главная</a></li>
+                    <li id="items"><a asp-controller="Home" asp-action="Items" asp-area="">ПУНКТЫ</a></li>
+                    <li id="reports"><a asp-controller="UnomReports" asp-action="Reports" asp-area="">ОТЧЁТЫ</a></li>
+                    <li id="events"><a asp-controller="Home" asp-action="Events" asp-area="Events">Мероприятия</a></li>
+                    <li id="ret"><a asp-controller="Home" asp-action="MainRET" asp-area="RET">РЭТ</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#!" id="user-name"></a>
+                    </li>
+                    <li><a href="javascript:document.getElementById('logoutForm').submit()">Выйти</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year</p>
+        </footer>
+    </div>
+
+    @RenderSection("modalsection", required: false)
+    @RenderSection("scripts", required: false)
+    @RenderSection("pageJs", required: false)
+
+    
+
+    <script type="text/javascript">
+
+        $.ajax({
+            type: 'POST',
+            url: '@Html.Raw(Url.Action("UserName", "Home"))',
+            dataType: 'json'
+        }).done(function (result) {
+            $("#user-name").html(result.userName);
+        });
+
+            //$("#user-name").html("Виктор");
+    </script>
+
+</body>
+</html>

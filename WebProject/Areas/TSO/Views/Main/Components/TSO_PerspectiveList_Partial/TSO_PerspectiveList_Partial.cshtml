@@ -1,0 +1,79 @@
+﻿@model WebProject.Areas.TSO.Models.TSOPerspectiveViewModel
+@{
+    Layout = null;
+	string disable = ""; int ds = @Model.data_status - 1;
+}
+
+@if (Model.Id == 0)
+{
+	disable = "disabled";
+}
+
+<div class="data-row">
+	<h4>Параметры ТСО по годам расчетного периода схемы</h4>
+	<button class="bttn bttn-square bttn-icon-save ms-auto" type="submit" title="Сохранить" form="tso_perspective_form" id="btnSubmitTsoPersp" @disable></button>
+</div>
+<form asp-controller="Main" asp-action="TSO_Save_Perspective" asp-area="TSO" asp-antiforgery="true" data-ajax-begin="onBeginForm"
+	  data-ajax-failure="onFailedForm" data-ajax-success="onSuccessForm" data-ajax="true" data-ajax-method="POST" id="tso_perspective_form">
+	<input type="hidden" name="Id" value="@Model.Id" id="perspective_tso_id_input" />
+	<input type="hidden" name="data_status" value="@Model.data_status"/>
+@*<table id="yearParamTable" class="display nowrap compact table-inp-stretch" style="width:100%">*@
+<table id="yearParamTable" class="table-inp-stretch" style="width:100%; white-space: nowrap;">
+	<thead>
+		<tr>
+			<th>Год схемы</th>
+			<th>Статус организации</th>
+			<th>Тип организации</th>
+			<th>Тарифные зоны</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var tso_perspective in Model.TSOPerspectiveList)
+		{
+			<tr>
+				<td>@tso_perspective.perspective_year_dt</td>
+				<td>
+					<input type="hidden" name="perspective_year" value="@tso_perspective.perspective_year">
+					<input type="hidden" name="org_status_id" value="@tso_perspective.org_status_id" id="org_status_id_@(tso_perspective.perspective_year)">
+					<select class="data-value selectpicker" name="org_status_select" id="org_status_select_@(tso_perspective.perspective_year)" onchange="ChangeSelectValuePerspective(event, @tso_perspective.perspective_year, 'org_status')" data-org_status="@tso_perspective.perspective_year" data-width="100%">
+						@foreach (var statuses in ViewBag.OrgStatusesList)
+						{
+							if (statuses.Id == tso_perspective.org_status_id)
+							{
+								<option value="@statuses.Id" selected>@statuses.org_status_name</option>
+							}
+							if (statuses.Id != tso_perspective.org_status_id)
+							{
+								<option value="@statuses.Id">@statuses.org_status_name</option>
+							}
+						}
+					</select>
+				</td>
+				<td>
+					<input type="hidden" name="tso_type_id" value="@tso_perspective.tso_type_id" id="tso_type_id_@(tso_perspective.perspective_year)">
+					<select class="data-value selectpicker" name="tso_type_select" id="tso_type_select_@(tso_perspective.perspective_year)" onchange="ChangeSelectValuePerspective(event, @tso_perspective.perspective_year, 'tso_type')" data-tso_type="@tso_perspective.perspective_year" data-width="100%">
+						@if (tso_perspective.tso_type_id == null)
+						{
+							<option value="" selected disabled>Выберите</option>
+						}
+						@foreach (var types in ViewBag.TSOTypesList)
+						{
+							if (types.Id == tso_perspective.tso_type_id)
+							{
+								<option value="@types.Id" selected>@types.org_type_name</option>
+							}
+							if (types.Id != tso_perspective.tso_type_id)
+							{
+								<option value="@types.Id">@types.org_type_name</option>
+							}
+						}
+					</select>
+				</td>
+				<td>
+					@tso_perspective.unom_tz_list
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>
+</form>

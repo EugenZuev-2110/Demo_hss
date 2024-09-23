@@ -1,0 +1,346 @@
+﻿@model WebProject.Areas.TSO.Models.TZElectroEnergyCostsViewModel
+@{
+	Layout = null; string disable = "";
+}
+@if (Model.tz_id == 0)
+{
+	disable = "disabled";
+}
+<form asp-controller="CostsAndPrices" asp-action="TZElectroEnergyCosts_Save" asp-antiforgery="true" asp-area="TSO"
+	  data-ajax-failure="onFailedFormTZ" data-ajax-success="onSuccessFormTZ" data-ajax-begin="onBeginFormTZ" data-ajax="true" data-ajax-method="POST">
+	<input type="hidden" name="tz_id" value="@Model.tz_id" />
+	<input type="hidden" name="data_status" value="@Model.data_status" />
+	<input type="hidden" name="perspective_year" value="@Model.perspective_year" />
+	<table class="table-inp-stretch" style="width:100%;">
+		<thead>
+			<tr>
+				<th rowspan="2"></th>
+				<th colspan="3">Факт</th>
+				<th colspan="3">План</th>
+			</tr>
+			<tr>
+				<th>I полугодие</th>
+				<th>II полугодие</th>
+				<th>Год</th>
+				<th>I полугодие</th>
+				<th>II полугодие</th>
+				<th>Год</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>Всего затраты, <span class="data-unit">тыс. руб. без НДС</span></td>
+				<td><input type="text" asp-for="costs_all_el_energy_fact_1" class="data-value" disabled></td>
+				<td><input type="text" asp-for="costs_all_el_energy_fact_2" class="data-value" disabled></td>
+				<td><input type="text" asp-for="costs_all_el_energy_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="costs_all_el_energy_plan_1" class="data-value" disabled></td>
+				<td><input type="text" asp-for="costs_all_el_energy_plan_2" class="data-value" disabled></td>
+				<td><input type="text" asp-for="costs_all_el_energy_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- на покупку электрической энергии</td>
+				<td><input type="text" asp-for="costs_electricity_fact_1" class="data-value" disabled></td>
+				<td><input type="text" asp-for="costs_electricity_fact_2" class="data-value" disabled></td>
+				<td><input type="text" asp-for="costs_electricity_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="costs_electricity_plan_1" class="data-value" disabled></td>
+				<td><input type="text" asp-for="costs_electricity_plan_2" class="data-value" disabled></td>
+				<td><input type="text" asp-for="costs_electricity_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- на покупку мощности</td>
+				<td><input type="text" asp-for="costs_el_power_fact_1" class="data-value" disabled></td>
+				<td><input type="text" asp-for="costs_el_power_fact_2" class="data-value" disabled></td>
+				<td><input type="text" asp-for="costs_el_power_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="costs_el_power_plan_1" class="data-value" disabled></td>
+				<td><input type="text" asp-for="costs_el_power_plan_2" class="data-value" disabled></td>
+				<td><input type="text" asp-for="costs_el_power_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>Средняя цена (тариф) покупной электроэнергии с учетом мощности, <span class="data-unit">руб./кВт.ч</span></td>
+				<td><input type="text" asp-for="avg_price_all_el_energy_fact_1" class="data-value" disabled></td>
+				<td><input type="text" asp-for="avg_price_all_el_energy_fact_2" class="data-value" disabled></td>
+				<td><input type="text" asp-for="avg_price_all_el_energy_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="avg_price_all_el_energy_plan_1" class="data-value" disabled></td>
+				<td><input type="text" asp-for="avg_price_all_el_energy_plan_2" class="data-value" disabled></td>
+				<td><input type="text" asp-for="avg_price_all_el_energy_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<th colspan="7">Электроэнергия на технологические и хозяйственные нужды</th>
+			</tr>
+			<tr>
+				<td>Объем покупной электрической энергии на технологические цели, <span class="data-unit">тыс. кВт.ч</span></td>
+				<td><input type="text" asp-for="volume_all_electricity_techneed_fact_1" class="data-value" disabled></td>
+				<td><input type="text" asp-for="volume_all_electricity_techneed_fact_2" class="data-value" disabled></td>
+				<td><input type="text" asp-for="volume_all_electricity_techneed_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="volume_all_electricity_techneed_plan_1" class="data-value" disabled></td>
+				<td><input type="text" asp-for="volume_all_electricity_techneed_plan_2" class="data-value" disabled></td>
+				<td><input type="text" asp-for="volume_all_electricity_techneed_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- низкое напряжение (НН) 0,4 кВ и ниже</td>
+				<td><input type="text" asp-for="volume_low_voltage_electricity_techneed_fact_1" class="data-value double" data-double="electro_energy" data-voltage="low" data-type-energy="electricity" data-type-need="techneed"></td>
+				<td><input type="text" asp-for="volume_low_voltage_electricity_techneed_fact_2" class="data-value double" data-double="electro_energy" data-voltage="low" data-type-energy="electricity" data-type-need="techneed"></td>
+				<td><input type="text" asp-for="volume_low_voltage_electricity_techneed_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="volume_low_voltage_electricity_techneed_plan_1" class="data-value double" data-double="electro_energy" data-voltage="low" data-type-energy="electricity" data-type-need="techneed"></td>
+				<td><input type="text" asp-for="volume_low_voltage_electricity_techneed_plan_2" class="data-value double" data-double="electro_energy" data-voltage="low" data-type-energy="electricity" data-type-need="techneed"></td>
+				<td><input type="text" asp-for="volume_low_voltage_electricity_techneed_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- среднее напряжение (СН-2) 1 - 20 кВ</td>
+				<td><input type="text" asp-for="volume_medium1_voltage_electricity_techneed_fact_1" class="data-value double" data-double="electro_energy" data-voltage="medium1" data-type-energy="electricity" data-type-need="techneed"></td>
+				<td><input type="text" asp-for="volume_medium1_voltage_electricity_techneed_fact_2" class="data-value double" data-double="electro_energy" data-voltage="medium1" data-type-energy="electricity" data-type-need="techneed"></td>
+				<td><input type="text" asp-for="volume_medium1_voltage_electricity_techneed_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="volume_medium1_voltage_electricity_techneed_plan_1" class="data-value double" data-double="electro_energy" data-voltage="medium1" data-type-energy="electricity" data-type-need="techneed"></td>
+				<td><input type="text" asp-for="volume_medium1_voltage_electricity_techneed_plan_2" class="data-value double" data-double="electro_energy" data-voltage="medium1" data-type-energy="electricity" data-type-need="techneed"></td>
+				<td><input type="text" asp-for="volume_medium1_voltage_electricity_techneed_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- среднее напряжение (СН-1) 35 кВ</td>
+				<td><input type="text" asp-for="volume_medium2_voltage_electricity_techneed_fact_1" class="data-value double" data-double="electro_energy" data-voltage="medium2" data-type-energy="electricity" data-type-need="techneed"></td>
+				<td><input type="text" asp-for="volume_medium2_voltage_electricity_techneed_fact_2" class="data-value double" data-double="electro_energy" data-voltage="medium2" data-type-energy="electricity" data-type-need="techneed"></td>
+				<td><input type="text" asp-for="volume_medium2_voltage_electricity_techneed_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="volume_medium2_voltage_electricity_techneed_plan_1" class="data-value double" data-double="electro_energy" data-voltage="medium2" data-type-energy="electricity" data-type-need="techneed"></td>
+				<td><input type="text" asp-for="volume_medium2_voltage_electricity_techneed_plan_2" class="data-value double" data-double="electro_energy" data-voltage="medium2" data-type-energy="electricity" data-type-need="techneed"></td>
+				<td><input type="text" asp-for="volume_medium2_voltage_electricity_techneed_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- высокое напряжение (ВН) 110 кВ и выше</td>
+				<td><input type="text" asp-for="volume_high_voltage_electricity_techneed_fact_1" class="data-value double" data-double="electro_energy" data-voltage="high" data-type-energy="electricity" data-type-need="techneed"></td>
+				<td><input type="text" asp-for="volume_high_voltage_electricity_techneed_fact_2" class="data-value double" data-double="electro_energy" data-voltage="high" data-type-energy="electricity" data-type-need="techneed"></td>
+				<td><input type="text" asp-for="volume_high_voltage_electricity_techneed_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="volume_high_voltage_electricity_techneed_plan_1" class="data-value double" data-double="electro_energy" data-voltage="high" data-type-energy="electricity" data-type-need="techneed"></td>
+				<td><input type="text" asp-for="volume_high_voltage_electricity_techneed_plan_2" class="data-value double" data-double="electro_energy" data-voltage="high" data-type-energy="electricity" data-type-need="techneed"></td>
+				<td><input type="text" asp-for="volume_high_voltage_electricity_techneed_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>Объем покупной электрической энергии на хозяйственные нужды, <span class="data-unit">тыс. кВт.ч</span></td>
+				<td><input type="text" asp-for="volume_all_electricity_houseneed_fact_1" class="data-value" disabled></td>
+				<td><input type="text" asp-for="volume_all_electricity_houseneed_fact_2" class="data-value" disabled></td>
+				<td><input type="text" asp-for="volume_all_electricity_houseneed_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="volume_all_electricity_houseneed_plan_1" class="data-value" disabled></td>
+				<td><input type="text" asp-for="volume_all_electricity_houseneed_plan_2" class="data-value" disabled></td>
+				<td><input type="text" asp-for="volume_all_electricity_houseneed_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- низкое напряжение (НН) 0,4 кВ и ниже</td>
+				<td><input type="text" asp-for="volume_low_voltage_electricity_houseneed_fact_1" class="data-value double" data-double="electro_energy" data-voltage="low" data-type-energy="electricity" data-type-need="houseneed"></td>
+				<td><input type="text" asp-for="volume_low_voltage_electricity_houseneed_fact_2" class="data-value double" data-double="electro_energy" data-voltage="low" data-type-energy="electricity" data-type-need="houseneed"></td>
+				<td><input type="text" asp-for="volume_low_voltage_electricity_houseneed_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="volume_low_voltage_electricity_houseneed_plan_1" class="data-value double" data-double="electro_energy" data-voltage="low" data-type-energy="electricity" data-type-need="houseneed"></td>
+				<td><input type="text" asp-for="volume_low_voltage_electricity_houseneed_plan_2" class="data-value double" data-double="electro_energy" data-voltage="low" data-type-energy="electricity" data-type-need="houseneed"></td>
+				<td><input type="text" asp-for="volume_low_voltage_electricity_houseneed_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- среднее напряжение (СН-2) 1 - 20 кВ</td>
+				<td><input type="text" asp-for="volume_medium1_voltage_electricity_houseneed_fact_1" class="data-value double" data-double="electro_energy" data-voltage="medium1" data-type-energy="electricity" data-type-need="houseneed"></td>
+				<td><input type="text" asp-for="volume_medium1_voltage_electricity_houseneed_fact_2" class="data-value double" data-double="electro_energy" data-voltage="medium1" data-type-energy="electricity" data-type-need="houseneed"></td>
+				<td><input type="text" asp-for="volume_medium1_voltage_electricity_houseneed_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="volume_medium1_voltage_electricity_houseneed_plan_1" class="data-value double" data-double="electro_energy" data-voltage="medium1" data-type-energy="electricity" data-type-need="houseneed"></td>
+				<td><input type="text" asp-for="volume_medium1_voltage_electricity_houseneed_plan_2" class="data-value double" data-double="electro_energy" data-voltage="medium1" data-type-energy="electricity" data-type-need="houseneed"></td>
+				<td><input type="text" asp-for="volume_medium1_voltage_electricity_houseneed_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- среднее напряжение (СН-1) 35 кВ</td>
+				<td><input type="text" asp-for="volume_medium2_voltage_electricity_houseneed_fact_1" class="data-value double" data-double="electro_energy" data-voltage="medium2" data-type-energy="electricity" data-type-need="houseneed"></td>
+				<td><input type="text" asp-for="volume_medium2_voltage_electricity_houseneed_fact_2" class="data-value double" data-double="electro_energy" data-voltage="medium2" data-type-energy="electricity" data-type-need="houseneed"></td>
+				<td><input type="text" asp-for="volume_medium2_voltage_electricity_houseneed_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="volume_medium2_voltage_electricity_houseneed_plan_1" class="data-value double" data-double="electro_energy" data-voltage="medium2" data-type-energy="electricity" data-type-need="houseneed"></td>
+				<td><input type="text" asp-for="volume_medium2_voltage_electricity_houseneed_plan_2" class="data-value double" data-double="electro_energy" data-voltage="medium2" data-type-energy="electricity" data-type-need="houseneed"></td>
+				<td><input type="text" asp-for="volume_medium2_voltage_electricity_houseneed_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- высокое напряжение (ВН) 110 кВ и выше</td>
+				<td><input type="text" asp-for="volume_high_voltage_electricity_houseneed_fact_1" class="data-value double" data-double="electro_energy" data-voltage="high" data-type-energy="electricity" data-type-need="houseneed"></td>
+				<td><input type="text" asp-for="volume_high_voltage_electricity_houseneed_fact_2" class="data-value double" data-double="electro_energy" data-voltage="high" data-type-energy="electricity" data-type-need="houseneed"></td>
+				<td><input type="text" asp-for="volume_high_voltage_electricity_houseneed_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="volume_high_voltage_electricity_houseneed_plan_1" class="data-value double" data-double="electro_energy" data-voltage="high" data-type-energy="electricity" data-type-need="houseneed"></td>
+				<td><input type="text" asp-for="volume_high_voltage_electricity_houseneed_plan_2" class="data-value double" data-double="electro_energy" data-voltage="high" data-type-energy="electricity" data-type-need="houseneed"></td>
+				<td><input type="text" asp-for="volume_high_voltage_electricity_houseneed_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>Средняя цена (тариф) покупной электроэнергии, <span class="data-unit">руб./кВт.ч</span></td>
+				<td><input type="text" asp-for="avg_price_all_electricity_fact_1" class="data-value" disabled></td>
+				<td><input type="text" asp-for="avg_price_all_electricity_fact_2" class="data-value" disabled></td>
+				<td><input type="text" asp-for="avg_price_all_electricity_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="avg_price_all_electricity_plan_1" class="data-value" disabled></td>
+				<td><input type="text" asp-for="avg_price_all_electricity_plan_2" class="data-value" disabled></td>
+				<td><input type="text" asp-for="avg_price_all_electricity_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- низкое напряжение (НН) 0,4 кВ и ниже</td>
+				<td><input type="text" asp-for="price_low_voltage_electricity_fact_1" class="data-value double" data-double="electro_energy" data-voltage="low" data-type-energy="electricity"></td>
+				<td><input type="text" asp-for="price_low_voltage_electricity_fact_2" class="data-value double" data-double="electro_energy" data-voltage="low" data-type-energy="electricity"></td>
+				<td><input type="text" asp-for="price_low_voltage_electricity_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="price_low_voltage_electricity_plan_1" class="data-value double" data-double="electro_energy" data-voltage="low" data-type-energy="electricity"></td>
+				<td><input type="text" asp-for="price_low_voltage_electricity_plan_2" class="data-value double" data-double="electro_energy" data-voltage="low" data-type-energy="electricity"></td>
+				<td><input type="text" asp-for="price_low_voltage_electricity_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- среднее напряжение (СН-2) 1 - 20 кВ</td>
+				<td><input type="text" asp-for="price_medium1_voltage_electricity_fact_1" class="data-value double" data-double="electro_energy" data-voltage="medium1" data-type-energy="electricity"></td>
+				<td><input type="text" asp-for="price_medium1_voltage_electricity_fact_2" class="data-value double" data-double="electro_energy" data-voltage="medium1" data-type-energy="electricity"></td>
+				<td><input type="text" asp-for="price_medium1_voltage_electricity_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="price_medium1_voltage_electricity_plan_1" class="data-value double" data-double="electro_energy" data-voltage="medium1" data-type-energy="electricity"></td>
+				<td><input type="text" asp-for="price_medium1_voltage_electricity_plan_2" class="data-value double" data-double="electro_energy" data-voltage="medium1" data-type-energy="electricity"></td>
+				<td><input type="text" asp-for="price_medium1_voltage_electricity_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- среднее напряжение (СН-1) 35 кВ</td>
+				<td><input type="text" asp-for="price_medium2_voltage_electricity_fact_1" class="data-value double" data-double="electro_energy" data-voltage="medium2" data-type-energy="electricity"></td>
+				<td><input type="text" asp-for="price_medium2_voltage_electricity_fact_2" class="data-value double" data-double="electro_energy" data-voltage="medium2" data-type-energy="electricity"></td>
+				<td><input type="text" asp-for="price_medium2_voltage_electricity_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="price_medium2_voltage_electricity_plan_1" class="data-value double" data-double="electro_energy" data-voltage="medium2" data-type-energy="electricity"></td>
+				<td><input type="text" asp-for="price_medium2_voltage_electricity_plan_2" class="data-value double" data-double="electro_energy" data-voltage="medium2" data-type-energy="electricity"></td>
+				<td><input type="text" asp-for="price_medium2_voltage_electricity_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- высокое напряжение (ВН) 110 кВ и выше</td>
+				<td><input type="text" asp-for="price_high_voltage_electricity_fact_1" class="data-value double" data-double="electro_energy" data-voltage="high" data-type-energy="electricity"></td>
+				<td><input type="text" asp-for="price_high_voltage_electricity_fact_2" class="data-value double" data-double="electro_energy" data-voltage="high" data-type-energy="electricity"></td>
+				<td><input type="text" asp-for="price_high_voltage_electricity_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="price_high_voltage_electricity_plan_1" class="data-value double" data-double="electro_energy" data-voltage="high" data-type-energy="electricity"></td>
+				<td><input type="text" asp-for="price_high_voltage_electricity_plan_2" class="data-value double" data-double="electro_energy" data-voltage="high" data-type-energy="electricity"></td>
+				<td><input type="text" asp-for="price_high_voltage_electricity_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<th colspan="7">Электрическая мощность на технологические и хозяйственные нужды</th>
+			</tr>
+			<tr>
+				<td>Заявленный объем электрической мощности на технологические цели, <span class="data-unit">МВт</span></td>
+				<td><input type="text" asp-for="volume_all_el_power_techneed_fact_1" class="data-value" disabled></td>
+				<td><input type="text" asp-for="volume_all_el_power_techneed_fact_2" class="data-value" disabled></td>
+				<td><input type="text" asp-for="volume_all_el_power_techneed_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="volume_all_el_power_techneed_plan_1" class="data-value" disabled></td>
+				<td><input type="text" asp-for="volume_all_el_power_techneed_plan_2" class="data-value" disabled></td>
+				<td><input type="text" asp-for="volume_all_el_power_techneed_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- низкое напряжение (НН) 0,4 кВ и ниже</td>
+				<td><input type="text" asp-for="volume_low_voltage_el_power_techneed_fact_1" class="data-value double" data-double="electro_energy" data-voltage="low" data-type-energy="el_power" data-type-need="techneed"></td>
+				<td><input type="text" asp-for="volume_low_voltage_el_power_techneed_fact_2" class="data-value double" data-double="electro_energy" data-voltage="low" data-type-energy="el_power" data-type-need="techneed"></td>
+				<td><input type="text" asp-for="volume_low_voltage_el_power_techneed_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="volume_low_voltage_el_power_techneed_plan_1" class="data-value double" data-double="electro_energy" data-voltage="low" data-type-energy="el_power" data-type-need="techneed"></td>
+				<td><input type="text" asp-for="volume_low_voltage_el_power_techneed_plan_2" class="data-value double" data-double="electro_energy" data-voltage="low" data-type-energy="el_power" data-type-need="techneed"></td>
+				<td><input type="text" asp-for="volume_low_voltage_el_power_techneed_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- среднее напряжение (СН-2) 1 - 20 кВ</td>
+				<td><input type="text" asp-for="volume_medium1_voltage_el_power_techneed_fact_1" class="data-value double" data-double="electro_energy" data-voltage="medium1" data-type-energy="el_power" data-type-need="techneed"></td>
+				<td><input type="text" asp-for="volume_medium1_voltage_el_power_techneed_fact_2" class="data-value double" data-double="electro_energy" data-voltage="medium1" data-type-energy="el_power" data-type-need="techneed"></td>
+				<td><input type="text" asp-for="volume_medium1_voltage_el_power_techneed_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="volume_medium1_voltage_el_power_techneed_plan_1" class="data-value double" data-double="electro_energy" data-voltage="medium1" data-type-energy="el_power" data-type-need="techneed"></td>
+				<td><input type="text" asp-for="volume_medium1_voltage_el_power_techneed_plan_2" class="data-value double" data-double="electro_energy" data-voltage="medium1" data-type-energy="el_power" data-type-need="techneed"></td>
+				<td><input type="text" asp-for="volume_medium1_voltage_el_power_techneed_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- среднее напряжение (СН-1) 35 кВ</td>
+				<td><input type="text" asp-for="volume_medium2_voltage_el_power_techneed_fact_1" class="data-value double" data-double="electro_energy" data-voltage="medium2" data-type-energy="el_power" data-type-need="techneed"></td>
+				<td><input type="text" asp-for="volume_medium2_voltage_el_power_techneed_fact_2" class="data-value double" data-double="electro_energy" data-voltage="medium2" data-type-energy="el_power" data-type-need="techneed"></td>
+				<td><input type="text" asp-for="volume_medium2_voltage_el_power_techneed_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="volume_medium2_voltage_el_power_techneed_plan_1" class="data-value double" data-double="electro_energy" data-voltage="medium2" data-type-energy="el_power" data-type-need="techneed"></td>
+				<td><input type="text" asp-for="volume_medium2_voltage_el_power_techneed_plan_2" class="data-value double" data-double="electro_energy" data-voltage="medium2" data-type-energy="el_power" data-type-need="techneed"></td>
+				<td><input type="text" asp-for="volume_medium2_voltage_el_power_techneed_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- высокое напряжение (ВН) 110 кВ и выше</td>
+				<td><input type="text" asp-for="volume_high_voltage_el_power_techneed_fact_1" class="data-value double" data-double="electro_energy" data-voltage="high" data-type-energy="el_power" data-type-need="techneed"></td>
+				<td><input type="text" asp-for="volume_high_voltage_el_power_techneed_fact_2" class="data-value double" data-double="electro_energy" data-voltage="high" data-type-energy="el_power" data-type-need="techneed"></td>
+				<td><input type="text" asp-for="volume_high_voltage_el_power_techneed_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="volume_high_voltage_el_power_techneed_plan_1" class="data-value double" data-double="electro_energy" data-voltage="high" data-type-energy="el_power" data-type-need="techneed"></td>
+				<td><input type="text" asp-for="volume_high_voltage_el_power_techneed_plan_2" class="data-value double" data-double="electro_energy" data-voltage="high" data-type-energy="el_power" data-type-need="techneed"></td>
+				<td><input type="text" asp-for="volume_high_voltage_el_power_techneed_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>Заявленный объем электрической мощности на хозяйственные нужды, <span class="data-unit">МВт</span></td>
+				<td><input type="text" asp-for="volume_all_el_power_houseneed_fact_1" class="data-value" disabled></td>
+				<td><input type="text" asp-for="volume_all_el_power_houseneed_fact_2" class="data-value" disabled></td>
+				<td><input type="text" asp-for="volume_all_el_power_houseneed_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="volume_all_el_power_houseneed_plan_1" class="data-value" disabled></td>
+				<td><input type="text" asp-for="volume_all_el_power_houseneed_plan_2" class="data-value" disabled></td>
+				<td><input type="text" asp-for="volume_all_el_power_houseneed_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- низкое напряжение (НН) 0,4 кВ и ниже</td>
+				<td><input type="text" asp-for="volume_low_voltage_el_power_houseneed_fact_1" class="data-value double" data-double="electro_energy" data-voltage="low" data-type-energy="el_power" data-type-need="houseneed"></td>
+				<td><input type="text" asp-for="volume_low_voltage_el_power_houseneed_fact_2" class="data-value double" data-double="electro_energy" data-voltage="low" data-type-energy="el_power" data-type-need="houseneed"></td>
+				<td><input type="text" asp-for="volume_low_voltage_el_power_houseneed_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="volume_low_voltage_el_power_houseneed_plan_1" class="data-value double" data-double="electro_energy" data-voltage="low" data-type-energy="el_power" data-type-need="houseneed"></td>
+				<td><input type="text" asp-for="volume_low_voltage_el_power_houseneed_plan_2" class="data-value double" data-double="electro_energy" data-voltage="low" data-type-energy="el_power" data-type-need="houseneed"></td>
+				<td><input type="text" asp-for="volume_low_voltage_el_power_houseneed_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- среднее напряжение (СН-2) 1 - 20 кВ</td>
+				<td><input type="text" asp-for="volume_medium1_voltage_el_power_houseneed_fact_1" class="data-value double" data-double="electro_energy" data-voltage="medium1" data-type-energy="el_power" data-type-need="houseneed"></td>
+				<td><input type="text" asp-for="volume_medium1_voltage_el_power_houseneed_fact_2" class="data-value double" data-double="electro_energy" data-voltage="medium1" data-type-energy="el_power" data-type-need="houseneed"></td>
+				<td><input type="text" asp-for="volume_medium1_voltage_el_power_houseneed_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="volume_medium1_voltage_el_power_houseneed_plan_1" class="data-value double" data-double="electro_energy" data-voltage="medium1" data-type-energy="el_power" data-type-need="houseneed"></td>
+				<td><input type="text" asp-for="volume_medium1_voltage_el_power_houseneed_plan_2" class="data-value double" data-double="electro_energy" data-voltage="medium1" data-type-energy="el_power" data-type-need="houseneed"></td>
+				<td><input type="text" asp-for="volume_medium1_voltage_el_power_houseneed_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- среднее напряжение (СН-1) 35 кВ</td>
+				<td><input type="text" asp-for="volume_medium2_voltage_el_power_houseneed_fact_1" class="data-value double" data-double="electro_energy" data-voltage="medium2" data-type-energy="el_power" data-type-need="houseneed"></td>
+				<td><input type="text" asp-for="volume_medium2_voltage_el_power_houseneed_fact_2" class="data-value double" data-double="electro_energy" data-voltage="medium2" data-type-energy="el_power" data-type-need="houseneed"></td>
+				<td><input type="text" asp-for="volume_medium2_voltage_el_power_houseneed_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="volume_medium2_voltage_el_power_houseneed_plan_1" class="data-value double" data-double="electro_energy" data-voltage="medium2" data-type-energy="el_power" data-type-need="houseneed"></td>
+				<td><input type="text" asp-for="volume_medium2_voltage_el_power_houseneed_plan_2" class="data-value double" data-double="electro_energy" data-voltage="medium2" data-type-energy="el_power" data-type-need="houseneed"></td>
+				<td><input type="text" asp-for="volume_medium2_voltage_el_power_houseneed_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- высокое напряжение (ВН) 110 кВ и выше</td>
+				<td><input type="text" asp-for="volume_high_voltage_el_power_houseneed_fact_1" class="data-value double" data-double="electro_energy" data-voltage="high" data-type-energy="el_power" data-type-need="houseneed"></td>
+				<td><input type="text" asp-for="volume_high_voltage_el_power_houseneed_fact_2" class="data-value double" data-double="electro_energy" data-voltage="high" data-type-energy="el_power" data-type-need="houseneed"></td>
+				<td><input type="text" asp-for="volume_high_voltage_el_power_houseneed_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="volume_high_voltage_el_power_houseneed_plan_1" class="data-value double" data-double="electro_energy" data-voltage="high" data-type-energy="el_power" data-type-need="houseneed"></td>
+				<td><input type="text" asp-for="volume_high_voltage_el_power_houseneed_plan_2" class="data-value double" data-double="electro_energy" data-voltage="high" data-type-energy="el_power" data-type-need="houseneed"></td>
+				<td><input type="text" asp-for="volume_high_voltage_el_power_houseneed_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>Средняя цена (тариф) электрической мощности, <span class="data-unit">руб./кВт х мес</span></td>
+				<td><input type="text" asp-for="@Model.avg_price_all_el_power_fact_1" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.avg_price_all_el_power_fact_2" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.avg_price_all_el_power_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.avg_price_all_el_power_plan_1" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.avg_price_all_el_power_plan_2" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.avg_price_all_el_power_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- низкое напряжение (НН) 0,4 кВ и ниже</td>
+				<td><input type="text" asp-for="@Model.price_low_voltage_el_power_fact_1" class="data-value double" data-double="electro_energy" data-voltage="low" data-type-energy="el_power"></td>
+				<td><input type="text" asp-for="@Model.price_low_voltage_el_power_fact_2" class="data-value double" data-double="electro_energy" data-voltage="low" data-type-energy="el_power"></td>
+				<td><input type="text" asp-for="@Model.price_low_voltage_el_power_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.price_low_voltage_el_power_plan_1" class="data-value double" data-double="electro_energy" data-voltage="low" data-type-energy="el_power"></td>
+				<td><input type="text" asp-for="@Model.price_low_voltage_el_power_plan_2" class="data-value double" data-double="electro_energy" data-voltage="low" data-type-energy="el_power"></td>
+				<td><input type="text" asp-for="@Model.price_low_voltage_el_power_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- среднее напряжение (СН-2) 1 - 20 кВ</td>
+				<td><input type="text" asp-for="@Model.price_medium1_voltage_el_power_fact_1" class="data-value double" data-double="electro_energy" data-voltage="medium1" data-type-energy="el_power"></td>
+				<td><input type="text" asp-for="@Model.price_medium1_voltage_el_power_fact_2" class="data-value double" data-double="electro_energy" data-voltage="medium1" data-type-energy="el_power"></td>
+				<td><input type="text" asp-for="@Model.price_medium1_voltage_el_power_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.price_medium1_voltage_el_power_plan_1" class="data-value double" data-double="electro_energy" data-voltage="medium1" data-type-energy="el_power"></td>
+				<td><input type="text" asp-for="@Model.price_medium1_voltage_el_power_plan_2" class="data-value double" data-double="electro_energy" data-voltage="medium1" data-type-energy="el_power"></td>
+				<td><input type="text" asp-for="@Model.price_medium1_voltage_el_power_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- среднее напряжение (СН-1) 35 кВ</td>
+				<td><input type="text" asp-for="@Model.price_medium2_voltage_el_power_fact_1" class="data-value double" data-double="electro_energy" data-voltage="medium2" data-type-energy="el_power"></td>
+				<td><input type="text" asp-for="@Model.price_medium2_voltage_el_power_fact_2" class="data-value double" data-double="electro_energy" data-voltage="medium2" data-type-energy="el_power"></td>
+				<td><input type="text" asp-for="@Model.price_medium2_voltage_el_power_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.price_medium2_voltage_el_power_plan_1" class="data-value double" data-double="electro_energy" data-voltage="medium2" data-type-energy="el_power"></td>
+				<td><input type="text" asp-for="@Model.price_medium2_voltage_el_power_plan_2" class="data-value double" data-double="electro_energy" data-voltage="medium2" data-type-energy="el_power"></td>
+				<td><input type="text" asp-for="@Model.price_medium2_voltage_el_power_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- высокое напряжение (ВН) 110 кВ и выше</td>
+				<td><input type="text" asp-for="@Model.price_high_voltage_el_power_fact_1" class="data-value double" data-double="electro_energy" data-voltage="high" data-type-energy="el_power"></td>
+				<td><input type="text" asp-for="@Model.price_high_voltage_el_power_fact_2" class="data-value double" data-double="electro_energy" data-voltage="high" data-type-energy="el_power"></td>
+				<td><input type="text" asp-for="@Model.price_high_voltage_el_power_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.price_high_voltage_el_power_plan_1" class="data-value double" data-double="electro_energy" data-voltage="high" data-type-energy="el_power"></td>
+				<td><input type="text" asp-for="@Model.price_high_voltage_el_power_plan_2" class="data-value double" data-double="electro_energy" data-voltage="high" data-type-energy="el_power"></td>
+				<td><input type="text" asp-for="@Model.price_high_voltage_el_power_plan_3" class="data-value" disabled></td>
+			</tr>
+		</tbody>
+	</table>
+	<button type="submit" class="bttn bttn-color ms-auto" @disable>Сохранить</button>
+</form>

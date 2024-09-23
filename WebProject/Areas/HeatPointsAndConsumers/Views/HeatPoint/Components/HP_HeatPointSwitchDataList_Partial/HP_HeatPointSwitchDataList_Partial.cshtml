@@ -1,0 +1,34 @@
+﻿@model List<WebProject.Areas.HeatPointsAndConsumers.Models.HP_SwitchableUnit>
+@{
+	Layout = null;
+}
+
+<h4>Перечень переключаемых тепловых пунктов</h4>
+<table id="hpSwitchTable" class="display compact table-clicked" style="width:100%">
+	<thead>
+		<tr>
+			<th>УНОМ ТП</th>
+			<th>Наименование</th>
+			<th>∑ Q<sup>РГ до переключения</sup>, <span class="data-unit">Гкал/ч</span></th>
+			<th>∑ Q<sup>РГ после переключения</sup>, <span class="data-unit">Гкал/ч</span></th>
+			<th>Тип</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var tz_list in Model)
+		{
+			<tr onclick="ShowHeatPointsByAllYears(@tz_list.hp_switchable_unom_id, '@tz_list.hp_switchable_name');">
+				<td>@tz_list.hp_switchable_unom_id</td>
+				<td>@tz_list.hp_switchable_name</td>
+				<td>@tz_list.hp_switchable_summary_before</td>
+				<td>@tz_list.hp_switchable_summary_after</td>
+				<td>@tz_list.hp_switchable_type</td>
+			</tr>
+		}
+	</tbody>
+</table>
+<div class="data-row">
+	<p class="data-item">Количество: <span class="mark-color" id="all_cnt_rows_popup"></span><span class="data-unit"> шт.</span></p>
+	<p class="data-item">∑ Q<sup>РГ</sup><sub>пер</sub>: <span class="mark-color" id="q_sum_before"></span><span class="data-unit"> Гкал/ч</span></p>
+</div>
+

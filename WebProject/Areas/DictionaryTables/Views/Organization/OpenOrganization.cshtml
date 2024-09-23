@@ -1,0 +1,349 @@
+﻿@model WebProject.Areas.DictionaryTables.Models.OrganizationOneDataViewModel
+
+@{
+	string btn_disable = string.Empty;
+}
+@if (Model.org_id == 0)
+{
+	btn_disable = "disabled";
+}
+
+<div class="modal-dialog modal-dialog-centered">
+	<div class="modal-content">
+		<div class="modal-header">
+			<h3 class="modal-title" id="editDataLabel">Организация</h3>
+			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="RefreshTable()"></button>
+		</div>
+		<div class="modal-body">
+			<form class="needs-validation" novalidate asp-controller="Organization" asp-action="Organization_Save" asp-antiforgery="true" asp-area="DictionaryTables" id="Organization_form"
+			data-ajax-failure="onFailedFormTZ" data-ajax-success="onSuccessFormOrganization" data-ajax-begin="onBeginFormTZ" data-ajax="true" data-ajax-method="POST">
+				<input type="hidden" name="data_status" value="@Model.data_status" id="org_data_status" />
+				<input type="hidden" name="unom_org" value="@Model.unom_org" id="unom_org" />
+				<input type="hidden" name="org_id" value="@Model.org_id" id="org_id" />
+			<div class="data-block static-block data-params">
+				<div class="data-row">
+					<div class="data-item">
+						<label class="data-label">Уникальный номер организации</label>
+							<select class="selectpicker data-value xxl-stretch" name="org_id" data-live-search="true" id="paramNumberOrg" placeholder="УНОМ организации">
+								@if (@Model.org_id == 0 || ViewBag.Action_for == "copy")
+								{
+									<option value="" selected disabled>При добавлении новоой организации, УНОМ генерируется автоматически</option>
+								}
+								@foreach (var org in ViewBag.OrgList)
+							{
+								if (org.org_id == Model.org_id)
+								{
+									<option value="@org.org_id" selected>@org.unom_org</option>
+								}
+								else
+								{
+									<option value="@org.org_id">@org.unom_org</option>
+								}
+							}
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="scroll-block-wrapper" style="max-height: 70vh;">
+				<div class="data-block scroll-block">
+					<div class="accordion data-block">
+						<div class="border-block">
+							<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel1" aria-expanded="false">Общие сведения</button>
+							<div id="panel1" class="accordion-collapse collapse">
+								<div class="accordion-body">
+									<div class="data-block">
+										<div class="data-row">
+											<label class="data-label lg-fix text-end">Статус:</label>
+											<label class="data-item">
+												<span class="data-label">действует</span>
+												@if(Model.org_id > 0)
+												{
+													string is_checked = string.Empty;
+													@if (Model.org_status_id == 1)
+													{
+														is_checked = "checked";
+													}
+														<input type="radio" name="org_status_id" class="data-check" value="1"  @is_checked>
+												}
+												else
+												{
+														<input type="radio" name="org_status_id" class="data-check" value="1" checked>
+												}
+											</label>
+											<label class="data-item">
+												<span class="data-label">ликвидирован</span>
+												@if (Model.org_id > 0)
+												{
+													string is_checked = string.Empty;
+													@if (Model.org_status_id == 2)
+													{
+														is_checked = "checked";
+													}
+														<input type="radio" name="org_status_id" class="data-check" value="2"  @is_checked>
+												}
+												else
+												{
+														<input type="radio" name="org_status_id" class="data-check" value="2" >
+												}
+											</label>
+										</div>
+										<div class="data-item">
+											<label class="data-label lg-fix">Наименование: <span class="sublabel">краткое</span></label>
+												<input type="text" class="data-value xxl-stretch" name="short_name" value="@Model.short_name" required>
+												<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Это поле должно быть заполнено"></a>
+
+										</div>
+										<div class="data-item">
+											<label class="data-label lg-fix"><span class="sublabel">полное</span></label>
+												<textarea class="data-value xxl-stretch" style="height: 62px;" name="full_name" required>@Model.full_name</textarea>
+												<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Это поле должно быть заполнено"></a>
+
+										</div>
+										<div class="data-row">
+											<div class="data-item">
+												<label class="data-label lg-fix">Тип по виду деятельности</label>
+													<select class="selectpicker data-value xl-stretch" name="activity_type_id" data-live-search="true" required placeholder="Выберите...">
+													@foreach (var type in ViewBag.OrgType)
+													{
+														if(@type.Id == Model.activity_type_id)
+														{
+															<option value="@type.Id" selected>@type.activity_type_name</option>
+														}
+														else
+														{
+															<option value="@type.Id">@type.activity_type_name</option>
+														}
+													}
+												</select>
+													<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Выберите значение из списка"></a>
+
+											</div>
+											<label class="data-item">
+												<span class="data-label">Организация является структурным подразделением</span>
+												@if (Model.org_id >= 0)
+												{
+													string is_checked = string.Empty;
+													@if (Model.org_struct == true)
+													{
+														is_checked = "checked";
+													}
+														<input type="checkbox" name="org_struct" class="data-check" value="@Model.org_struct" onchange="CB_Change(this)" @is_checked>
+												}
+												else
+												{
+														<input type="checkbox" name="org_struct" class="data-check" onchange="CB_Change(this)" value="@Model.org_struct">
+												}
+											</label>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class=" border-block">
+							<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel2" aria-expanded="false">Сведения о руководителе</button>
+							<div id="panel2" class="accordion-collapse collapse">
+								<div class="accordion-body">
+									<div class="data-block">
+										<div class="data-row">
+											<div class="data-item">
+												<label class="data-label sm-fix">Должность</label>
+													<input type="text" class="data-value xl-stretch" name="pozition_head_manager" value="@Model.pozition_head_manager">
+											</div>
+										</div>
+										<div class="data-row">
+											<div class="data-item">
+												<label class="data-label sm-fix">Фамилия</label>
+													<input type="text" class="data-value xl-stretch" name="l_name_head_manager" value="@Model.l_name_head_manager">
+											</div>
+											<div class="data-item">
+												<label class="data-label sm-fix">Имя</label>
+													<input type="text" class="data-value lg-stretch" name="f_name_head_manager" value="@Model.f_name_head_manager">
+											</div>
+											<div class="data-item">
+												<label class="data-label sm-fix">Отчество</label>
+													<input type="text" class="data-value lg-stretch" name="m_name_head_manager" value="@Model.m_name_head_manager">
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="border-block">
+							<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel3" aria-expanded="false">Регистрационные номера и классификаторы</button>
+							<div id="panel3" class="accordion-collapse collapse">
+								<div class="accordion-body">
+									<div class="data-row">
+										<div class="data-item">
+											<label class="data-label smx-fix">ОГРН</label>
+												<input type="number" class="data-value lg-stretch" name="ogrn" value="@Model.ogrn">
+										</div>
+										<div class="data-item">
+											<label class="data-label smx-fix">ИНН</label>
+												<input type="number" class="data-value lg-stretch" name="inn" value="@Model.inn">
+										</div>
+										<div class="data-item">
+											<label class="data-label smx-fix">КПП</label>
+												<input type="number" class="data-value lg-stretch" name="kpp" value="@Model.kpp">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="border-block">
+							<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel4" aria-expanded="false">Контактная информация</button>
+							<div id="panel4" class="accordion-collapse collapse">
+								<div class="accordion-body">
+									<div class="data-row">
+										<div class="data-row border-block stretch">
+											<label class="data-label">Телефон</label>
+												<input type="text" class="data-value md-full int" name="org_contact_phones" value="@Model.org_contact_phones">
+										</div>
+										<div class="data-row border-block stretch">
+											<label class="data-label">Email</label>
+												<input type="text" class="data-value md-full email" name="org_emails" value="@Model.org_emails">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			</form>
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="bttn" data-bs-dismiss="modal">Отмена</button>
+			<button type="submit" class="bttn bttn-color" id="btnSaveOrg" form="Organization_form">Сохранить</button>
+			<button type="button" class="bttn bttn-color" @btn_disable id="btnCopyOrg" onclick="OpenPopupOrg(@Model.org_id, 'copy'); ">Создать копию</button>
+			<button type="button" class="bttn bttn-color" @btn_disable id="btnDeleteOrg" onclick="Organization_Delete(@Model.org_id, @Model.data_status)">Удалить</button>
+		</div>
+	</div>
+</div>
+
+
+
+	<script type="text/javascript" src="@Url.Content("~/hss/js/popup_common_scripts.js")"></script>
+<script>
+
+	$(document).ready(function () {
+		document.querySelector('#paramNumberOrg').addEventListener('change', (event) => {
+			OpenPopupOrg($("#paramNumberOrg").val());
+		});
+	});
+
+	//var inp = document.getElementById("tel");
+
+	//function foo() {
+	//	if (!inp.value.length) inp.value = "+"
+	//}
+	//inp.addEventListener('change', foo)
+	//inp.addEventListener('input', foo);
+
+	//var old = 0;
+
+	//inp.onkeyup = function () {
+	//	var curLen = inp.value.length;
+	//	debugger
+	//	if (curLen < old) {
+	//		old--;
+	//		if(curLen != 2)
+	//		return;
+	//	}
+
+	//	if (curLen == 2)
+	//		inp.value = inp.value + "(";
+
+	//	if (curLen == 6)
+	//		inp.value = inp.value + ")-";
+
+	//	if (curLen == 11)
+	//		inp.value = inp.value + "-";
+
+	//	if (curLen == 14)
+	//		inp.value = inp.value + "-";
+
+	//	//if (curLen ==  18)
+	//	//	inp.value = inp.value.substring(0, inp.value.length - 1);
+
+	//	old++;
+	//}
+
+	
+
+	//$(".int").keydown(function (event) {
+	//	// Разрешаем: backspace, delete, tab и escape
+	//	if (event.keyCode == 46 || event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 27 ||
+	//		// Разрешаем: Ctrl+A
+	//		(event.keyCode == 65 && event.ctrlKey === true) ||
+	//		// Разрешаем: home, end, влево, вправо 
+	//		(event.keyCode >= 35 && event.keyCode <= 39)) {
+
+	//		// Ничего не делаем
+	//		return;
+	//	} else {
+	//		// Запрещаем все, кроме цифр на основной клавиатуре, а так же Num-клавиатуре
+	//		if ((event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105) || event.shiftKey) {
+	//			event.preventDefault();
+	//		}
+	//	}
+	//});
+
+	var onSuccessFormOrganization = function (xhr) {
+		if (xhr.success == true) {
+			showMessage('Данные сохранены.', 'modal', 'success');
+				$("#refresh_org_table").val(1);
+			if(xhr.is_new == true)
+			{
+				OpenPopupOrg(xhr.org_id)
+			}
+		}
+		else {
+			if (xhr.message === undefined) {
+				xhr.message = 'Ошибка сохранения данных'
+			}
+			showMessage(xhr.message, 'modal', 'fault');
+		}
+		hidePreloader();
+	};
+
+	function Organization_Delete() {
+		showPreloader();
+		$.ajax({
+			url: '@Html.Raw(Url.Action("Organization_Delete", "Organization", new { Area = "DictionaryTables" }))',
+			type: 'POST',
+			data: {
+				org_id: $('#org_id').val(),
+				data_status: $('#org_data_status').val()
+			}
+		}).done(function () {
+			$("#btnDeleteOrg").prop('disabled', true);
+			$("#btnCopyOrg").prop('disabled', true);
+			$("#btnSaveOrg").prop('disabled', true);
+			$("#refresh_org_table").val(1);
+			showMessage('Организация удалена', 'modal', 'success');
+			hidePreloader();
+		});
+	}
+
+	$("input.email[type=text]").keydown(function (event) {
+
+		
+		if (event.keyCode == 186 || event.keyCode == 32 || event.keyCode == 188 || (event.shiftKey && event.keyCode == 52)) {
+			var value = $(this).val();
+			$(this).val(value + ";");
+			value = $(this).val();
+			var lastChar = value.slice(-1);
+			if (lastChar === ";" && value.slice(-2)[0] === ";") {
+				$(this).val(value.slice(0, -1))
+			}
+			event.preventDefault();
+
+		}
+		//else {
+		//	// Запрещаем все, кроме цифр на основной клавиатуре, а так же Num-клавиатуре
+		//	if ((event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105) || event.shiftKey) {
+		//		event.preventDefault();
+		//	}
+		//}
+	});
+</script>

@@ -1,0 +1,155 @@
+﻿<div class="table-block">
+    <div class="table-buttons SourcesEquipmentsTable-buttons"></div>
+    <table id="SourcesEquipmentsTable" class="display compact table-clicked" style="width:100%">
+        <thead>
+            <tr>
+                <th>УНОМ ТЗ</th>
+                <th>Наименование</th>
+                <th>Адрес</th>
+                <th>Дата</th>
+                <th>Тип</th>
+                <th>Округ</th>
+                <th>Состояние</th>
+                <th>Полезная энергия</th>
+                <th>Тепловая энергия</th>
+                <th>Источники</th>
+            </tr>
+            <tr class="filter-row ">
+                <th class="dtfc-fixed-left" style="left:0; position:sticky;"><input type="text" class="filter-col-0" /></th>
+                <th><input type="text" class="filter-col-1" /></th>
+                <th><input type="text" class="filter-col-2" /></th>
+                <th><input type="text" class="filter-col-3" /></th>
+                <th><input type="text" class="filter-col-4" /></th>
+                <th><input type="text" class="filter-col-5" /></th>
+                <th><input type="text" class="filter-col-6" /></th>
+                <th><input type="text" class="filter-col-7" /></th>
+                <th><input type="text" class="filter-col-8" /></th>
+                <th><input type="text" class="filter-col-9" /></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ondblclick="OpenPopupSourceEquip(1);">
+                <td> equip_unom</td>
+                <td> turbine_num</td>
+                <td> equip_status_name</td>
+                <td> turbine_type_name</td>
+                <td> mark</td>
+                <td> queue_num</td>
+                <td> energy_input_num</td>
+                <td> manufacturer</td>
+                <td> start_year_turbine</td>
+                <td> source_unom</td>
+                
+            </tr>
+
+        </tbody>
+    </table>
+</div>
+<div class="data-row table-summary">
+    <div class="data-block">
+        <div class="data-item">
+            <h5 class="data-label">Всего записей:</h5>
+            <span class="data-value mark-color">1 000</span>
+        </div>
+        <div class="data-item">
+            <span class="data-label">∑ N<sub>у</sub> =</span>
+            <span class="data-value mark-color">10</span>
+            <span class="data-unit">МВт</span>
+        </div>
+        <div class="data-item">
+            <span class="data-label">∑ Q<sub>у</sub> =</span>
+            <span class="data-value mark-color">10</span>
+            <span class="data-unit">Гкал/ч</span>
+        </div>
+    </div>
+    <div class="data-row">
+        <div class="data-table-block">
+            <div class="data-item">
+                <h5>Турбоагрегаты:</h5>
+                <span class="data-label">- количество:</span>
+                <span class="mark-color">4</span>
+                <span class="data-unit">шт.</span>
+                <span class="data-label">- установленная мощность: ∑ Q<sub>у</sub> =</span>
+                <span class="mark-color">4</span>
+                <span class="data-unit">Гкал/ч</span>
+                <span class="data-label">∑ N<sub>у</sub> =</span>
+                <span class="mark-color">4</span>
+                <span class="data-unit">МВт</span>
+            </div>
+            <div class="data-item">
+                <h5>Котлоагрегаты:</h5>
+                <span class="data-label">- количество:</span>
+                <span class="mark-color">4</span>
+                <span class="data-unit">шт.</span>
+                <span class="data-label">- установленная мощность: ∑ Q<sub>у</sub> =</span>
+                <span class="mark-color">4</span>
+                <span class="data-unit">Гкал/ч</span>
+                <span class="data-label">∑ N<sub>у</sub> =</span>
+                <span class="mark-color">4</span>
+                <span class="data-unit">МВт</span>
+                <span class="data-label">∑ ПР<sub>у</sub> =</span>
+                <span class="mark-color">4</span>
+                <span class="data-unit">т/ч</span>
+            </div>
+            <div class="data-item">
+                <h5>Энергоблоки ПГУ:</h5>
+                <span class="data-label">- количество:</span>
+                <span class="mark-color">4</span>
+                <span class="data-unit">шт.</span>
+                <span class="data-label">- установленная мощность: ∑ Q<sub>у</sub> =</span>
+                <span class="mark-color">4</span>
+                <span class="data-unit">Гкал/ч</span>
+                <span class="data-label">∑ N<sub>у</sub> =</span>
+                <span class="mark-color">4</span>
+                <span class="data-unit">МВт</span>
+            </div>
+            <div class="data-item">
+                <h5>Поршневые агрегаты:</h5>
+                <span class="data-label">- количество:</span>
+                <span class="mark-color">4</span>
+                <span class="data-unit">шт.</span>
+                <span class="data-label">- установленная мощность: ∑ Q<sub>у</sub> =</span>
+                <span class="mark-color">4</span>
+                <span class="data-unit">Гкал/ч</span>
+                <span class="data-label">∑ N<sub>у</sub> =</span>
+                <span class="mark-color">4</span>
+                <span class="data-unit">МВт</span>
+            </div>
+        </div>
+        <div class="data-table-block">
+            <div class="data-item">
+                <h5>РОУ:</h5>
+                <span class="data-label">- количество:</span>
+                <span class="mark-color">4</span>
+                <span class="data-unit">шт.</span>
+                <span class="data-label">- установленная мощность: ∑ Q<sub>у</sub> =</span>
+                <span class="mark-color">4</span>
+                <span class="data-unit">Гкал/ч</span>
+            </div>
+            <div class="data-item">
+                <h5>ПСВ / ПСГ:</h5>
+                <span class="data-label">- количество:</span>
+                <span class="mark-color">4</span>
+                <span class="data-unit">шт.</span>
+                <span class="data-label">- установленная мощность: ∑ Q<sub>у</sub> =</span>
+                <span class="mark-color">4</span>
+                <span class="data-unit">Гкал/ч</span>
+            </div>
+            <div class="data-item">
+                <h5>Насосы:</h5>
+                <span class="data-label">- количество:</span>
+                <span class="mark-color">4</span>
+                <span class="data-unit">шт.</span>
+                <span class="data-label">- производительность: ∑ G<sub>у</sub> =</span>
+                <span class="mark-color">4</span>
+                <span class="data-unit">т/ч</span>
+            </div>
+            <div class="data-item">
+                <h5>Дымовые трубы:</h5>
+                <span class="data-label">- количество:</span>
+                <span class="mark-color">4</span>
+                <span class="data-unit">шт.</span>
+            </div>
+        </div>
+    </div>
+</div>

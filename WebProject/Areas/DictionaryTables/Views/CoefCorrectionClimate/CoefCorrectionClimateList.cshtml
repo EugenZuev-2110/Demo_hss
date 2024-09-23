@@ -1,0 +1,48 @@
+﻿<div class="data-block workspace">
+	<input type="hidden" value="1" id="hide_clocks"></input>
+	<div class="data-block title-block">
+		<div class="data-row">
+			<ul class="breadcrumb">
+				<li class="breadcrumb-item"><a class="ref-color" href="index.html">Главная</a></li>
+				<li class="breadcrumb-item">Справочники - Поправочные коэффициенты на климат</li>
+			</ul>
+		</div>
+		<h1 class="title">Поправочные коэффициенты на климат</h1>
+	</div>
+
+	<div class="data-block main-content" id="coefCorrectionTable_div">
+		@await Component.InvokeAsync("CoefCorrectionClimateList_Partial")
+		
+	</div>
+</div>
+<script type="text/javascript" src="@Url.Content("~/hss/js/popup_common_scripts.js")"></script>
+
+<script type="text/javascript">
+	$(document).ready(function () {
+		setTimeout(function () {
+			$('#CoefCorrectionClimate').addClass('active');
+		}, 500);
+	});
+
+
+function GetListOnPage() {
+	debugger
+		showPreloader();
+		$.ajax({
+
+			type: 'GET',
+			url: '@Html.Raw(Url.Action("CoefCorrectionClimateList_PartialViewComponent", "CoefCorrectionClimate", new { Area = "DictionaryTables" }))',
+			data: {
+				data_status: $('#data_status').val()
+			},
+			dataType: 'html'
+		})
+			.done(function (result) {
+				var div = $('#coefCorrectionTable_div');
+				div.html("");
+				div.html(result);
+				
+				hidePreloader();
+			});
+	}
+</script>

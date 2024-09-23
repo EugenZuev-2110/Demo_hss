@@ -1,0 +1,245 @@
+﻿@model List<WebProject.Areas.TSO.Models.TZProductionDataViewModel>
+@{
+	Layout = null;
+	int cnt_columns = 71;
+}
+<div class="table-block">
+	<div class="table-buttons tzProductionTable-buttons"></div>
+	<table id="tzProductionTable" class="display compact table-clicked" style="width:100%">
+		<thead>
+			<tr>
+				<th rowspan="3">УНОМ ТЗ</th>
+				<th rowspan="3">Территория действия тарифной зоны</th>
+				<th rowspan="3">КОД ТСО</th>
+				<th rowspan="3">Наименование ТСО</th>
+				<th rowspan="3">
+					Виды регулируемой деятельности
+					<a class="info" data-bs-toggle="tooltip" data-bs-custom-class="info-tooltip" data-bs-html="true"
+					   data-bs-title='<ul class="list-unstyled">
+									<li>К > 25 - Комбинированное производство, более 25 МВт</li>
+									<li>К < 25 - Комбинированное производство, менее 25 МВт</li>
+									<li>НК - Некомбинированное производство</li>
+									<li>П - Передача</li>
+									<li>С - Сбыт</li>
+									<li>ДП - Договор поставки</li>
+								</ul>'
+					</a>
+				</th>
+				<th rowspan="3">Выработка тепловой энергии (отпуск с коллектров с учетом хоз.нужд) (факт), Гкал</th>
+				<th rowspan="3">Выработка тепловой энергии (отпуск с коллектров с учетом хоз.нужд), Гкал</th>
+				<th rowspan="3">Расход тепла на собственные (хозяйственные) нужды источников тепла (факт), Гкал</th>
+				<th rowspan="3">Расход тепла на собственные (хозяйственные) нужды источников тепла, Гкал</th>
+				<th colspan="9">Отпуск тепловой энергии с коллекторов (факт), Гкал</th>
+				<th colspan="9">Отпуск тепловой энергии с коллекторов, Гкал</th>
+				<th colspan="9">Покупная тепловая энергия (факт), Гкал</th>
+				<th colspan="9">Покупная тепловая энергия, Гкал</th>
+				<th rowspan="3">Отпуск тепловой энергии в сеть (факт), Гкал</th>
+				<th rowspan="3">Отпуск тепловой энергии в сеть, Гкал</th>
+				<th rowspan="3">Потери тепла в сетях (факт), Гкал</th>
+				<th rowspan="3">Потери тепла в сетях, Гкал</th>
+				<th colspan="9">Полезный отпуск тепловой энергии (факт), Гкал</th>
+				<th colspan="9">Полезный отпуск тепловой энергии, Гкал</th>
+				<th rowspan="3">ПРОВЕРКА объем небаланса тепла, Гкал (факт)</th>
+				<th rowspan="3">Примечание по фактическому балансу</th>
+				<th rowspan="3">ПРОВЕРКА объем небаланса тепла, Гкал</th>
+				<th rowspan="3">Примечание</th>
+			</tr>
+			<tr>
+				<th rowspan="2">ВСЕГО</th>
+				<th colspan="3">На технологические нужды предприятия</th>
+				<th rowspan="2">Бюджетные потребители</th>
+				<th rowspan="2">Население</th>
+				<th rowspan="2">Прочие потребители</th>
+				<th rowspan="2">Организации - перепродавцы</th>
+				<th rowspan="2">В собственную тепловую сеть</th>
+				<th rowspan="2">ВСЕГО</th>
+				<th colspan="3">На технологические нужды предприятия</th>
+				<th rowspan="2">Бюджетные потребители</th>
+				<th rowspan="2">Население</th>
+				<th rowspan="2">Прочие потребители</th>
+				<th rowspan="2">Организации - перепродавцы</th>
+				<th rowspan="2">В собственную тепловую сеть</th>
+				<th rowspan="2">ВСЕГО</th>
+				<th colspan="4">с коллекторов</th>
+				<th colspan="4">из тепловой сети</th>
+				<th rowspan="2">ВСЕГО</th>
+				<th colspan="4">с коллекторов</th>
+				<th colspan="4">из тепловой сети</th>
+				<th rowspan="2">ВСЕГО</th>
+				<th colspan="3">на нужды предприятия</th>
+				<th rowspan="2">Организациям-перепродавцам</th>
+				<th colspan="4">по группам потребителей</th>
+				<th rowspan="2">ВСЕГО</th>
+				<th colspan="3">на нужды предприятия</th>
+				<th rowspan="2">Организациям-перепродавцам</th>
+				<th colspan="4">по группам потребителей</th>
+			</tr>
+			<tr>
+				<th>Всего</th>
+				<th>На собственное производство</th>
+				<th>На хозяйственные нужды</th>
+				<th>Всего</th>
+				<th>На собственное производство</th>
+				<th>На хозяйственные нужды</th>
+				<th>Всего</th>
+				<th>ТЭС >= 25 МВт</th>
+				<th>ТЭС < 25 МВт</th>
+				<th>от котельных</th>
+				<th>Всего</th>
+				<th>ТЭС >= 25 МВт</th>
+				<th>ТЭС < 25 МВт</th>
+				<th>от котельных</th>
+				<th>Всего</th>
+				<th>ТЭС >= 25 МВт</th>
+				<th>ТЭС < 25 МВт</th>
+				<th>от котельных</th>
+				<th>Всего</th>
+				<th>ТЭС >= 25 МВт</th>
+				<th>ТЭС < 25 МВт</th>
+				<th>от котельных</th>
+				<th>Всего</th>
+				<th>На собственное производство</th>
+				<th>На хозяйственные нужды</th>
+				<th>Всего</th>
+				<th>бюджет</th>
+				<th>население</th>
+				<th>прочие</th>
+				<th>Всего</th>
+				<th>На собственное производство</th>
+				<th>На хозяйственные нужды</th>
+				<th>Всего</th>
+				<th>бюджет</th>
+				<th>население</th>
+				<th>прочие</th>
+			</tr>
+			<tr class="filter-row ">
+				@for (int i = 0; i < @cnt_columns; i++)
+				{
+					if (i == 0)
+					{
+						<th class="dtfc-fixed-left" style="left:0; position:sticky;"><input type="text" class="filter-col-0" /></th>
+					}
+					else
+					{
+						<th><input type="text" class="filter-col-@i" /></th>
+					}
+				}
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var tz_list in Model)
+			{
+				<tr ondblclick="OpenPopupHeatBalance(@tz_list.tz_id, @tz_list.perspective_year, '/TSO/HeatBalance/OpenTZProduction', 'TZProductionDataPopup');">
+					<td>@tz_list.unom_tz</td>
+					<td><div class="data-truncate-multirow" title="@tz_list.territory">@tz_list.territory</div></td>
+					<td>@tz_list.code_tso</td>
+					<td>@tz_list.short_name</td>
+					<td>@tz_list.activity_types</td>
+					<td>@tz_list.generate_heat_energy_fact</td>
+					<td>@tz_list.generate_heat_energy_plan</td>
+					<td>@tz_list.heat_consump_fact</td>
+					<td>@tz_list.heat_consump_plan</td>
+					<td>@tz_list.release_collect_fact</td>
+					<td>@tz_list.release_collect_tech_need_fact</td>
+					<td>@tz_list.release_collect_ownprod_fact</td>
+					<td>@tz_list.release_collect_household_needs_fact</td>
+					<td>@tz_list.release_collect_buget_cons_fact</td>
+					<td>@tz_list.release_collect_public_fact</td>
+					<td>@tz_list.release_collect_other_cons_fact</td>
+					<td>@tz_list.release_collect_tso_salers_fact</td>
+					<td>@tz_list.release_collect_ownheatnet_fact</td>
+					<td>@tz_list.release_collect_plan</td>
+					<td>@tz_list.release_collect_tech_need_plan</td>
+					<td>@tz_list.release_collect_ownprod_plan</td>
+					<td>@tz_list.release_collect_household_needs_plan</td>
+					<td>@tz_list.release_collect_buget_cons_plan</td>
+					<td>@tz_list.release_collect_public_plan</td>
+					<td>@tz_list.release_collect_other_cons_plan</td>
+					<td>@tz_list.release_collect_tso_salers_plan</td>
+					<td>@tz_list.release_collect_ownheatnet_plan</td>
+					<td>@tz_list.buy_energy_fact</td>
+					<td>@tz_list.buy_energy_collect_fact</td>
+					<td>@tz_list.buy_energy_collect_more25_fact</td>
+					<td>@tz_list.buy_energy_collect_less25_fact</td>
+					<td>@tz_list.buy_energy_collect_boiler_fact</td>
+					<td>@tz_list.buy_energy_heatnet_fact</td>
+					<td>@tz_list.buy_energy_heatnet_more25_fact</td>
+					<td>@tz_list.buy_energy_heatnet_less25_fact</td>
+					<td>@tz_list.buy_energy_heatnet_boiler_fact</td>
+					<td>@tz_list.buy_energy_plan</td>
+					<td>@tz_list.buy_energy_collect_plan</td>
+					<td>@tz_list.buy_energy_collect_more25_plan</td>
+					<td>@tz_list.buy_energy_collect_less25_plan</td>
+					<td>@tz_list.buy_energy_collect_boiler_plan</td>
+					<td>@tz_list.buy_energy_heatnet_plan</td>
+					<td>@tz_list.buy_energy_heatnet_more25_plan</td>
+					<td>@tz_list.buy_energy_heatnet_less25_plan</td>
+					<td>@tz_list.buy_energy_heatnet_boiler_plan</td>
+					<td>@tz_list.release_heat_energy_network_fact</td>
+					<td>@tz_list.release_heat_energy_network_plan</td>
+					<td>@tz_list.heatenrg_loss_heatnet_fact</td>
+					<td>@tz_list.heatenrg_loss_heatnet_plan</td>
+					<td>@tz_list.useful_release_fact</td>
+					<td>@tz_list.useful_release_company_needs_fact</td>
+					<td>@tz_list.useful_release_ownprod_fact</td>
+					<td>@tz_list.useful_release_household_needs_fact</td>
+					<td>@tz_list.useful_release_tso_salers_fact</td>
+					<td>@tz_list.useful_release_cons_groups_fact</td>
+					<td>@tz_list.useful_release_buget_cons_fact</td>
+					<td>@tz_list.useful_release_public_fact</td>
+					<td>@tz_list.useful_release_other_cons_fact</td>
+					<td>@tz_list.useful_release_plan</td>
+					<td>@tz_list.useful_release_company_needs_plan</td>
+					<td>@tz_list.useful_release_ownprod_plan</td>
+					<td>@tz_list.useful_release_household_needs_plan</td>
+					<td>@tz_list.useful_release_tso_salers_plan</td>
+					<td>@tz_list.useful_release_cons_groups_plan</td>
+					<td>@tz_list.useful_release_buget_cons_plan</td>
+					<td>@tz_list.useful_release_public_plan</td>
+					<td>@tz_list.useful_release_other_cons_plan</td>
+					<td>@tz_list.volume_notbalance_heat_fact</td>
+					<td>@tz_list.notes_fact</td>
+					<td>@tz_list.volume_notbalance_heat_plan</td>
+					<td>@tz_list.notes_plan</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>
+
+<div class="data-row table-summary">
+	<div class="data-item rows-count">
+		<h5>Всего записей:</h5>
+		<p><span class="mark-color" id="all_cnt_rows"></span></p>
+	</div>
+	<div class="data-block">
+		<h5>Отпуск тепловой энергии с коллекторов (брутто):</h5>
+		<div class="data-table-block">
+			<p class="data-item">план - <span class="mark-color" id="release_collect_brutto_plan"></span><span class="data-unit"> Гкал/ч</span></p>
+			<p class="data-item">факт - <span class="mark-color" id="release_collect_brutto_fact"></span><span class="data-unit"> Гкал/ч</span></p>
+		</div>
+	</div>
+	<div class="data-block">
+		<h5>Отпуск тепловой энергии в сеть:</h5>
+		<div class="data-table-block">
+			<p class="data-item">план - <span class="mark-color" id="release_heat_energy_network_plan"></span><span class="data-unit"> Гкал/ч</span></p>
+			<p class="data-item">факт - <span class="mark-color" id="release_heat_energy_network_fact"></span><span class="data-unit"> Гкал/ч</span></p>
+		</div>
+	</div>
+	<div class="data-block">
+		<h5>Потери тепла в тепловых сетях:</h5>
+		<div class="data-table-block">
+			<p class="data-item">план - <span class="mark-color" id="heatenrg_loss_heatnet_plan"></span><span class="data-unit"> Гкал/ч</span></p>
+			<p class="data-item">факт - <span class="mark-color" id="heatenrg_loss_heatnet_fact"></span><span class="data-unit"> Гкал/ч</span></p>
+		</div>
+	</div>
+	<div class="data-block">
+		<h5>Полезный отпуск тепловой энергии:</h5>
+		<div class="data-table-block">
+			<p class="data-item">план - <span class="mark-color" id="useful_release_plan"></span><span class="data-unit"> Гкал/ч</span></p>
+			<p class="data-item">факт - <span class="mark-color" id="useful_release_fact"></span><span class="data-unit"> Гкал/ч</span></p>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript" src="@Url.Content("~/hss/js/datatables_common_scripts.js")"></script>

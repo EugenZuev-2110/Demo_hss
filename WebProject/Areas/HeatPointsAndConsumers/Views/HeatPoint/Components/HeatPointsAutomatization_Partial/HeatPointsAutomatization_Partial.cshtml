@@ -1,0 +1,106 @@
+﻿@model List<WebProject.Areas.HeatPointsAndConsumers.Models.AutomatizationModel>
+@{
+    Layout = null;
+    int cnt_columns = 21;
+}
+<h3>Автоматизация</h3>
+<div class="table-block">
+    <div class="table-buttons automationTable-buttons"></div>
+    <table id="automationTable" class="display compact table-clicked" style="width:100%">
+        <thead>
+            <tr>
+                <th colspan="5">Источник тепловой энергии</th>
+                <th colspan="12">Тепловой пункт</th>
+                <th colspan="4">Автоматизация</th>
+            </tr>
+            <tr>
+                <th>УНОМ ИСТ</th>
+                <th>Наименование</th>
+                <th>Статус источника</th>
+                <th>УНОМ Вывода</th>
+                <th>Наименование вывода</th>
+
+                <th>УНОМ ТП</th>
+                <th>Номер теплового пункта</th>
+                <th>Административный округ</th>
+                <th>Район</th>
+                <th>Адрес месторасположения теплового пункта</th>
+
+                <th>Тип теплового пункта</th>
+                <th>Номер типовой схемы теплового пункта</th>
+                <th>Тип размещения теплового пункта</th>
+                <th>Статус теплового пункта</th>
+                <th>Год ввода в эксплуатацию</th>
+
+                <th>Год проведения последней реконструкции</th>
+                <th>Год ликвидации теплового пункта</th>
+                <th>Наличие ограничителя расхода на тепловом вводе</th>
+                <th>Наличие автоматики</th>
+                <th>Тип автоматики</th>
+
+                <th>Наличие автоматизированного узла управления отоплением (погодозависимая автоматика)</th>
+            </tr>
+            <tr class="filter-row ">
+                @for (int i = 0; i < @cnt_columns; i++)
+                {
+                    if (i == 0)
+                    {
+                        <th class="dtfc-fixed-left" style="left:0; position:sticky;"><input type="text" class="filter-col-0" /></th>
+                    }
+                    else
+                    {
+                        <th><input type="text" class="filter-col-@i" /></th>
+                    }
+                }
+            </tr>
+        </thead>
+        <tbody title="Двойной клик открывает форму редактирования">
+            @foreach (var item in Model)
+            {
+                <tr ondblclick="OpenPopupHeatPointAddRemove(@item.heat_point_id);">
+                    <td>@item.source_unom</td>
+                    <td>@item.source_name</td>
+                    <td>@item.source_status_name</td>
+                    <td>@item.source_output_unom</td>
+                    <td>@item.source_output_name</td>
+
+                    <td>@item.heat_point_id</td>
+                    <td>@item.hp_num</td>
+                    <td>@item.hp_region_name</td>
+                    <td>@item.hp_district_name</td>
+                    <td>@item.hp_address</td>
+
+                    <td>@item.hp_type_name</td>
+                    <td>@item.hp_type_scheme_id</td>
+                    <td>@item.hp_type_location_name</td>
+                    <td>@item.hp_status_name</td>
+                    <td>@item.hp_start_year_expl</td>
+
+                    <td>@item.hp_last_year_reconstr</td>
+                    <td>@item.hp_year_liquidate</td>
+                    <td>@item.avail_flow_limiter</td>
+                    <td>@item.avail_automatic</td>
+                    <td>@item.automatic_type_name</td>
+
+                    <td>@item.avail_automatic_heat_control</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <br/>
+    <div class="data-row table-summary">
+        <div class="data-item rows-count">
+            <h5>Всего записей:</h5>
+            <p><span class="mark-color" id="all_cnt_rows"></span></p>
+        </div>
+        <div class="data-row align-items-start">
+            <h5>Количество тепловых пунктов:</h5>
+            <div class="data-table-block">
+                <p class="data-item">с автоматизацией - <span class="mark-color" id="sum_automatization_count_auto"></span><span class="data-unit"> шт.</span></p>
+                <p class="data-item">с погодозависимой автоматикой - <span class="mark-color" id="sum_automatization_count_auto_dep"></span><span class="data-unit"> шт.</span></p>
+                <p class="data-item">с ограничителями расхода на тепловой воде - <span class="mark-color" id="sum_automatization_count_hw_exp_limit"></span><span class="data-unit"> шт.</span></p>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="@Url.Content("~/hss/js/datatables_common_scripts.js")"></script>

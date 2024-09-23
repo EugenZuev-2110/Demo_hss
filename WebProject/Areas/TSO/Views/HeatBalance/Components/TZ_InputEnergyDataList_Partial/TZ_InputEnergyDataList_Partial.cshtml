@@ -1,0 +1,26 @@
+﻿@model List<WebProject.Areas.TSO.Models.TZInOutEnergyPlanListViewModel>
+
+<h4>Входящая тепловая энергия</h4>
+<table>
+	<thead>
+		<tr>
+			<th>Год</th>
+			<th>УНОМ ТЗ</th>
+			<th>К/С</th>
+			<th>Наименование ТСО</th>
+			<th>Объём, <span class="data-edit">Гкал/год</span></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var tz_list in Model)
+		{
+			<tr>
+				<td>@tz_list.perspective_year_dt</td>
+				<td>@tz_list.unom_tz</td>
+				<td>@tz_list.buy_place_short</td>
+				<td>@tz_list.tso_name</td>
+				<td>@tz_list.buy_energy_plan</td>
+			</tr>
+		}
+	</tbody>
+</table>

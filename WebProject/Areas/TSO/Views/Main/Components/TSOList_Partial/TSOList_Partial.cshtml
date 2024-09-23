@@ -1,0 +1,116 @@
+﻿@model List<WebProject.Areas.TSO.Models.TSOListViewModel>
+@{
+	Layout = null;
+	int cnt_columns = 26;
+}
+
+<div class="table-block">
+	<div class="table-buttons tsoTable-buttons"></div>
+	<input type="hidden" value="0" id="refresh_tso_table" />
+	<table id="tsoTable" class="display compact table-clicked" style="width:100%">
+		<thead>
+			<tr>
+				<th>УНОМ ТСО</th>
+				<th>Код ТСО</th>
+				<th>Наименование ТСО</th>
+				<th>ИНН</th>
+				<th>ОГРН</th>
+				<th>КПП</th>
+				<th>Тип организации</th>
+				<th>Статус организации</th>
+				<th>Статус ЕТО назначен<br /> в зоне деятельности</th>
+				<th>Зона(ы) деятельности ЕТО,<br /> в которой функционирует ТСО</th>
+				<th>№ тарифной(ых) зон</th>
+				<th>Комбинированное<br /> производство, более 25 МВт</th>
+				<th>Комбинированное<br /> производство, менее 25 МВт</th>
+				<th>Некомбинированное<br /> производство</th>
+				<th>Передача</th>
+				<th>Сбыт</th>
+				<th>Договор<br /> поставки</th>
+				<th>Вид собственности</th>
+				<th>Размер собственного<br /> капитала ТСО, тыс. руб.</th>
+				<th>Год значения<br /> собственного капитала</th>
+				<th>ТСО является<br /> плательщиком НДС</th>
+				<th>Должность руководителя</th>
+				<th>ФИО руководителя</th>
+				<th>Контактный(ые) телефон(ы)<br /> организации</th>
+				<th>Адреса эл. почты<br /> организации</th>
+				<th>Способ отправки<br /> писем запросов</th>
+			</tr>
+			<tr class="filter-row ">
+				@for (int i = 0; i < @cnt_columns; i++)
+				{
+					if (i == 0)
+					{
+						<th class="dtfc-fixed-left" style="left:0; position:sticky;"><input type="text" class="filter-col-0" /></th>
+					}
+					else
+					{
+						<th><input type="text" class="filter-col-@i" /></th>
+					}
+				}
+			</tr>
+		</thead>
+		<tbody title="Двойной клик открывает форму редактирования">
+			@foreach (var tso_list in Model)
+			{
+				<tr ondblclick="OpenPopupTSO(@tso_list.Id);">
+					<td>@tso_list.unom_org</td>
+					<td>@tso_list.code_tso</td>
+					<td>@tso_list.short_name</td>
+					<td>@tso_list.inn</td>
+					<td>@tso_list.ogrn</td>
+					<td>@tso_list.kpp</td>
+					<td>@tso_list.org_type_name</td>
+					<td>@tso_list.org_status_name</td>
+					<td>@tso_list.unom_eto</td>
+					<td>@tso_list.unom_eto_list</td>
+					<td>@tso_list.unom_tz_list</td>
+					<td>@tso_list.combine_prod_more25</td>
+					<td>@tso_list.combine_prod_less25</td>
+					<td>@tso_list.not_combine_prod</td>
+					<td>@tso_list.transfer</td>
+					<td>@tso_list.sale</td>
+					<td>@tso_list.delivery_contract</td>
+					<td>@tso_list.org_property_type_name</td>
+					<td>@tso_list.org_size_own_capital</td>
+					<td>@tso_list.year_own_capital</td>
+					<td>@tso_list.tso_nds_pay</td>
+					<td>@tso_list.pozition_head_manager</td>
+					<td>@tso_list.fullname_head_manager</td>
+					<td>@tso_list.org_contact_phones</td>
+					<td>@tso_list.org_emails</td>
+					<td>@tso_list.send_letters_type_name</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>
+<div class="data-row table-summary">
+	<div class="data-item rows-count">
+		<h5>Всего записей:</h5>
+		<p><span class="mark-color" id="all_cnt_rows"></span></p>
+	</div>
+	<div class="data-row">
+		<h5>Количество организаций:</h5>
+		<div class="data-table-block">
+			<p class="data-item">- регулируемые: <span class="mark-color" id="reg_cnt_rows"></span><span class="data-unit">шт.</span></p>
+			<p class="data-item">- нерегулируемые: <span class="mark-color" id="not_reg_cnt_rows"></span><span class="data-unit">шт.</span></p>
+			<p class="data-item">- договор поставки: <span class="mark-color" id="contract_delivery_cnt_rows"></span><span class="data-unit">шт.</span></p>
+		</div>
+	</div>
+	<div class="data-row">
+		<h5>В том числе по видам деятельности:</h5>
+		<div class="data-row">
+			<div class="data-table-block">
+				<p class="data-item">- комбинированное производство, более 25 МВт: <span class="mark-color" id="comb_prod_more_25_cnt_rows"></span><span class="data-unit">шт.</span></p>
+				<p class="data-item">- комбинированное производство менее 25 МВт: <span class="mark-color" id="comb_prod_less_25_cnt_rows"></span><span class="data-unit">шт.</span></p>
+				<p class="data-item">- некомбинированное производство: <span class="mark-color" id="not_comb_prod_cnt_rows"></span><span class="data-unit">шт.</span></p>
+			</div>
+			<div class="data-table-block">
+				<p class="data-item">- передача: <span class="mark-color" id="transfer_cnt_rows"></span><span class="data-unit">шт.</span></p>
+				<p class="data-item">- сбыт: <span class="mark-color" id="sales_cnt_rows"></span><span class="data-unit">шт.</span></p>
+			</div>
+		</div>
+	</div>
+</div>

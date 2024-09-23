@@ -1,0 +1,146 @@
+﻿@model WebProject.Areas.DictionaryTables.Models.TerritorialDivisionClimaticDataOneViewModel
+
+@{
+	string btn_disable = ""; 
+}
+
+@if (ViewBag.Action_for == "copy" || Model.Id == 0 )
+{
+	btn_disable = "disabled";
+}
+
+
+<form asp-controller="TerritorialDivision" asp-action="TerritorialDivisionClimatic_Save" asp-antiforgery="true" asp-area="DictionaryTables" id="terrDivisionClimatic_form"
+   data-ajax-failure="onFailedFormTZ" data-ajax-success="onSuccessFormTerrDivisionClimatic" data-ajax-begin="onBeginFormTZ" data-ajax="true" data-ajax-method="POST">
+	
+
+
+<div class="data-block">
+		<input type="hidden" name="data_status" value="@Model.data_status" id="terrDivisionClimatic_data_status_input" />
+		<input type="hidden" name="Id" value="@Model.Id" id="terrDivisionClimatic_id_input" />
+	<div class="data-row">
+		<div class="data-item">
+			<label class="data-label xxl-fix">Расчетная температура наружного воздуха для систем отопления и вентиляции</label>
+			<input type="text" class="data-asp-for smx-fix" asp-for="@Model.calc_air_temp_ht_vent">
+			<span class="data-unit smx-fix">°C</span>
+		</div>
+		<div class="data-item">
+			<label class="data-label lg-fix">Тоже при зарасчетном похолодании</label>
+			<input type="text" class="data-asp-for smx-fix" asp-for="@Model.calc_air_temp_after_calc_coldest">
+			<span class="data-unit smx-fix">°C</span>
+		</div>
+	</div>
+	<div class="data-row">
+		<div class="data-item">
+			<label class="data-label xxl-fix">Средняя температура наиболее холодного месяца</label>
+			<input type="text" class="data-asp-for smx-fix" asp-for="@Model.aver_temp_coldest_month">
+			<span class="data-unit smx-fix">°C</span>
+		</div>
+		<div class="data-item">
+			<label class="data-label lg-fix">Наименование наиболее холодного месяца</label>
+				<select class="selectpicker data-asp-for lg-fix" name="coldest_month_id" id="coldest_month_id" data-live-search="true" placeholder="Выберите...">
+				@foreach (var month in ViewBag.Months)
+				{
+					if(month.Id == Model.coldest_month_id)
+					{
+						<option value="@month.Id" selected>@month.month_name</option>
+					}
+					else
+					{
+						<option value="@month.Id">@month.month_name</option>
+					}
+				}
+				
+			</select>
+		</div>
+	</div>
+	<div class="data-row">
+		<div class="data-item">
+			<label class="data-label xxl-fix">Средняя температура наружного воздуха за отопительный период: <span class="sublabel">норматив</span></label>
+			<input type="text" class="data-asp-for smx-fix" asp-for="@Model.aver_temp_heat_period">
+			<span class="data-unit smx-fix">°C</span>
+		</div>
+		<div class="data-item">
+			<label class="data-label lg-fix"><span class="sublabel">факт</span></label>
+			<input type="text" class="data-asp-for smx-fix" asp-for="@Model.fact_aver_temp_heat_period">
+			<span class="data-unit smx-fix">°C</span>
+		</div>
+	</div>
+	<div class="data-row">
+		<div class="data-item">
+			<label class="data-label xxl-fix">Продолжительность отопительного периода: <span class="sublabel">норматив</span></label>
+			<input type="text" class="data-asp-for smx-fix" asp-for="@Model.length_heat_period">
+			<span class="data-unit smx-fix">сут.</span>
+		</div>
+		<div class="data-item">
+			<label class="data-label lg-fix"><span class="sublabel">факт</span></label>
+			<input type="text" class="data-asp-for smx-fix" asp-for="@Model.fact_length_heat_period">
+			<span class="data-unit smx-fix">сут.</span>
+		</div>
+	</div>
+	<div class="data-row">
+		<div class="data-item">
+			<label class="data-label xxl-fix">Температура исходной водопроводной воды: <span class="sublabel">в отопительном периоде</span></label>
+			<input type="text" class="data-asp-for smx-fix" asp-for="@Model.aver_temp_tap_water_heat_period">
+			<span class="data-unit smx-fix">°C</span>
+		</div>
+		<div class="data-item">
+			<label class="data-label lg-fix"><span class="sublabel">в неотопительном периоде</span></label>
+			<input type="text" class="data-asp-for smx-fix" asp-for="@Model.aver_temp_tap_water_notheat_period">
+			<span class="data-unit smx-fix">°C</span>
+		</div>
+	</div>
+	<div class="data-row">
+		<div class="data-item">
+			<label class="data-label xxl-fix">Продолжительность ежегодного профилактического отключения системы теплоснабжения</label>
+			<input type="text" class="data-asp-for smx-fix" asp-for="@Model.length_year_prevent_off_system">
+			<span class="data-unit smx-fix">сут.</span>
+		</div>
+	</div>
+	<div class="data-row">
+		<div class="data-item">
+			<label class="data-label xxl-fix">Годовое число часов использования максимума отопительно-вентиляционной нагрузки</label>
+			<input type="text" class="data-asp-for smx-fix" disabled>
+			<span class="data-unit smx-fix">ч/год</span>
+		</div>
+	</div>
+	<div class="data-row">
+		<div class="data-item">
+			<label class="data-label xxl-fix">Годовое число часов использования максимума нагрузки горячего водоснабжения</label>
+			<input type="text" class="data-asp-for smx-fix" disabled>
+			<span class="data-unit smx-fix">ч/год</span>
+		</div>
+	</div>
+	<div class="data-row">
+		<div class="data-item">
+			<label class="data-label xxl-fix">Градусо-сутки отопительного периода (ГСОП)</label>
+			<input type="text" class="data-asp-for smx-fix" disabled>
+			<span class="data-unit smx-fix">°C · сут.</span>
+		</div>
+	</div>
+</div>
+	<button type="submit" class="bttn bttn-color ms-auto" style="float: right;" form="terrDivisionClimatic_form" id="btnSubmitTerrDivisionClimatic" @btn_disable>Сохранить</button>
+
+</form>
+
+<script type="text/javascript">
+
+	var onSuccessFormTerrDivisionClimatic = function (xhr)
+	{
+		if (xhr.success == true)
+		{
+			showMessage('Данные сохранены.', 'modal', 'success');
+		}
+		else
+		{
+			if (xhr.message === undefined) 
+			{
+				xhr.message = 'Ошибка сохранения данных'
+			}
+			showMessage(xhr.message, 'modal', 'fault');
+		}
+		$("#refresh_terrDivision_table").val(1);
+		hidePreloader();
+	};
+
+</script>

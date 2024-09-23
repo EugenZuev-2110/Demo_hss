@@ -1,0 +1,44 @@
+﻿<label class="data-label">Выберите год:</label>
+<select class="selectpicker md-fix" id="perspective_year" name="perspective_year">
+</select>
+
+<script type="text/javascript">
+
+	GetPerspectiveYears(0);
+
+	function GetPerspectiveYears(is_change_ds) {
+        $.ajax({
+            url: '@Html.Raw(Url.Action("GetPerspectiveYears", "HSS", new { Area = "" }))',
+            type: 'POST',
+            data: { data_status: $("#data_status").val() }
+        }).done(function (data) {
+            changeSelectPerspectiveYears(data.years, is_change_ds);
+        });
+    }
+
+	function changeSelectPerspectiveYears(newSelect, is_change_ds) {
+        var select = $('#perspective_year');
+        $(select).find('option').remove();
+        if (newSelect.length !== 0) {
+            for (var i = 0; i < newSelect.length; i++) {
+                if (i == 0) {
+                    let base_year = newSelect[i].perspective_year - 1;
+                    let base_year_info = base_year + ' (' + newSelect[i].perspective_year_dt + ')';
+                    $("#base_year_info").html(base_year_info);
+                }
+                $(select).append('<option value=' + newSelect[i].perspective_year + '>' + newSelect[i].perspective_year_dt + '</option>');
+            }
+        } else {
+            $(select).append('<option value="">' + "Пусто" + '</option>');
+        }
+        $(select).selectpicker('destroy');
+        $(select).selectpicker();
+
+        if (is_change_ds === 1) {
+            if (typeof GetListOnPage === "function") {
+                GetListOnPage();
+            }
+        }
+    }
+
+</script>

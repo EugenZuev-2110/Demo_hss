@@ -1,0 +1,473 @@
+﻿@model List<WebProject.Areas.HPConsumers.Models.Consumers_YearParamsCalcLoadViewModel>
+@{
+    Layout = null; string is_disabled = ViewBag.IsDisabled;
+}
+
+<form asp-controller="Consumers" asp-action="Consumer_YearParamsCalcLoadData_Save" asp-antiforgery="true" asp-area="HPConsumers" class="needs-validation" novalidate
+      data-ajax-failure="onFailedFormTZ" data-ajax-success="onSuccessForm_YearParamsCalcLoad" data-ajax-begin="onBeginFormTZ" data-ajax="true" data-ajax-method="POST">
+    <div class="data-block">
+        <div class="data-row">
+            <div class="data-item ms-auto">
+                <button type="submit" class="bttn bttn-square bttn-icon-save" onclick="removeRequiredAttrAllConsumer()" @is_disabled id="consumer_year_impl_save_btn"></button>
+                <button class="bttn bttn-color bttn-edit-data" type="button" disabled>Привязать данные электронной модели</button>
+                <button type="button" class="bttn" disabled>Рассчитать нагрузку</button>
+            </div>
+        </div>
+        <div class="data-row">
+            <div class="data-item">
+                <label class="data-label">
+                    Потребитель учтён в программе капремонта / энергосбережения с:
+                    <select class="selectpicker data-value md-fix" data-width="140px" id="consumer_start_year_caprepair" name="consumer_start_year_caprepair">
+                        <option value=@null selected>Отсутствует</option>
+                        @foreach (var p_years_list in ViewBag.PerspectiveYearsList)
+                        {
+                            if (p_years_list.perspective_year == Model[0].consumer_start_year_caprepair)
+                            {
+                                <option value="@p_years_list.perspective_year" selected>@p_years_list.perspective_year_dt</option>
+                            }
+                            if (p_years_list.perspective_year != Model[0].consumer_start_year_caprepair)
+                            {
+                                <option value="@p_years_list.perspective_year">@p_years_list.perspective_year_dt</option>
+                            }
+                        }
+                    </select>
+                    года
+                </label>
+            </div>
+        </div>
+        <div class="data-row">
+            <label class="data-item">
+                <span class="data-label">Принять по программе развития:</span>
+                @if (Model[0].calc_on_main_dev_prog != null && Model[0].calc_on_main_dev_prog == true)
+                {
+                    var is_checked = "checked";
+                    <input type="checkbox" class="data-value data-check" id="calc_on_main_dev_prog" name="calc_on_main_dev_prog" value="@(Model[0].calc_on_main_dev_prog == true ? "true" : "false")" @is_checked onchange="YearParamsCalc_CB_Change(this)">
+                }
+                else
+                {
+                    <input type="checkbox" class="data-value data-check" id="calc_on_main_dev_prog" name="calc_on_main_dev_prog" value="false" onchange="YearParamsCalc_CB_Change(this)">
+                }
+            </label>
+            <div class="data-item">
+                <label class="data-label">Основная программа развития:</label>
+                <select class="selectpicker data-value md-fix" data-width="140px" id="consumer_main_dev_prog_id" name="consumer_main_dev_prog_id" required>
+                    <option value=@null selected>Отсутствует</option>
+                    @foreach (var p_years_list in ViewBag.DevProgrammList)
+                    {
+                        if (p_years_list.dev_prog_id == Model[0].main_dev_prog_id)
+                        {
+                            <option value="@p_years_list.dev_prog_id" selected>@p_years_list.unom_num</option>
+                        }
+                        if (p_years_list.dev_prog_id != Model[0].main_dev_prog_id)
+                        {
+                            <option value="@p_years_list.dev_prog_id">@p_years_list.unom_num</option>
+                        }
+                    }
+                </select>
+                <a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Выберите значение из списка"></a>
+            </div>
+        </div>
+        <div class="scroll-table-wrapper">
+            <table class="table-inp-stretch" style="width:100%;">
+                <thead>
+                    <tr>
+                        <th rowspan="2">Год</th>
+                        <th rowspan="2">Статус</th>
+                        <th rowspan="2">Площадь, <span class="data-unit">м<sup>2</sup></span></th>
+                        <th rowspan="2">Прирост площади, <span class="data-unit">м<sup>2</sup></span></th>
+                        <th rowspan="2">УНОМ ИСТ / Источник</th>
+                        <th rowspan="2">УНОМ ТП / Номер на схеме</th>
+                        <th rowspan="2">Открытая ГВС</th>
+                        <th colspan="5">Расчетная нагрузка в паре, <span class="data-unit">т/ч</span></th>
+                        <th colspan="5">Расчетная нагрузка в г.в., <span class="data-unit">Гкал/ч</span></th>
+                        @*  <th rowspan="2">q<sup>ГР</sup></th>*@
+                    </tr>
+                    <tr>
+                        <th>Q<sup>ПР</sup><sub>ТЕХ</sub></th>
+                        <th>Q<sup>ПР</sup><sub>ОТ</sub></th>
+                        <th>Q<sup>ПР</sup><sub>ВЕН</sub></th>
+                        <th>Q<sup>ПР</sup><sub>ГВС</sub></th>
+                        <th>∑ Q<sup>ПР</sup></th>
+                        <th>Q<sup>ГР</sup><sub>ТЕХ</sub></th>
+                        <th>Q<sup>ГР</sup><sub>ОТ</sub></th>
+                        <th>Q<sup>ГР</sup><sub>ВЕН</sub></th>
+                        <th>Q<sup>ГР</sup><sub>ГВС</sub></th>
+                        <th>∑ Q<sup>ГР</sup></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var tz_list in Model)
+                    {
+                        <input hidden asp-for="@tz_list.consumer_id">
+                        <input hidden asp-for="@tz_list.data_status">
+                        <tr data-consumer_status="@tz_list.consumer_perspective_year">
+                            <td>@tz_list.consumer_perspective_year_dt</td>
+                            <td>
+                                <input type="hidden" name="consumer_yisp_perspective_year" value="@tz_list.consumer_perspective_year">
+                                <div class="data-item">
+                                    <select class="data-value selectpicker stretch" name="consumer_ypcl_status_select" id="consumer_ypcl_status_select_@(tz_list.consumer_perspective_year)"
+                                            onchange="ChangeSelectValuePerspectiveConsumer(event, @tz_list.consumer_perspective_year, 'consumer_ypcl_status')" data-consumer_ypcl_status="@tz_list.consumer_perspective_year" placeholder="Выберите..." data-width="100%" required>
+                                        <option value="">Выберите...</option>
+                                        @foreach (var s_list in ViewBag.Statuses)
+                                        {
+                                            if (s_list.Id == tz_list.consumer_status_id)
+                                            {
+                                                <option value="@s_list.Id" selected>@s_list.status_name</option>
+                                            }
+                                            if (s_list.Id != tz_list.consumer_status_id)
+                                            {
+                                                <option value="@s_list.Id">@s_list.status_name</option>
+                                            }
+                                        }
+                                    </select>
+                                    <a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Выберите значение из списка"></a>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="data-item">
+                                    <input type="text" class="data-value double" name="consumer_ypcl_area" value="@tz_list.area" id="consumer_ypcl_area_@(tz_list.consumer_perspective_year)"
+                                           data-consumer_ypcl_area="@tz_list.consumer_perspective_year" required onkeyup="ConsumerSetIncreaseArea(@(tz_list.consumer_perspective_year))">
+                                    <a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Это поле должно быть заполнено"></a>
+                                </div>
+                            </td>
+                            <td>
+                                <input type="text" class="data-value double" name="consumer_ypcl_increase_area" value="@tz_list.increase_area" id="consumer_ypcl_increase_area_@(tz_list.consumer_perspective_year)"
+                                       data-consumer_ypcl_increase_area="@tz_list.consumer_perspective_year" onkeyup="ConsumerSetIncreaseArea(@(tz_list.consumer_perspective_year))">
+                            </td>
+                            <td>
+                                <div class="data-item">
+                                    <input type="text" class="data-value double xxl-stretch" name="consumer_ypcl_unom_source_name" value="@tz_list.unom_source_name" id="consumer_ypcl_unom_source_name_@(tz_list.consumer_perspective_year)"
+                                           data-consumer_ypcl_unom_source_name="@tz_list.consumer_perspective_year" required disabled>
+                                    <a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Это поле должно быть заполнено"></a>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="data-item">
+                                    <select class="data-value selectpicker stretch" name="consumer_ypcl_heat_point_select" id="consumer_ypcl_heat_point_select_@(tz_list.consumer_perspective_year)"
+                                            onchange="SetSourceUnomByUnomHp(event, @tz_list.consumer_perspective_year, 'consumer_ypcl_heat_point')"
+                                            data-consumer_ypcl_heat_point="@tz_list.consumer_perspective_year" data-width="100%" required data-size="5">
+                                        <option value="">Выберите...</option>
+                                        @foreach (var s_list in ViewBag.HpNumberAddressList)
+                                        {
+                                            if (s_list.value_id == tz_list.consumer_heat_point_id)
+                                            {
+                                                <option value="@s_list.value_id" selected>@s_list.value_name</option>
+                                            }
+                                            if (s_list.value_id != tz_list.consumer_heat_point_id)
+                                            {
+                                                <option value="@s_list.value_id">@s_list.value_name</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="data-item">
+                                    <select class="data-value selectpicker stretch" name="consumer_ypcl_is_open_gvs_select" id="consumer_ypcl_is_open_gvs_select_@(tz_list.consumer_perspective_year)"
+                                            onchange="ChangeSelectValuePerspectiveConsumer(event, @tz_list.consumer_perspective_year, 'consumer_ypcl_is_open_gvs')"
+                                            data-consumer_ypcl_is_open_gvs="@tz_list.consumer_perspective_year" placeholder="Выберите..." data-width="100%" required>
+                                        @if (tz_list.is_in_open_gvs != null && (bool)tz_list.is_in_open_gvs)
+                                        {
+                                            <option value="">Выберите...</option>
+                                            <option value="@true" selected>Да</option>
+                                            <option value="@false">Нет</option>
+                                        }
+                                        else if (tz_list.is_in_open_gvs != null && !(bool)tz_list.is_in_open_gvs)
+                                        {
+                                            <option value="">Выберите...</option>
+                                            <option value="@true">Да</option>
+                                            <option value="@false" selected>Нет</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="" selected>Выберите...</option>
+                                            <option value="@true">Да</option>
+                                            <option value="@false">Нет</option>
+                                        }
+                                    </select>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="data-item">
+                                    <input type="text" class="data-value double" name="calc_hl_tech_steam" value="@tz_list.calc_hl_tech_steam" id="calc_hl_tech_steam_@(tz_list.consumer_perspective_year)" required
+                                           onkeyup="ChangeInputValuePerspectiveConsumer(@(tz_list.consumer_perspective_year), 'calc_hl_tech_steam', 'steam')"
+                                           data-calc_hl_tech_steam="@tz_list.consumer_perspective_year">
+                                    <a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Это поле должно быть заполнено"></a>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="data-item">
+                                    <input type="text" class="data-value double" name="calc_hl_heat_steam" value="@tz_list.calc_hl_heat_steam" id="calc_hl_heat_steam_@(tz_list.consumer_perspective_year)" required
+                                           onkeyup="ChangeInputValuePerspectiveConsumer(@(tz_list.consumer_perspective_year), 'calc_hl_heat_steam', 'steam')"
+                                           data-calc_hl_heat_steam="@tz_list.consumer_perspective_year">
+                                    <a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Это поле должно быть заполнено"></a>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="data-item">
+                                    <input type="text" class="data-value double" name="calc_hl_vent_steam" value="@tz_list.calc_hl_vent_steam" id="calc_hl_vent_steam_@(tz_list.consumer_perspective_year)" required
+                                           onkeyup="ChangeInputValuePerspectiveConsumer(@(tz_list.consumer_perspective_year), 'calc_hl_vent_steam', 'steam')"
+                                           data-calc_hl_vent_steam="@tz_list.consumer_perspective_year">
+                                    <a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Это поле должно быть заполнено"></a>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="data-item">
+                                    <input type="text" class="data-value double" name="calc_hl_gvss_steam" value="@tz_list.calc_hl_gvss_steam" id="calc_hl_gvss_steam_@(tz_list.consumer_perspective_year)" required
+                                           onkeyup="ChangeInputValuePerspectiveConsumer(@(tz_list.consumer_perspective_year), 'calc_hl_gvss_steam', 'steam')"
+                                           data-calc_hl_gvss_steam="@tz_list.consumer_perspective_year">
+                                    <a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Это поле должно быть заполнено"></a>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="data-item">
+                                    <input type="text" class="data-value double" name="calc_hl_sum_steam" value="@tz_list.calc_hl_sum_steam" id="calc_hl_sum_steam_@(tz_list.consumer_perspective_year)" disabled>
+                                    <a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Это поле должно быть заполнено"></a>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="data-item">
+                                    <input type="text" class="data-value double" name="calc_hl_tech_hw" value="@tz_list.calc_hl_tech_hw" id="calc_hl_tech_hw_@(tz_list.consumer_perspective_year)"
+                                           required onkeyup="ChangeInputValuePerspectiveConsumer(@(tz_list.consumer_perspective_year), 'calc_hl_tech_hw', 'hw')"
+                                           data-calc_hl_tech_hw="@tz_list.consumer_perspective_year">
+                                    <a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Это поле должно быть заполнено"></a>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="data-item">
+                                    <input type="text" class="data-value double" name="calc_hl_heat_hw" value="@tz_list.calc_hl_heat_hw" id="calc_hl_heat_hw_@(tz_list.consumer_perspective_year)"
+                                           required onkeyup="ChangeInputValuePerspectiveConsumer(@(tz_list.consumer_perspective_year), 'calc_hl_heat_hw', 'hw')"
+                                           data-calc_hl_heat_hw="@tz_list.consumer_perspective_year">
+                                    <a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Это поле должно быть заполнено"></a>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="data-item">
+                                    <input type="text" class="data-value double" name="calc_hl_vent_hw" value="@tz_list.calc_hl_vent_hw" id="calc_hl_vent_hw_@(tz_list.consumer_perspective_year)"
+                                           required onkeyup="ChangeInputValuePerspectiveConsumer(@(tz_list.consumer_perspective_year), 'calc_hl_vent_hw', 'hw')"
+                                           data-calc_hl_vent_hw="@tz_list.consumer_perspective_year">
+                                    <a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Это поле должно быть заполнено"></a>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="data-item">
+                                    <input type="text" class="data-value double" name="calc_hl_gvss_hw" value="@tz_list.calc_hl_gvss_hw" id="calc_hl_gvss_hw_@(tz_list.consumer_perspective_year)"
+                                           required onkeyup="ChangeInputValuePerspectiveConsumer(@(tz_list.consumer_perspective_year), 'calc_hl_gvss_hw', 'hw')"
+                                           data-calc_hl_gvss_hw="@tz_list.consumer_perspective_year">
+                                    <a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Это поле должно быть заполнено"></a>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="data-item">
+                                    <input type="text" class="data-value double" name="calc_hl_sum_hw" value="@tz_list.calc_hl_sum_hw" id="calc_hl_sum_hw_@(tz_list.consumer_perspective_year)" disabled>
+                                    <a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Это поле должно быть заполнено"></a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</form>
+
+<script type="text/javascript">
+
+    var add_remove_yisp_temp_ht_plan_select_required = true;
+    var global_array = [];
+
+    $(document).ready(function () {
+        removeRequiredAttrAllConsumer();
+        SetHeaderQpValue('hw');
+        SetHeaderQpValue('steam');
+        SetDevProgCheckbox();
+    });
+
+    function YearParamsCalc_CB_Change(cb) {
+        CB_Change(cb);
+        SetDevProgCheckbox();
+    };
+
+    function SetDevProgCheckbox(){
+        var is_main_prog = $('#calc_on_main_dev_prog').val();
+        if (is_main_prog != null && is_main_prog == 'true')
+            $('#consumer_main_dev_prog_id').prop("required", true);
+        else
+            $('#consumer_main_dev_prog_id').removeAttr("required");
+    }
+
+    function ChangeInputValuePerspectiveConsumer(perspective_year, select_name, type) {
+        var elements = document.getElementsByName(select_name);
+        var select_value = $('#' + select_name + '_' + perspective_year).val();
+        for (var i = 0; i < elements.length; i++) {
+            var year = elements[i].getAttribute('data-' + select_name);
+            if (year >= perspective_year) {
+                var select_id = elements[i].getAttribute('id');
+                $('#' + select_id).val(select_value);
+                SetValueSum(year, type);
+            }
+        }
+        if (perspective_year == $('#data_status').val()) {
+            SetHeaderQpValue(type);
+        }
+    }
+
+    function ChangeSelectValuePerspectiveConsumer(event, perspective_year, select_name) {
+        var elements = document.getElementsByName(select_name + '_select');
+        var select_value = event.target.value;
+        for (var i = 0; i < elements.length; i++) {
+            var year = elements[i].getAttribute('data-' + select_name);
+            if (year >= perspective_year) {
+                var select_id = elements[i].getAttribute('id');
+                $('#' + select_id).val(select_value);
+                RefreshSelectById(select_id);
+            }
+        }
+    }
+
+    function ConsumerSetIncreaseArea(perspective_year) {
+        var elements = document.getElementsByName('consumer_ypcl_area');
+        for (var i = 0; i < elements.length; i++) {
+            var year = elements[i].getAttribute('data-consumer_ypcl_area');
+            if (year > perspective_year) {
+                var current_area_double = Number($("#consumer_ypcl_area_" + (year - 1)).val().replace(",", "."));
+                var increase_value_double = Number($("#consumer_ypcl_increase_area_" + (year - 1)).val().replace(",", "."));
+                var result = (current_area_double + increase_value_double).toFixed(2).toString().replace(".", ",");
+                $('#consumer_ypcl_area_' + year).val(result);
+            }
+        }
+    }
+
+    function SetValueSum(year, type) {
+        var calc_hl_tech = Number($("#calc_hl_tech_" + type + "_" + (year)).val().replace(",", "."));
+        var calc_hl_heat = Number($("#calc_hl_heat_" + type + "_" + (year)).val().replace(",", "."));
+        var calc_hl_vent = Number($("#calc_hl_vent_" + type + "_" + (year)).val().replace(",", "."));
+        var calc_hl_gvss = Number($("#calc_hl_gvss_" + type + "_" + (year)).val().replace(",", "."));
+        var result = (calc_hl_tech + calc_hl_heat + calc_hl_vent + calc_hl_gvss).toFixed(8).toString().replace(".", ",");
+        $('#calc_hl_sum_' + type + "_" + year).val(result);
+    }
+
+    function removeRequiredAttrAllConsumer() {
+        let names = [
+            'consumer_ypcl_heat_point_select',
+            'consumer_ypcl_is_open_gvs_select'
+        ];
+
+        for (var i = 0; i < names.length; i++) {
+            if (!removeRequiredAttrConsumer(names[i])) {
+                requiredAttrSetConsumer(names[i], global_array, 'add');
+            }
+        }
+    }
+
+    function removeRequiredAttrConsumer(name) {
+        global_array = getArray(name);
+        add_remove_yisp_temp_ht_plan_select_required = checkIsEmptyColumns(global_array);
+        if (add_remove_yisp_temp_ht_plan_select_required) {
+            requiredAttrSetConsumer(name, global_array, 'remove');
+            return true;
+        }
+        return false;
+    }
+
+    function requiredAttrSetConsumer(name, array, operation) {
+        var years = getArray('consumer_yisp_perspective_year');
+        for (var i = 0; i < array.length; i++) {
+            if (operation == 'remove') {
+                $("#" + name + "_" + years[i]).removeAttr("required");
+            }
+            else if (operation == 'add') {
+                $("#" + name + "_" + years[i]).prop("required", true);
+            }
+        }
+    }
+
+    function getArray(name) {
+        var array = [];
+        var list = document.getElementsByName(name);
+        for (var i = 0; i < list.length; i++) {
+            array.push(list[i].value);
+        }
+        return array;
+    }
+
+    function checkIsEmptyColumns(array) {
+        if (array.filter(item => item === '').length == array.length) {
+            return true;
+        }
+        return false;
+    }
+
+    function GetSourceUnomByUnomHp(event, perspective_year, input_name) {
+        $.ajax({
+            url: '@Html.Raw(Url.Action("GetSourceUnomByUnomHp", "HSS", new { Area = ""}))',
+            type: 'POST',
+            data: {
+                data_status: $('#data_status').val(),
+                heat_point_id: $('#consumer_ypcl_heat_point_select_' + perspective_year).val()
+            }
+        }).done(function (data) {
+            var elements = document.getElementsByName('consumer_ypcl_heat_point_select');
+            for (var i = 0; i < elements.length; i++) {
+                var year = elements[i].getAttribute('data-consumer_ypcl_heat_point');
+                var data_year = data.list.find(x => x.value_id == year);
+                if (year >= perspective_year && data_year != undefined) {
+                    $('#consumer_ypcl_unom_source_name_' + year).val(data_year.value_name);
+                }
+                else if (year >= perspective_year && data_year == undefined) {
+                    $('#consumer_ypcl_unom_source_name_' + year).val('');
+                }
+            }
+        });
+    }
+
+    function SetSourceUnomByUnomHp(event, perspective_year, input_name) {
+        ChangeSelectValuePerspectiveConsumer(event, perspective_year, input_name);
+        GetSourceUnomByUnomHp(event, perspective_year, input_name);
+    }
+
+    function SetHeaderQpValue(type) {
+        var data_status = $('#data_status').val();
+        var sum_val = $('#calc_hl_sum_' + type + '_' + data_status).val();
+        $('#consumer_header_Qp_sum_' + type).val(sum_val);
+    }
+
+    var onSuccessForm_YearParamsCalcLoad = function (xhr) {
+        hidePreloader();
+        if (xhr.isDelete == true) {
+            $("#refresh_table").val(1);
+            showMessage('Данные удалены.', 'modal', 'success');
+        }
+        else if (xhr.isDelete == false) {
+            $("#refresh_table").val(1);
+            showMessage('Произошла ошибка при удалении.', 'modal', 'success');
+        }
+        else if (xhr.success == true) {
+            SetDevMainProg(xhr.data_status, xhr.consumer_id)
+            $("#refresh_table").val(1);
+            showMessage('Данные сохранены.', 'modal', 'success');
+        }
+        else {
+            showMessage(xhr.error, 'modal', 'fault');
+        }
+    };
+
+    function SetDevMainProg(data_status, consumer_id) {
+        $.ajax({
+            type: 'GET',
+            url: '@Html.Raw(Url.Action("OnGetConsumers_DevProgPart_ChangeDevMainProgBySelect_ViewComponent", "Consumers", new { Area = "HPConsumers" }))',
+            data: {
+                data_status: data_status,
+                consumer_id: consumer_id
+            },
+            dataType: 'html'
+        })
+            .done(function (result) {
+                var div = $('#perspective_dev_partial_div');
+                div.html("");
+                div.html(result);
+                $('.selectpicker').selectpicker();
+            });
+    }
+
+</script>

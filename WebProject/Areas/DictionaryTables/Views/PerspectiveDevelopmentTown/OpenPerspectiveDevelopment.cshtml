@@ -1,0 +1,520 @@
+﻿@model WebProject.Areas.DictionaryTables.Models.PerspectiveDevelopmentHeaderViewModel
+
+@{
+	string btn_disable = string.Empty; string is_checked = string.Empty;
+}
+
+<div class="modal-dialog modal-dialog-centered">
+	<div class="modal-content">
+		<div class="modal-header">
+			<h3 class="modal-title" id="editDataLabel">Программа развития города (поселения)</h3>
+			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="RefreshTable();"></button>
+		</div>
+		<div class="modal-body">
+			<div class="data-block static-block data-params">
+				<div class="data-row">
+					<div class="data-item">
+						<label class="data-label">Уникальный номер программы развития</label>
+						<select class="selectpicker data-value xxl-stretch" data-live-search="true" id="per_dev_gen_info_unom" name="per_dev_gen_info_id"
+							placeholder="УНОМ программы развития" onchange="ChangeOpenPopupPerspectiveDevelopment(event);">
+							@foreach (var tz_list in ViewBag.PerspectiveDevelopmentList)
+							{
+								if (tz_list.value_id == Model.dev_prog_id)
+								{
+									<option value="@tz_list.value_id" selected>@tz_list.value_name</option>
+								}
+								if (tz_list.value_id != Model.dev_prog_id)
+								{
+									<option value="@tz_list.value_id">@tz_list.value_name</option>
+								}
+							}
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="scroll-block-wrapper" style="max-height: 70vh;">
+				<div class="data-block scroll-block">
+					<div class="accordion data-block">
+						<div class="border-block">
+							<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel1" aria-expanded="false">Общие сведения о программе развития</button>
+							<div id="panel1" class="accordion-collapse collapse">
+								<div class="accordion-body">
+									@await Component.InvokeAsync("PerspectiveDevelopment_GenInfo_Partial", new {dev_prog_id = Model.dev_prog_id})
+								</div>
+							</div>
+						</div>
+						<div class=" border-block">
+							<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel2" aria-expanded="false">Объекты в программе развития</button>
+							<div id="panel2" class="accordion-collapse collapse">
+								<div class="accordion-body">
+									@await Component.InvokeAsync("PerspectiveDevelopment_Facilities_Partial", new {dev_prog_id = Model.dev_prog_id})
+								</div>
+							</div>
+						</div>
+						<div class="border-block">
+							<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel3" aria-expanded="false">Сводные данные по объектам программы развития</button>
+							<div id="panel3" class="accordion-collapse collapse">
+								<div class="accordion-body">
+									<div class="data-block">
+										<div class="scroll-table-wrapper">
+											<table class="table-inp-stretch" style="white-space: nowrap;width: 100%;">
+												<thead>
+													<tr>
+														<th>Расчётный год</th>
+														<th>01.01.2022</th>
+														<th>01.01.2023</th>
+														<th>01.01.2024</th>
+														<th>01.01.2025</th>
+														<th>01.01.2026</th>
+														<th>01.01.2027</th>
+														<th>01.01.2028</th>
+														<th>01.01.2029</th>
+														<th>01.01.2030</th>
+														<th>01.01.2031</th>
+														<th>01.01.2032</th>
+														<th>01.01.2033</th>
+														<th>01.01.2034</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr class="clicker">
+														<td class="dropdown-toggle">Количество объектов, <span class="data-unit">шт.</span></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+													</tr>
+													<tr style="display: none;">
+														<td>- жилые здания</td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+													</tr>
+													<tr style="display: none;">
+														<td>- общественные здания</td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+													</tr>
+													<tr style="display: none;">
+														<td>- промышленные здания</td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+													</tr>
+													<tr style="display: none;">
+														<td>- здания ИЖС</td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+													</tr>
+													<tr class="clicker">
+														<td class="dropdown-toggle">Объем строительства, <span class="data-unit">тыс. м<sup>2</sup></span></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+													</tr>
+													<tr style="display: none;">
+														<td>- жилые здания</td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+													</tr>
+													<tr style="display: none;">
+														<td>- общественные здания</td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+													</tr>
+													<tr style="display: none;">
+														<td>- промышленные здания</td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+													</tr>
+													<tr style="display: none;">
+														<td>- здания ИЖС</td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+													</tr>
+													<tr class="clicker">
+														<td class="dropdown-toggle">Суммарный рост тепловой нагрузки (заявленная), <span class="data-unit">Гкал/ч</span></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+													</tr>
+													<tr style="display: none;">
+														<td>- жилые здания</td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+													</tr>
+													<tr style="display: none;">
+														<td>- общественные здания</td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+													</tr>
+													<tr style="display: none;">
+														<td>- промышленные здания</td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+													</tr>
+													<tr style="display: none;">
+														<td>- здания ИЖС</td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+													</tr>
+													<tr class="clicker">
+														<td class="dropdown-toggle">Суммарный рост тепловой нагрузки (расчетная), <span class="data-unit">Гкал/ч</span></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+													</tr>
+													<tr style="display: none;">
+														<td>- жилые здания</td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+													</tr>
+													<tr style="display: none;">
+														<td>- общественные здания</td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+													</tr>
+													<tr style="display: none;">
+														<td>- промышленные здания</td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+													</tr>
+													<tr style="display: none;">
+														<td>- здания ИЖС</td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+													</tr>
+													<tr class="clicker">
+														<td class="dropdown-toggle">Средний удельный расход тепла на 1 м<sup>2</sup>, <span class="data-unit"> ккал/(ч х м<sup>2</sup>)</span></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+													</tr>
+													<tr style="display: none;">
+														<td>- жилые здания</td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+													</tr>
+													<tr style="display: none;">
+														<td>- общественные здания</td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+													</tr>
+													<tr style="display: none;">
+														<td>- промышленные здания</td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+													</tr>
+													<tr style="display: none;">
+														<td>- здания ИЖС</td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+														<td><input type="text" class="data-value" disabled></td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="bttn" data-bs-dismiss="modal">Отмена</button>
+			<button type="button" class="bttn bttn-color" data-bs-dismiss="modal">Сохранить</button>
+			<button type="button" class="bttn bttn-color">Создать копию</button>
+			<button type="button" class="bttn bttn-color">Удалить</button>
+			@*<button type="button" class="bttn bttn-color" onclick="RemoveConsumerFromDb(@Model.consumer_id, @Model.data_status)" id="open_consumer_add_remove_del_but" @is_disabled>Удалить</button>*@
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript" src="@Url.Content("~/hss/js/popup_common_scripts.js")"></script>
+<script type="text/javascript">
+
+	function RefreshTable() {
+		if ($("#refresh_table").val() === "1") {
+			GetListOnPage();
+		}
+	}
+
+	function RemoveConsumerFromDb(consumer_id, data_status) {
+		$('#is_deleted_consumer_gen_info').val(true);
+		$('#consumers_gen_info_form').submit();
+	}
+
+	function ChangeOpenPopupPerspectiveDevelopment(event){
+		var per_dev_id = event.target.value;
+		OpenPopupPerspectiveDevelopment(per_dev_id);
+	}
+
+</script>

@@ -1,0 +1,241 @@
+﻿@{
+    Layout = null;
+}
+
+
+<div class="form-data-edit modal wide-modal fade" id="TSOeditData" data-bs-backdrop="static" tabindex="-1" aria-labelledby="loadDataLabel" aria-hidden="true">
+</div>
+
+<div class="form-data-edit modal wide-modal fade" id="TZobjectsData" data-bs-backdrop="static" tabindex="-1" aria-labelledby="loadDataLabel" aria-hidden="true">
+</div>
+
+<div class="modal fade show" id="TSOeditAdditionalData" data-bs-backdrop="static" tabindex="-1" aria-labelledby="loadDataLabel" aria-hidden="true">
+</div>
+
+<div class="modal wide-modal fade" id="TZProductionDataPopup" data-bs-backdrop="static" tabindex="-1" aria-labelledby="loadDataLabel" aria-hidden="true">
+</div>
+
+<div class="modal modal-2 wide-modal fade" id="TZOutputEnergyDataPopup" data-bs-backdrop="static" tabindex="-1" aria-hidden="true">
+</div>
+
+<div class="modal wide-modal fade" id="TZTransferDataPopup" data-bs-backdrop="static" tabindex="-1" aria-labelledby="loadDataLabel" aria-hidden="true">
+</div>
+
+<div class="modal modal-2 wide-modal fade" id="TZOutputTransferEnergyDataPopup" data-bs-backdrop="static" tabindex="-1" aria-labelledby="loadDataLabel" aria-hidden="true">
+</div>
+
+<div class="modal wide-modal fade show" id="TZCostsPricesDataPopup" data-bs-backdrop="static" tabindex="-1" aria-labelledby="editDataLabel" aria-hidden="true">
+</div>
+
+<div class="modal wide-modal fade show" id="TZTariffConnectionDataPopup" data-bs-backdrop="static" tabindex="-1" aria-labelledby="editDataLabel" aria-hidden="true">
+</div>
+
+<div class="modal fade show" id="TZIndividualFeeDataPopup" data-bs-backdrop="static" tabindex="-1" aria-labelledby="editDataLabel" aria-hidden="true">
+</div>
+
+<div class="modal fade show" id="TZStandardizedRatesDataPopup" data-bs-backdrop="static" tabindex="-1" aria-labelledby="editDataLabel" aria-hidden="true">
+</div>
+
+<div class="modal fade show" id="TZPowerReservePaymentDataPopup" data-bs-backdrop="static" tabindex="-1" aria-labelledby="editDataLabel" aria-hidden="true">
+</div>
+
+<div class="form-data-edit modal fade" id="editHeatPointSwitchDataPopup" data-bs-backdrop="static" tabindex="-1" aria-labelledby="editDataLabel" aria-hidden="true">
+</div>
+
+<div class="modal wide-modal fade" id="editHeatPointAddRemoveDataPopup" data-bs-backdrop="static" tabindex="-1" aria-labelledby="editDataLabel" aria-hidden="true">
+</div>
+
+<div class="modal wide-modal fade" id="editLoadsAndExpensivesDataPopup" data-bs-backdrop="static" tabindex="-1" aria-labelledby="editDataLabel" aria-hidden="true">
+</div>
+
+<div class="modal wide-modal fade" id="editConsumerAddRemoveDataPopup" data-bs-backdrop="static" tabindex="-1" aria-labelledby="editDataLabel" aria-hidden="true">
+</div>
+
+<div class="modal wide-modal fade" id="editPerspectiveDevelopmentDataPopup" data-bs-backdrop="static" tabindex="-1" aria-labelledby="editDataLabel" aria-hidden="true">
+</div>
+
+<div class="modal wide-modal modal-2 fade" id="editPerspectiveDevelopmentFacilitiesDataPopup" data-bs-backdrop="static" tabindex="-1" aria-labelledby="editDataLabel" aria-hidden="true">
+</div>
+
+<div class="modal fade show" id="TZIndividualFeeDeleteRowPopup" data-bs-backdrop="static" tabindex="-1" aria-labelledby="editDataLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h3 class="modal-title" id="editDataLabel">Удаление записи</h3>
+				</div>
+				<div class="modal-body">
+					<div class="data-row static-block data-params">
+						<div class="data-item stretch" id="power_reserve_payment_one_tso_id_select">
+							<label class="data-label">Вы уверенны?</label>
+						</div>
+					</div>					
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="bttn" data-bs-dismiss="modal" onclick="CancelDeletingTableRowIndividualFee();">Отмена</button>
+					<button type="submit" class="bttn bttn-color" onclick="DeleteTableRowIndividualFee();">Удалить</button>
+				</div>
+			</div>
+	</div>
+</div>
+
+<div class="modal fade show" id="TZStandardizedRatesDeleteRowPopup" data-bs-backdrop="static" tabindex="-1" aria-labelledby="editDataLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h3 class="modal-title" id="editDataLabel">Удаление записи</h3>
+			</div>
+			<div class="modal-body">
+				<div class="data-row static-block data-params">
+					<div class="data-item stretch" id="power_reserve_payment_one_tso_id_select">
+						<label class="data-label">Вы уверенны?</label>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="bttn" data-bs-dismiss="modal" onclick="CancelDeletingTableRowStandardizedRates();">Отмена</button>
+				<button type="submit" class="bttn bttn-color" onclick="DeleteTableRowStandardizedRates();">Удалить</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade show" id="TZPowerReservePaymentDeleteRowPopup" data-bs-backdrop="static" tabindex="-1" aria-labelledby="editDataLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h3 class="modal-title" id="editDataLabel">Удаление записи</h3>
+			</div>
+			<div class="modal-body">
+				<div class="data-row static-block data-params">
+					<div class="data-item stretch" id="power_reserve_payment_one_tso_id_select">
+						<label class="data-label">Вы уверенны?</label>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="bttn" data-bs-dismiss="modal" onclick="CancelDeletingTableRowPowerReservePayment();">Отмена</button>
+				<button type="submit" class="bttn bttn-color" onclick="DeleteTableRowPowerReservePayment();">Удалить</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div class="modal fade show" id="TerrDivisionDataPopup" data-bs-backdrop="static" tabindex="-1" aria-labelledby="editDataLabel" aria-hidden="true">
+</div>
+<div class="modal fade show" id="TariffZoneDataPopup" data-bs-backdrop="static" tabindex="-1" aria-labelledby="editDataLabel" aria-hidden="true">
+</div>
+<div class="modal fade show" id="ActiveZoneETODataPopup" data-bs-backdrop="static" tabindex="-1" aria-labelledby="editDataLabel" aria-hidden="true">
+</div>
+<div class="modal fade show" id="HSSDataPopup" data-bs-backdrop="static" tabindex="-1" aria-labelledby="editDataLabel" aria-hidden="true">
+</div>
+<div class="modal fade show" id="OrganizationDataPopup" data-bs-backdrop="static" tabindex="-1" aria-labelledby="editDataLabel" aria-hidden="true">
+</div>
+<div class="modal fade show" id="OutPutsSorcesDataPopup" data-bs-backdrop="static" tabindex="-1" aria-labelledby="editDataLabel" aria-hidden="true">
+</div>
+<div class="modal fade show" id="DiametersConsumptionsDataPopup" data-bs-backdrop="static" tabindex="-1" aria-labelledby="editDataLabel" aria-hidden="true">
+</div>
+<div class="modal fade show" id="IzolTypesDataPopup" data-bs-backdrop="static" tabindex="-1" aria-labelledby="editDataLabel" aria-hidden="true">
+</div>
+<div class="modal fade show" id="FuelDataPopup" data-bs-backdrop="static" tabindex="-1" aria-labelledby="editDataLabel" aria-hidden="true">
+</div>
+<div class="modal fade show" id="LayersDataPopup" data-bs-backdrop="static" tabindex="-1" aria-labelledby="editDataLabel" aria-hidden="true">
+</div>
+<div class="modal fade" id="HPSchemesDataPopup" data-bs-backdrop="static" tabindex="-1" aria-labelledby="editDataLabel" aria-hidden="true">
+</div>
+<div class="modal fade" id="SteamTurbineDataPopup" data-bs-backdrop="static" tabindex="-1" aria-labelledby="editDataLabel" aria-hidden="true">
+</div>
+<div class="modal fade" id="GasTurbineDataPopup" data-bs-backdrop="static" tabindex="-1" aria-labelledby="editDataLabel" aria-hidden="true">
+</div>
+<div class="modal fade" id="SteamBoilerDataPopup" data-bs-backdrop="static" tabindex="-1" aria-labelledby="editDataLabel" aria-hidden="true">
+</div>
+<div class="modal fade" id="HWBoilerDataPopup" data-bs-backdrop="static" tabindex="-1" aria-labelledby="editDataLabel" aria-hidden="true">
+</div>
+<div class="modal fade" id="PistonInstallationsDataPopup" data-bs-backdrop="static" tabindex="-1" aria-labelledby="editDataLabel" aria-hidden="true">
+</div>
+<div class="modal fade" id="ROUDataPopup" data-bs-backdrop="static" tabindex="-1" aria-labelledby="editDataLabel" aria-hidden="true">
+</div>
+<div class="modal fade" id="WaterHeaterDataPopup" data-bs-backdrop="static" tabindex="-1" aria-labelledby="editDataLabel" aria-hidden="true">
+</div>
+<div class="modal fade" id="PumpsDataPopup" data-bs-backdrop="static" tabindex="-1" aria-labelledby="editDataLabel" aria-hidden="true">
+</div>
+<div class="modal fade" id="FiltersVPUDataPopup" data-bs-backdrop="static" tabindex="-1" aria-labelledby="editDataLabel" aria-hidden="true">
+</div>
+<div class="modal fade" id="ClarifierVPUDataPopup" data-bs-backdrop="static" tabindex="-1" aria-labelledby="editDataLabel" aria-hidden="true">
+</div>
+<div class="modal fade" id="ReverseOsmosisInstalVPUDataPopup" data-bs-backdrop="static" tabindex="-1" aria-labelledby="editDataLabel" aria-hidden="true">
+</div>
+<div class="modal fade" id="NanoFiltrationInstallVPUDataPopup" data-bs-backdrop="static" tabindex="-1" aria-labelledby="editDataLabel" aria-hidden="true">
+</div>
+<div class="modal fade" id="DeaeratorsDataPopup" data-bs-backdrop="static" tabindex="-1" aria-labelledby="editDataLabel" aria-hidden="true">
+</div>
+<div class="modal fade" id="TanksVPUDataPopup" data-bs-backdrop="static" tabindex="-1" aria-labelledby="editDataLabel" aria-hidden="true">
+</div>
+<div class="modal fade" id="ComplexonsVPUDataPopup" data-bs-backdrop="static" tabindex="-1" aria-labelledby="editDataLabel" aria-hidden="true">
+</div>
+<div class="modal fade" id="SmokePipesDataPopup" data-bs-backdrop="static" tabindex="-1" aria-labelledby="editDataLabel" aria-hidden="true">
+</div>
+<div class="modal fade" id="ContractDataPopup" data-bs-backdrop="static" tabindex="-1" aria-labelledby="editDataLabel" aria-hidden="true">
+</div>
+<div class="modal fade" id="BuildingDataPopup" data-bs-backdrop="static" tabindex="-1" aria-labelledby="editDataLabel" aria-hidden="true">
+</div>
+<div class="modal fade" id="NormLossDataPopup" data-bs-backdrop="static" tabindex="-1" aria-labelledby="editDataLabel" aria-hidden="true">
+</div>
+<div class="modal fade" id="SourceDataPopup" data-bs-backdrop="static" tabindex="-1" aria-labelledby="editDataLabel" aria-hidden="true">
+</div>
+<div class="modal wide-modal fade" id="SourceEquipmentDataPopup" data-bs-backdrop="static" tabindex="-1" aria-labelledby="editDataLabel" aria-hidden="true">
+</div>
+<!-- Modal Message-->
+<div class="modal fade" id="infoMessage" tabindex="-1" aria-labelledby="infoUserLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-body">
+				<div class="data-block">
+					<button type="button" class="btn-close ms-auto" data-bs-dismiss="modal" aria-label="Close"></button>
+					<div class="border-block info">
+						<div class="message-icon">
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M256 56C145.72 56 56 145.72 56 256s89.72 200 200 200 200-89.72 200-200S366.28 56 256 56zm0 82a26 26 0 11-26 26 26 26 0 0126-26zm48 226h-88a16 16 0 010-32h28v-88h-16a16 16 0 010-32h32a16 16 0 0116 16v104h28a16 16 0 010 32z" /></svg>
+						</div>
+						<div class="message-text">Текст сообщения</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Modal exitUser -->
+<div class="modal fade" id="exitUser" tabindex="-1" aria-labelledby="exitUserLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h3 class="modal-title" id="exitUserLabel">Предупреждение</h3>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				Вы уверены, что хотите выйти из системы?
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="bttn" data-bs-dismiss="modal">Отмена</button>
+				<a role="button" href="welcome.html" class="bttn bttn-color">Да</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div class="modal fade" id="infoUser" tabindex="-1" aria-labelledby="infoUserLabel" aria-hidden="true">
+	<div class="modal-dialog">
+	<div class="modal-content">
+		<div class="modal-header">
+		<h3 class="modal-title" id="infoUserLabel"></h3>
+		<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		</div>
+		<div class="modal-body">
+		Информация сохранена!
+		</div>
+		<div class="modal-footer">
+		<button type="button" class="bttn bttn-color" data-bs-dismiss="modal">Закрыть</button>
+		</div>
+	</div>
+	</div>
+</div>

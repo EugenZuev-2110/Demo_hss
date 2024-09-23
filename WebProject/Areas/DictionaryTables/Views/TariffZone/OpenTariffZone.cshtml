@@ -1,0 +1,416 @@
+﻿@model WebProject.Areas.DictionaryTables.Models.TariffZoneOneDataViewModel
+
+@{
+	string btn_disable = string.Empty;
+}
+@if (Model.tz_id == 0)
+{
+	btn_disable = "disabled";
+}
+
+<div class="modal-dialog modal-dialog-centered">
+	<div class="modal-content">
+		<div class="modal-header">
+			<h3 class="modal-title" id="editDataLabel">Тарифная зона</h3>
+			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="RefreshTable()"></button>
+		</div>
+		<div class="modal-body">
+			<form class="needs-validation" novalidate asp-controller="TariffZone" asp-action="TariffZone_Save" asp-antiforgery="true" asp-area="DictionaryTables" id="tariffZone_form"
+			data-ajax-failure="onFailedForm" data-ajax-success="onSuccessFormTariffZone" data-ajax-begin="onBeginForm" data-ajax="true" data-ajax-method="POST">
+				<input type="hidden" name="tz_id" value="@Model.tz_id" id="tariffZone_tz_id" />
+				<input type="hidden" name="data_status" value="@Model.data_status" id="tariffZone_data_status" />
+				<input type="hidden" name="unom_tz" value="@Model.unom_tz" id="tariffZone_unom_tz" />
+				<div class="data-block static-block data-params">
+					<div class="data-row">
+						<div class="data-item">
+							<label for="ParamNumberTZ" class="data-label">Уникальный номер тарифной зоны</label>
+							<select class="selectpicker data-value xxl-stretch" name="tz_id" id="ParamNumberTZ" data-size="5" data-live-search="true" placeholder="Выберите УНОМ ТЗ">
+								@if (@Model.tz_id == 0 || ViewBag.Action_for == "copy")
+								{
+									<option value="" selected disabled>При добавлении новой ТЗ, УНОМ генерируется автоматически</option>
+								}
+								@foreach (var tz in ViewBag.TZList)
+								{
+									if (tz.tz_id == Model.tz_id && ViewBag.Action_for != "copy")
+									{
+										<option value="@tz.tz_id" selected>@tz.tz_name</option>
+									}
+									else
+									{
+										<option value="@tz.tz_id">@tz.tz_name</option>
+									}
+								}
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="scroll-block-wrapper" style="max-height: 72vh;">
+					<div class="data-block scroll-block">
+						<div class="data-row">
+							<div class="col-12 col-lg-5">
+								<div class="data-block border-block me-lg-1">
+									<table class="table-inp-stretch" style="width: 100%;">
+										<thead>
+											<tr>
+												<th>Год схемы</th>
+												<th>Наименование ТСО</th>
+											</tr>
+										</thead>
+										<tbody>
+											@foreach (var tz_perspective in Model.TariffZoneTsoList)
+											{
+												<input type="hidden" name="tso" value="@tz_perspective.tso_id" id="tso_id_@(tz_perspective.perspective_year)" />
+												<input type="hidden" name="perspective_year" value="@tz_perspective.perspective_year" />
+												<tr>
+													<td>@tz_perspective.perspective_year</td>
+													<td>
+														<div class="data-item">
+														<select class="selectpicker data-value xl-full" data-live-search="true" data-size="5"  name="tso_select" required id="tso_select_@(tz_perspective.perspective_year)" onchange="ChangeSelectValuePerspective(event, @tz_perspective.perspective_year, 'tso')" data-tso="@tz_perspective.perspective_year" data-width="100%">
+															@if(tz_perspective.tso_id == null)
+																{
+																	<option value="" disabled selected>Выберите...</option>
+																}
+																@foreach (var name in ViewBag.TsoList)
+															{
+																if (name.tso_id == tz_perspective.tso_id)
+																{
+																	<option value="@name.tso_id" selected>@name.tso_name</option>
+																}
+																if (name.tso_id != tz_perspective.tso_id)
+																{
+																	<option value="@name.tso_id">@name.tso_name</option>
+																}
+															}
+														</select>
+														<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Выберите значение из списка"></a>
+														</div>
+													</td>
+												</tr>
+											}
+										</tbody>
+									</table>
+								</div>
+							</div>
+							<div class="col-12 col-lg-7">
+								<div class="data-block ms-lg-1">
+									<div class="data-row border-block">
+									<div class="data-item">
+										<label class="data-label">№ тарифной зоны в исходном файле (факт)</label>
+										<input type="text" asp-for="@Model.tz_num" class="data-value md-stretch" required>
+										<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Это поле должно быть заполнено"></a>
+									</div>
+									<div class="data-item">
+										<label class="data-label">№ тарифной зоны в исходном файле (план)</label>
+										<input type="text" asp-for="@Model.tz_num_plan" class="data-value md-stretch" >
+									</div>
+									<div class="data-item">
+										<label class="data-label">Наименование тарифной зоны</label>
+											<input type="text" asp-for="@Model.tz_name" required class="data-value md-stretch">
+											<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Это поле должно быть заполнено"></a>
+									</div>
+									</div>
+									<div class="data-block border-block">
+										<h4>Виды деятельности:</h4>
+										<div class="data-row">
+											<label class="data-item">
+												<span class="data-label">Комбинированное производство, более 25 МВт</span>
+												@if (Model.tz_id > 0)
+												{
+													string is_checked = string.Empty;
+													@if(Model.combine_prod_more25 == true)
+														is_checked = "checked";
+													<input type="checkbox" value="@(Model.combine_prod_more25 == true ? "true" : "false")" name="combine_prod_more25" id="CheckBox_combine_prod_more25" class="data-check" @is_checked onchange="CB_Change(this)" onclick="CheckCB()">
+												}
+												else
+												{
+													<input type="checkbox" value="false" name="combine_prod_more25" id="CheckBox_combine_prod_more25" class="data-check" onchange="CB_Change(this)" onclick="CheckCB()">
+												}
+		
+											</label>
+											<label class="data-item">
+												<span class="data-label">Комбинированное производство, менее 25 МВт</span>
+												@if (Model.tz_id > 0)
+												{
+													string is_checked = string.Empty;
+													@if (Model.combine_prod_less25 == true)
+														is_checked = "checked";
+													<input type="checkbox" value="@(Model.combine_prod_less25 == true ? "true" : "false")" name="combine_prod_less25" id="CheckBox_combine_prod_less25" class="data-check" @is_checked onchange="CB_Change(this)" onclick="CheckCB()">
+												}
+												else
+												{
+													<input type="checkbox" name="combine_prod_less25" value="false" id="CheckBox_combine_prod_less25" class="data-check" onchange="CB_Change(this)" onclick="CheckCB()">
+												}
+											</label>
+											<label class="data-item">
+												<span class="data-label ">Некомбинированное производство</span>
+												@if (Model.tz_id > 0)
+												{
+													string is_checked = string.Empty;
+													@if (Model.not_combine_prod == true)
+														is_checked = "checked";
+													<input type="checkbox" value="@(Model.not_combine_prod == true ? "true" : "false")" name="not_combine_prod" id="not_combine_prod" class="data-check" @is_checked onchange="CB_Change(this)" onclick="CheckCB()">
+												}
+												else
+												{
+													<input type="checkbox" name="not_combine_prod" value="true" checked class="data-check" id="not_combine_prod" onchange="CB_Change(this)" onclick="CheckCB()">
+												}
+											</label>
+
+											<label class="data-item">
+												<span class="data-label ">Договор поставки</span>
+												@if (Model.tz_id > 0)
+												{
+													string is_checked = string.Empty;
+													@if (Model.delivery_contract == true)
+														is_checked = "checked";
+													<input type="checkbox" value="@(Model.delivery_contract == true ? "true" : "false")" name="delivery_contract" id="CheckBox_delivery_contract" class="data-check" @is_checked onchange="CB_Change(this)" onclick="CheckCB()">
+												}
+												else
+												{
+													<input type="checkbox" name="delivery_contract" value="false" class="data-check" id="CheckBox_delivery_contract" onchange="CB_Change(this)" onclick="CheckCB()">
+												}
+											</label>
+											<label class="data-item">
+												<span class="data-label ">Передача</span>
+												@if (Model.tz_id > 0)
+												{
+													string is_checked = string.Empty;
+													@if (Model.transfer == true)
+														is_checked = "checked";
+													<input type="checkbox" value="@(Model.transfer == true ? "true" : "false")" name="transfer" id="CheckBox_transfer" class="data-check" @is_checked onchange="CB_Change(this)" onclick="CheckCB()">
+												}
+												else
+												{
+													<input type="checkbox" name="transfer" value="false" class="data-check" id="CheckBox_transfer" onchange="CB_Change(this)" onclick="CheckCB()">
+												}
+											</label>
+											<label class="data-item">
+												<span class="data-label ">Сбыт</span>
+												@if (Model.tz_id > 0)
+												{
+													string is_checked = string.Empty;
+													@if (Model.sale == true)
+														is_checked = "checked";
+													<input type="checkbox" value="@(Model.sale == true ? "true" : "false")" name="sale" id="CheckBox_sale" class="data-check" @is_checked onchange="CB_Change(this)" onclick="CheckCB()">
+												}
+												else
+												{
+													<input type="checkbox" name="sale" value="false" class="data-check" id="CheckBox_sale" onchange="CB_Change(this)" onclick="CheckCB()">
+												}
+											</label>
+										</div>
+									</div>
+									<div class="data-row border-block">
+										<h4>Дифференциация тарифов:</h4>
+										<div class="data-row">
+											<label class="data-item">
+												<span class="data-label">Без дифференциации</span>
+												@if (Model.tz_id > 0)
+												{
+													string is_checked = string.Empty;
+													@if (Model.tariff_differentiation == 1)
+														is_checked = "checked";
+													<input type="radio" value="@(Model.tariff_differentiation == 1 ? 1 : 1)" name="tariff_differentiation" class="data-check" @is_checked id="cb1" onclick="CheckBox_Change('cb1')">
+												}
+												else
+												{
+													<input type="radio" name="tariff_differentiation" value="true" checked class="data-check" id="cb1">
+												}
+											</label>
+											<label class="data-item">
+												<span class="data-label">До тепловых пунктов</span>
+												@if (Model.tz_id > 0)
+												{
+													string is_checked = string.Empty;
+													@if (Model.tariff_differentiation == 2)
+														is_checked = "checked";
+													<input type="radio" value="@(Model.tariff_differentiation == 2 ? 2 : 1)" name="tariff_differentiation" class="data-check" @is_checked id="cb2" onclick="CheckBox_Change('cb2')">
+												}
+												else
+												{
+													<input type="radio" name="tariff_differentiation" value="false" class="data-check" id="cb2">
+												}
+											</label>
+											<label class="data-item">
+												<span class="data-label">После тепловых пунктов</span>
+												@if (Model.tz_id > 0)
+												{
+													string is_checked = string.Empty;
+													@if (Model.tariff_differentiation == 3)
+														is_checked = "checked";
+													<input type="radio" value="@(Model.tariff_differentiation == 3 ? 3 : 1)" name="tariff_differentiation" class="data-check" id="cb3" @is_checked onclick="CheckBox_Change('cb3')">
+												}
+												else
+												{
+													<input type="radio" name="tariff_differentiation" value="false" class="data-check" id="cb3">
+												}
+											</label>
+										</div>
+
+									</div>
+									<div class="data-row border-block">
+										<div class="data-item">
+											<label class="data-label">Уникальный номер слоя электронной модели</label>
+											<select class="selectpicker data-value sm-stretch" name="layer_id" data-live-search="true" placeholder="Выберите...">
+												@foreach (var layer in ViewBag.LayersList)
+												{
+													if(layer.Id == Model.layer_id)
+													{
+														<option value="@layer.Id" selected>@layer.layer_unom</option>
+													}
+													else
+													{
+														<option value="@layer.Id">@layer.layer_unom</option>
+													}
+												}
+											</select>
+										</div>
+										<div class="data-item">
+											<label class="data-label">SYS объекта в электронном слое</label>
+											<input type="text" class="data-value sm-stretch" name="layer_sys" value="@Model.layer_sys">
+										</div>
+									</div>
+									<div class="data-block border-block">
+										<div class="data-block border-block">
+											<div class="data-row">
+												<div class="data-item">
+													<label class="data-label">Район (поселение)</label>
+													<select class="selectpicker data-value lg-stretch" name="distr_id" data-live-search="true" data-size="5" placeholder="Выберите..." required multiple="true">
+														@if(Model.tz_id == 0 || Model.TariffZoneDistrictList == null || Model.TariffZoneDistrictList.Count == 0)
+														{
+															foreach (var distr in Model.districts)
+															{
+																<option value="@distr.id">@distr.distr_name</option>
+															}
+														}
+														@if (Model.TariffZoneDistrictList != null && Model.TariffZoneDistrictList.Count > 0)
+														{
+															foreach (var district in Model.tz_distr)
+															{
+																<option value="@district" selected>@Model.districts.Where(x => x.id == district).Select(x => x.distr_name).FirstOrDefault()</option>
+															}
+															foreach(var distr in Model.districts.Where(x => !Model.tz_distr.Any(y => y == x.id)))
+															{
+																<option value="@distr.id">@distr.distr_name</option>
+															}
+														}
+													</select>
+													<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Выберите значение из списка"></a>
+
+												</div>
+
+											</div>
+											<table id="TZdistrictsTable" class="display compact table-inp-stretch" style="width:100%">
+												<thead>
+													<tr>
+														<th>Округ</th>
+														<th>Районы</th>
+													</tr>
+												</thead>
+												<tbody>
+													@foreach (var distr in Model.TariffZoneDistrictList)
+													{
+														<tr>
+															<td>@distr.region</td>
+															<td>@distr.territories</td>
+														</tr>
+													}
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="bttn" data-bs-dismiss="modal">Отмена</button>
+			<button type="submit" class="bttn bttn-color" id="btnSaveTZ" form="tariffZone_form" >Сохранить</button>
+			<button type="button" class="bttn bttn-color" id="btnCopyTZ" @btn_disable onclick="OpenPopupTariffZone(@Model.tz_id, 'copy'); ">Создать копию</button>
+			<button type="button" class="bttn bttn-color" id="btnDeleteTZ" onclick="DeleteTZ()" @btn_disable>Удалить</button>
+		</div>
+	</div>
+</div>
+
+
+	<script type="text/javascript" src="@Url.Content("~/hss/js/popup_common_scripts.js")"></script>
+    <script type="text/javascript">
+
+	$(document).ready(function () {
+		document.querySelector('#ParamNumberTZ').addEventListener('change', (event) => {
+			OpenPopupTariffZone($("#ParamNumberTZ").val());
+		});
+	});
+	function DeleteTZ() {
+		debugger
+		showPreloader();
+		$.ajax({
+			url: '@Html.Raw(Url.Action("TariffZone_Delete", "TariffZone", new { Area = "DictionaryTables" }))',
+			type: 'POST',
+			data: {
+				tz_Id: $('#tariffZone_tz_id').val(),
+				data_status: $('#tariffZone_data_status').val()
+			}
+		}).done(function () {
+			$("#btnDeleteTZ").prop('disabled', true);
+			$("#btnCopyTZ").prop('disabled', true);
+			$("#btnSaveTZ").prop('disabled', true);
+			$("#refresh_tariffZone_table").val(1);
+			hidePreloader();
+		});
+	}
+		var onBeginFormTariffZone = function (xhr) {
+			showPreloader();
+		};
+
+		var onFailedFormTariffZone = function (xhr) {
+			showMessage('Ошибка сохранения данных.', 'modal', 'success');
+			hidePreloader();
+		};
+
+		var onSuccessFormTariffZone = function (xhr) {
+			if (xhr.success == true) {
+				debugger
+				showMessage('Данные сохранены.', 'modal', 'success');
+
+			let select_id = "ParamNumberTZ";
+				$('#' + select_id).val(xhr.unom_tz);
+				$('#' + select_id).append('<option value=' + xhr.tz_id + ' selected>' + xhr.unom_tz + '</option>');
+
+
+				OpenPopupTariffZone(xhr.tz_id);
+
+				RefreshSelectById(select_id);
+				$("#refresh_tariffZone_table").val(1);
+			var e = $("#refresh_tariffZone_table").val();
+			}
+			else {
+				if (xhr.message === undefined) {
+					xhr.message = 'Ошибка сохранения данных'
+				}
+				showMessage(xhr.message, 'modal', 'fault');
+			}
+			hidePreloader();
+		};
+
+        function CheckCB()
+		{
+			 var checkBoxes = document.querySelectorAll('[id*="CheckBox_"]');
+			 var AllCheked = false;
+
+			 for(var i = 0; i < checkBoxes.length; i++)
+			 {
+				 if(checkBoxes[i].checked){
+					 AllCheked = true;
+				 }
+			 }
+			 if(AllCheked == false)
+			 {
+				document.getElementById("not_combine_prod").checked = true;
+			 }
+		}
+</script>

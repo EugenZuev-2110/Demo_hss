@@ -1,0 +1,91 @@
+﻿@model List<WebProject.Areas.DictionaryTables.Models.CoefEnergyEfficiencyViewModel>
+@{
+	int colCount = Model.Where(x => x.type_purpose_id == 1 && x.coef_id == 1).Count() + 1;
+}
+
+<form class="needs-validation" novalidate asp-controller="StandardConsumptionHeat" asp-action="CoefEnergyEfficiency_Save" asp-antiforgery="true" asp-area="DictionaryTables" id="ZoneETO_form"
+   data-ajax-failure="onFailedForm" data-ajax-success="onSuccessFormCoef" data-ajax-begin="onBeginForm" data-ajax="true" data-ajax-method="POST">
+	<div class="scroll-table-wrapper">
+			<input type="hidden" name="data_status" value="@Model[0].data_status" />
+				<table class="table-inp-stretch" style="width:100%;white-space: nowrap;">
+					<thead>
+						<tr>
+							<th>Расчётный год</th>
+							@foreach (var years in Model.Where(x => x.type_purpose_id == 1 && x.coef_id == 1))
+							{
+								<input type="hidden" name="perspective_year" value="@years.perspective_year" />
+								<th>@years.perspective_year</th>
+							}			
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<th colspan="@colCount">А) на нужды отопления и вентиляции</th>
+						</tr>
+						
+						<tr>
+							<td>- в жилых зданиях</td>
+							@foreach(var coef in Model.Where(x => x.coef_id == 1 && x.type_purpose_id == 1) )
+							{
+								<td><input type="text" class="data-value" name="coef_value1_resident" value="@coef.coef_value"></td>
+							}
+						</tr>
+						<tr>
+							<td>- в общественных зданиях</td>
+							@foreach (var coef in Model.Where(x => x.coef_id == 1 && x.type_purpose_id == 2))
+							{
+								<td><input type="text" class="data-value" name="coef_value1_public" value="@coef.coef_value"></td>
+							}
+						</tr>
+						<tr>
+							<td>- в промышленности</td>
+							@foreach (var coef in Model.Where(x => x.coef_id == 1 && x.type_purpose_id == 3))
+							{
+								<td><input type="text" class="data-value" name="coef_value1_industr" value="@coef.coef_value"></td>
+							}
+						</tr>
+						<tr>
+							<td>- в зданиях ИЖС</td>
+							@foreach (var coef in Model.Where(x => x.coef_id == 1 && x.type_purpose_id == 4))
+							{
+								<td><input type="text" class="data-value" name="coef_value1_izhs" value="@coef.coef_value"></td>
+							}
+						</tr>
+						<tr>
+							<th colspan="@colCount">Б) на нужды горячего водоснабжения</th>
+						</tr>
+						<tr>
+							<td>- в жилых зданиях</td>
+							@foreach (var coef in Model.Where(x => x.coef_id == 2 && x.type_purpose_id == 1))
+							{
+								<td><input type="text" class="data-value" name="coef_value2_resident" value="@coef.coef_value"></td>
+							}
+						</tr>
+						<tr>
+							<td>- в общественных зданиях</td>
+							@foreach (var coef in Model.Where(x => x.coef_id == 2 && x.type_purpose_id == 2))
+							{
+								<td><input type="text" class="data-value" name="coef_value2_public" value="@coef.coef_value"></td>
+							}
+						</tr>
+						<tr>
+							<td>- в промышленности</td>
+							@foreach (var coef in Model.Where(x => x.coef_id == 2 && x.type_purpose_id == 3))
+							{
+								<td><input type="text" class="data-value" name="coef_value2_industr" value="@coef.coef_value"></td>
+							}
+						</tr>
+						<tr>
+							<td>- в зданиях ИЖС</td>
+							@foreach (var coef in Model.Where(x => x.coef_id == 2 && x.type_purpose_id == 4))
+							{
+								<td><input type="text" class="data-value" name="coef_value2_izhs" value="@coef.coef_value"></td>
+							}
+						</tr>
+					</tbody>
+				</table>
+</div>
+			<div class="data-item-right">
+				<button class="bttn bttn-color ms-auto">Сохранить</button>
+			</div>
+</form>

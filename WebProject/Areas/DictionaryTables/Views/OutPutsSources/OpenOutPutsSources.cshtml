@@ -1,0 +1,124 @@
+﻿@model WebProject.Areas.DictionaryTables.Models.OutPutsSourcesOnetViewModel
+
+@{
+	string btn_disable = string.Empty;
+}
+@if (Model.source_output_id == 0)
+{
+	btn_disable = "disabled";
+}
+
+<div class="modal-dialog modal-dialog-centered">
+	<div class="modal-content">
+		<div class="modal-header">
+			<h3 class="modal-title" id="editDataLabel">Головной вывод источника</h3>
+			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="RefreshTable()"></button>
+		</div>
+		<div class="modal-body">
+			<form class="needs-validation" novalidate asp-controller="OutPutsSources" asp-action="OutPutSources_Save" asp-antiforgery="true" asp-area="DictionaryTables" id="OutPut_form"
+			data-ajax-failure="onFailedFormTZ" data-ajax-success="onSuccessFormOutputs" data-ajax-begin="onBeginFormTZ" data-ajax="true" data-ajax-method="POST">
+				<input type="hidden" name="data_status" value="@Model.data_status" id="org_data_status" />
+				<input type="hidden" name="source_output_id" value="@Model.source_output_id" id="source_output_id" />
+				<input type="hidden" name="unom_output" value="@Model.unom_output" id="unom_output" />
+			<div class="data-block static-block data-params">
+				<div class="data-row">
+					<div class="data-item">
+						<label class="data-label">Уникальный номер головного вывода источника</label>
+							<select class="selectpicker data-value xxl-stretch" data-live-search="true"  id="paramNumberOutput" placeholder="Выберите УНОМ головного вывода">
+								@if (@Model.source_output_id == 0 || ViewBag.Action_for == "copy")
+								{
+									<option value="" selected disabled>При добавлении нового вывода, УНОМ генерируется автоматически</option>
+								}
+							@foreach (var output in ViewBag.OutputList)
+							{
+								if (@output.source_output_id == Model.source_output_id)
+								{
+										<option value="@output.source_output_id" selected>@output.unom_output (@output.output_name)</option>
+								}
+								else
+								{
+										<option value="@output.source_output_id">@output.unom_output (@output.output_name)</option>
+								}
+							}
+						</select>
+							
+					</div>
+				</div>
+			</div>
+			<div class="data-block">
+				<div class="data-row">
+					<div class="data-item">
+						<label class="data-label xl-fix">Уникальный номер источника</label>
+							<select class="selectpicker data-value lg-stretch" name="value_id" data-live-search="true" required placeholder="Выберите...">
+							@foreach (var s_ource in ViewBag.SourcesList)
+							{
+								if (s_ource.value_id == Model.value_id)
+								{
+									<option value="@s_ource.value_id" selected>@s_ource.value_name</option>
+								}
+								else
+								{
+									<option value="@s_ource.value_id">@s_ource.value_name</option>
+								}
+							}
+						</select>
+							<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Выберите значение из списка"></a>
+					</div>
+					
+				</div>
+				<div class="data-row">
+					<div class="data-item">
+						<label class="data-label xl-fix">Наименование головного вывода </label>
+						<input type="text" name="output_name" class="data-value xl-fix" value="@Model.output_name" required/>
+							<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Это поле должно быть заполнено"></a>
+
+					</div>
+				</div>
+			</div>
+			</form>
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="bttn" data-bs-dismiss="modal">Отмена</button>
+			<button type="submit" class="bttn bttn-color" form="OutPut_form">Сохранить</button>
+			<button type="button" class="bttn bttn-color" @btn_disable onclick="OpenPopupOutPut(@Model.source_output_id, 'copy')">Создать копию</button>
+		</div>
+	</div>
+</div>
+
+
+<script type="text/javascript" src="@Url.Content("~/hss/js/popup_common_scripts.js")"></script>
+<script>
+
+	$(document).ready(function () {
+		document.querySelector('#paramNumberOutput').addEventListener('change', (event) => {
+			OpenPopupOutPut($("#paramNumberOutput").val());
+		});
+	});
+
+	function RefreshTable() {
+		if ($("#refresh_output_table").val() === "1") {
+			$("#refresh_output_table").val(0);
+			GetListOnPage();
+		}
+	}
+
+	var onSuccessFormOutputs = function (xhr) {
+		if (xhr.success == true) {
+			showMessage('Данные сохранены.', 'modal', 'success');
+			$("#refresh_output_table").val(1);
+			if(xhr.is_new == true)
+			{
+				OpenPopupOutPut(xhr.output_id);
+			}
+		}
+		else {
+			if (xhr.message === undefined) {
+				xhr.message = 'Ошибка сохранения данных'
+			}
+			showMessage(xhr.message, 'modal', 'fault');
+		}
+		hidePreloader();
+	};
+
+
+</script>

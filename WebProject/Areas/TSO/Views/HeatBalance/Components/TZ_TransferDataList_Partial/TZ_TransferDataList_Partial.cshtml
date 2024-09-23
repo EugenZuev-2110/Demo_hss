@@ -1,0 +1,156 @@
+﻿@model List<WebProject.Areas.TSO.Models.TZTransferDataViewModel>
+@{
+	Layout = null;
+	int cnt_columns = 31;
+}
+<div class="data-block">
+	<div class="table-block">
+		<div class="table-buttons tzTransferTable-buttons"></div>
+		<table id="tzTransferTable" class="display compact table-clicked" style="width:100%">
+			<thead>
+				<tr>
+					<th rowspan="3">УНОМ ТЗ</th>
+					<th rowspan="3">Территория действия тарифной зоны</th>
+					<th rowspan="3">КОД ТСО</th>
+					<th rowspan="3">Наименование ТСО</th>
+					<th rowspan="3">
+						Виды регулируемой деятельности
+						<a class="info" data-bs-toggle="tooltip" data-bs-custom-class="info-tooltip" data-bs-html="true"
+						   data-bs-title='<ul class="list-unstyled">
+										<li>К > 25 - Комбинированное производство, более 25 МВт</li>
+										<li>К < 25 - Комбинированное производство, менее 25 МВт</li>
+										<li>НК - Некомбинированное производство</li>
+										<li>П - Передача</li>
+										<li>С - Сбыт</li>
+										<li>ДП - Договор поставки</li>
+									</ul>'
+						</a>
+					</th>
+					<th rowspan="3">Принято тепловой энергии для передачи (транспортировки) (факт), Гкал</th>
+					<th rowspan="3">Принято тепловой энергии для передачи (транспортировки), Гкал</th>
+					<th rowspan="3">Потери тепла в сетях (факт), Гкал</th>
+					<th rowspan="3">Потери тепла в сетях, Гкал</th>
+					<th colspan="9">Отпуск тепловой энергии (факт), Гкал</th>
+					<th colspan="9">Отпуск тепловой энергии, Гкал</th>
+					<th rowspan="3">ПРОВЕРКА объем небаланса тепла, Гкал (факт)</th>
+					<th rowspan="3">Примечание по фактическому балансу</th>
+					<th rowspan="3">ПРОВЕРКА объем небаланса тепла, Гкал</th>
+					<th rowspan="3">Примечание</th>
+				</tr>
+				<tr>
+					<th rowspan="2">ВСЕГО</th>
+					<th colspan="3">передано на нужды предприятия</th>
+					<th rowspan="2">Теплоснабжаюшим организациям</th>
+					<th colspan="4">по группам потребителей</th>
+					<th rowspan="2">ВСЕГО</th>
+					<th colspan="3">передано на нужды предприятия</th>
+					<th rowspan="2">Теплоснабжаюшим организациям</th>
+					<th colspan="4">по группам потребителей</th>
+				</tr>
+				<tr>
+					<th>Всего</th>
+					<th>На собственное производство</th>
+					<th>На хозяйственные нужды</th>
+					<th>Всего</th>
+					<th>бюджет</th>
+					<th>население</th>
+					<th>прочие</th>
+					<th>Всего</th>
+					<th>На собственное производство</th>
+					<th>На хозяйственные нужды</th>
+					<th>Всего</th>
+					<th>бюджет</th>
+					<th>население</th>
+					<th>прочие</th>
+				</tr>
+				<tr class="filter-row ">
+					@for (int i = 0; i < @cnt_columns; i++)
+					{
+						if (i == 0)
+						{
+							<th class="dtfc-fixed-left" style="left:0; position:sticky;"><input type="text" class="filter-col-0" /></th>
+						}
+						else
+						{
+							<th><input type="text" class="filter-col-@i" /></th>
+						}
+					}
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var tz_list in Model)
+				{
+					<tr ondblclick="OpenPopupHeatBalance(@tz_list.tz_id, @tz_list.perspective_year, '/TSO/HeatBalance/OpenTZTransfer', 'TZTransferDataPopup');">
+						<td>@tz_list.unom_tz</td>
+						<td><div class="data-truncate-multirow" title="@tz_list.territory">@tz_list.territory</div></td>
+						<td>@tz_list.code_tso</td>
+						<td>@tz_list.short_name</td>
+						<td>@tz_list.activity_types</td>
+						<td>@tz_list.accept_heatenrg_transport_fact</td>
+						<td>@tz_list.accept_heatenrg_transport_plan</td>
+						<td>@tz_list.heatenrg_loss_heatnet_fact</td>
+						<td>@tz_list.heatenrg_loss_heatnet_plan</td>
+						<td>@tz_list.useful_release_fact</td>
+						<td>@tz_list.useful_release_company_needs_fact</td>
+						<td>@tz_list.useful_release_ownprod_fact</td>
+						<td>@tz_list.useful_release_household_needs_fact</td>
+						<td>@tz_list.useful_release_tso_salers_fact</td>
+						<td>@tz_list.useful_release_cons_groups_fact</td>
+						<td>@tz_list.useful_release_buget_cons_fact</td>
+						<td>@tz_list.useful_release_public_fact</td>
+						<td>@tz_list.useful_release_other_cons_fact</td>
+						<td>@tz_list.useful_release_plan</td>
+						<td>@tz_list.useful_release_company_needs_plan</td>
+						<td>@tz_list.useful_release_ownprod_plan</td>
+						<td>@tz_list.useful_release_household_needs_plan</td>
+						<td>@tz_list.useful_release_tso_salers_plan</td>
+						<td>@tz_list.useful_release_cons_groups_plan</td>
+						<td>@tz_list.useful_release_buget_cons_plan</td>
+						<td>@tz_list.useful_release_public_plan</td>
+						<td>@tz_list.useful_release_other_cons_plan</td>
+						<td>@tz_list.volume_notbalance_heat_fact</td>
+						<td>@tz_list.notes_fact</td>
+						<td>@tz_list.volume_notbalance_heat_plan</td>
+						<td>@tz_list.notes_plan</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+	<div class="data-row table-summary">
+		<div class="data-item rows-count">
+			<h5>Всего записей:</h5>
+			<p><span class="mark-color" id="all_cnt_rows"></span></p>
+		</div>
+		<div class="data-block">
+			<h5>Принято тепловой энрегии для передачи:</h5>
+			<div class="data-table-block">
+				<p class="data-item">план - <span class="mark-color" id="accept_heatenrg_transport_plan"></span><span class="data-unit"> Гкал/ч</span></p>
+				<p class="data-item">факт - <span class="mark-color" id="accept_heatenrg_transport_fact"></span><span class="data-unit"> Гкал/ч</span></p>
+			</div>
+		</div>
+		<div class="data-block">
+			<h5>Передано на нужды организации:</h5>
+			<div class="data-table-block">
+				<p class="data-item">план - <span class="mark-color" id="useful_release_company_needs_plan"></span><span class="data-unit"> Гкал/ч</span></p>
+				<p class="data-item">факт - <span class="mark-color" id="useful_release_company_needs_fact"></span><span class="data-unit"> Гкал/ч</span></p>
+			</div>
+		</div>
+		<div class="data-block">
+			<h5>Потери тепла в тепловых сетях:</h5>
+			<div class="data-table-block">
+				<p class="data-item">план - <span class="mark-color" id="heatenrg_loss_heatnet_plan"></span><span class="data-unit"> Гкал/ч</span></p>
+				<p class="data-item">факт - <span class="mark-color" id="heatenrg_loss_heatnet_fact"></span><span class="data-unit"> Гкал/ч</span></p>
+			</div>
+		</div>
+		<div class="data-block">
+			<h5>Предано тепловой энергии (другие):</h5>
+			<div class="data-table-block">
+				<p class="data-item">план - <span class="mark-color" id="useful_release_others_plan"></span><span class="data-unit"> Гкал/ч</span></p>
+				<p class="data-item">факт - <span class="mark-color" id="useful_release_others_fact"></span><span class="data-unit"> Гкал/ч</span></p>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript" src="@Url.Content("~/hss/js/datatables_common_scripts.js")"></script>

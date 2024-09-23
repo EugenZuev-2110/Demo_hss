@@ -1,0 +1,117 @@
+﻿@model List<WebProject.Areas.HeatPointsAndConsumers.Models.ContractListViewModel>
+
+<div class="data-block workspace">
+
+	<div class="data-block title-block">
+		<div class="data-row">
+			<ul class="breadcrumb">
+				<li class="breadcrumb-item"><a class="ref-color" href="#">Главная</a></li>
+				<li class="breadcrumb-item">Справочники - Договоры на теплоснабжение</li>
+			</ul>
+		</div>
+		<div class="data-row">
+			<h1 class="title">Договоры на теплоснабжение</h1>
+			<div class="data-item data-item-right">
+				<button class="bttn bttn-color bttn-edit-data" onclick="OpenPopupContract(0);" type="button">Добавить/Удалить</button>
+				<a class="bttn bttn-color bttn-load-data disabled" type="button" href="page2-2-1-2.html">Загрузить данные</a>
+			</div>
+		</div>
+		<div class="data-row">
+			<label class="data-item">
+				<span class="data-label">Показать ликвидированные</span>
+				<input type="checkbox" class="data-check" name="only_liquidate" id="only_liquidate" value="0">
+			</label>
+		</div>
+	</div>
+
+	<div class="data-block main-content border-block" style="border-color: var(--action-color);" id="ContractTable_div">
+		@await Component.InvokeAsync("ContractList_Partial")
+	</div>
+</div>
+
+@section pageJs{
+<script type="text/javascript">
+
+		const editDataModal = document.getElementById('ContractDataPopup');
+		editDataModal.addEventListener('shown.bs.modal', event => {
+			TableInit('ConsumersTable', 'full');
+		});
+
+	$(document).ready(function () {
+		setTimeout(function () {
+			$('#contract').addClass('active');
+		}, 500);
+
+		TableInit('ContractTable', 'full');
+
+		document.querySelector('#only_liquidate').addEventListener('change', (event) => {
+			GetListOnPage();
+		});
+	});
+
+	
+
+	function GetListOnPage() {
+		showPreloader();
+
+		 $('input[name="only_liquidate"]').not(':checked').val(0);
+         $('input[name="only_liquidate"]:checked').val(1);
+
+		$.ajax({
+			
+			type: 'GET',
+			url: '@Html.Raw(Url.Action("OnGetCallContractList_PartialViewComponent", "Contract", new { Area = "HeatPointsAndConsumers" }))',
+			data: {
+				data_status: $('#data_status').val(),
+				only_liquidate: $('#only_liquidate').val()
+			},
+			dataType: 'html'
+		})
+			.done(function (result) {
+				var div = $('#ContractTable_div');
+				div.html("");
+				div.html(result);
+				TableInit('ContractTable', 'full');
+				hidePreloader();
+			});
+	}
+
+
+
+	function OpenPopupContract(id, action_for) {
+		showPreloader();
+		$.ajax({
+			type: 'POST',
+				url: '@Html.Raw(Url.Action("OpenContract", "Contract", new { Area = "HeatPointsAndConsumers" }))',
+			data: {
+				contract_id: id,
+				data_status: $('#data_status').val(),
+				action_for: action_for
+			},
+			dataType: 'html'
+		})
+			.done(function (result) {
+				var div = $('#ContractDataPopup');
+				div.html("");
+				div.html(result);
+				$('.selectpicker').selectpicker();
+
+				if ($('#ContractDataPopup').is(':hidden')) {
+					showModal('ContractDataPopup');
+				}
+				else {
+						TableInit('ConsumersTable', 'full');
+				}
+				hidePreloader();
+			});
+	}
+
+		function RefreshTable() {
+			if ($("#refresh_Contract_table").val() === "1") {
+				$("#refresh_Contract_table").val(0);
+				GetListOnPage();
+			}
+		}
+
+</script>
+}

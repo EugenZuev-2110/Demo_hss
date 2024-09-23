@@ -1,0 +1,242 @@
+﻿@model List<WebProject.Models.ItemsViewModel>
+@{
+    Layout = null;
+    ViewData["Title"] = "ПУНКТЫ";
+}
+<style>
+    .td-thStyle {
+        text-align: center;
+    }
+
+    .modal_load {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        background: rgba( 255, 255, 255, .8 ) url('http://i.stack.imgur.com/FhHRx.gif') 50% 50% no-repeat;
+    }
+
+    body.loading {
+        overflow: hidden;
+    }
+
+    body.loading .modal_load {
+        display: block;
+    }
+
+</style>
+
+<div class="modal_load"><!-- Place at bottom of page --></div>
+<table class="table datatable dataTable no-footer table-hover" id="table-part-items" role="grid">
+    <thead>
+        <tr role="row">
+            <th class="sorting" tabindex="0">*</th>
+            <th class="sorting" tabindex="1">УНОМ обращения</th>
+            <th class="sorting" tabindex="2">№ Пункта</th>
+            <th class="sorting" tabindex="3">3й уровень</th>
+            <th class="sorting" tabindex="4">Условный адрес</th>
+            <th class="sorting" tabindex="5">Тип объекта</th>
+            <th class="sorting" tabindex="6">Идентификатор объекта</th>
+            <th class="sorting" tabindex="7">Источник</th>
+            <th class="sorting" tabindex="8">Округ</th>
+            <th class="sorting" tabindex="9">Удаление пунктов</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Count > 0)
+        {
+            foreach (var items in Model)
+            {
+                <tr id="tr_item_@items.Id" style="cursor: pointer" onclick="ItemOpen(event, @items.Id, '@items.unom_num')">
+                    @if (items.object_id == "Нет данных")
+                    {
+                        <td></td>
+                    }
+                    else
+                    {
+                        <td style="cursor: pointer" onclick="AddNewObjDesc(@items.Id)"><a>Перейти на 3ий уровень</a></td>
+                    }
+                    <td>@items.unom_num</td>
+                    <td>@items.item_number</td>
+                    @if (items.is_complete == true)
+                    {
+                        <td style="text-align: center; color: green;"><span style="font-size: x-large;">&#9745;</span></td>
+                    }
+                    else
+                    {
+                        <td></td>
+                    }
+                    <td>@items.conditional_address</td>
+                    <td>@items.object_type_name</td>
+                    @if (items.object_type_name == "Потребитель" || items.object_type_name == "Тепловой пункт")
+                    {
+                        <td><a href="#!" style="cursor: pointer;" onclick="navigator.clipboard.writeText('@items.object_id')">@items.object_id</a></td>
+                        
+                    }
+                    else
+                    {
+                        <td>@items.object_id</td>
+                    }
+                    <td>@items.source_name</td>
+                    <td>@items.district_name</td>
+                    @if (items.category_id != 1 && items.searchText.Length > 0)
+                    {
+                        <td><button onclick="DeleteItem(@items.Id);">Удалить</button></td>
+                    }
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+@*<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>*@
+@*<script src="/js/jquery.inputmask.bundle.min.js"></script>*@
+@*<script src="/js/app.js"></script>*@
+
+<script type="text/javascript">
+
+        $body = $("body");
+
+        function ajaxStart() {
+            $body.addClass("loading");
+        }
+        function ajaxStop() {
+            $body.removeClass("loading");
+        }
+
+        $(document).ready(function () {
+
+            const queryString = window.location.search;
+            const urlParams = new URLSearchParams(queryString);
+
+            if (urlParams.has('unom_num') == false)
+            {
+                $('#btnAddNewItem').hide();
+            }
+
+            $("#items").addClass("active");
+
+            var table = $('#table-part-items').DataTable({
+                aaSorting: [],
+                destroy: true,
+                dom: 'Blfrtip',
+                buttons: [
+                    {
+                        extend: 'excelHtml5',
+                        //exportOptions: {
+                        //    columns: ['#upldate', '#idint', '#pr_count', '#network', '#checkhref', '#state', '#user']
+                        //},
+                        className: 'exportExcelFull'
+                    }
+                ],
+                initComplete: function () {
+                    var $buttons = $('.dt-buttons').hide();
+                    $('#excelFull').on('click',
+                        function () {
+                            $buttons.find('.exportExcelFull').click();
+                        });
+                },
+                "language": {
+                    "processing": "Подождите...",
+                    "search": "Поиск:",
+                    "lengthMenu": "Показать _MENU_ записей",
+                    "info": "Записи с _START_ до _END_ из _TOTAL_ записей",
+                    "infoEmpty": "Записи с 0 до 0 из 0 записей",
+                    "infoFiltered": "(отфильтровано из _MAX_ записей)",
+                    "infoPostFix": "",
+                    "loadingRecords": "Загрузка записей...",
+                    "zeroRecords": "Записи отсутствуют.",
+                    "emptyTable": "В таблице отсутствуют данные",
+                    "paginate": {
+                        "first": "Первая",
+                        "previous": "Предыдущая",
+                        "next": "Следующая",
+                        "last": "Последняя"
+                    },
+                    "aria": {
+                        "sortAscending": ": активировать для сортировки столбца по возрастанию",
+                        "sortDescending": ": активировать для сортировки столбца по убыванию"
+                    }
+                }
+            });
+
+        });
+
+        function LoadTable() {
+            GetItems();
+        }
+
+        function Search(e) {
+
+            if (e.keyCode == 13) {
+                GetItems();
+                //return false;
+            }
+        }
+
+        function ItemOpen(e, id, unom_num) {
+            var ind = $(e.target).index();
+            if (ind === 0 || ind === 6)
+                return;
+
+            ajx = false;
+            $.ajax({
+                type: 'GET',
+                url: '@Html.Raw(Url.Action("OpenItem", "Home"))',
+                data: {
+                    id: id,
+                    unom_num: unom_num
+                },
+                dataType: 'html'
+            }).done(function(result) {
+                var div = $('#div-open-fd');
+                div.html(result);
+                $("#modal-open-fd").modal('toggle');
+            });
+        }
+
+        function DeleteItem(id) {
+            $.ajax({
+                type: 'POST',
+                url: '@Html.Raw(Url.Action("DeleteItem", "Home"))',
+                data: {
+                    id: id
+                },
+                dataType: 'json'
+            }).done(function (result) {
+
+                var table = $('#table-part-items').DataTable();
+                table.row($('#tr_item_'+id)).remove().draw();
+
+            });
+        }
+
+        function GetItems() {
+            ajaxStart();
+            $.ajax({
+                type: 'GET',
+                url: '/Home/OnGetCallItemsListViewComponent',
+                data: {
+                    searchText: document.getElementsByName("searchText")[0].value
+                },
+                dataType: 'html'
+            }).done(function (result) {
+                    var div = $('.panel-body');
+                    div.html("");
+                    div.html(result);
+
+                    $('#unom_info_div').hide();
+                    ajaxStop();
+                });
+        }
+
+        function AddNewObjDesc(itemId) {
+            ajaxStart();
+            var url = '@Url.Action("ObjectDescription", "Home")' + "?itemId=" + itemId
+                window.location = url;
+        }
+
+</script>

@@ -1,0 +1,200 @@
+﻿@model WebProject.Areas.HPConsumers.Models.Consumers_YearHeatConsumptionViewModel
+@{
+    Layout = null; string is_disabled = ViewBag.IsDisabled;
+}
+
+<form asp-controller="Consumers" asp-action="Consumer_YearHeatConsumption_Save" asp-antiforgery="true" asp-area="HPConsumers" class="needs-validation" novalidate
+      data-ajax-failure="onFailedFormTZ" data-ajax-success="onSuccessFormTZ" data-ajax-begin="onBeginFormTZ" data-ajax="true" data-ajax-method="POST">
+    <div class="data-block">
+        <div class="data-row">
+            <div class="data-item data-item-right">
+                <button type="submit" class="bttn bttn-square bttn-icon-save" @is_disabled id="consumer_year_heat_consumption_save_btn"></button>
+                <button type="button" class="bttn">Рассчитать потребление</button>
+            </div>
+        </div>
+        <div class="data-row">
+            <h5>Способ определения полезного отпуска:</h5>
+            <label class="data-item">
+                <span class="data-label">нормативный климат</span>
+                @if (Model.fact.hc_calc_method_id != null)
+                {
+                    string is_checked = string.Empty;
+                    @if (Model.fact.hc_calc_method_id == 1)
+                        is_checked = "checked";
+                    <input type="radio" class="data-value data-check" name="fact.hc_calc_method_id" value="1" @is_checked>
+                }
+                else
+                {
+                    <input type="radio" class="data-value data-check" name="fact.hc_calc_method_id" value="1">
+                }
+            </label>
+            <label class="data-item">
+                <span class="data-label">учесть поправочные коэффициенты</span>
+                @if (Model.fact.hc_calc_method_id != null)
+                {
+                    string is_checked = string.Empty;
+                    @if (Model.fact.hc_calc_method_id == 2)
+                        is_checked = "checked";
+                    <input type="radio" class="data-value data-check" name="fact.hc_calc_method_id" value="2" @is_checked>
+                }
+                else
+                {
+                    <input type="radio" class="data-value data-check" name="fact.hc_calc_method_id" value="2">
+                }
+            </label>
+        </div>
+        <div class="data-row">
+            <div class="data-item ms-auto">
+                <div class="data-item">
+                    <span class="data-label">Фактический расход исходной воды на нужды ГВС, куб. м/год:</span>
+                    <input type="text" class="data-value double xl-stretch" name="fact.fact_watercons_gvs" value="@Model.fact.fact_watercons_gvs" id="fact_watercons_gvs">
+                </div>
+                <div class="data-item">
+                    <span class="data-label">Фактическое суммарное теплопотребление в паре, т/год:</span>
+                    <input type="text" class="data-value double xl-stretch" name="fact.fact_total_hc_steam" value="@Model.fact.fact_total_hc_steam" id="fact_total_hc_steam">
+                </div>
+                <div class="data-item">
+                    <span class="data-label">Фактическое суммарное теплопотребление в горячей воде, Гкал/год:</span>
+                    <input type="text" class="data-value double xl-stretch" name="fact.fact_total_hc_hw" value="@Model.fact.fact_total_hc_hw" id="fact_total_hc_hw">
+                </div>
+            </div>
+        </div>
+        <div class="scroll-table-wrapper">
+            <table class="table-inp-stretch" style="width:100%;">
+                <thead>
+                    <tr>
+                        <th rowspan="2">Год</th>
+                        <th rowspan="2">Статус</th>
+                        <th rowspan="2">УНОМ ИСТ / Источник</th>
+                        <th rowspan="2">УНОМ ТП / Номер на схеме</th>
+                        <th rowspan="2">G<sup>ВГ</sup><sub>ГВС</sub>, <span class="data-unit">м<sup>3</sup></span></th>
+                        <th colspan="6">Теплопотребление в паре, <span class="data-unit">т/год</span></th>
+                        <th colspan="6">Теплопотребление в г.в., <span class="data-unit">Гкал/год</span></th>
+                        @* <th rowspan="2">∑ Q<sup>П+Г</sup></th>*@
+                    </tr>
+                    <tr>
+                        <th>Q<sup>ПГ</sup><sub>ТЕХ</sub></th>
+                        <th>Q<sup>ПГ</sup><sub>ОТ</sub></th>
+                        <th>Q<sup>ПГ</sup><sub>ВЕН</sub></th>
+                        <th>Q<sup>ПГ</sup><sub>ГВС</sub></th>
+                        <th>∑ Q<sup>ПГ</sup></th>
+                        <th>n<sup>ПГ</sup></th>
+                        <th>Q<sup>ГГ</sup><sub>ТЕХ</sub></th>
+                        <th>Q<sup>ГГ</sup><sub>ОТ</sub></th>
+                        <th>Q<sup>ГГ</sup><sub>ВЕН</sub></th>
+                        <th>Q<sup>ГГ</sup><sub>ГВС</sub></th>
+                        <th>∑ Q<sup>ГГ</sup></th>
+                        <th>n<sup>ГГ</sup></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var tz_list in Model.perspective)
+                    {
+                        <input hidden asp-for="@tz_list.consumer_id">
+                        <input hidden asp-for="@tz_list.data_status">
+                        <tr data-consumer_status="@tz_list.consumer_perspective_year">
+                            <td>@tz_list.consumer_perspective_year_dt</td>
+                            <td>
+                                <input type="hidden" name="consumer_yisp_perspective_year" value="@tz_list.consumer_perspective_year">
+                                <div class="data-item">
+                                    <input type="text" class="data-value double xl-stretch" name="consumer_status_name" value="@tz_list.consumer_status_name" id="consumer_status_name_@(tz_list.consumer_perspective_year)" disabled>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="data-item">
+                                    <input type="text" class="data-value double xl-stretch" name="unom_source_name" value="@tz_list.unom_source_name" id="unom_source_name_@(tz_list.consumer_perspective_year)" disabled>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="data-item">
+                                    <input type="text" class="data-value double xl-stretch" name="consumer_heat_point_name" value="@tz_list.consumer_heat_point_name" id="consumer_heat_point_name_@(tz_list.consumer_perspective_year)" disabled>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="data-item">
+                                    <input type="text" onkeyup="ConsumerSetWatercons_gvs(@(tz_list.consumer_perspective_year))" data-consumer_watercons_gvs="@tz_list.consumer_perspective_year" class="data-value double" name="watercons_gvs" value="@tz_list.watercons_gvs" id="watercons_gvs_@(tz_list.consumer_perspective_year)">
+                                </div>
+                            </td>
+                            <td>
+                                <div class="data-item">
+                                    <input type="text" class="data-value double" name="hc_tech_hw" value="@tz_list.hc_tech_hw" id="hc_tech_hw_@(tz_list.consumer_perspective_year)" disabled>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="data-item">
+                                    <input type="text" class="data-value double" name="hc_heat_hw" value="@tz_list.hc_heat_hw" id="hc_heat_hw_@(tz_list.consumer_perspective_year)" disabled>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="data-item">
+                                    <input type="text" class="data-value double" name="hc_vent_hw" value="@tz_list.hc_vent_hw" id="hc_vent_hw_@(tz_list.consumer_perspective_year)" disabled>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="data-item">
+                                    <input type="text" class="data-value double" name="hc_gvs_hw" value="@tz_list.hc_gvs_hw" id="hc_gvs_hw_@(tz_list.consumer_perspective_year)" disabled>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="data-item">
+                                    <input type="text" class="data-value double" name="hc_sum_hw" value="@tz_list.hc_sum_hw" id="hc_sum_hw_@(tz_list.consumer_perspective_year)" disabled>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="data-item">
+                                    <input type="text" class="data-value double" name="rel_hc_sum_hw" value="@tz_list.rel_hc_sum_hw" id="rel_hc_sum_hw_@(tz_list.consumer_perspective_year)" disabled>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="data-item">
+                                    <input type="text" class="data-value double" name="hc_tech_steam" value="@tz_list.hc_tech_steam" id="hc_tech_steam_@(tz_list.consumer_perspective_year)" disabled>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="data-item">
+                                    <input type="text" class="data-value double" name="hc_heat_steam" value="@tz_list.hc_heat_steam" id="hc_heat_steam_@(tz_list.consumer_perspective_year)" disabled>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="data-item">
+                                    <input type="text" class="data-value double" name="hc_vent_steam" value="@tz_list.hc_vent_steam" id="hc_vent_steam_@(tz_list.consumer_perspective_year)" disabled>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="data-item">
+                                    <input type="text" class="data-value double" name="hc_gvs_steam" value="@tz_list.hc_gvs_steam" id="hc_gvs_steam_@(tz_list.consumer_perspective_year)" disabled>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="data-item">
+                                    <input type="text" class="data-value double" name="hc_sum_steam" value="@tz_list.hc_sum_steam" id="hc_sum_steam_@(tz_list.consumer_perspective_year)" disabled>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="data-item">
+                                    <input type="text" class="data-value double" name="rel_hc_sum_steam" value="@tz_list.rel_hc_sum_steam" id="rel_hc_sum_steam_@(tz_list.consumer_perspective_year)" disabled>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</form>
+
+<script type="text/javascript">
+
+    function ConsumerSetWatercons_gvs(perspective_year) {
+        var elements = document.getElementsByName('watercons_gvs');
+        var select_value = $('#watercons_gvs_' + perspective_year).val();
+        for (var i = 0; i < elements.length; i++) {
+            var year = elements[i].getAttribute('data-consumer_watercons_gvs');
+            if (year >= perspective_year) {
+                var select_id = elements[i].getAttribute('id');
+                $('#' + select_id).val(select_value);
+            }
+        }
+    }
+
+</script>

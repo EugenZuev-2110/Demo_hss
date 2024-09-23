@@ -1,0 +1,152 @@
+﻿@model WebProject.Areas.TSO.Models.TZOrgServiceOtherCostsViewModel
+@{
+	Layout = null; string disable = "";
+}
+@if (Model.tz_id == 0)
+{
+	disable = "disabled";
+}
+<form asp-controller="CostsAndPrices" asp-action="TZOrgServiceOtherCosts_Save" asp-antiforgery="true" asp-area="TSO" id="tz_org_service_other_costs_form"
+	  data-ajax-failure="onFailedFormTZ" data-ajax-success="onSuccessFormTZ" data-ajax-begin="onBeginFormTZ" 
+	  data-ajax="true" data-ajax-method="POST">
+	<input type="hidden" name="tz_id" value="@Model.tz_id" />
+	<input type="hidden" name="data_status" value="@Model.data_status" />
+	<input type="hidden" name="perspective_year" value="@Model.perspective_year" />
+	<table class="table-inp-stretch" style="width:100%;">
+		<thead>
+			<tr>
+				<th rowspan="2"></th>
+				<th colspan="3">Факт</th>
+				<th colspan="3">План</th>
+			</tr>
+			<tr>
+				<th>I полугодие</th>
+				<th>II полугодие</th>
+				<th>Год</th>
+				<th>I полугодие</th>
+				<th>II полугодие</th>
+				<th>Год</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>Всего расходов, <span class="data-unit">тыс. руб.</span></td>
+				<td><input type="text" asp-for="@Model.cost_org_other_service_all_fact_1" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.cost_org_other_service_all_fact_2" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.cost_org_other_service_all_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.cost_org_other_service_all_plan_1" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.cost_org_other_service_all_plan_2" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.cost_org_other_service_all_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>1. Расходы на услуги связи, <span class="data-unit">тыс. руб.</span></td>
+				<td><input type="text" asp-for="@Model.cost_connect_service_fact_1" class="data-value double" data-double="org_serv_other_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_connect_service_fact_2" class="data-value double" data-double="org_serv_other_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_connect_service_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.cost_connect_service_plan_1" class="data-value double" data-double="org_serv_other_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_connect_service_plan_2" class="data-value double" data-double="org_serv_other_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_connect_service_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>2. Расходы на услуги вневедомственной охраны, <span class="data-unit">тыс. руб.</span></td>
+				<td><input type="text" asp-for="@Model.cost_security_service_fact_1" class="data-value double" data-double="org_serv_other_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_security_service_fact_2" class="data-value double" data-double="org_serv_other_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_security_service_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.cost_security_service_plan_1" class="data-value double" data-double="org_serv_other_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_security_service_plan_2" class="data-value double" data-double="org_serv_other_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_security_service_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>3. Расходы на коммунальные услуги, <span class="data-unit">тыс. руб.</span></td>
+				<td><input type="text" asp-for="@Model.cost_communal_service_fact_1" class="data-value double" data-double="org_serv_other_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_communal_service_fact_2" class="data-value double" data-double="org_serv_other_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_communal_service_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.cost_communal_service_plan_1" class="data-value double" data-double="org_serv_other_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_communal_service_plan_2" class="data-value double" data-double="org_serv_other_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_communal_service_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>4. Расходы на консультационные услуги, <span class="data-unit">тыс. руб.</span></td>
+				<td><input type="text" asp-for="@Model.cost_consulting_service_fact_1" class="data-value double" data-double="org_serv_other_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_consulting_service_fact_2" class="data-value double" data-double="org_serv_other_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_consulting_service_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.cost_consulting_service_plan_1" class="data-value double" data-double="org_serv_other_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_consulting_service_plan_2" class="data-value double" data-double="org_serv_other_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_consulting_service_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>5. Расходы на юридические услуги, <span class="data-unit">тыс. руб.</span></td>
+				<td><input type="text" asp-for="@Model.cost_legal_service_fact_1" class="data-value double" data-double="org_serv_other_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_legal_service_fact_2" class="data-value double" data-double="org_serv_other_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_legal_service_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.cost_legal_service_plan_1" class="data-value double" data-double="org_serv_other_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_legal_service_plan_2" class="data-value double" data-double="org_serv_other_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_legal_service_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>6. Расходы на информационные услуги, <span class="data-unit">тыс. руб.</span></td>
+				<td><input type="text" asp-for="@Model.cost_inform_service_fact_1" class="data-value double" data-double="org_serv_other_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_inform_service_fact_2" class="data-value double" data-double="org_serv_other_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_inform_service_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.cost_inform_service_plan_1" class="data-value double" data-double="org_serv_other_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_inform_service_plan_2" class="data-value double" data-double="org_serv_other_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_inform_service_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>7. Расходы на аудиторские услуги, <span class="data-unit">тыс. руб.</span></td>
+				<td><input type="text" asp-for="@Model.cost_audit_service_fact_1" class="data-value double" data-double="org_serv_other_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_audit_service_fact_2" class="data-value double" data-double="org_serv_other_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_audit_service_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.cost_audit_service_plan_1" class="data-value double" data-double="org_serv_other_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_audit_service_plan_2" class="data-value double" data-double="org_serv_other_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_audit_service_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>8. Расходы на услуги по стратегическому управлению организацией, <span class="data-unit">тыс. руб.</span></td>
+				<td><input type="text" asp-for="@Model.cost_strategic_manag_service_fact_1" class="data-value double" data-double="org_serv_other_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_strategic_manag_service_fact_2" class="data-value double" data-double="org_serv_other_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_strategic_manag_service_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.cost_strategic_manag_service_plan_1" class="data-value double" data-double="org_serv_other_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_strategic_manag_service_plan_2" class="data-value double" data-double="org_serv_other_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_strategic_manag_service_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>9. Расходы по подготовке и освоению производства (пуско-наладочные работы), <span class="data-unit">тыс. руб.</span></td>
+				<td><input type="text" asp-for="@Model.cost_prepare_develop_service_fact_1" class="data-value double" data-double="org_serv_other_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_prepare_develop_service_fact_2" class="data-value double" data-double="org_serv_other_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_prepare_develop_service_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.cost_prepare_develop_service_plan_1" class="data-value double" data-double="org_serv_other_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_prepare_develop_service_plan_2" class="data-value double" data-double="org_serv_other_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_prepare_develop_service_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>10. Расходы на целевые средства на НИОКР, <span class="data-unit">тыс. руб.</span></td>
+				<td><input type="text" asp-for="@Model.cost_targeted_funds_fact_1" class="data-value double" data-double="org_serv_other_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_targeted_funds_fact_2" class="data-value double" data-double="org_serv_other_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_targeted_funds_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.cost_targeted_funds_plan_1" class="data-value double" data-double="org_serv_other_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_targeted_funds_plan_2" class="data-value double" data-double="org_serv_other_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_targeted_funds_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>11. Средства на необязательное (дополнительное) страхование, <span class="data-unit">тыс. руб.</span></td>
+				<td><input type="text" asp-for="@Model.cost_additional_insure_fact_1" class="data-value double" data-double="org_serv_other_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_additional_insure_fact_2" class="data-value double" data-double="org_serv_other_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_additional_insure_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.cost_additional_insure_plan_1" class="data-value double" data-double="org_serv_other_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_additional_insure_plan_2" class="data-value double" data-double="org_serv_other_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_additional_insure_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>12. Расходы на иные работы и услуги, <span class="data-unit">тыс. руб.</span></td>
+				<td><input type="text" asp-for="@Model.cost_other_work_service_fact_1" class="data-value double" data-double="org_serv_other_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_other_work_service_fact_2" class="data-value double" data-double="org_serv_other_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_other_work_service_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.cost_other_work_service_plan_1" class="data-value double" data-double="org_serv_other_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_other_work_service_plan_2" class="data-value double" data-double="org_serv_other_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_other_work_service_plan_3" class="data-value" disabled></td>
+			</tr>
+		</tbody>
+	</table>
+	<button type="submit" class="bttn bttn-color ms-auto" @disable>Сохранить</button>
+</form>

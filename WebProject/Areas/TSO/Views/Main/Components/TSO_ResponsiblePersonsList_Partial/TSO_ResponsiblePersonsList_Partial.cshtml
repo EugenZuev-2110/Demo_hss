@@ -1,0 +1,108 @@
+﻿@model WebProject.Areas.TSO.Models.TSOResponsiblePersonsViewModel
+@{
+    Layout = null;
+}
+
+<div class="data-row pb-1 mt-1">
+	<h4>Ответственное лицо за подготовку данных по схеме</h4>
+</div>
+@{
+	string disable = ""; string delete_disable = "";
+}
+@if (Model.tso_Id == 0)
+{
+	disable = "disabled";
+}
+<div class="forms-block">
+	@foreach (var cnt_forms in Model.TSOResponsiblePersonsList)
+	{
+		<form id="form_@cnt_forms.person_num" class="needs-validation form-row" novalidate asp-controller="Main" asp-action="TSO_SavePerson" asp-antiforgery="true" asp-area="TSO"
+		  data-ajax-failure="onFailedForm" data-ajax-success="onSuccessForm_RespPerson" data-ajax-begin="onBeginForm" data-ajax="true" data-ajax-method="POST">
+			@Html.AntiForgeryToken()
+		</form>
+	}
+</div>
+
+<table id="responseTable" class="display nowrap compact table-inp-stretch" style="width: 1500px;">
+	<thead>
+		<tr>
+			<th>Должность<a data-bs-toggle="tooltip" data-bs-custom-class="info-tooltip" data-bs-html="false" data-bs-title="Это поле обязательно для заполнения" style="color: var(--red-color);">*</a></th>
+			<th>Фамилия<a data-bs-toggle="tooltip" data-bs-custom-class="info-tooltip" data-bs-html="false" data-bs-title="Это поле обязательно для заполнения" style="color: var(--red-color);">*</a></th>
+			<th>Имя</th>
+			<th>Отчество</th>
+			<th>Телефон</th>
+			<th>Адрес эл. почты</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var tso_resp_pers in Model.TSOResponsiblePersonsList)
+		{
+			if (tso_resp_pers.person_num == 0)
+			{
+				delete_disable = "disabled";
+			}
+			<tr>
+				<input type="hidden" name="is_deleted" value="false" id="is_deleted_@tso_resp_pers.person_num" form="form_@tso_resp_pers.person_num" />
+				<input type="hidden" name="tso_Id" value="@Model.tso_Id" id="rp_tso_id_input" form="form_@tso_resp_pers.person_num" />
+				<input type="hidden" name="data_status" value="@Model.data_status" id="rp_tso_ds_input" form="form_@tso_resp_pers.person_num" />
+				<input type="hidden" name="person_num" value="@tso_resp_pers.person_num" form="form_@tso_resp_pers.person_num" />
+				<td><input type="text" class="data-value" name="position_respons_pers" value="@tso_resp_pers.position_respons_pers" form="form_@tso_resp_pers.person_num" required>
+					<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Это поле должно быть заполнено"></a>
+				</td>
+				<td><input type="text" class="data-value" name="l_name_respons_pers" value="@tso_resp_pers.l_name_respons_pers" form="form_@tso_resp_pers.person_num" required>
+					<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Это поле должно быть заполнено"></a>
+				</td>
+				<td><input type="text" class="data-value" name="f_name_respons_pers" value="@tso_resp_pers.f_name_respons_pers" form="form_@tso_resp_pers.person_num"></td>
+				<td><input type="text" class="data-value" name="m_name_respons_pers" value="@tso_resp_pers.m_name_respons_pers" form="form_@tso_resp_pers.person_num"></td>
+				@* <td><input type="text" class="data-value double" name="phones_respons_pers" value="@tso_resp_pers.phones_respons_pers" form="form_@tso_resp_pers.person_num"></td> *@
+				<td><textarea class="data-value double" name="phones_respons_pers" form="form_@tso_resp_pers.person_num">@tso_resp_pers.phones_respons_pers</textarea></td>
+				<td><input type="text" class="data-value" name="emails_respons_pers" value="@tso_resp_pers.emails_respons_pers" form="form_@tso_resp_pers.person_num"></td>
+				<td>
+					<button class="bttn bttn-square bttn-icon-save" type="submit" title="Сохранить" id="btnSubmitRespPerson_@tso_resp_pers.person_num" form="form_@tso_resp_pers.person_num" @disable>
+					</button>
+					<button class="bttn bttn-square bttn-icon-del" type="button" title="Удалить" onclick="DeletePerson(@tso_resp_pers.person_num);" @delete_disable>
+					</button>
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>
+
+<script type="text/javascript">
+
+	var onSuccessForm_RespPerson = function (xhr) {
+		UpdateTSORespPers();
+		hidePreloader();
+		showMessage('Данные сохранены.', 'modal', 'success');
+	};
+
+	function DeletePerson(person_num) {
+
+		showPreloader();
+		$("#is_deleted_" + person_num).val(true);
+		$("#form_" + person_num).submit();
+
+	}
+
+	function UpdateTSORespPers() {
+		$.ajax({
+			type: 'GET',
+			url: '@Html.Raw(Url.Action("OnGetCallTSO_RespPersList_PartialViewComponent", "Main", new { Area = "TSO" }))',
+			data: {
+				data_status: $('#rp_tso_ds_input').val(),
+				tso_id: $('#rp_tso_id_input').val()
+			},
+			dataType: 'html'
+		}).done(function (result) {
+			var div = $('#tso_resp_pers_table');
+			div.html("");
+			div.html(result);
+			initDataTable('responseTable', 'simple-scroll', '67vh');
+			adjustColumns('responseTable');
+
+			InitAllEventsInPopup();
+		});
+	}
+
+</script>

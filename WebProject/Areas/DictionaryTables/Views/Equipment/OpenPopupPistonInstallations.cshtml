@@ -1,0 +1,127 @@
+﻿@model WebProject.Areas.DictionaryTables.Models.PistonInstallationsViewmodel
+@{
+	string btn_disable = string.Empty;
+}
+@if (Model.equip_id == 0)
+{
+	btn_disable = "disabled";
+}
+
+<div class="modal-dialog modal-dialog-centered">
+	<div class="modal-content">
+		<div class="modal-header">
+			<h3 class="modal-title" id="editDataLabel">Редактирование данных поршневой установки</h3>
+			<button type="button" class="btn-close" data-bs-dismiss="modal" onclick="RefreshTable();" aria-label="Close"></button>
+		</div>
+		<div class="modal-body">
+			<form class="needs-validation" novalidate asp-controller="Equipment" asp-action="Equipment_Save" asp-antiforgery="true" asp-area="DictionaryTables" id="PistonInstallations_form"
+	  data-ajax-failure="onFailedForm" data-ajax-success="onSuccessFormPistonInstallations" data-ajax-begin="onBeginForm" data-ajax="true" data-ajax-method="POST">
+				<input type="hidden" name="equip_id" value="@Model.equip_id" id="equip_id" />
+				<input type="hidden" name="unom_equip" value="@Model.unom_equip" id="unom_equip" />
+				<input type="hidden" name="equip_type_id" value="@Model.equip_type_id" id="equip_type_id" />
+			<div class="data-block static-block">
+				<div class="data-row">
+					<div class="data-item">
+						<label class="data-label xl-fix">Уникальный номер оборудования в справочнике</label>
+							<select class="selectpicker data-value xxl-stretch" data-live-search="true" value="@Model.unom_equip" name="unom_equip" placeholder="Выберите УНОМ оборудования" id="paramNumberPistonInstallations">
+							@if (@Model.equip_id == 0 || ViewBag.Action_for == "copy")
+							{
+								<option value="" selected disabled>При добавлении нового оборудования, УНОМ генерируется автоматически</option>
+							}
+							@foreach (var equip in ViewBag.EquipList)
+							{
+								if (equip.equip_id == Model.equip_id)
+								{
+										<option value="@equip.equip_id" selected>@equip.unom_equip</option>
+								}
+								else
+								{
+										<option value="@equip.equip_id">@equip.unom_equip</option>
+								}
+							}
+						</select>
+					</div>
+				</div>
+				<div class="data-row">
+					<div class="data-item">
+						<label class="data-label xl-fix">Марка оборудования</label>
+							<input type="text" class="data-value xxl-stretch" value="@Model.mark" name="mark" required>
+							<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Это поле должно быть заполнено"></a>
+					</div>
+				</div>
+				<div class="data-row">
+					<div class="data-item">
+						<label class="data-label xl-fix">Завод изготовитель</label>
+							<input type="text" class="data-value xxl-stretch" value="@Model.manufacturer" name="manufacturer" required>
+							<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Это поле должно быть заполнено"></a>
+					</div>
+				</div>
+			</div>
+			<div class="data-block">
+				<h4>Паспортные технические параметры оборудования</h4>
+				<div class="data-row">
+					<div class="data-item">
+						<label class="data-label xl-fix">Установленная электрическая мощность</label>
+							<input type="text" class="data-value sm-fix" value="@Model.inst_electric_power" name="inst_electric_power" required>
+							<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Это поле должно быть заполнено"></a>
+						<span class="data-unit">МВт</span>
+					</div>
+					<div class="data-item">
+						<label class="data-label xl-fix">Установленная тепловая мощность</label>
+							<input type="text" class="data-value sm-fix" value="@Model.inst_heat_power" name="inst_heat_power" required>
+							<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Это поле должно быть заполнено"></a>
+						<span class="data-unit">Гкал/ч</span>
+					</div>
+					<div class="data-item">
+						<label class="data-label xl-fix">Парковый ресурс</label>
+							<input type="text" class="data-value sm-fix" value="@Model.park_resources" name="park_resources" required>
+							<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Это поле должно быть заполнено"></a>
+						<span class="data-unit">тыс. ч</span>
+					</div>
+				</div>
+			</div>
+			</form>
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="bttn" data-bs-dismiss="modal">Отмена</button>
+			<button type="submit" class="bttn bttn-color" form="PistonInstallations_form">Сохранить</button>
+			<button type="button" class="bttn bttn-color" onclick="OpenPopup(@Model.equip_id, 'OpenPopupPistonInstallations', 'PistonInstallationsDataPopup', 'copy')" @btn_disable>Создать копию</button>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript" src="@Url.Content("~/hss/js/popup_common_scripts.js")"></script>
+<script>
+
+	$(document).ready(function () {
+		document.querySelector('#paramNumberPistonInstallations').addEventListener('change', (event) => {
+			OpenPopup($("#paramNumberPistonInstallations").val(), 'OpenPopupPistonInstallations', 'PistonInstallationsDataPopup');
+		});
+	});
+
+	function RefreshTable() {
+		if ($("#refresh_PistonInstallations_table").val() === "1") {
+			$("#refresh_PistonInstallations_table").val(0);
+			GetListOnPage();
+		}
+	}
+
+	var onSuccessFormPistonInstallations = function (xhr) {
+		if (xhr.success == true) {
+			showMessage('Данные сохранены.', 'modal', 'success');
+			$("#refresh_PistonInstallations_table").val(1);
+			if (xhr.is_new == true) {
+				OpenPopup(xhr.equip_id, 'OpenPopupPistonInstallations', 'PistonInstallationsDataPopup');
+			}
+		}
+		else {
+			if (xhr.message === undefined) {
+				xhr.message = 'Ошибка сохранения данных'
+			}
+			showMessage(xhr.message, 'modal', 'fault');
+		}
+		hidePreloader();
+	};
+
+
+</script>

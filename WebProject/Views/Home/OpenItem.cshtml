@@ -1,0 +1,325 @@
+﻿@model WebProject.Models.ItemViewModel
+<link rel="stylesheet" href="~/Content/bootstrap-select.css" />
+@{
+    string selectedValue = string.Empty;
+}
+
+<style>
+    .my_lbl_cls_popup {
+        width: 29%;
+    }
+    .item-select {
+        width: 315px !important;
+    }
+    .error {
+        color: red;
+    }
+    .my_lbl_cls_popup_select {
+        width: 31%;
+        padding-right: 20px !important;
+    }
+
+    textarea {
+        white-space:pre-wrap;
+        margin-left:0px; 
+        text-align:left;
+    }
+
+    .inp-marg-top-10 {
+        margin-top: 10px;
+    }
+
+</style>
+
+<div class="row" id="row-open-fd">
+    <div class="col-md-12">
+        <form asp-controller="Home" asp-action="ItemUpdate" asp-antiforgery="true"
+            data-ajax-failure="onFailed" data-ajax-success="onSuccess"
+            data-ajax="true" data-ajax-method="POST" id="item_form" class="form-horizontal" >
+            <div on class="panel-body" style="padding-left: 15px; padding-right: 15px; padding-top: 30px; padding-bottom: 30px;">
+                <div class="row">
+                    <div style="width: 550px">
+                        <div class="form-group">
+                            <div class="validation-summary-errors" style="display: none">
+                                <ul>
+                                    <li id="validation_error" style="color: red; font-size: 16px; "></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label my_lbl_cls_popup">УНОМ обращения:</label>
+                            <div class="col-md-8">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <input type="text" class="form-control required" value="@Model.unom_num" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label my_lbl_cls_popup">Условный адрес:</label>
+                            <div class="col-md-8">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <textarea class="form-control" name="conditional_address" rows="5">@Model.conditional_address</textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" style="display: none;">
+                            <label class="col-md-3 control-label my_lbl_cls_popup_select">Тип объекта:</label>
+                            <select class="selectpicker item-select" data-show-subtext="true" data-live-search="true" name="object_type_id" id="object_type_id">
+                                @if (@Model.Id == 0 || Model.object_type_id == null)
+                                {
+                                    <option value="" selected disabled>Выберите тип объекта</option>
+                                }
+                                @foreach (var objects in ViewBag.ObjectTypesList)
+                                {
+                                    if (objects.Id == Model.object_type_id)
+                                    {
+                                        <option value="@objects.Id" selected>@objects.object_type_name</option>
+                                    }
+                                    if (objects.Id != Model.object_type_id)
+                                    {
+                                        <option value="@objects.Id">@objects.object_type_name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        @if (Model.category_id == 2)
+                        {
+                            <div class="form-group" style="display: none" id="not_source_list">
+                                <label class="col-md-3 control-label my_lbl_cls_popup_select">Наименование локальной схемы:</label>
+                                <select class="selectpicker item-select" data-show-subtext="true" data-live-search="true" name="object_id">
+                                    @if (@Model.Id == 0 || Model.object_id == null)
+                                    {
+                                        <option value="" selected disabled>Выберите наименование</option>
+                                    }
+                                    @foreach (var ksio_names in ViewBag.KSIO_Names)
+                                    {
+                                        if (ksio_names.ksio_name == Model.object_id)
+                                        {
+                                            <option value="@ksio_names.ksio_name" selected>@ksio_names.ksio_name</option>
+                                        }
+                                        if (ksio_names.ksio_name != Model.object_id)
+                                        {
+                                            <option value="@ksio_names.ksio_name">@ksio_names.ksio_name</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        }
+                        else 
+                        {
+                            <div class="form-group" style="display: none" id="not_source_list">
+                                <label class="col-md-3 control-label my_lbl_cls_popup" id="obj_id">Идентификатор объекта:</label>
+                                <div class="col-md-8">
+                                    <div class="input-group inp-marg-top-10">
+                                        <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                        <input type="text" class="form-control" value="@Model.object_id" name="object_id">
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        <div class="form-group" style="display: none" id="source_list">
+                            <label class="col-md-3 control-label my_lbl_cls_popup_select">Зона действия источника:</label>
+                            <select class="selectpicker item-select" data-show-subtext="true" data-live-search="true" name="source_id" id="source_id">
+                                @if (@Model.Id == 0 || Model.source_id == null)
+                                {
+                                    <option value="" selected disabled>Выберите источник</option>
+                                }
+                                @foreach (var sources in ViewBag.SourcesList)
+                                {
+                                    @if (Model.object_type_id == 2)
+                                    {
+                                        if (sources.Id == Model.source_id)
+                                        {
+                                            <option value="@sources.Id" selected>@sources.source_name</option>
+                                        }
+                                        if (sources.Id != Model.source_id)
+                                        {
+                                            <option value="@sources.Id">@sources.source_name</option>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <option value="@sources.Id">@sources.source_name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group" id="div_reg">
+                            <label class="col-md-3 control-label my_lbl_cls_popup_select">Округ:</label>
+                            <select class="selectpicker item-select" data-show-subtext="true" data-live-search="true" name="district_id" id="district_id">
+                                @if (@Model.Id == 0 || Model.district_id == null)
+                                {
+                                    <option value="" selected disabled>Выберите округ</option>
+                                }
+                                @foreach (var districts in ViewBag.DistrictsList)
+                                {
+                                    if (districts.Id == Model.district_id)
+                                    {
+                                        <option value="@districts.Id" selected>@districts.district_name</option>
+                                    }
+                                    if (districts.Id != Model.district_id)
+                                    {
+                                        <option value="@districts.Id">@districts.district_name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" name="Id" value="@Model.Id" />
+                <input type="hidden" name="unom_num" value="@Model.unom_num" />
+            </div>
+            @if (Model.ItsExecutorOrAdmin == true)
+            {
+                <div class="panel-footer" style="padding-bottom: 40px">
+                    <button type="submit" class="btn btn-primary pull-right" id="btnSave">Сохранить</button>
+                    <div id="Results"></div>
+                </div>
+            }
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    if ('@Model.ItsExecutorOrAdmin' == 'True') 
+    {
+        $(document).on('keydown', function(e){
+            if(e.ctrlKey && e.which === 83){ // Check for the Ctrl key being pressed, and if the key = [S] (83)
+                e.preventDefault();
+                $('form').submit();
+                return false;
+            }
+        });
+    }
+
+    $(document).ready(function () {
+
+        if ('@Model.object_type_id' == '2')
+            $('#source_list').show();
+        else if ('@Model.object_type_id' == '') { }
+        else {
+            if ('@Model.object_type_id' == '1') {
+                $("#obj_id").text("Идентификатор объекта (ConsumerId):");
+                $('#div_reg').hide();
+            }
+            else if ('@Model.object_type_id' == '5') {
+                $("#obj_id").text("Наименование локальной схемы:");
+            }
+
+            $('#not_source_list').show();
+            if ('@Model.object_type_id' == '3' || '@Model.object_type_id' == '5')
+                $('#source_list').show();
+        }
+            
+
+        $('#object_type_id').on('change', function(e){
+            var s_value = this.value;
+
+            if (s_value == 2) {
+                $('#source_list').show();
+                $('#not_source_list').hide();
+                $('#div_reg').show();
+            }
+            else {
+                $('#not_source_list').show();
+                
+                if (s_value == 1) {
+                    $("#obj_id").text("Идентификатор объекта (ConsumerId):");
+                    $('#div_reg').hide();
+                }
+                else {
+                    $("#obj_id").html("Идентификатор<br> объекта:");
+                    $('#div_reg').show();
+                }
+
+                if (s_value == 3)
+                    $('#source_list').show();
+                else 
+                    $('#source_list').hide();
+            }
+
+          //console.log(this.value,
+          //            this.options[this.selectedIndex].value,
+          //            $(this).find("option:selected").val(),);
+        });
+
+        var elem = document.getElementById('item_form');
+        elem.addEventListener("submit", function (e) {
+            if ($(this).valid()) {
+                document.getElementById("btnSave").disabled = true;
+            }
+        }, true);
+
+        $('.selectpicker').selectpicker({
+            size: 3
+        });
+
+        function checkValidate() {
+            var form = $('form');
+
+            $.each(form, function () {
+                $(this).validate({
+                    ignore: [],
+                    errorClass: 'error',
+                    validClass: 'success',
+                    rules: {
+                        unom_num: {
+                            required: true,
+                            normalizer: function normalizer(value) {
+                                return $.trim(value);
+                            }
+                        }
+                    },
+                    errorElement: 'span',
+                    errorPlacement: function (error, element) {
+                        var placement = $(element).data('error');
+                        if (placement) {
+                            $(placement).append(error);
+                        } else {
+                            error.insertBefore(element);
+                        }
+                    },
+                    messages: {
+                        unom_num: 'Выберите номер УНОМа',
+                    }
+                });
+            });
+        }
+        checkValidate();
+
+    });
+        
+        var onFailed = function(context){
+            $("#modal-open-fd").modal('hide');
+        };
+
+        var onSuccess = function(success){
+            if (success.success == true) {
+                ajaxStart();
+                $.ajax({
+                    type: 'GET',
+                    url: '/Home/OnGetCallItemsListViewComponent',
+                    data: {
+                        searchText: success.unom_num
+                    },
+                    dataType: 'html'
+                })
+                    .done(function (result) {
+                        var div = $('.panel-body');
+                        div.html("");
+                        div.html(result);
+                        $("#modal-open-fd").modal('hide');
+                        ajaxStop();
+                    });
+            }
+            else {
+                document.getElementById("btnSave").disabled = false;
+                $('.validation-summary-errors').show();
+                $("#validation_error").text(success.error);
+            }
+        };
+
+</script>

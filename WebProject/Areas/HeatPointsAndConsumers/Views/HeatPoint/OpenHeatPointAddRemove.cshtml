@@ -1,0 +1,729 @@
+﻿@model WebProject.Areas.HeatPointsAndConsumers.Models.HPHeaderAddRemoveDataViewModel
+
+@{
+    string btn_disable = string.Empty; string is_checked = string.Empty; string is_disabled = ViewBag.IsDisabled;
+}
+
+<div class="modal-dialog modal-dialog-centered">
+    <input type="hidden" id="add_remove_yisp_status_value">
+    <input type="hidden" value="0" id="refresh_table" />
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title" id="editDataLabel">Редактирование данных теплового пункта</h3>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="RefreshTable();"></button>
+        </div>
+        <div class="modal-body">
+            <div class="data-block static-block data-params">
+                <div class="data-row">
+                    <div class="data-item stretch">
+                        <label class="data-label">Уникальный номер ТП</label>
+                        <select class="selectpicker data-value xxl-stretch" name="unomTpAddressList" id="unomTpAddressList" data-live-search="true" placeholder="Выберите УНОМ теплового пункта">
+                            @foreach (var tz_list in ViewBag.HpNumberAddressList)
+                            {
+                                if (tz_list.value_id == Model.hp_id)
+                                {
+                                    <option value="@tz_list.value_id" selected>@tz_list.value_name</option>
+                                }
+                                if (tz_list.value_id != Model.hp_id)
+                                {
+                                    <option value="@tz_list.value_id">@tz_list.value_name</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="data-row">
+                    <div class="data-item stretch">
+                        <label class="data-label">Теплоснабжающая организация</label>
+                        <input type="text" class="data-value stretch" id="hp_tso_name" name="hp_tso" value="@Model.hp_tso" disabled>
+                    </div>
+                    <div class="data-item ">
+                        <label class="data-label">∑ Q<sub>уст</sub></label>
+                        <input type="text" id="inst_heat_power_sum" class="data-value" disabled>
+                        <span class="data-unit">Гкал/ч</span>
+                    </div>
+                    <div class="data-item ">
+                        <label class="data-label">G<sub>произ.насос.</sub></label>
+                        <input type="text" id="capasity_sum" class="data-value" disabled>
+                        <span class="data-unit">т/ч</span>
+                    </div>
+                </div>
+            </div>
+            <div class="scroll-block-wrapper" style="max-height: 65vh;">
+                <div class="data-block scroll-block">
+                    <div class="accordion data-block">
+                        <div class="border-block">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel1" aria-expanded="false">Общие сведения</button>
+                            <div id="panel1" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    @await Component.InvokeAsync("HP_AddRemoveGenInfo_Partial", new {data_status = Model.data_status, heat_point_id = Model.hp_id})
+                                </div>
+                            </div>
+                        </div>
+                        <div class="border-block">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel2" aria-expanded="false">Параметры по годам реализации схемы</button>
+                            <div id="panel2" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    @await Component.InvokeAsync("HP_YearImplementSchemeParam_Partial", new {data_status = Model.data_status, heat_point_id = Model.hp_id})
+                                </div>
+                            </div>
+                        </div>
+                        <div class="border-block">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel3" aria-expanded="false">Распределительные тепловые сети после теплового пункта</button>
+                            <div id="panel3" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    <div class="data-block">
+                                        <div class="data-row">
+                                            <div class="data-item ms-auto">
+                                                <button class="bttn bttn-color bttn-edit-data" type="button">Привязать данные электронной модели</button>
+                                            </div>
+                                        </div>
+                                        <div class="scroll-table-wrapper">
+                                            <table id="HNdistribTable" class="table-clicked" style="width:100%;">
+                                                <thead>
+                                                    <tr>
+                                                        <th></th>
+                                                        <th colspan="5">Сети системы отопления</th>
+                                                        <th colspan="5">Сети системы вентиляции</th>
+                                                        <th colspan="5">Сети системы горячего водоснабжения</th>
+                                                        <th colspan="5">Сети системы технологии</th>
+                                                    </tr>
+                                                    <tr>
+                                                        <th style="position: static;">Год</th>
+                                                        <th>Кол-во уч.</th>
+                                                        <th>L,<span class="data-unit">м</span></th>
+                                                        <th>Д<sub>ср</sub><sup>под</sup></th>
+                                                        <th>Д<sub>ср</sub><sup>обр</sup></th>
+                                                        <th>Объём, <span class="data-unit">м<sup>3</sup></span></th>
+                                                        <th>Кол-во уч.</th>
+                                                        <th>L,<span class="data-unit">м</span></th>
+                                                        <th>Д<sub>ср</sub><sup>под</sup></th>
+                                                        <th>Д<sub>ср</sub><sup>обр</sup></th>
+                                                        <th>Объём, <span class="data-unit">м<sup>3</sup></span></th>
+                                                        <th>Кол-во уч.</th>
+                                                        <th>L,<span class="data-unit">м</span></th>
+                                                        <th>Д<sub>ср</sub><sup>под</sup></th>
+                                                        <th>Д<sub>ср</sub><sup>обр</sup></th>
+                                                        <th>Объём, <span class="data-unit">м<sup>3</sup></span></th>
+                                                        <th>Кол-во уч.</th>
+                                                        <th>L,<span class="data-unit">м</span></th>
+                                                        <th>Д<sub>ср</sub><sup>под</sup></th>
+                                                        <th>Д<sub>ср</sub><sup>обр</sup></th>
+                                                        <th>Объём, <span class="data-unit">м<sup>3</sup></span></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>01.01.2022</td>
+                                                        <td>10</td>
+                                                        <td>200</td>
+                                                        <td>150</td>
+                                                        <td>150</td>
+                                                        <td>7,068</td>
+                                                        <td>10</td>
+                                                        <td>200</td>
+                                                        <td>150</td>
+                                                        <td>150</td>
+                                                        <td>7,068</td>
+                                                        <td>10</td>
+                                                        <td>200</td>
+                                                        <td>150</td>
+                                                        <td>150</td>
+                                                        <td>7,068</td>
+                                                        <td>10</td>
+                                                        <td>200</td>
+                                                        <td>150</td>
+                                                        <td>150</td>
+                                                        <td>7,068</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>01.01.2023</td>
+                                                        <td>10</td>
+                                                        <td>200</td>
+                                                        <td>150</td>
+                                                        <td>150</td>
+                                                        <td>7,068</td>
+                                                        <td>10</td>
+                                                        <td>200</td>
+                                                        <td>150</td>
+                                                        <td>150</td>
+                                                        <td>7,068</td>
+                                                        <td>10</td>
+                                                        <td>200</td>
+                                                        <td>150</td>
+                                                        <td>150</td>
+                                                        <td>7,068</td>
+                                                        <td>10</td>
+                                                        <td>200</td>
+                                                        <td>150</td>
+                                                        <td>150</td>
+                                                        <td>7,068</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>01.01.2024</td>
+                                                        <td>10</td>
+                                                        <td>200</td>
+                                                        <td>150</td>
+                                                        <td>150</td>
+                                                        <td>7,068</td>
+                                                        <td>10</td>
+                                                        <td>200</td>
+                                                        <td>150</td>
+                                                        <td>150</td>
+                                                        <td>7,068</td>
+                                                        <td>10</td>
+                                                        <td>200</td>
+                                                        <td>150</td>
+                                                        <td>150</td>
+                                                        <td>7,068</td>
+                                                        <td>10</td>
+                                                        <td>200</td>
+                                                        <td>150</td>
+                                                        <td>150</td>
+                                                        <td>7,068</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>01.01.2025</td>
+                                                        <td>10</td>
+                                                        <td>200</td>
+                                                        <td>150</td>
+                                                        <td>150</td>
+                                                        <td>7,068</td>
+                                                        <td>10</td>
+                                                        <td>200</td>
+                                                        <td>150</td>
+                                                        <td>150</td>
+                                                        <td>7,068</td>
+                                                        <td>10</td>
+                                                        <td>200</td>
+                                                        <td>150</td>
+                                                        <td>150</td>
+                                                        <td>7,068</td>
+                                                        <td>10</td>
+                                                        <td>200</td>
+                                                        <td>150</td>
+                                                        <td>150</td>
+                                                        <td>7,068</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>01.01.2026</td>
+                                                        <td>10</td>
+                                                        <td>200</td>
+                                                        <td>150</td>
+                                                        <td>150</td>
+                                                        <td>7,068</td>
+                                                        <td>10</td>
+                                                        <td>200</td>
+                                                        <td>150</td>
+                                                        <td>150</td>
+                                                        <td>7,068</td>
+                                                        <td>10</td>
+                                                        <td>200</td>
+                                                        <td>150</td>
+                                                        <td>150</td>
+                                                        <td>7,068</td>
+                                                        <td>10</td>
+                                                        <td>200</td>
+                                                        <td>150</td>
+                                                        <td>150</td>
+                                                        <td>7,068</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>01.01.2027</td>
+                                                        <td>10</td>
+                                                        <td>200</td>
+                                                        <td>150</td>
+                                                        <td>150</td>
+                                                        <td>7,068</td>
+                                                        <td>10</td>
+                                                        <td>200</td>
+                                                        <td>150</td>
+                                                        <td>150</td>
+                                                        <td>7,068</td>
+                                                        <td>10</td>
+                                                        <td>200</td>
+                                                        <td>150</td>
+                                                        <td>150</td>
+                                                        <td>7,068</td>
+                                                        <td>10</td>
+                                                        <td>200</td>
+                                                        <td>150</td>
+                                                        <td>150</td>
+                                                        <td>7,068</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>01.01.2028</td>
+                                                        <td>10</td>
+                                                        <td>200</td>
+                                                        <td>150</td>
+                                                        <td>150</td>
+                                                        <td>7,068</td>
+                                                        <td>10</td>
+                                                        <td>200</td>
+                                                        <td>150</td>
+                                                        <td>150</td>
+                                                        <td>7,068</td>
+                                                        <td>10</td>
+                                                        <td>200</td>
+                                                        <td>150</td>
+                                                        <td>150</td>
+                                                        <td>7,068</td>
+                                                        <td>10</td>
+                                                        <td>200</td>
+                                                        <td>150</td>
+                                                        <td>150</td>
+                                                        <td>7,068</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>01.01.2029</td>
+                                                        <td>10</td>
+                                                        <td>200</td>
+                                                        <td>150</td>
+                                                        <td>150</td>
+                                                        <td>7,068</td>
+                                                        <td>10</td>
+                                                        <td>200</td>
+                                                        <td>150</td>
+                                                        <td>150</td>
+                                                        <td>7,068</td>
+                                                        <td>10</td>
+                                                        <td>200</td>
+                                                        <td>150</td>
+                                                        <td>150</td>
+                                                        <td>7,068</td>
+                                                        <td>10</td>
+                                                        <td>200</td>
+                                                        <td>150</td>
+                                                        <td>150</td>
+                                                        <td>7,068</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>01.01.2030</td>
+                                                        <td>10</td>
+                                                        <td>200</td>
+                                                        <td>150</td>
+                                                        <td>150</td>
+                                                        <td>7,068</td>
+                                                        <td>10</td>
+                                                        <td>200</td>
+                                                        <td>150</td>
+                                                        <td>150</td>
+                                                        <td>7,068</td>
+                                                        <td>10</td>
+                                                        <td>200</td>
+                                                        <td>150</td>
+                                                        <td>150</td>
+                                                        <td>7,068</td>
+                                                        <td>10</td>
+                                                        <td>200</td>
+                                                        <td>150</td>
+                                                        <td>150</td>
+                                                        <td>7,068</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>01.01.2031</td>
+                                                        <td>10</td>
+                                                        <td>200</td>
+                                                        <td>150</td>
+                                                        <td>150</td>
+                                                        <td>7,068</td>
+                                                        <td>10</td>
+                                                        <td>200</td>
+                                                        <td>150</td>
+                                                        <td>150</td>
+                                                        <td>7,068</td>
+                                                        <td>10</td>
+                                                        <td>200</td>
+                                                        <td>150</td>
+                                                        <td>150</td>
+                                                        <td>7,068</td>
+                                                        <td>10</td>
+                                                        <td>200</td>
+                                                        <td>150</td>
+                                                        <td>150</td>
+                                                        <td>7,068</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>01.01.2032</td>
+                                                        <td>10</td>
+                                                        <td>200</td>
+                                                        <td>150</td>
+                                                        <td>150</td>
+                                                        <td>7,068</td>
+                                                        <td>10</td>
+                                                        <td>200</td>
+                                                        <td>150</td>
+                                                        <td>150</td>
+                                                        <td>7,068</td>
+                                                        <td>10</td>
+                                                        <td>200</td>
+                                                        <td>150</td>
+                                                        <td>150</td>
+                                                        <td>7,068</td>
+                                                        <td>10</td>
+                                                        <td>200</td>
+                                                        <td>150</td>
+                                                        <td>150</td>
+                                                        <td>7,068</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>01.01.2033</td>
+                                                        <td>10</td>
+                                                        <td>200</td>
+                                                        <td>150</td>
+                                                        <td>150</td>
+                                                        <td>7,068</td>
+                                                        <td>10</td>
+                                                        <td>200</td>
+                                                        <td>150</td>
+                                                        <td>150</td>
+                                                        <td>7,068</td>
+                                                        <td>10</td>
+                                                        <td>200</td>
+                                                        <td>150</td>
+                                                        <td>150</td>
+                                                        <td>7,068</td>
+                                                        <td>10</td>
+                                                        <td>200</td>
+                                                        <td>150</td>
+                                                        <td>150</td>
+                                                        <td>7,068</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>01.01.2034</td>
+                                                        <td>10</td>
+                                                        <td>200</td>
+                                                        <td>150</td>
+                                                        <td>150</td>
+                                                        <td>7,068</td>
+                                                        <td>10</td>
+                                                        <td>200</td>
+                                                        <td>150</td>
+                                                        <td>150</td>
+                                                        <td>7,068</td>
+                                                        <td>10</td>
+                                                        <td>200</td>
+                                                        <td>150</td>
+                                                        <td>150</td>
+                                                        <td>7,068</td>
+                                                        <td>10</td>
+                                                        <td>200</td>
+                                                        <td>150</td>
+                                                        <td>150</td>
+                                                        <td>7,068</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>01.01.2035</td>
+                                                        <td>10</td>
+                                                        <td>200</td>
+                                                        <td>150</td>
+                                                        <td>150</td>
+                                                        <td>7,068</td>
+                                                        <td>10</td>
+                                                        <td>200</td>
+                                                        <td>150</td>
+                                                        <td>150</td>
+                                                        <td>7,068</td>
+                                                        <td>10</td>
+                                                        <td>200</td>
+                                                        <td>150</td>
+                                                        <td>150</td>
+                                                        <td>7,068</td>
+                                                        <td>10</td>
+                                                        <td>200</td>
+                                                        <td>150</td>
+                                                        <td>150</td>
+                                                        <td>7,068</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="border-block">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel4" aria-expanded="false">Привязка теплового пункта к слоям электронной модели</button>
+                            <div id="panel4" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    <div class="data-row">
+                                        <div class="data-block stretch fix-180">
+                                            <div class="data-row ">
+                                                <div class="data-item stretch">
+                                                    <label class="data-label">Уникальный номер слоя</label>
+                                                    <select class="selectpicker data-value xxl-stretch" data-live-search="true" placeholder="Выберите значение">
+                                                        <option value="2020">2020</option>
+                                                        <option value="2021">2021</option>
+                                                        <option value="2022">2022</option>
+                                                        <option value="2023">2023</option>
+                                                    </select>
+                                                </div>
+                                                <div class="data-item">
+                                                    <label class="data-label">Расчетный год слоя</label>
+                                                    <input type="text" class="data-value md-fix" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="data-row">
+                                                <div class="data-item">
+                                                    <label class="data-label">Наименование слоя</label>
+                                                    <input type="text" class="data-value stretch" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="data-row">
+                                                <div class="data-item stretch">
+                                                    <label class="data-label">Номер SYS объекта</label>
+                                                    <input type="text" class="data-value stretch">
+                                                </div>
+                                                <div class="data-item">
+                                                    <button class="bttn bttn-color bttn-edit-data" type="button">Выполнить</button>
+                                                    <button class="bttn bttn-color bttn-edit-data" type="button">Показать</button>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="data-block stretch">
+                                            <h4>Перечень привязанных слоев электронной модели</h4>
+                                            <table style="width: 100%">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Год</th>
+                                                        <th>УНОМ слоя</th>
+                                                        <th>Наименование слоя</th>
+                                                        <th>SYS объекта в слое</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>01.01.2022</td>
+                                                        <td>1.2022</td>
+                                                        <td>Moscow_2022_aktual_Osnovnoi</td>
+                                                        <td><a href="#">125489</a></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>01.01.2023</td>
+                                                        <td>2.2022</td>
+                                                        <td>Moscow_2023_aktual_Osnovnoi</td>
+                                                        <td><a href="#">125489</a></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>01.01.2024</td>
+                                                        <td>3.2022</td>
+                                                        <td>Moscow_2024_aktual_Osnovnoi</td>
+                                                        <td><a href="#">257846</a></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>01.01.2025</td>
+                                                        <td>4.2022</td>
+                                                        <td>Moscow_2025_aktual_Osnovnoi</td>
+                                                        <td><a href="#">355478</a></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>01.01.2026</td>
+                                                        <td>5.2022</td>
+                                                        <td>Moscow_2026_aktual_Osnovnoi</td>
+                                                        <td><a href="#">854673</a></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>01.01.2027</td>
+                                                        <td>6.2022</td>
+                                                        <td>Moscow_2027_aktual_Osnovnoi</td>
+                                                        <td><a href="#">214643</a></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>01.01.2028</td>
+                                                        <td>-</td>
+                                                        <td>Moscow_2028_aktual_Osnovnoi</td>
+                                                        <td><a href="#">896543</a></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>01.01.2029</td>
+                                                        <td>-</td>
+                                                        <td>-</td>
+                                                        <td><a href="#">-</a></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>01.01.2030</td>
+                                                        <td>-</td>
+                                                        <td>-</td>
+                                                        <td><a href="#">-</a></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>01.01.2031</td>
+                                                        <td>-</td>
+                                                        <td>-</td>
+                                                        <td><a href="#">-</a></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>01.01.2032</td>
+                                                        <td>-</td>
+                                                        <td>-</td>
+                                                        <td><a href="#">-</a></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>01.01.2033</td>
+                                                        <td>7.2022</td>
+                                                        <td>Moscow_2033_aktual_Osnovnoi</td>
+                                                        <td><a href="#">2354354</a></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>01.01.2034</td>
+                                                        <td>8.2022</td>
+                                                        <td>Moscow_2034_aktual_Osnovnoi</td>
+                                                        <td><a href="#">2438735</a></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>01.01.2035</td>
+                                                        <td>9.2022</td>
+                                                        <td>Moscow_2035_aktual_Osnovnoi</td>
+                                                        <td><a href="#">2587513</a></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="border-block">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel5" aria-expanded="false">Состав оборудования</button>
+                            <div id="panel5" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    <div class="data-block">
+                                        @await Component.InvokeAsync("HP_EquipmentPart_Partial", new {data_status = Model.data_status, heat_point_id = Model.hp_id})
+                                        <div class="accordion data-block">
+                                            <div class="border-block">
+                                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel5-1" aria-expanded="false">Теплообменное оборудование</button>
+                                                <div id="panel5-1" class="accordion-collapse collapse">
+                                                    <div class="accordion-body">
+                                                        <div class="data-block" id="HP_EquipmentPart_HeatExchange">
+                                                            @await Component.InvokeAsync("HP_EquipmentPart_HeatExchange_Partial", new {data_status = Model.data_status, heat_point_id = Model.hp_id})
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="border-block">
+                                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel5-2" aria-expanded="false">Насосное оборудование</button>
+                                                <div id="panel5-2" class="accordion-collapse collapse">
+                                                    <div class="accordion-body">
+                                                        <div class="data-block" id="HP_EquipmentPart_Pump">
+                                                            @await Component.InvokeAsync("HP_EquipmentPart_Pump_Partial", new {data_status = Model.data_status, heat_point_id = Model.hp_id})
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="border-block">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel6" aria-expanded="false">Автоматизация</button>
+                            <div id="panel6" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    <div class="data-block">
+                                        @await Component.InvokeAsync("HP_Automatization_Partial", new {data_status = Model.data_status, heat_point_id = Model.hp_id})
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="border-block">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel7" aria-expanded="false">Учет ресурсов</button>
+                            <div id="panel7" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    <div class="data-block" id="HP_EquipmentPart_AccResources">
+                                        @await Component.InvokeAsync("HP_EquipmentPart_AccResources_Partial", new {data_status = Model.data_status, heat_point_id = Model.hp_id})
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="border-block">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel8" aria-expanded="false">Номера и обозначения теплового пункта в других базах данных</button>
+                            <div id="panel8" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    <div class="data-block fix">
+                                        @await Component.InvokeAsync("HP_NumSignOtherDB_Partial", new {data_status = Model.data_status, heat_point_id = Model.hp_id})
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="border-block">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel9" aria-expanded="false">Документация и фотоматериалы по тепловому пункту</button>
+                            <div id="panel9" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    <div class="data-block" id="HP_EquipmentPart_DocsFootage">
+                                        @await Component.InvokeAsync("HP_DocsFootage_Partial", new {data_status = Model.data_status, heat_point_id = Model.hp_id})
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="bttn" data-bs-dismiss="modal">Отмена</button>
+            <button type="button" class="bttn bttn-color" disabled>Создать копию</button>
+            <button type="button" class="bttn bttn-color" onclick="RemoveHeatPointFromDb(@Model.hp_id, @Model.data_status)" id="open_hp_add_remove_del_but" @is_disabled>Удалить</button>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="@Url.Content("~/hss/js/popup_common_scripts.js")"></script>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        let par_elem = document.getElementById("unomTpAddressList").parentElement;
+        par_elem.querySelector("input.form-control[type=search]").addEventListener('keyup', (event) => {
+            GetUnomTpAddressListByChars(event.target.value, $('#data_status').val());
+        });
+    });
+
+    function GetUnomTpAddressListByChars(input_chars, data_status) {
+        if(input_chars.length > 2){
+            $.ajax({
+                url: '@Html.Raw(Url.Action("GetUnomTpAddressListByChars", "HSS", new { Area = ""}))',
+                type: 'POST',
+                data: { chars: input_chars, data_status: data_status }
+            }).done(function (data) {
+                changeSelectByOtherSelectHeatPointUnomTpAddressList(data.list, "unomTpAddressList", input_chars);
+            });
+        }        
+    }
+
+    function changeSelectByOtherSelectHeatPointUnomTpAddressList(newSelect, select_id, input_chars) {
+        var select = $('#' + select_id);
+        $(select).find('option').remove();
+        if (newSelect.length !== 0) {
+            for (var i = 0; i < newSelect.length; i++) {
+                $(select).append('<option value=' + newSelect[i].value_id + '>' + newSelect[i].value_name + '</option>');
+            }
+        } else {
+            $(select).append('<option value="">' + "Нет записей" + '</option>');
+        }
+        $(select).selectpicker('destroy');
+        $(select).selectpicker();
+        $(select).selectpicker('open');
+        let par_elem = document.getElementById("unomTpAddressList").parentElement;
+        par_elem.querySelector("input.form-control[type=search]").value = input_chars;
+        par_elem.querySelector("input.form-control[type=search]").addEventListener('keyup', (event) => {
+            GetUnomTpAddressListByChars(event.target.value, $('#data_status').val());
+        });
+    }
+
+    document.querySelector('#unomTpAddressList').addEventListener('change', (event) => {
+        OpenPopupHeatPointAddRemove($('#unomTpAddressList').val());
+    });
+
+    function RefreshTable() {
+        if ($("#refresh_table").val() === "1") {
+            GetListOnPage();
+        }
+    }
+
+    function RemoveHeatPointFromDb(heat_point_id, data_status) {
+        $('#is_deleted_hp_gen_info').val(true);
+        $('#hp_gen_info_form').submit();
+    }
+
+</script>

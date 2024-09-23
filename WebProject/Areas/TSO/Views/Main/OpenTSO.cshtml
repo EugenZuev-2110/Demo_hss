@@ -1,0 +1,435 @@
+﻿@model WebProject.Areas.TSO.Models.TSOViewModel
+
+@{
+	string btn_disable = string.Empty; int ds = @Model.data_status - 1;
+}
+@if (Model.Id == 0)
+{
+	btn_disable = "disabled";
+}
+<div class="modal-dialog modal-dialog-centered">
+	<div class="modal-content">
+		<div class="modal-header">
+			<h3 class="modal-title" id="editDataLabel">Редактирование ТСО</h3>
+			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="RefreshTable();"></button>
+		</div>
+		<div class="modal-body">
+			<div class="data-block">
+				<div class="data-row static-block">
+					<div class="data-item">
+						<label class="data-label">Уникальный номер ТСО</label>
+						<select class="selectpicker data-value xxl-stretch" id="paramNumberTso" data-live-search="true">
+							@if (@Model.Id == 0)
+							{
+								<option value="" selected disabled>При добавлении новой ТО, УНОМ генерируется автоматически</option>
+							}
+							@foreach (var tso_list in ViewBag.TSOList)
+							{
+								if (tso_list.org_id == Model.Id)
+								{
+									<option value="@tso_list.org_id" selected>@tso_list.org_name</option>
+								}
+								if (tso_list.org_id != Model.Id)
+								{
+									<option value="@tso_list.org_id">@tso_list.org_name</option>
+								}
+							}
+						</select>
+					</div>
+					<div class="data-item">
+						<div class="note">Базовый год - <span class="note-base-year">@ds (01.01.@Model.data_status)</span>.</div>
+					</div>
+				</div>
+				<div class="scroll-block-wrapper" style="max-height: calc(95vh - 250px);">
+					<div class="data-block scroll-block">
+						<form class="needs-validation" novalidate asp-controller="Main" asp-action="TSO_Save" asp-antiforgery="true" asp-area="TSO" id="tso_form"
+							  data-ajax-failure="onFailedForm" data-ajax-success="onSuccessFormTSO" data-ajax-begin="onBeginForm" data-ajax="true" data-ajax-method="POST">
+							<input type="hidden" name="Id" value="@Model.Id" id="tso_id_input"/>
+							<input type="hidden" name="data_status" value="@Model.data_status" id="tso_ds_input" />
+							<div class="data-block border-block">
+								<h4>Общие сведения об организации:</h4>
+								<div class="data-row">
+									<div class="data-block stretch me-xxl-3">
+										<div class="data-row">
+											<div class="col-5 col-lg-3 order-lg-5 ms-auto">
+												<div class="data-item ms-lg-3">
+													<label class="data-label">Код ТСО</label>
+													<input type="text" class="data-value md-auto" name="code_tso" value="@Model.code_tso">
+												</div>
+											</div>
+											<div class="col-12 col-lg-9">
+												<div class="data-item me-lg-3">
+													<label class="data-label xl-fix">Наименование ТСО: <span class="sublabel">краткое</span></label>
+													<input type="text" class="data-value stretch" name="short_name" value="@Model.short_name" required>
+													<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Это поле должно быть заполнено"></a>
+												</div>
+											</div>
+										</div>
+										<div class="data-row">
+											<div class="data-item">
+												<label class="data-label xl-fix"><span class="sublabel">полное</span></label>
+												<textarea class="data-value stretch" style="height: 62px;" name="full_name">@Model.full_name</textarea>
+											</div>
+											<div class="data-item stretch">
+												<label class="data-label md-fix">Примечание</label>
+												<textarea class="data-value stretch" style="height: 62px;" name="notes" id="notes">@Model.notes</textarea>
+											</div>
+										</div>
+
+
+										<div class="data-row">
+											<label class="data-item data-item-right">
+												<span class="data-label">Организация является структурным подразделением</span>
+												@if (Model.Id > 0)
+												{
+													string is_checked = string.Empty;
+													@if (Model.org_struct == true)
+														is_checked = "checked";
+													<input type="checkbox" class="data-value data-check" name="org_struct" value="@(Model.org_struct == true ? "true" : "false")" @is_checked onchange="CB_Change(this)">
+												}
+												else
+												{
+													<input type="checkbox" class="data-value data-check" name="org_struct" value="false" onchange="CB_Change(this)">
+												}
+											</label>
+											<label class="data-item data-item-right">
+												<span class="data-label">Организация является плательщиком НДС</span>
+												@if (Model.Id > 0)
+												{
+													string is_checked = string.Empty;
+													@if (Model.tso_nds_pay == true)
+														is_checked = "checked";
+													<input type="checkbox" class="data-check" name="tso_nds_pay" value="@(Model.tso_nds_pay == true ? "true" : "false")" @is_checked onchange="CB_Change(this)" />
+												}
+												else
+												{
+													<input type="checkbox" class="data-check" name="tso_nds_pay" value="true" checked onchange="CB_Change(this)" />
+												}
+											</label>
+										</div>
+									</div>
+
+									<div class="data-block ms-xxl-3 data-xxl-row fix-80">
+
+										<div class="data-item">
+											<label class="data-label smx-fix">ИНН</label>
+											<input type="text" class="data-value md-stretch" name="inn" id="inn" value="@Model.inn" required>
+											<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Это поле должно быть заполнено"></a>
+										</div>
+										<div class="data-item">
+											<label class="data-label smx-fix">ОГРН</label>
+											<input type="text" class="data-value md-stretch" name="ogrn" value="@Model.ogrn">
+										</div>
+										<div class="data-item">
+											<label class="data-label smx-fix">КПП</label>
+											<input type="text" class="data-value md-stretch" name="kpp" value="@Model.kpp">
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="data-row">
+								<div class="col-12 col-xxl-5">
+									<div class="data-block border-block me-xxl-1">
+										<h4>Руководитель:</h4>
+										<div class="data-row">
+											<div class="col-12 col-md-6">
+												<div class="data-block me-md-3">
+													<div class="data-item">
+														<label class="data-label sm-fix">Должность</label>
+														<input type="text" class="data-value md-stretch" name="pozition_head_manager" value="@Model.pozition_head_manager">
+													</div>
+													<div class="data-item">
+														<label class="data-label sm-fix">Фамилия</label>
+														<input type="text" class="data-value md-stretch" name="l_name_head_manager" value="@Model.l_name_head_manager">
+													</div>
+													<div class="data-item">
+														<label class="data-label sm-fix">Имя</label>
+														<input type="text" class="data-value md-stretch" name="f_name_head_manager" value="@Model.f_name_head_manager">
+													</div>
+												</div>
+											</div>
+											<div class="col-12 col-md-6">
+												<div class="data-block ms-md-3">
+													<div class="data-item">
+														<label class="data-label sm-fix">Отчество</label>
+														<input type="text" class="data-value md-stretch" name="m_name_head_manager" value="@Model.m_name_head_manager">
+													</div>
+													<div class="data-item">
+														<label class="data-label sm-fix">Контактный телефон</label>
+														<input type="tel" class="data-value md-stretch" name="org_contact_phones" value="@Model.org_contact_phones">
+													</div>
+													<div class="data-item">
+														<label class="data-label sm-fix">Эл. почта</label>
+														<input type="email" class="data-value md-stretch" name="org_emails" value="@Model.org_emails">
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-12 col-xxl-7">
+									<div class="data-block border-block ms-xxl-1">
+										<div class="data-row">
+											<div class="col-12 col-md-6">
+												<div class="data-block me-md-3">
+													<div class="data-item">
+														<label class="data-label md-fix">Размер собственного капитала</label>
+														<input type="text" class="data-value stretch double" id="org_size_own_capital" name="org_size_own_capital" value="@Model.org_size_own_capital"><span class="data-unit"> тыс.р.</span>
+													</div>
+													<div class="data-item">
+														<label class="data-label md-fix">по состоянию на</label>
+														@if (Model.year_own_capital != null)
+														{
+															<input type="date" class="data-value stretch" name="year_own_capital" value="@(Model.year_own_capital?.ToString("yyyy") + "-" + Model.year_own_capital?.ToString("MM") + "-" + Model.year_own_capital?.ToString("dd"))">
+														}
+														else
+														{
+															<input type="date" class="data-value stretch" name="year_own_capital">
+														}
+													</div>
+													<div class="data-item">
+														<label class="data-label md-fix">Вид собственности</label>
+														<select class="selectpicker data-value stretch" id="paramPropertyType" data-live-search="true" name="org_property_type_id">
+															@if (@Model.Id == 0 || Model.org_property_type_id == null)
+															{
+																<option value="" selected disabled>Выберите</option>
+															}
+															@foreach (var properties in ViewBag.PropertyTypesList)
+															{
+																if (properties.Id == Model.org_property_type_id)
+																{
+																	<option value="@properties.Id" selected>@properties.org_property_type_name</option>
+																}
+																if (properties.Id != Model.org_property_type_id)
+																{
+																	<option value="@properties.Id">@properties.org_property_type_name</option>
+																}
+															}
+														</select>
+														<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Выберите значение из списка"></a>
+													</div>
+												</div>
+											</div>
+											<div class="col-12 col-md-6">
+												<div class="data-block ms-md-3">
+													<div class="data-item">
+														<label class="data-label md-fix">Способ отправки писем</label>
+														<select class="selectpicker data-value stretch" id="paramPostMethod" data-live-search="true" placeholder="Выберите значение" name="send_letters_type_id">
+															@if (@Model.Id == 0 || Model.send_letters_type_id == null)
+															{
+																<option value="" selected disabled>Выберите</option>
+															}
+															@foreach (var send_let in ViewBag.SendLettersTypesList)
+															{
+																if (send_let.Id == Model.send_letters_type_id)
+																{
+																	<option value="@send_let.Id" selected>@send_let.send_letters_type_name</option>
+																}
+																if (send_let.Id != Model.send_letters_type_id)
+																{
+																	<option value="@send_let.Id">@send_let.send_letters_type_name</option>
+																}
+															}
+														</select>
+													</div>
+													<div class="data-item">
+														<label class="data-label md-fix">Организация действует в зоне(нах) ЕТО</label>
+														<select class="selectpicker data-value stretch" id="paramEtoZone" multiple data-live-search="true" name="etos">
+															@if (Model.Id == 0 || Model.etos == null || Model.etos.Length == 0)
+															{
+																<option value="" selected disabled>Выберите</option>
+																@foreach (var etos in Model.eto_list)
+																{
+																	<option value="@etos.eto_id">@etos.unom_eto</option>
+																}
+															}
+															@if (Model.etos != null && Model.etos.Length > 0)
+															{
+																foreach (var unom_etos_id in Model.etos)
+																{
+																	<option value="@unom_etos_id" selected>@Model.eto_list.Where(x => x.eto_id == unom_etos_id).Select(x => x.unom_eto).FirstOrDefault()</option>
+																}
+																@foreach (var etos in Model.eto_list.Where(x => !Model.etos.Any(y => y == x.eto_id)))
+																{
+																	<option value="@etos.eto_id">@etos.unom_eto</option>
+																}
+															}
+														</select>
+													</div>
+													<div class="data-item">
+														<label class="data-label md-fix">Статус ЕТО</label>
+														<div class="input-group stretch">
+															<select class="selectpicker data-value stretch" id="paramEtoStatus" name="eto_id" data-live-search="true">
+																@if (@Model.Id == 0 || Model.eto_id == null)
+																{
+																	<option value="" selected disabled>Выберите</option>
+																}
+																<option value="null">-</option>
+																@foreach (var etos in Model.eto_list_status)
+																{
+																	if (etos.eto_id == Model.eto_id)
+																	{
+																		<option value="@etos.eto_id" selected>@etos.unom_eto</option>
+																	}
+																	if (etos.eto_id != Model.eto_id)
+																	{
+																		<option value="@etos.eto_id">@etos.unom_eto</option>
+																	}
+																}
+															</select>
+															<a class="bttn bttn-square bttn-icon-add" href="/DictionaryTables/ActiveZoneETO/ActiveZoneETOList" target="_blank"></a>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="data-item data-item-right">
+								<button type="submit" class="bttn bttn-color" id="btnSaveTSO" form="tso_form">Сохранить</button>
+							</div>
+						</form>
+						<div class="data-row">
+							<div class="col-xxl-6 col-12">
+								<div class="data-block border-block me-1" id="tso_perspective_table">
+									@await Component.InvokeAsync("TSO_PerspectiveList_Partial", new { tso_id = Model.Id, data_status = Model.data_status })
+								</div>
+							</div>
+							<div class="col-xxl-6 col-12">
+								<div class="data-block border-block ms-1" id="tso_resp_pers_table">
+									@await Component.InvokeAsync("TSO_ResponsiblePersonsList_Partial", new { tso_id = Model.Id, data_status = Model.data_status })
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal-footer">
+			
+			<button type="button" class="bttn bttn-color" id="btnCopyTSO" onclick="OpenPopupTSO(@Model.Id, 'copy');" @btn_disable>Создать копию</button>
+			<button type="button" class="bttn bttn-color" id="btnDeleteTSO" onclick="DeleteTSO();" @btn_disable>Удалить</button>
+		</div>
+	</div>
+</div>
+<script type="text/javascript" src="@Url.Content("~/hss/js/popup_common_scripts.js")"></script>
+<script type="text/javascript">
+
+	$(document).ready(function () {
+
+		$('#paramEtoZone, #paramEtoStatus').selectpicker({
+			size: 5
+		});
+
+		document.querySelector('#paramNumberTso').addEventListener('change', (event) => {
+			OpenPopupTSO($('#paramNumberTso').val());
+		});
+
+		let par_elem1 = document.getElementById("paramEtoStatus").parentElement;
+		let par_elem2 = document.getElementById("paramEtoZone").parentElement;
+
+		par_elem1.querySelector("input.form-control[type=search]").addEventListener('keyup', (event) => {
+			if (event.target.value.length === 3) {
+				FindETOAddToList(event.target.value, "paramEtoStatus");
+			}
+		});
+		par_elem2.querySelector("input.form-control[type=search]").addEventListener('keyup', (event) => {
+			if (event.target.value.length === 3) {
+				FindETOAddToList(event.target.value, "paramEtoZone");
+			}
+		});
+
+		$('#inn').on('change', function () {
+			if ((this.value.length != 10 && this.value.length != 12) && this.value.length != 0) {
+				$(this).setErrorText('ИНН должен содержать 10 или 12 цифр');
+				$(this).showErrorTooltip();
+			}
+			else {
+				$(this).hideErrorTooltip();
+			}
+		})
+
+	});
+
+	function FindETOAddToList(search_str, select_id) {
+		$.ajax({
+			url: '@Html.Raw(Url.Action("FindETOAddToList", "HSS", new { Area = "" }))',
+			type: 'POST',
+			data: { eto_num: search_str }
+		}).done(function (data) {
+			if (data.eto != null)
+			{
+				let find_option = $('#' + select_id + ' option[value="' + data.eto.eto_id + '"]').text();
+				var select = $('#' + select_id);
+				if (find_option == "")
+				{
+					$(select).append('<option value=' + data.eto.eto_id + ' selected>' + data.eto.unom_eto + '</option>');
+					$(select).selectpicker('destroy');
+					$(select).selectpicker();
+					$(select).selectpicker('toggle');
+				}
+			}
+		});
+	}
+
+	function DeleteTSO() {
+		showPreloader();
+		$.ajax({
+			url: '@Html.Raw(Url.Action("TSO_Delete", "Main", new { Area = "TSO" }))',
+			type: 'POST',
+			data: {
+				tso_Id: $('#tso_id_input').val(),
+				data_status: $('#tso_ds_input').val()
+			}
+		}).done(function () {
+			$("#btnDeleteTSO").prop('disabled', true);
+			$("#btnCopyTSO").prop('disabled', true);
+			$("#btnSaveTSO").prop('disabled', true);
+			$("#refresh_tso_table").val(1);
+			hidePreloader();
+		}).fail(function (xhr) {
+			showMessage(xhr.responseText, 'modal', 'fault');
+			hidePreloader();
+		});
+	}
+
+	var onSuccessFormTSO = function (xhr) {
+		debugger
+		if (xhr.success == true) {
+			$("#refresh_tso_table").val(1);
+			let select_id = "paramNumberTso";
+			if (xhr.is_new_tso === 1) {
+				$("#rp_tso_id_input").val(xhr.tso_id);
+				$("#perspective_tso_id_input").val(xhr.tso_id);
+				$("#tso_id_input").val(xhr.tso_id);
+				$('#' + select_id).append('<option value=' + xhr.tso_id + ' selected>' + xhr.unom_tso + '</option>');
+				RefreshSelectByIdWithVal(select_id, xhr.tso_id);
+				$("#btnSubmitTsoPersp").prop('disabled', false);
+				$("#btnSubmitRespPerson_0").prop('disabled', false);
+				$("#btnDeleteTSO").prop('disabled', false);
+				$("#btnCopyTSO").prop('disabled', false);
+				$("#tso_perspective_form").submit();
+			}
+			else {
+				$("select[id=" + select_id + "] option[value=" + xhr.tso_id + "]").text(xhr.unom_tso);
+				RefreshSelectById(select_id);
+				$("#tso_perspective_form").submit();
+			}
+		}
+		else {
+			showMessage(xhr.error, 'modal', 'fault');
+		}
+
+		hidePreloader();
+	};
+
+	function RefreshTable() {
+		if ($("#refresh_tso_table").val() === "1") {
+			GetListOnPage();
+		}
+	}
+
+
+</script>

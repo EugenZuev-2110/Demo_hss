@@ -1,0 +1,77 @@
+﻿@model List<WebProject.Areas.TSO.Models.TZOneSourcesDataListViewModel>
+@{
+	Layout = null;
+	int cnt_columns = 19;
+}
+
+
+<div class="table-buttons tzSourcesTable-buttons"></div>
+<table id="tzSourcesTable" class="display compact" style="width:100%">
+	<thead>
+		<tr>
+			<th rowspan="2">УНОМ ИСТ</th>
+			<th rowspan="2">УНОМ СТ</th>
+			<th rowspan="2">УНОМ ЕТО</th>
+			<th rowspan="2">Наименование источника тепловой энергии</th>
+			<th rowspan="2">Тип источника</th>
+			<th rowspan="2">Округ</th>
+			<th rowspan="2">Район</th>
+			<th rowspan="2">Адрес месторасположения</th>
+			<th colspan="2">Установленная мощность</th>
+			<th colspan="2">Расчетная подключенная тепловая нагрузка</th>
+			<th rowspan="2">Отпуск электрической энергии с шин электростанции, тыс. кВт.ч/год</th>
+			<th rowspan="2">Годовой отпуск тепла с коллекторов, тыс. Гкал</th>
+			<th rowspan="2">Теплоснабжаемые округа/районы</th>
+			<th colspan="2">Организация собственник</th>
+			<th rowspan="2">Статус источника</th>
+			<th rowspan="2">Объект относится к бесхозяйному имуществу</th>
+		</tr>
+		<tr>
+			<th>электрическая, МВт</th>
+			<th>тепловая, Гкал/ч</th>
+			<th>в паре, т/ч</th>
+			<th>в горячей воде, Гкал/ч</th>
+			<th>ИНН</th>
+			<th>Наименование</th>
+		</tr>
+		<tr class="filter-row ">
+			@for (int i = 0; i < @cnt_columns; i++)
+			{
+				if (i == 0)
+				{
+					<th class="dtfc-fixed-left" style="left:0; position:sticky;"><input type="text" class="filter-col-0" /></th>
+				}
+				else
+				{
+					<th><input type="text" class="filter-col-@i" /></th>
+				}
+			}
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var sources_list in Model)
+		{
+			<tr>
+				<td>@sources_list.source_unom</td>
+				<td>@sources_list.unom_hss</td>
+				<td>@sources_list.unom_eto</td>
+				<td>@sources_list.source_name</td>
+				<td>@sources_list.source_type_name</td>
+				<td>@sources_list.region_short</td>
+				<td>@sources_list.district_name</td>
+				<td>@sources_list.address</td>
+				<td>@sources_list.inst_elec_power</td>
+				<td>@sources_list.inst_heat_power</td>
+				<td>@sources_list.calc_hl_steam_hp</td>
+				<td>@sources_list.calc_hl_hw_hp</td>
+				<td>@sources_list.release_elenergy_tires_powerplant</td>
+				<td>@sources_list.release_heatenergy_consumers</td>
+				<td>@sources_list.territories</td>
+				<td>@sources_list.inn_org_owner</td>
+				<td>@sources_list.org_owner</td>
+				<td>@sources_list.source_status_name</td>
+				<td>@sources_list.obj_vacant_prop</td>
+			</tr>
+		}
+	</tbody>
+</table>

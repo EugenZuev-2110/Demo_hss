@@ -1,0 +1,169 @@
+﻿@model WebProject.Areas.DictionaryTables.Models.NormLossOneDataViewModel
+@{
+	string btn_disable = string.Empty;
+}
+@if (Model.Id == 0)
+{
+	btn_disable = "disabled";
+}
+<div class="modal-dialog modal-dialog-centered">
+	<div class="modal-content">
+		<div class="modal-header">
+			<h3 class="modal-title" id="editDataLabel">Нормы плотности теплового потока</h3>
+			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="RefreshTable()"></button>
+		</div>
+		<div class="modal-body">
+			<form class="needs-validation" novalidate asp-controller="NormLoss" asp-action="NormLoss_Save" asp-antiforgery="true" asp-area="DictionaryTables" id="IzolTypes_form"
+			data-ajax-failure="onFailedFormTZ" data-ajax-success="onSuccessFormDiameters" data-ajax-begin="onBeginFormTZ" data-ajax="true" data-ajax-method="POST">
+				<input type="hidden" name="Id" value="@Model.Id" id="Id" />
+				<input type="hidden" name="data_status" value="@Model.data_status" id="data_status" />
+				<div class="data-block static-block data-params">
+					<div class="data-row">
+						<div class="data-item">
+							<label class="data-label">Уникальный номер нормы плотности теплового потока</label>
+							<select class="selectpicker data-value xxl-stretch" data-live-search="true" id="paramNumberNormLoss" placeholder="Выберите УНОМ нормы плотности теплового потока">
+								@if(Model.Id == 0 || ViewBag.Action_for == "copy")
+								{
+									<option value="" selected>При добавлении новой потери УНОМ генерируется автоматически</option>
+								}
+								@foreach (var normLoss in ViewBag.NormLossList)
+								{
+									if (normLoss.value_id == Model.Id)
+									{
+										<option value="@normLoss.value_id" selected>@normLoss.value_name</option>
+									}
+									else
+									{
+										<option value="@normLoss.value_id">@normLoss.value_name</option>
+									}
+								}
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="data-block">
+					<h4>Паспортные технические параметры оборудования</h4>
+					<div class="data-row">
+						<div class="data-table-block">
+							<div class="data-item">
+								<label class="data-label lm-fix">Диаметр тепловой сети</label>
+								<div class="data-item">
+									<select class="selectpicker data-value xxl-stretch" required name="net_diam_id" data-live-search="true" placeholder="Выберите УНОМ диаметра">
+										@foreach (var diam in ViewBag.Diam)
+									{
+										if (diam.value_id == Model.net_diam_id)
+										{
+											<option value="@diam.value_id" selected>@diam.value_name</option>
+										}
+										else
+										{
+											<option value="@diam.value_id">@diam.value_name</option>
+										}
+									}
+								</select>
+									<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Выберите значение из списка"></a>
+								</div>
+							</div>
+							<div class="data-item">
+								<label class="data-label">Температурный график</label>
+								<div class="data-item">
+									<select class="selectpicker data-value xxl-stretch" name="temp_graph_id" data-live-search="true" placeholder="Выберите УНОМ температурного графика" required>
+										@foreach (var temp in ViewBag.Temp)
+										{
+											if (temp.value_id == Model.temp_graph_id)
+											{
+												<option value="@temp.value_id" selected>@temp.value_name</option>
+											}
+											else
+											{
+												<option value="@temp.value_id">@temp.value_name</option>
+											}
+										}
+									</select>
+									<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Выберите значение из списка"></a>
+								</div>
+							</div>
+							</div>
+						<div class="data-table-block">
+							<div class="data-item">
+								<label class="data-label">Способ прокладки тепловой сети</label>
+								<div class="data-item">
+									<select required class="selectpicker data-value xxl-stretch" name="net_laying_type_id" data-live-search="true" placeholder="Выберите УНОМ температурного графика">
+										@foreach (var layType in ViewBag.NetLayingTypes)
+										{
+											if (layType.value_id == Model.net_laying_type_id)
+											{
+												<option value="@layType.value_id" selected>@layType.value_name</option>
+											}
+											else
+											{
+												<option value="@layType.value_id">@layType.value_name</option>
+											}
+										}
+									</select>
+									<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Выберите значение из списка"></a>
+								</div>
+							</div>
+							<div class="data-item">
+								<label class="data-label">Нормы плотности теплового потока</label>
+								<div class="data-item">
+								<input type="text" class="data-value double" required value="@Model.norm_density" name="norm_density">
+								<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Это поле должно быть заполнено"></a>
+								</div>
+								<span class="data-unit">Ккал/чм</span>
+							</div>
+						</div>
+						
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="bttn" data-bs-dismiss="modal">Отмена</button>
+			<button type="submit" class="bttn bttn-color" form="IzolTypes_form">Сохранить</button>
+			<button type="button" class="bttn bttn-color" onclick="OpenNormLoss(@Model.Id, 'copy')" @btn_disable>Создать копию</button>
+		</div>
+	</div>
+</div>
+
+
+<script type="text/javascript" src="@Url.Content("~/hss/js/popup_common_scripts.js")"></script>
+<script>
+
+	$(document).ready(function () {
+		document.querySelector('#paramNumberNormLoss').addEventListener('change', (event) => {
+			OpenNormLoss($("#paramNumberNormLoss").val());
+		});
+	});
+
+	function RefreshTable() {
+		if ($("#refresh_NormLossList_table").val() === "1") {
+			$("#refresh_NormLossList_table").val(0);
+			GetListOnPage();
+		}
+	}
+
+	var onSuccessFormDiameters = function (xhr) {
+		if (xhr.success == true) {
+			showMessage('Данные сохранены.', 'modal', 'success');
+			$("#refresh_NormLossList_table").val(1);
+			let select_id = "paramNumberNormLoss";
+			if (xhr.is_new == true) {
+				OpenNormLoss(xhr.normloss_id);
+			}
+			else {
+				$("select[id=paramNumberNormLoss] option[value=" + xhr.normloss_id + "]").text(xhr.unom_build);
+				RefreshSelectByIdWithVal(select_id, xhr.build_id);
+			}
+		}
+		else {
+			if (xhr.message === undefined) {
+				xhr.message = 'Ошибка сохранения данных'
+			}
+			showMessage(xhr.message, 'modal', 'fault');
+		}
+		hidePreloader();
+	};
+
+
+</script>

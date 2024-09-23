@@ -1,0 +1,103 @@
+﻿@model WebProject.Areas.HeatPointsAndConsumers.Models.HP_TankBatteryAvailables
+
+@{
+    Layout = null; string is_disabled = ViewBag.IsDisabled;
+}
+
+<form asp-controller="HeatPoint" asp-action="HpAddRemove_EquipmentPart_Save" asp-antiforgery="true" asp-area="HeatPointsAndConsumers"
+      data-ajax-failure="onFailedFormHP_EquipmentPart" data-ajax-success="onSuccessFormHP_EquipmentPart" data-ajax-begin="onBeginFormHP_EquipmentPart" data-ajax="true" data-ajax-method="POST">
+    <input hidden asp-for="@Model.heat_point_id">
+    <input hidden asp-for="@Model.data_status">
+    <div class="data-row">
+        <label class="data-item">
+            <span class="data-label">Неизвестно</span>
+            @if (Model.heat_point_id > 0)
+            {
+                string is_checked = string.Empty;
+                @if (Model.avail_tank_battery == null)
+                    is_checked = "checked";
+                <input type="radio" value="null" name="avail_tank_battery" class="data-check" id="cb3" @is_checked onclick="SetAccumCapacityTextbox_HP_EquipmentPart('cb3')">
+            }
+            else
+            {
+                <input type="radio" value="null" name="avail_tank_battery" class="data-check" id="cb3" checked onclick="SetAccumCapacityTextbox_HP_EquipmentPart('cb3')">
+            }
+        </label>
+        <label class="data-item">
+            <span class="data-label">Не существует</span>
+            @if (Model.heat_point_id > 0)
+            {
+                string is_checked = string.Empty;
+                @if (Model.avail_tank_battery != null && !(bool)Model.avail_tank_battery)
+                    is_checked = "checked";
+                <input type="radio" value="false" name="avail_tank_battery" class="data-check" @is_checked id="cb2" onclick="SetAccumCapacityTextbox_HP_EquipmentPart('cb2')">
+            }
+            else
+            {
+                <input type="radio" value="false" name="avail_tank_battery" class="data-check" id="cb2" onclick="SetAccumCapacityTextbox_HP_EquipmentPart('cb2')">
+            }
+        </label>
+        <label class="data-item">
+            <span class="data-label">Существует</span>
+            @if (Model.heat_point_id > 0)
+            {
+                string is_checked = string.Empty;
+                @if (Model.avail_tank_battery != null && (bool)Model.avail_tank_battery)
+                    is_checked = "checked";
+                <input type="radio" value="true" name="avail_tank_battery" class="data-check" @is_checked id="cb1" onclick="SetAccumCapacityTextbox_HP_EquipmentPart('cb1')">
+            }
+            else
+            {
+                <input type="radio" value="true" name="avail_tank_battery" class="data-check" id="cb1" onclick="SetAccumCapacityTextbox_HP_EquipmentPart('cb1')">
+            }
+        </label>
+        <div class="data-item">
+            <label class="data-label">Ёмкость бака(ов) аккумуляторов</label>
+            <input type="text" id="inpSizeBattery" value="@Model.tank_capacity" name="tank_capacity" class="data-value">
+            <span class="data-unit">м<sup>3</sup></span>
+        </div>
+        <div class="data-item">
+            <button class="bttn bttn-square bttn-icon-save" type="submit" @is_disabled id="hp_equip_partial_save_btn"></button>
+        </div>
+    </div>
+</form>
+
+<script type="text/javascript">
+
+    var onBeginFormHP_EquipmentPart = function (xhr) {
+        showPreloader();
+    };
+
+    var onFailedFormHP_EquipmentPart = function (xhr) {
+        hidePreloader();
+    };
+
+    var onSuccessFormHP_EquipmentPart = function (xhr) {
+        hidePreloader();
+        if (xhr.success == true) {
+            $("#refresh_table").val(1);
+            showMessage('Данные сохранены.', 'modal', 'success');
+        }
+        else {
+            showMessage(xhr.error, 'modal', 'fault');
+        }
+    };
+
+    function SetAccumCapacityTextbox_HP_EquipmentPart(name) {
+        let is_checked = document.getElementById('cb1').checked;
+        let tb_val = document.getElementById('inpSizeBattery');
+
+        if (is_checked) {
+            tb_val.disabled = false;
+        }
+        else {
+            tb_val.disabled = true;
+            tb_val.value = "";
+        }
+    }
+
+    $(document).ready(function () {
+        SetAccumCapacityTextbox_HP_EquipmentPart('cb1');
+    });
+
+</script>

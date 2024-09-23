@@ -1,0 +1,146 @@
+﻿   @model List<WebProject.Areas.TSO.Models.EcologyIndicatorsViewModel>
+@{
+}
+<div class="table-block">
+	<div class="table-buttons ecoTable-buttons"></div>
+	<table id="ecoTable" class="display compact" style="width:100%">
+		<thead>
+			<tr>
+				<th rowspan="2">КОД ТСО</th>
+				<th rowspan="2">Наименование ТСО</th>
+				<th colspan="9">Фактические годовые выбросы загрязняющих веществ в атмосферу, т/год</th>
+				<th colspan="10">Разрешенные годовые выбросы загрязняющих веществ в атмосферу, т/год</th>
+				<th rowspan="2">Выбросы парниковых газов в СО2-эквиваленте, т/год</th>
+				<th colspan="7">Сведения о текущих затратах на охрану окружающей среды и экологических платежах, тыс. руб./год</th>
+				<th colspan="4">Плата за негативное воздействие на окружающую среду, тыс. руб.</th>
+			</tr>
+			<tr>
+				<th>всего, т/год</th>
+				<th>оксиды азота (в пересчете на NO2 - 301)</th>
+				<th>углерода оксид (0337)</th>
+				<th>бенз(а)пирен (0703)</th>
+				<th>серы диоксид (0330)</th>
+				<th>мазутной золы (в пересчете на ванадий – 2904)</th>
+				<th>золы углей (3714)</th>
+				<th>пыли неорганической с содержанием SiO2 20-70% (код 2908)</th>
+				<th>прочие</th>
+				<th>всего, т/год</th>
+				<th>азота диоксид (0301)</th>
+				<th>азота оксид (0304)</th>
+				<th>углерода оксид (0337)</th>
+				<th>бенз(а)пирен (0703)</th>
+				<th>серы диоксид (0330)</th>
+				<th>мазутной золы (в пересчете на ванадий – 2904)</th>
+				<th>золы углей (3714)</th>
+				<th>пыли неорганической с содержанием SiO2 20-70% (код 2908)</th>
+				<th>прочие</th>
+				<th>текущие суммарные затраты</th>
+				<th>текущие (эксплуатационные) затраты</th>
+				<th>текущие (эксплуатационные) затраты за счет собственных  средств</th>
+				<th>оплата услуг природоохранного назначения</th>
+				<th>затраты на капитальный ремонт основных фондов</th>
+				<th>амортизационные отчисления на восстановление основных фондов</th>
+				<th>выручка (поступления) от продажи побочной продукции</th>
+				<th>за выбросы загрязняющих веществ в атмосферный воздух стационарными объектами</th>
+				<th>за сбросы</th>
+				<th>за размещение отходов</th>
+				<th>суммы средств, взысканные за нарушение законодательства в области охраны окружающей среды</th>
+			</tr>
+			@*<tr class="filter-row ">
+				<th class="dtfc-fixed-left" style="left:0; position:sticky;"><input type="text" class="filter-col-0" /></th>
+				<th><input type="text" class="filter-col-1" /></th>
+				<th><input type="text" class="filter-col-2" /></th>
+				<th><input type="text" class="filter-col-3" /></th>
+				<th><input type="text" class="filter-col-4" /></th>
+				<th><input type="text" class="filter-col-5" /></th>
+				<th><input type="text" class="filter-col-6" /></th>
+				<th><input type="text" class="filter-col-7" /></th>
+				<th><input type="text" class="filter-col-8" /></th>
+				<th><input type="text" class="filter-col-9" /></th>
+			</tr>*@
+		</thead>
+		<tbody title ="Двойной клик открывает форму редактирования">
+			<tr>
+				<td>1</td>
+				<td>2</td>
+				<td>3</td>
+				<td>4</td>
+				<td>5</td>
+				<td>6</td>
+				<td>7</td>
+				<td>8</td>
+				<td>9</td>
+				<td>10</td>
+				<td>11</td>
+				<td>1</td>
+				<td>13</td>
+				<td>14</td>
+				<td>15</td>
+				<td>16</td>
+				<td>17</td>
+				<td>18</td>
+				<td>19</td>
+				<td>20</td>
+				<td>21</td>
+				<td>22</td>
+				<td>23</td>
+				<td>24</td>
+				<td>25</td>
+				<td>26</td>
+				<td>27</td>
+				<td>28</td>
+				<td>29</td>
+				<td>30</td>
+				<td>31</td>
+				<td>30</td>
+				<td>33</td>
+				
+			</tr>
+			@*@foreach(var eco_list in Model)
+			{
+				<tr ondblclick="OpenPopupTSO(@eco_list.Id);">
+					<td>@eco_list.code_tso</td>
+					<td>@eco_list.short_name</td>
+					<td>@eco_list.all</td>
+					<td>@eco_list.nitrogen_oxides</td>
+					<td>@eco_list.oxide_carbon</td>
+					<td>@eco_list.benzo_a_pyrene</td>
+					<td>@eco_list.sulfur_dioxide</td>
+					<td>@eco_list.oil_ash</td>
+					<td>@eco_list.coal_ash</td>
+					<td>@eco_list.inorganic_dust</td>
+					<td>@eco_list.others</td>
+					<td>@eco_list.greenhouse_gas_emissions</td>
+					<td>@eco_list.current_total_costs</td>
+					<td>@eco_list.current_costs</td>
+					<td>@eco_list.current_costs_own_funds</td>
+					<td>@eco_list.pay_nature_services</td>
+					<td>@eco_list.overhaul_costs</td>
+					<td>@eco_list.depreciation_cost_restoration</td>
+					<td>@eco_list.revenue_bu_products</td>
+					<td>@eco_list.pay_pollution</td>
+					<td>@eco_list.pay_discharges</td>
+					<td>@eco_list.pay_waste</td>
+					<td>@eco_list.pay_disturbance_low</td>
+					</tr>
+			}*@
+
+		</tbody>
+	</table>
+</div>
+<div class="data-row table-summary">
+	<div class="data-item rows-count">
+		<h5>Всего записей:</h5>
+		<p><span class="mark-color">10</span></p>
+	</div>
+	<div class="data-block">
+		<p class="data-item">Суммарные валовые выбросы в атмосферу: <span class="mark-color">10</span><span class="data-unit"> т/год</span></p>
+		<p class="data-item">Разрешенные валовые выбросы в атмосферу: <span class="mark-color">10</span><span class="data-unit"> т/год</span></p>
+		<p class="data-item">Парниковые газы от объектов энергетики: <span class="mark-color">10</span><span class="data-unit"> т/год</span></p>
+	</div>
+	<div class="data-block">
+		<p class="data-item">Количество источников выбросов в атмосферу: <span class="mark-color">4</span><span class="data-unit"> шт.</span></p>
+		<p class="data-item">Плата за негативное воздействие на окружающую среду: <span class="mark-color">10</span><span class="data-unit"> тыс.руб.</span></p>
+	</div>
+</div>
+@*<script type="text/javascript" src="@Url.Content("~/hss/js/datatables_common_scripts.js")"></script>*@

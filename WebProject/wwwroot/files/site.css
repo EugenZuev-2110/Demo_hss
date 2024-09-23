@@ -1,0 +1,50 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+#partial-content {
+    margin-top: 40px;
+}
+
+h2 {
+    margin-left: 20px!important;
+    /*font-size: 26px;
+    font-weight: 400;*/
+}
+
+#table-part_length {
+    padding: 0px 20px 20px !important;
+}
+
+.container {
+    width: 1700px !important;
+}
+
+.button_add_plus {
+    min-width: 1.5em;
+    padding: 0.5em 1em;
+    margin-left: 2px;
+    cursor: pointer;
+    color: #333 !important;
+    border: 1px solid #999;
+    background: linear-gradient(to bottom, rgba(230, 230, 230, 0.1) 0%, rgba(0, 0, 0, 0.1) 100%);
+}
+
+.btn-approve-input {
+    margin-left: 4px;
+}

@@ -1,0 +1,41 @@
+﻿@using System.Linq;
+@model List<WebProject.Areas.DictionaryTables.Models.CalcConsumptionViewModel>
+
+
+    <h4>А) Суммарные укрупнённые удельные расходы тепла на 1 м<sup>2</sup> площади (отопление, вентиляция и горячее водоснабжение)<a class="info" data-bs-toggle="tooltip" data-bs-custom-class="info-tooltip" data-bs-html="false" data-bs-title="Справочная информация"></a></h4>
+    <table id="totalConsumptionTable" class="display compact table-inp-stretch" style="width:100%;">
+        <thead>
+            <tr>
+                <th>Назначение ОКС</th>
+                @foreach (var floor in ViewBag.Floor)
+                {
+                    <th>@floor.floor_name</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @for (int coef = 0, j = 1; coef < Model.Select(x => x.calcPurp_id).Count(); j++)
+            {
+                var maxFloor = ViewBag.MaxFloor;
+                <tr>
+                    <td>@Model[coef].cpurp_type_name</td>
+                    @{
+                        var count_floor = Model.Where(x => x.calcPurp_id == j).Count();
+                    }
+                    @for (int i = 0; i < count_floor; i++, coef++)
+                    {
+                        <td><input type="text" class="data-value" value="@Model[coef].result" disabled></td>
+                    }
+                    @if (count_floor < maxFloor)
+                    {
+                        for (int i = 0; i < maxFloor - count_floor; i++)
+                        {
+                            <td><input type="text" class="data-value" value="" disabled></td>
+                        }
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+
+

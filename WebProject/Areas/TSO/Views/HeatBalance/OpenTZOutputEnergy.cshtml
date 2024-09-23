@@ -1,0 +1,176 @@
+﻿@model WebProject.Areas.TSO.Models.TZOutputEnergyDataViewModel
+
+@{
+	string btn_disable = string.Empty; int ds = @Model.data_status - 1; string is_checked = string.Empty;
+}
+@if (Model.tz_id == 0)
+{
+	btn_disable = "disabled";
+}
+
+<div class="modal-dialog modal-dialog-centered">
+	<div class="modal-content">
+		<div class="modal-header">
+			<h3 class="modal-title">Исходящая тепловая энергия</h3>
+			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="RefreshTableOutput();"></button>
+			<input type="hidden" value="0" id="refresh_tz_output_table" />
+		</div>
+		<div class="modal-body">
+			<div class="data-row static-block">
+				<div class="data-item">
+					<label class="data-label">Наименование ТСО</label>
+					<input type="text" class="data-value xxl-stretch" value="@Model.tz_tso_name" disabled>
+				</div>
+				<div class="data-item">
+					<label for="perspective_year_popup_second" class="data-label">Расчётный год</label>
+					<select class="selectpicker md-fix" id="perspective_year_popup_second">
+						@foreach (var p_years_list in ViewBag.PerspectiveYearsList)
+						{
+							if (p_years_list.perspective_year == Model.perspective_year)
+							{
+								<option value="@p_years_list.perspective_year" selected>@p_years_list.perspective_year_dt</option>
+							}
+							if (p_years_list.perspective_year != Model.perspective_year)
+							{
+								<option value="@p_years_list.perspective_year">@p_years_list.perspective_year_dt</option>
+							}
+						}
+					</select>
+				</div>
+				<div class="data-item">
+					<div class="note">Базовый год - <span class="note-base-year">@ds (01.01.@Model.data_status)</span>.</div>
+				</div>
+			</div>
+			<div class="scroll-block-wrapper" style="max-height:70vh">
+				<div class="data-block scroll-block">
+					<div class="data-block border-block">
+						<h4>Отпуск тепловой энергии ТСО-перепродавцам</h4>
+						<div class="scroll-table-wrapper">
+							<table class="table-inp-stretch" style="width:100%; white-space: nowrap;">
+								<thead>
+									<tr>
+										<th rowspan="2"></th>
+										<th colspan="3">Факт</th>
+										<th colspan="3">План</th>
+									</tr>
+									<tr>
+					      				<th style="position: static;">I полугодие</th>
+					      				<th>II полугодие</th>
+					      				<th>Год</th>
+					      				<th>I полугодие</th>
+					      				<th>II полугодие</th>
+					      				<th>Год</th>
+					      			</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>Всего, <span class="data-unit">Гкал</span></td>
+										<td><input type="text" value="@Model.release_tso_salers_sum_fact_1" class="data-value" disabled></td>
+										<td><input type="text" value="@Model.release_tso_salers_sum_fact_2" class="data-value" disabled></td>
+										<td><input type="text" value="@Model.release_tso_salers_sum_fact_3" class="data-value" disabled></td>
+										<td><input type="text" value="@Model.release_tso_salers_sum_plan_1" class="data-value" disabled></td>
+										<td><input type="text" value="@Model.release_tso_salers_sum_plan_2" class="data-value" disabled></td>
+										<td><input type="text" value="@Model.release_tso_salers_sum_plan_3" class="data-value" disabled></td>
+									</tr>
+									<tr>
+										<td>- с коллекторов источников тепла</td>
+										<td><input type="text" value="@Model.release_collect_tso_salers_fact_1" class="data-value" disabled></td>
+										<td><input type="text" value="@Model.release_collect_tso_salers_fact_2" class="data-value" disabled></td>
+										<td><input type="text" value="@Model.release_collect_tso_salers_fact_3" class="data-value" disabled></td>
+										<td><input type="text" value="@Model.release_collect_tso_salers_plan_1" class="data-value" disabled></td>
+										<td><input type="text" value="@Model.release_collect_tso_salers_plan_2" class="data-value" disabled></td>
+										<td><input type="text" value="@Model.release_collect_tso_salers_plan_3" class="data-value" disabled></td>
+									</tr>
+									<tr>
+										<td>- из тепловой сети</td>
+										<td><input type="text" value="@Model.release_heatnet_tso_salers_fact_1" class="data-value" disabled></td>
+										<td><input type="text" value="@Model.release_heatnet_tso_salers_fact_2" class="data-value" disabled></td>
+										<td><input type="text" value="@Model.release_heatnet_tso_salers_fact_3" class="data-value" disabled></td>
+										<td><input type="text" value="@Model.release_heatnet_tso_salers_plan_1" class="data-value" disabled></td>
+										<td><input type="text" value="@Model.release_heatnet_tso_salers_plan_2" class="data-value" disabled></td>
+										<td><input type="text" value="@Model.release_heatnet_tso_salers_plan_3" class="data-value" disabled></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="data-block" id="div_tz_output_sources_list">
+							@await Component.InvokeAsync("TZ_OutputEnergySourcesListData_Partial", new { tz_id = Model.tz_id, data_status = Model.data_status, perspective_year = Model.perspective_year })
+						</div>
+					</div>
+					<div class="data-block border-block" style="display: none;" id="div_tz_output_energy_one">
+						
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="bttn" onclick="CopyOnNextYears(@Model.tz_id, @Model.data_status, @Model.perspective_year);" disabled>
+				Поставить данные на последующие года
+			</button>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript" src="@Url.Content("~/hss/js/popup_common_scripts.js")"></script>
+<script type="text/javascript">
+
+	$(document).ready(function () {
+
+		document.querySelector('#perspective_year_popup_second').addEventListener('change', (event) => {
+			OpenPopupHeatBalance($('#paramNumberTZ').val(), $('#perspective_year_popup_second').val(), '/TSO/HeatBalance/OpenTZOutputEnergy', 'TZOutputEnergyDataPopup');
+		});
+
+	});
+
+	function RefreshTableOutput() {
+		if ($("#refresh_tz_output_table").val() === "1") {
+			GetDataOnTabPopup();
+		}
+	}
+
+	function OpenSourceEnergyOutput(source_id, buy_place_id, input_tz_id, output_tz_id, data_status, perspective_year, popup_name) {
+		showPreloader();
+		$.ajax({
+			type: 'POST',
+			url: '@Html.Raw(Url.Action("OpenTZOutputEnergySourceOne", "HeatBalance", new { Area = "TSO" }))',
+			data: {
+				source_id: source_id,
+				buy_place_id: buy_place_id,
+				input_tz_id: input_tz_id,
+				output_tz_id: output_tz_id,
+				data_status: data_status,
+				perspective_year: perspective_year
+			},
+			dataType: 'html'
+		})
+			.done(function (result) {
+				var div = $('#' + popup_name);
+				div.html("");
+				div.html(result);
+				$('.selectpicker').selectpicker();
+
+				let element = document.getElementById(popup_name);
+				let cssObj = window.getComputedStyle(element, null);
+				if (source_id == 0)
+				{
+					$("#btnAddInputSource").prop('disabled', true);
+				}
+				else {
+					$("#btnAddInputSource").prop('disabled', false);
+				}
+				if (cssObj.display == 'none') {
+					div.show();
+				}
+				hidePreloader();
+			});
+	}
+
+	function DeleteSourceEnergyOutput(source_id, buy_place_id, input_tz_id, output_tz_id, data_status, perspective_year, popup_name) {
+
+	}
+
+	function CopyOnNextYears(output_tz_id, data_status, perspective_year) {
+
+	}
+
+</script>

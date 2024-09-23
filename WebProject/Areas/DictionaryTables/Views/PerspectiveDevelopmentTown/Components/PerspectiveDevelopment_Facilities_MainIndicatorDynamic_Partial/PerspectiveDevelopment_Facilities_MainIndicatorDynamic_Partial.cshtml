@@ -1,0 +1,140 @@
+﻿@model WebProject.Areas.DictionaryTables.Models.DevProgrammsLoadsCalculated_List
+@{
+    Layout = null; string is_disabled = ViewBag.IsDisabled;
+}
+
+<form asp-controller="PerspectiveDevelopmentTown" asp-action="Save" asp-antiforgery="true" asp-area="DictionaryTables" class="needs-validation" novalidate
+      data-ajax-failure="onFailedFormTZ" data-ajax-success="onSuccessFormHPYearImplement" data-ajax-begin="onBeginFormTZ" data-ajax="true" data-ajax-method="POST">
+    <input hidden asp-for="@Model.GetType().FullName">
+    <div class="data-block border-block">
+        <div class="data-row">
+            <div class="data-item data-item-right">
+                <button type="button" id="year_distr_button" class="bttn">Распределение по годам</button>
+            </div>
+        </div>
+        <div class="data-row">
+            <div class="scroll-table-wrapper">
+                <table class="table-inp-stretch" style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th rowspan="3">Год</th>
+                            <th rowspan="3">Прирост общей площади, тыс. кв. м</th>
+                            <th colspan="10">Прирост расчетной тепловой нагрузки в горячей воде, т/ч</th>
+                        </tr>
+                        <tr>
+                            <th colspan="5">в горячей воде, Гкал/ч</th>
+                            <th colspan="5">в паре, Гкал/ч</th>
+                        </tr>
+                        <tr>
+                            <th>технология</th>
+                            <th>отопление</th>
+                            <th>вентиляция</th>
+                            <th>ГВС, ср.ч.</th>
+                            <th>ВСЕГО</th>
+                            <th>технология</th>
+                            <th>отопление</th>
+                            <th>вентиляция</th>
+                            <th>ГВС, ср.ч.</th>
+                            <th>ВСЕГО</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var tz_list in Model)
+                        {
+                            <input hidden asp-for="@tz_list.dev_prog_id">
+                            <input hidden asp-for="@tz_list.consumer_id">
+                            <input hidden asp-for="@tz_list.perspective_year">
+                            <tr data-hp_status="@tz_list.perspective_year">
+                                <td name="perspective_year" id="perspective_year">@tz_list.perspective_year</td>
+                                <td><input type="text" asp-for="@tz_list.increase_area" class="data-value double sm-stretch"></td>
+                                <td>
+                                    <input type="text" value="@tz_list.hl_tech_hw" class="data-value double sm-stretch" id="hl_tech_hw_@(tz_list.perspective_year)"
+                                           onkeyup="ChangeInputValueMainIndicator(@(tz_list.perspective_year), 'hl_tech_hw', 'hw')" pdfmi-hl_tech_hw="@tz_list.perspective_year"
+                                           name="hl_tech_hw">
+                                </td>
+                                <td>
+                                    <input type="text" value="@tz_list.hl_heat_hw" class="data-value double sm-stretch" id="hl_heat_hw_@(tz_list.perspective_year)"
+                                           onkeyup="ChangeInputValueMainIndicator(@(tz_list.perspective_year), 'hl_heat_hw', 'hw')" pdfmi-hl_heat_hw="@tz_list.perspective_year"
+                                           name="hl_heat_hw">
+                                </td>
+                                <td>
+                                    <input type="text" value="@tz_list.hl_vent_hw" class="data-value double sm-stretch" id="hl_vent_hw_@(tz_list.perspective_year)"
+                                           onkeyup="ChangeInputValueMainIndicator(@(tz_list.perspective_year), 'hl_vent_hw', 'hw')" pdfmi-hl_vent_hw="@tz_list.perspective_year"
+                                           name="hl_vent_hw">
+                                </td>
+                                <td>
+                                    <input type="text" value="@tz_list.hl_gvss_hw" class="data-value double sm-stretch" id="hl_gvss_hw_@(tz_list.perspective_year)"
+                                           onkeyup="ChangeInputValueMainIndicator(@(tz_list.perspective_year), 'hl_gvss_hw', 'hw')" pdfmi-hl_gvss_hw="@tz_list.perspective_year"
+                                           name="hl_gvss_hw">
+                                </td>
+                                <td><input type="text" id="calc_lc_sum_hw_@(tz_list.perspective_year)" name="calc_lc_sum_hw" value="@(tz_list.hl_tech_hw + tz_list.hl_heat_hw + tz_list.hl_vent_hw + tz_list.hl_gvss_hw)" class="data-value double sm-stretch" disabled></td>
+                                <td>
+                                    <input type="text" value="@tz_list.hl_tech_steam" class="data-value double sm-stretch" id="hl_tech_steam_@(tz_list.perspective_year)"
+                                           onkeyup="ChangeInputValueMainIndicator(@(tz_list.perspective_year), 'hl_tech_steam', 'steam')" pdfmi-hl_tech_steam="@tz_list.perspective_year"
+                                           name="hl_tech_steam">
+                                </td>
+                                <td>
+                                    <input type="text" value="@tz_list.hl_heat_steam" class="data-value double sm-stretch" id="hl_heat_steam_@(tz_list.perspective_year)"
+                                           onkeyup="ChangeInputValueMainIndicator(@(tz_list.perspective_year), 'hl_heat_steam', 'steam')" pdfmi-hl_heat_steam="@tz_list.perspective_year"
+                                           name="hl_heat_steam">
+                                </td>
+                                <td>
+                                    <input type="text" value="@tz_list.hl_vent_steam" class="data-value double sm-stretch" id="hl_vent_steam_@(tz_list.perspective_year)"
+                                           onkeyup="ChangeInputValueMainIndicator(@(tz_list.perspective_year), 'hl_vent_steam', 'steam')" pdfmi-hl_vent_steam="@tz_list.perspective_year"
+                                           name="hl_vent_steam">
+                                </td>
+                                <td>
+                                    <input type="text" value="@tz_list.hl_gvss_steam" class="data-value double sm-stretch" id="hl_gvss_steam_@(tz_list.perspective_year)"
+                                           onkeyup="ChangeInputValueMainIndicator(@(tz_list.perspective_year), 'hl_gvss_steam', 'steam')" pdfmi-hl_gvss_steam="@tz_list.perspective_year"
+                                           name="hl_gvss_steam">
+                                </td>
+                                <td><input type="text" id="calc_lc_sum_steam_@(tz_list.perspective_year)" name="calc_lc_sum_steam" value="@(tz_list.hl_tech_steam + tz_list.hl_heat_steam + tz_list.hl_vent_steam + tz_list.hl_gvss_steam)" class="data-value double sm-stretch" disabled></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="data-row">
+            <button type="submit" class="bttn bttn-color ms-auto" id="per_dev_facil_gen_info_save_btn" @is_disabled>Сохранить</button>
+        </div>
+    </div>
+</form>
+
+<script type="text/javascript">
+
+    var onBeginForm = function (xhr) {
+        showPreloader();
+    };
+
+    var onFailed = function (xhr) {
+        hidePreloader();
+    };
+
+    var onSuccess = function (xhr) {
+        hidePreloader();
+    };
+
+    function ChangeInputValueMainIndicator(perspective_year, select_name, type) {
+        var elements = document.getElementsByName(select_name);
+        var select_value = $('#' + select_name + '_' + perspective_year).val();
+        for (var i = 0; i < elements.length; i++) {
+            var year = elements[i].getAttribute('pdfmi-' + select_name);
+            if (year >= perspective_year) {
+                var select_id = elements[i].getAttribute('id');
+                $('#' + select_id).val(select_value);
+                SetValueSum_MainIndicator(year, type);
+            }
+        }
+    }
+
+    function SetValueSum_MainIndicator(year, type) {
+        var calc_hl_tech = Number($("#hl_tech_" + type + "_" + (year)).val().replace(",", "."));
+        var calc_hl_heat = Number($("#hl_heat_" + type + "_" + (year)).val().replace(",", "."));
+        var calc_hl_vent = Number($("#hl_vent_" + type + "_" + (year)).val().replace(",", "."));
+        var calc_hl_gvss = Number($("#hl_gvss_" + type + "_" + (year)).val().replace(",", "."));
+        var result = (calc_hl_tech + calc_hl_heat + calc_hl_vent + calc_hl_gvss).toFixed(8).toString().replace(".", ",");
+        $('#calc_lc_sum_' + type + "_" + year).val(result);
+    }
+
+</script>

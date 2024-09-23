@@ -1,0 +1,51 @@
+﻿@model WebProject.Areas.HPConsumers.Models.Consumers_NumSignOtherDBViewModel
+
+@{
+	Layout = null; string is_disabled = ViewBag.IsDisabled;
+}
+
+<form asp-controller="Consumers" asp-action="Consumer_NumSignOtherDb_Save" asp-antiforgery="true" asp-area="HPConsumers" id="consumers_num_sign_other_db_form" class="needs-validation" novalidate
+   data-ajax-failure="onFailedFormTZ" data-ajax-success="onSuccessFormConsumer" data-ajax-begin="onBeginFormTZ" data-ajax="true" data-ajax-method="POST">
+
+	<input hidden name="consumer_id" value="@Model.consumer_id">
+	<input hidden name="data_status" value="@Model.data_status">
+	<div class="data-row">
+		<div class="data-item ">
+			<label class="data-label sm-fix">MUID</label>
+			<input type="text" class="data-value smx-stretch" name="muid" value="@Model.muid" placeholder="Введите номер MUID">
+		</div>
+		<div class="data-item ">
+			<label class="data-label sm-fix">CON_CODE</label>
+			<input type="text" class="data-value smx-stretch" name="con_code" value="@Model.con_code" placeholder="Введите номер CON_CODE">
+		</div>
+	</div>
+	<div class="data-row">
+		<div class="data-item ">
+			<label class="data-label sm-fix">KOD_DP_M</label>
+			<input type="text" class="data-value smx-stretch" name="kod_dp_m" value="@Model.kod_dp_m" placeholder="Введите номер KOD_DP_M">
+		</div>
+		<div class="data-item ">
+			<label class="data-label sm-fix">KKS_M</label>
+			<input type="text" class="data-value smx-stretch" name="kks_m" value="@Model.kks_m" placeholder="Введите номер KKS_M">
+		</div>
+	</div>
+	<div class="data-row">
+		<button type="submit" class="bttn bttn-color ms-auto" @is_disabled id="consumer_num_sign_save_btn">Сохранить</button>
+	</div>
+</form>
+
+<script type="text/javascript" src="@Url.Content("~/hss/js/popup_common_scripts.js")"></script>
+<script type="text/javascript">
+
+	var onSuccessFormConsumer = function (xhr) {
+		hidePreloader();
+		if (xhr.success == true) {
+			$("#refresh_table").val(1);
+			showMessage('Данные сохранены.', 'modal', 'success');
+		}
+		else {
+			showMessage(xhr.error, 'modal', 'fault');
+		}
+	};
+
+</script>

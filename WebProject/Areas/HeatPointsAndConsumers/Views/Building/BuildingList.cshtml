@@ -1,0 +1,99 @@
+﻿<div class="data-block workspace">
+
+	<div class="data-block title-block">
+		<div class="data-row">
+			<ul class="breadcrumb">
+				<li class="breadcrumb-item"><a class="ref-color" href="#">Главная</a></li>
+				<li class="breadcrumb-item">Справочники - Здания</li>
+			</ul>
+		</div>
+		<div class="data-row">
+			<h1 class="title">Здания</h1>
+			<div class="data-item data-item-right">
+				<button class="bttn bttn-color bttn-edit-data" onclick="OpenPopupBuilging(0);" type="button">Добавить/Удалить</button>
+				<a class="bttn bttn-color bttn-load-data disabled" type="button" href="page2-2-1-2.html">Загрузить данные</a>
+			</div>
+		</div>
+	</div>
+
+	<div class="data-block main-content border-block" style="border-color: var(--action-color);" id="BuildingTable_div">
+		@await Component.InvokeAsync("BuildingList_Partial")
+	</div>
+</div>
+
+@section pageJs{
+	<script type="text/javascript">
+
+		const editDataModal = document.getElementById('BuildingDataPopup');
+		editDataModal.addEventListener('shown.bs.modal', event => {
+			TableInit('ConsumersBuildTable', 'full');
+		});
+		
+		$(document).ready(function () {
+			setTimeout(function () {
+				$('#buildung').addClass('active');
+			}, 500);
+
+			TableInit('BuildingTable', 'full');
+		});
+
+		function GetListOnPage() {
+			showPreloader();
+
+			$.ajax({
+
+				type: 'GET',
+				url: '@Html.Raw(Url.Action("OnGetCallBuildingList_PartialViewComponent", "Building", new { Area = "HeatPointsAndConsumers" }))',
+				data: {
+					data_status: $('#data_status').val()
+				},
+				dataType: 'html'
+			})
+				.done(function (result) {
+					var div = $('#BuildingTable_div');
+					div.html("");
+					div.html(result);
+					TableInit('BuildingTable', 'full');
+					hidePreloader();
+				});
+		}
+
+
+
+		function OpenPopupBuilging(id, action_for) {
+			showPreloader();
+			$.ajax({
+				type: 'POST',
+				url: '@Html.Raw(Url.Action("OpenBuilding", "Building", new { Area = "HeatPointsAndConsumers" }))',
+				data: {
+					building_id: id,
+					data_status: $('#data_status').val(),
+					action_for: action_for
+				},
+				dataType: 'html'
+			})
+				.done(function (result) {
+					var div = $('#BuildingDataPopup');
+					div.html("");
+					div.html(result);
+					$('.selectpicker').selectpicker();
+
+					if ($('#BuildingDataPopup').is(':hidden')) {
+						showModal('BuildingDataPopup');
+					}
+					else {
+						TableInit('ConsumersBuildTable', 'full');
+					}
+					hidePreloader();
+				});
+		}
+
+		function RefreshTable() {
+			if ($("#refresh_Building_table").val() === "1") {
+				$("#refresh_Building_table").val(0);
+				GetListOnPage();
+			}
+		}
+
+	</script>
+}

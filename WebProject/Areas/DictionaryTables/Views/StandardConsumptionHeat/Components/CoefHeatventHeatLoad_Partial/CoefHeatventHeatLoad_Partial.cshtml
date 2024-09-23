@@ -1,0 +1,32 @@
+﻿@model List<WebProject.Areas.DictionaryTables.Models.CoefRelationHeatVentLoadViewModel>
+
+<form class="needs-validation" novalidate asp-controller="StandardConsumptionHeat" asp-action="CoefHeatventHeatLoad_Save" asp-antiforgery="true" asp-area="DictionaryTables" id="ZoneETO_form"
+   data-ajax-failure="onFailedForm" data-ajax-success="onSuccessFormCoef" data-ajax-begin="onBeginForm" data-ajax="true" data-ajax-method="POST">
+				
+			<table id="loadRatioTable" class="display compact table-inp-stretch" style="width:100%;">
+				<thead>
+					<tr>
+						<th>Назначение ОКС</th>
+						<th>Коэффициент отношения нагрузки отопления к отопительно-вентиляционной нагрузке</th>
+						<th>Коэффициент отношения нагрузки вентиляции к отопительно-вентиляционной нагрузке</th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach(var coef in Model)
+					{
+						<tr>
+							<input type="hidden" name="data_status" value="@coef.data_status" />
+							<input type="hidden" name="Id" value="@coef.Id" />
+							<td>@coef.cpurp_type_name</td>
+							<td><input type="text" class="data-value double" name="coefRelationHeat" value="@coef.coefRelationHeat"></td>
+							<td><input type="text" class="data-value double" name="coefRelationVent" value="@coef.coefRelationVent"></td>
+						</tr>
+					}
+				</tbody>
+			</table>
+
+<div class="data-item-right">
+	<button class="bttn bttn-color ms-auto">Сохранить</button>
+</div>
+</form>
+<script type="text/javascript" src="@Url.Content("~/hss/js/popup_common_scripts.js")"></script>

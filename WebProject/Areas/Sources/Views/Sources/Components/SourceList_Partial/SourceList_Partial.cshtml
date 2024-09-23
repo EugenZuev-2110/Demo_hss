@@ -1,0 +1,74 @@
+﻿@model List<WebProject.Areas.Sources.Models.SourcesViewModel>
+@{
+	int cnt_columns = 8;
+}
+
+
+<h3>Перечень источников на расчетный год</h3>
+<div class="table-block">
+	<input type="text" hidden value="0" id="refresh_sourcelist_table" />
+	<div class="table-buttons sourcelistTable-buttons"></div>
+	<table id="sourcelistTable" class="display compact table-clicked" style="width:100%">
+		<thead>
+			
+			<tr>
+				<th>УНОМ Источника</th>
+				<th>Наименование источника</th>
+				<th>Адрес</th>
+				<th>Организация</th>
+				<th>Район</th>
+				<th>Тарифная зона</th>
+				<th>Тип источника</th>
+				<th>Статус источника</th>
+			</tr>
+			<tr class="filter-row ">
+				@for (int i = 0; i < @cnt_columns; i++)
+				{
+					if (i == 0)
+					{
+						<th class="dtfc-fixed-left" style="left:0; position:sticky;"><input type="text" class="filter-col-0" /></th>
+					}
+					else
+					{
+						<th><input type="text" class="filter-col-@i" /></th>
+					}
+				}
+			</tr>
+		</thead>
+		<tbody>
+			@foreach(var source in Model)
+			{
+			<tr ondblclick="OpenPopupSource(@source.source_id);">
+				<td>@source.source_unom</td>
+				<td>@source.source_name</td>
+				<td>@source.address</td>
+				<td>@source.short_name</td>
+				<td>@source.district_name</td>
+				<td>@source.tz_num</td>
+				<td>@source.source_type_name</td>
+				<td>@source.source_status_name</td>
+			</tr>
+			}
+		</tbody>
+	</table>
+</div>
+<div class="data-row table-summary">
+	<div class="data-item rows-count">
+		<h5>Всего записей:</h5>
+		<p><span class="mark-color" id="all_cnt_rows"></span></p>
+	</div>
+	<div class="data-table-block">
+		<h5>Установленная мощность:</h5>
+		<p class="data-item">- электрическая: <span class="mark-color">321</span><span class="data-unit">Гкал/ч</span></p>
+		<p class="data-item">- тепловая: <span class="mark-color">123</span><span class="data-unit">Гкал/ч</span></p>
+	</div>
+	<div class="data-table-block">
+		<p class="data-item">Тепловая мощность нетто: <span class="mark-color">321</span><span class="data-unit">Гкал/ч</span></p>
+		<p class="data-item">Резерв (+) / дефицит (-) тепловой мощности:<span class="mark-color">123</span><span class="data-unit">Гкал/ч</span></p>
+	</div>
+	<div class="data-table-block">
+		<h5>Расчетная тепловая нагрузка:</h5>
+		<p class="data-item">- горячая вода: <span class="mark-color">321</span><span class="data-unit">Гкал/ч</span></p>
+		<p class="data-item">- пар: <span class="mark-color">321</span><span class="data-unit">т/ч</span></p>
+	</div>
+</div>

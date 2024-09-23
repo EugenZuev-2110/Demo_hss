@@ -1,0 +1,97 @@
+﻿@model WebProject.Areas.TSO.Models.ETO_Amount_Preference
+@{
+	Layout = null; string disable = "";
+}
+@if (Model.tz_id == 0)
+{
+	disable = "disabled";
+}
+<form asp-controller="TariffConnection" asp-action="TZETO_Amount_Preference_Save" asp-antiforgery="true" asp-area="TSO" id="tz_other_org_costs_form"
+	  data-ajax-failure="onFailedFormTZ" data-ajax-success="onSuccessFormTZ" data-ajax-begin="onBeginFormTZ" data-ajax="true" data-ajax-method="POST">
+	<input type="hidden" name="tz_id" value="@Model.tz_id" />
+	<input type="hidden" name="data_status" value="@Model.data_status" />
+	<input type="hidden" name="perspective_year" value="@Model.perspective_year" />
+
+	<input hidden asp-for="@Model.eto_amount_preference_twostage_useful_release_buget_cons_plan_per_1" data-type="buget">
+	<input hidden asp-for="@Model.eto_amount_preference_twostage_useful_release_public_cons_plan_per_1" data-type="public">
+	<input hidden asp-for="@Model.eto_amount_preference_twostage_useful_release_other_cons_plan_per_1" data-type="other">
+	<input hidden asp-for="@Model.eto_amount_preference_twostage_useful_release_buget_cons_plan_per_2" data-type="buget">
+	<input hidden asp-for="@Model.eto_amount_preference_twostage_useful_release_public_cons_plan_per_2" data-type="public">
+	<input hidden asp-for="@Model.eto_amount_preference_twostage_useful_release_other_cons_plan_per_2" data-type="other">
+	<table class="table-inp-stretch" style="width:100%;">
+		<thead>
+			<tr>
+				<th></th>
+				<th>I полугодие</th>
+				<th>II полугодие</th>
+				<th>Год</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<th colspan="4">Бюджетные потребители:</th>
+			</tr>
+			<tr>
+				<td>Тариф ЕТО</td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.tariff_eto_budgetcons_per_1" class="data-value double" data-type="eto_budgetcons" data-double="eto_amount_preference_1"></div></td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.tariff_eto_budgetcons_per_2" class="data-value double" data-type="eto_budgetcons" data-double="eto_amount_preference_1"></div></td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.tariff_eto_budgetcons_per_3" class="data-value" disabled></div></td>
+			</tr>
+			<tr>
+				<td>Тариф с возмещением / компенсацией / субсидированием организации</td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.tariff_compensation_budgetcons_per_1" class="data-value double" data-type="compensation_budgetcons" data-double="eto_amount_preference_1"></div></td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.tariff_compensation_budgetcons_per_2" class="data-value double" data-type="compensation_budgetcons" data-double="eto_amount_preference_1"></div></td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.tariff_compensation_budgetcons_per_3" class="data-value" disabled></div></td>
+			</tr>
+			<tr>
+				<td>Льготный тариф</td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.tariff_preferential_budgetcons_per_1" class="data-value double" data-type="preferential_budgetcons" data-double="eto_amount_preference_1"></div></td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.tariff_preferential_budgetcons_per_2" class="data-value double" data-type="preferential_budgetcons" data-double="eto_amount_preference_1"></div></td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.tariff_preferential_budgetcons_per_3" class="data-value" disabled></div></td>
+			</tr>
+			<tr>
+				<th colspan="4">Население:</th>
+			</tr>
+			<tr>
+				<td>Тариф ЕТО</td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.tariff_eto_public_per_1" class="data-value double" data-type="eto_public" data-double="eto_amount_preference_2"></div></td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.tariff_eto_public_per_2" class="data-value double" data-type="eto_public" data-double="eto_amount_preference_2"></div></td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.tariff_eto_public_per_3" class="data-value" disabled></div></td>
+			</tr>
+			<tr>
+				<td>Тариф с возмещением / компенсацией / субсидированием организации</td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.tariff_compensation_public_per_1" class="data-value double" data-type="compensation_public" data-double="eto_amount_preference_2"></div></td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.tariff_compensation_public_per_2" class="data-value double" data-type="compensation_public" data-double="eto_amount_preference_2"></div></td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.tariff_compensation_public_per_3" class="data-value" disabled></div></td>
+			</tr>
+			<tr>
+				<td>Льготный тариф</td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.tariff_preferential_public_per_1" class="data-value double" data-type="preferential_public" data-double="eto_amount_preference_2"></div></td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.tariff_preferential_public_per_2" class="data-value double" data-type="preferential_public" data-double="eto_amount_preference_2"></div></td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.tariff_preferential_public_per_3" class="data-value" disabled></div></td>
+			</tr>
+			<tr>
+				<th colspan="4">Прочие:</th>
+			</tr>
+			<tr>
+				<td>Тариф ЕТО</td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.tariff_eto_other_per_1" class="data-value double" data-type="eto_other" data-double="eto_amount_preference_3"></div></td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.tariff_eto_other_per_2" class="data-value double" data-type="eto_other" data-double="eto_amount_preference_3"></div></td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.tariff_eto_other_per_3" class="data-value" disabled></div></td>
+			</tr>
+			<tr>
+				<td>Тариф с возмещением / компенсацией / субсидированием организации</td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.tariff_compensation_other_per_1" class="data-value double" data-type="compensation_other" data-double="eto_amount_preference_3"></div></td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.tariff_compensation_other_per_2" class="data-value double" data-type="compensation_other" data-double="eto_amount_preference_3"></div></td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.tariff_compensation_other_per_3" class="data-value" disabled></div></td>
+			</tr>
+			<tr>
+				<td>Льготный тариф</td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.tariff_preferential_other_per_1" class="data-value double" data-type="preferential_other" data-double="eto_amount_preference_3"></div></td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.tariff_preferential_other_per_2" class="data-value double" data-type="preferential_other" data-double="eto_amount_preference_3"></div></td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.tariff_preferential_other_per_3" class="data-value" disabled></div></td>
+			</tr>
+		</tbody>
+	</table>
+	<button type="submit" class="bttn bttn-color ms-auto">Сохранить</button>
+</form>

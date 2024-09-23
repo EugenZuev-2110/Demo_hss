@@ -1,0 +1,39 @@
+﻿@model WebProject.Areas.DictionaryTables.Models.TariffZoneTsoViewModel
+
+<div class="data-block border-block me-lg-1">
+	<table class="table-inp-stretch" style="width: 100%;">
+		<thead>
+			<tr>
+				<th>Год схемы</th>
+				<th>Наименование ТСО</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var tz_perspective in Model.TariffZoneTsoList)
+			{
+				<tr>
+					<td>@tz_perspective.perspective_year</td>
+					<td>
+						<select class="selectpicker data-value xl-full" data-live-search="true" placeholder="Выберите..." name="tso_name_select" id="tso_name_select_@(tz_perspective.perspective_year)" onchange="ChangeSelectValuePerspective(event, @tz_perspective.perspective_year, 'tso_name')" data-tso_name="@tz_perspective">
+							@if (tz_perspective.tso_name == null)
+							{
+								<option value="" selected disabled>Выберите</option>
+							}
+							@foreach (var name in ViewBag.TsoList)
+							{
+								if(name.value_name == tz_perspective.tso_name)
+								{
+									<option value="@name.value_id" selected>@name.value_name</option>
+								}
+								if (name.value_name != tz_perspective.tso_name)
+								{
+									<option value="@name.value_id">@name.value_name</option>
+								}
+							}
+						</select>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>

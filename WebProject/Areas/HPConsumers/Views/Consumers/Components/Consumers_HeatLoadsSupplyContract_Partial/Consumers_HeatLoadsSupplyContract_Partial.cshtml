@@ -1,0 +1,143 @@
+﻿@model WebProject.Areas.HPConsumers.Models.Consumers_HeatLoadsSupplyContractDataViewModel
+@{
+    Layout = null; string is_checked = string.Empty; string is_disabled = ViewBag.IsDisabled;
+}
+
+<form asp-controller="Consumers" asp-action="ConsumerAddRemove_HeatLoadsSupplyContract_Save" asp-antiforgery="true" asp-area="HPConsumers" class="needs-validation" novalidate
+      data-ajax-failure="onFailedFormTZ" data-ajax-success="onSuccessFormHeatLoadsSupplyContract" data-ajax-begin="onBeginFormTZ" data-ajax="true" data-ajax-method="POST">
+    <input hidden asp-for="@Model.consumer_id">
+    <input hidden asp-for="@Model.data_status">
+    <div class="accordion-body">
+        <div class="data-block">
+            <div class="data-row">
+                <div class="data-item ">
+                    <label class="data-label">Договор:</label>
+                    <select class="selectpicker data-value lg-stretch" id="contract_id" name="contract_id"
+                            data-live-search="true" placeholder="Выберите назначение потребителя" required>
+                        <option value="">Выберите...</option>
+                        @foreach (var tz_list in ViewBag.ContractList)
+                        {
+                            if (tz_list.value_id == Model.contract_id)
+                            {
+                                <option value="@tz_list.value_id" selected>@tz_list.value_name</option>
+                            }
+                            if (tz_list.value_id != Model.contract_id)
+                            {
+                                <option value="@tz_list.value_id">@tz_list.value_name</option>
+                            }
+                        }
+                    </select>
+                    <a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Выберите значение из списка"></a>
+                </div>
+                <div class="data-item ">
+                    <label class="data-label">Адрес:</label>
+                    <input type="text" class="data-value stretch" id="address" name="address" value="@Model.address" placeholder="Введите адрес">
+                </div>
+            </div>
+            <div class="data-row">
+                <div class="data-item ">
+                    <label class="data-label">Назначение:</label>
+                    <input type="text" class="data-value stretch" id="purpose" name="purpose" value="@Model.purpose" placeholder="Введите назначение">
+                </div>
+                <div class="data-item ">
+                    <label class="data-label">UNOM строения по базе БТИ:</label>
+                    <input type="text" class="data-value stretch" id="bti_build_unom" name="bti_build_unom" value="@Model.bti_build_unom" placeholder="Введите UNOM строения по базе БТИ">
+                </div>
+            </div>
+            <div class="data-row">
+                <div class="scroll-table-wrapper">
+                    <table class="table-inp-stretch" style="width:100%; white-space: nowrap;">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Технология</th>
+                                <th>Отопление</th>
+                                <th>Вентиляция</th>
+                                <th>Кондиц.</th>
+                                <th>ГВС ср.ч.</th>
+                                <th>ГВС max</th>
+                                <th>Тепловые<br>завесы</th>
+                                <th>Прочие</th>
+                                <th>ВСЕГО<br>с учетом ГВС ср.ч</th>
+                                <th>ВСЕГО<br>с учетом ГВС мах</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Тепловая нагрузка (по договору)<br>в горячей воде, <span class="data-unit">Гкал/ч</span></td>
+                                <td><input type="text" class="data-value double" id="ctr_hl_tech_hw" name="ctr_hl_tech_hw" value="@Model.ctr_hl_tech_hw" onkeyup="OnChangeHeatLoad('hw')"></td>
+                                <td><input type="text" class="data-value double" id="ctr_hl_heat_hw" name="ctr_hl_heat_hw" value="@Model.ctr_hl_heat_hw" onkeyup="OnChangeHeatLoad('hw')"></td>
+                                <td><input type="text" class="data-value double" id="ctr_hl_vent_hw" name="ctr_hl_vent_hw" value="@Model.ctr_hl_vent_hw" onkeyup="OnChangeHeatLoad('hw')"></td>
+                                <td><input type="text" class="data-value double" id="ctr_hl_cond_hw" name="ctr_hl_cond_hw" value="@Model.ctr_hl_cond_hw" onkeyup="OnChangeHeatLoad('hw')"></td>
+                                <td><input type="text" class="data-value double" id="ctr_hl_gvss_hw" name="ctr_hl_gvss_hw" value="@Model.ctr_hl_gvss_hw" onkeyup="OnChangeHeatLoad('hw')"></td>
+                                <td><input type="text" class="data-value double" id="ctr_hl_gvsm_hw" name="ctr_hl_gvsm_hw" value="@Model.ctr_hl_gvsm_hw" onkeyup="OnChangeHeatLoad('hw')"></td>
+                                <td><input type="text" class="data-value double" id="ctr_hl_curtains_hw" name="ctr_hl_curtains_hw" value="@Model.ctr_hl_curtains_hw" onkeyup="OnChangeHeatLoad('hw')"></td>
+                                <td><input type="text" class="data-value double" id="ctr_hl_other_hw" name="ctr_hl_other_hw" value="@Model.ctr_hl_other_hw" onkeyup="OnChangeHeatLoad('hw')"></td>
+                                <td><input type="text" class="data-value double" id="ctr_hl_gvss_hw_sum" name="ctr_hl_gvss_hw_sum" value="@Model.ctr_hl_gvss_hw_sum" disabled></td>
+                                <td><input type="text" class="data-value double" id="ctr_hl_gvsm_hw_sum" name="ctr_hl_gvsm_hw_sum" value="@Model.ctr_hl_gvsm_hw_sum" disabled></td>
+                            </tr>
+                            <tr>
+                                <td>Тепловая нагрузка (по договору)<br>в паре,<span class="data-unit">т/ч</span></td>
+                                <td><input type="text" class="data-value double" id="ctr_hl_tech_steam" name="ctr_hl_tech_steam" value="@Model.ctr_hl_tech_steam" onkeyup="OnChangeHeatLoad('steam')"></td>
+                                <td><input type="text" class="data-value double" id="ctr_hl_heat_steam" name="ctr_hl_heat_steam" value="@Model.ctr_hl_heat_steam" onkeyup="OnChangeHeatLoad('steam')"></td>
+                                <td><input type="text" class="data-value double" id="ctr_hl_vent_steam" name="ctr_hl_vent_steam" value="@Model.ctr_hl_vent_steam" onkeyup="OnChangeHeatLoad('steam')"></td>
+                                <td><input type="text" class="data-value double" id="ctr_hl_cond_steam" name="ctr_hl_cond_steam" value="@Model.ctr_hl_cond_steam" onkeyup="OnChangeHeatLoad('steam')"></td>
+                                <td><input type="text" class="data-value double" id="ctr_hl_gvss_steam" name="ctr_hl_gvss_steam" value="@Model.ctr_hl_gvss_steam" onkeyup="OnChangeHeatLoad('steam')"></td>
+                                <td><input type="text" class="data-value double" id="ctr_hl_gvsm_steam" name="ctr_hl_gvsm_steam" value="@Model.ctr_hl_gvsm_steam" onkeyup="OnChangeHeatLoad('steam')"></td>
+                                <td><input type="text" class="data-value double" id="ctr_hl_curtains_steam" name="ctr_hl_curtains_steam" value="@Model.ctr_hl_curtains_steam" onkeyup="OnChangeHeatLoad('steam')"></td>
+                                <td><input type="text" class="data-value double" id="ctr_hl_other_steam" name="ctr_hl_other_steam" value="@Model.ctr_hl_other_steam" onkeyup="OnChangeHeatLoad('steam')"></td>
+                                <td><input type="text" class="data-value double" id="ctr_hl_gvss_steam_sum" name="ctr_hl_gvss_steam_sum" value="@Model.ctr_hl_gvss_steam_sum" disabled></td>
+                                <td><input type="text" class="data-value double" id="ctr_hl_gvsm_steam_sum" name="ctr_hl_gvsm_steam_sum" value="@Model.ctr_hl_gvsm_steam_sum" disabled></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="data-row">
+            <button type="submit" class="bttn bttn-color ms-auto" id="consumer_heat_loads_supply_contract_save_btn" @is_disabled>Сохранить</button>
+        </div>
+    </div>
+</form>
+
+<script type="text/javascript" src="@Url.Content("~/hss/js/popup_common_scripts.js")"></script>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        OnChangeHeatLoad('hw');
+        OnChangeHeatLoad('steam');
+    });
+
+    function OnChangeHeatLoad(type){
+        var sum_middle = Number($('#ctr_hl_tech_' + type).val().replace(",", ".")) + Number($('#ctr_hl_heat_' + type).val().replace(",", "."))
+            + Number($('#ctr_hl_vent_' + type).val().replace(",", ".")) + Number($('#ctr_hl_cond_' + type).val().replace(",", "."))
+            + Number($('#ctr_hl_gvss_' + type).val().replace(",", ".")) + Number($('#ctr_hl_curtains_' + type).val().replace(",", ".")) + Number($('#ctr_hl_other_' + type).val().replace(",", "."));
+
+        var sum_max = Number($('#ctr_hl_tech_' + type).val().replace(",", ".")) + Number($('#ctr_hl_heat_' + type).val().replace(",", "."))
+            + Number($('#ctr_hl_vent_' + type).val().replace(",", ".")) + Number($('#ctr_hl_cond_' + type).val().replace(",", "."))
+            + Number($('#ctr_hl_gvsm_' + type).val().replace(",", ".")) + Number($('#ctr_hl_curtains_' + type).val().replace(",", ".")) + Number($('#ctr_hl_other_' + type).val().replace(",", "."));
+
+        $('#ctr_hl_gvss_' + type + '_sum').val(sum_middle.toFixed(8).toString().replace(".", ","));
+        $('#ctr_hl_gvsm_' + type + '_sum').val(sum_max.toFixed(8).toString().replace(".", ","));
+
+        //$('#consumer_header_Qd_sum_' + type).val(sum_middle.toFixed(8).toString().replace(".", ","));
+        $('#consumer_header_Qd_sum_' + type).val(sum_max.toFixed(8).toString().replace(".", ","));
+    }
+
+    var onSuccessFormHeatLoadsSupplyContract = function (xhr) {
+        hidePreloader();
+
+        if (xhr.success && xhr._is_new_contract != true) {
+            showMessage('Данные сохранены.', 'modal', 'success');
+        }
+        else if (xhr.success && xhr._is_new_contract == true) {
+            showMessage('Данные добавлены.', 'modal', 'success');
+            OpenPopupConsumersAddRemove(xhr.consumer_id);
+        }
+        else {
+            showMessage(xhr.error, 'modal', 'fault');
+        }
+        $("#refresh_table").val(1);
+    };
+
+</script>

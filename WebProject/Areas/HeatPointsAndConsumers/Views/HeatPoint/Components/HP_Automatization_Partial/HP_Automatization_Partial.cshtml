@@ -1,0 +1,213 @@
+﻿@model WebProject.Areas.HeatPointsAndConsumers.Models.HPAddRemove_AutomatizationViewModel
+
+@{
+	Layout = null;
+}
+
+<form asp-controller="HeatPoint" asp-action="HpAddRemove_Automatization_Save" asp-antiforgery="true" asp-area="HeatPointsAndConsumers" id="tz_other_org_costs_form" class="needs-validation" novalidate
+   data-ajax-failure="onFailedFormTZ" data-ajax-success="onSuccessFormHP" data-ajax-begin="onBeginFormTZ" data-ajax="true" data-ajax-method="POST">
+
+	<input hidden name="heat_point_id" value="@Model.heat_point_id">
+	<input hidden name="data_status" value="@Model.data_status">
+	<div class="data-table-block">
+		<div class="data-item">
+			<label class="data-label">Наличие автоматики:</label>
+			<div class="data-row">
+				<label class="data-item">
+					<span class="data-label">Неизвестно</span>
+					@if (Model.heat_point_id > 0)
+					{
+						string is_checked = string.Empty;
+						@if (Model.avail_automatic == null)
+							is_checked = "checked";
+						<input type="radio" value="null" name="avail_automatic" class="data-check" id="ae_1" @is_checked onclick="SetAutomatizationValues()">
+					}
+					else
+					{
+						<input type="radio" value="null" name="avail_automatic" class="data-check" id="ae_1" checked onclick="SetAutomatizationValues()">
+					}
+				</label>
+				<label class="data-item">
+					<span class="data-label">Не</span>
+					<span class="data-label"> существует</span>
+					@if (Model.heat_point_id > 0)
+					{
+						string is_checked = string.Empty;
+						@if (Model.avail_automatic != null && !(bool)Model.avail_automatic)
+							is_checked = "checked";
+						<input type="radio" value="false" name="avail_automatic" class="data-check" @is_checked id="ae_2" onclick="SetAutomatizationValues()">
+					}
+					else
+					{
+						<input type="radio" value="false" name="avail_automatic" class="data-check" id="ae_2" onclick="SetAutomatizationValues()">
+					}
+				</label>
+				<label class="data-item">
+					<span class="data-label">Существует</span>
+					@if (Model.heat_point_id > 0)
+					{
+						string is_checked = string.Empty;
+						@if (Model.avail_automatic != null && (bool)Model.avail_automatic)
+							is_checked = "checked";
+						<input type="radio" value="true" name="avail_automatic" class="data-check" @is_checked id="ae_3" onclick="SetAutomatizationValues()">
+					}
+					else
+					{
+						<input type="radio" value="true" name="avail_automatic" class="data-check" id="ae_3" onclick="SetAutomatizationValues()">
+					}
+				</label>
+			</div>
+				<label class="data-label">Тип:</label>
+				<div class="data-value stretch">
+				<select class="selectpicker" name="automatic_type_id" id="automatic_type_id" data-width="100%" placeholder="Выберите значение">
+					<option value="-1">Выберите значение</option>
+					@foreach (var tz_list in ViewBag.AutomaticTypes)
+					{
+						if (tz_list.value_id == Model.automatic_type_id)
+						{
+							<option value="@tz_list.value_id" selected>@tz_list.value_name</option>
+						}
+						if (tz_list.value_id != Model.automatic_type_id)
+						{
+							<option value="@tz_list.value_id">@tz_list.value_name</option>
+						}
+					}
+					</select>
+				</div>
+		</div>
+		<div class="data-item">
+			<label class="data-label">Наличие ограничителя расхода на тепловом вводе:</label>
+			<div class="data-row">
+				<label class="data-item">
+					<span class="data-label">Неизвестно</span>
+					@if (Model.heat_point_id > 0)
+					{
+						string is_checked = string.Empty;
+						@if (Model.avail_flow_limiter == null)
+							is_checked = "checked";
+						<input type="radio" value="null" name="avail_flow_limiter" class="data-check" id="ae_4" @is_checked>
+					}
+					else
+					{
+						<input type="radio" value="null" name="avail_flow_limiter" class="data-check" id="ae_4" checked>
+					}
+				</label>
+				<label class="data-item">
+					<span class="data-label">Не</span>
+					<span class="data-label"> существует</span>
+					@if (Model.heat_point_id > 0)
+					{
+						string is_checked = string.Empty;
+						@if (Model.avail_flow_limiter != null && !(bool)Model.avail_flow_limiter)
+							is_checked = "checked";
+						<input type="radio" value="false" name="avail_flow_limiter" class="data-check" @is_checked id="ae_5">
+					}
+					else
+					{
+						<input type="radio" value="false" name="avail_flow_limiter" class="data-check" id="ae_5">
+					}
+				</label>
+				<label class="data-item">
+					<span class="data-label">Существует</span>
+					@if (Model.heat_point_id > 0)
+					{
+						string is_checked = string.Empty;
+						@if (Model.avail_flow_limiter != null && (bool)Model.avail_flow_limiter)
+							is_checked = "checked";
+						<input type="radio" value="true" name="avail_flow_limiter" class="data-check" @is_checked id="ae_6">
+					}
+					else
+					{
+						<input type="radio" value="true" name="avail_flow_limiter" class="data-check" id="ae_6">
+					}
+				</label>
+			</div>
+		</div>
+		<div class="data-item">
+			<label class="data-label">Наличие автоматизированного узла управления отоплением (погодозависимая автоматика):</label>
+			<div class="data-row">
+				<label class="data-item">
+					<span class="data-label">Неизвестно</span>
+					@if (Model.heat_point_id > 0)
+					{
+						string is_checked = string.Empty;
+						@if (Model.avail_automatic_heat_control == null)
+							is_checked = "checked";
+						<input type="radio" value="null" name="avail_automatic_heat_control" class="data-check" id="ae_7" @is_checked>
+					}
+					else
+					{
+						<input type="radio" value="null" name="avail_automatic_heat_control" class="data-check" id="ae_7" checked>
+					}
+				</label>
+				<label class="data-item">
+					<span class="data-label">Не</span>
+					<span class="data-label"> существует</span>
+					@if (Model.heat_point_id > 0)
+					{
+						string is_checked = string.Empty;
+						@if (Model.avail_automatic_heat_control != null && !(bool)Model.avail_automatic_heat_control)
+							is_checked = "checked";
+						<input type="radio" value="false" name="avail_automatic_heat_control" class="data-check" @is_checked id="ae_8">
+					}
+					else
+					{
+						<input type="radio" value="false" name="avail_automatic_heat_control" class="data-check" id="ae_8">
+					}
+				</label>
+				<label class="data-item">
+					<span class="data-label">Существует</span>
+					@if (Model.heat_point_id > 0)
+					{
+						string is_checked = string.Empty;
+						@if (Model.avail_automatic_heat_control != null && (bool)Model.avail_automatic_heat_control)
+							is_checked = "checked";
+						<input type="radio" value="true" name="avail_automatic_heat_control" class="data-check" @is_checked id="ae_9">
+					}
+					else
+					{
+						<input type="radio" value="true" name="avail_automatic_heat_control" class="data-check" id="ae_9">
+					}
+				</label>
+			</div>			
+		</div>		
+	</div>
+	<div class="data-row">
+		<button type="submit" class="bttn bttn-color ms-auto" id="hp_automatiz_save_btn">Сохранить</button>
+	</div>
+</form>
+
+<script type="text/javascript" src="@Url.Content("~/hss/js/popup_common_scripts.js")"></script>
+<script type="text/javascript">
+
+	var onSuccessFormHP = function (xhr) {
+		hidePreloader();
+		if (xhr.success == true) {
+			$("#refresh_table").val(1);
+			showMessage('Данные сохранены.', 'modal', 'success');
+		}
+		else {
+			showMessage(xhr.error, 'modal', 'fault');
+		}
+	};
+
+	function SetAutomatizationValues() {
+		let is_checked = document.getElementById('ae_3').checked;
+		let tb_val = document.getElementById('automatic_type_id');
+
+		if (is_checked == true) {
+			$('#automatic_type_id').prop('disabled', false);
+		}
+		else {
+			$('#automatic_type_id').prop('disabled', true);
+			$('#automatic_type_id').val("");
+			tb_val.selectedIndex = -1;
+		}
+		RefreshSelectById('automatic_type_id');
+	}
+
+	$(document).ready(function () {
+		SetAutomatizationValues();
+	});
+
+</script>

@@ -1,0 +1,179 @@
+﻿@model WebProject.Areas.HeatPointsAndConsumers.Models.BuildingOneDataViewModel
+@{
+	string btn_disable = string.Empty;
+}
+@if (Model.building_id == 0)
+{
+	btn_disable = "disabled";
+}
+<div class="modal-dialog modal-dialog-centered">
+	<div class="modal-content">
+		<div class="modal-header">
+			<h3 class="modal-title" id="editDataLabel">Редактирование данных зданий</h3>
+			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="RefreshTable();"></button>
+		</div>
+		<div class="modal-body">
+			<form class="needs-validation" novalidate asp-controller="Building" asp-action="Building_Save" asp-antiforgery="true" asp-area="HeatPointsAndConsumers" id="building_form"
+			data-ajax-failure="onFailedForm" data-ajax-success="onSuccessFormBuilding" data-ajax-begin="onBeginForm" data-ajax="true" data-ajax-method="POST">
+				<input type="hidden" name="building_id" value="@Model.building_id" id="building_id" />
+				<input type="hidden" name="data_status" value="@Model.data_status" id="data_status" />
+				
+
+				<div class="data-block static-block">
+					<div class="data-row">
+						<div class="data-item">
+							<label class="data-label xl-fix">Уникальный номер здания</label>
+							<select class="selectpicker data-value xxl-stretch" data-live-search="true"  placeholder="Выберите УНОМ оборудования" id="paramNumberBuilding">
+								@if (@Model.building_id == 0 || ViewBag.Action_for == "copy")
+								{
+									<option value="" selected disabled>При добавлении нового здания, УНОМ генерируется автоматически</option>
+								}
+								@foreach (var contr in ViewBag.UnomBuildingList)
+								{
+									if (contr.value_id == Model.building_id)
+									{
+										<option value="@contr.value_id" selected>@contr.value_name</option>
+									}
+									else
+									{
+										<option value="@contr.value_id">@contr.value_name</option>
+									}
+								}
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="data-block">
+					<div class="data-block border-block">
+						<div class="data-row">
+							<div class="data-table-block">
+								<div class="data-item">
+									<label class="data-label lm-fix">Адрес</label>
+									<div class="data-item">
+									<input type="text" class="data-value md-stretch" required value="@Model.address" name="address">
+									<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Это поле должно быть заполнено"></a>
+								</div>
+								</div>
+								<div class="data-item">
+									<label class="data-label">Кадастровый номер земельного участка</label>
+									<input type="text" class="data-value"  value="@Model.kadnum_zu" name="kadnum_zu">
+								</div>
+								<div class="data-item">
+									<label class="data-label">Кадастровый номер объекта капитального строительства</label>
+									<input type="text" class="data-value"  value="@Model.kadnum_oks" name="kadnum_oks">
+								</div>
+								<div class="data-item">
+									<label class="data-label">УНОМ БТИ</label>
+									<input type="text" class="data-value" value="@Model.bti_build_unom" name="bti_build_unom">
+								</div>
+								<div class="data-item">
+									<label class="data-label">Этажность</label>
+									<select class="selectpicker data-value xxl-stretch" data-live-search="true" name="floor_id" required id="paramNumberDistrict">
+										@if (@Model.building_id == 0 || Model.floor_id == null)
+										{
+											<option value="" selected disabled>Выберите этаж</option>
+										}
+										@foreach (var floor in ViewBag.Floor)
+										{
+											if (floor.Id == Model.floor_id)
+											{
+												<option value="@floor.Id" selected>@floor.floor_name</option>
+											}
+											else
+											{
+												<option value="@floor.Id">@floor.floor_name</option>
+											}
+										}
+									</select>
+								</div>
+							</div>
+
+							<div class="data-table-block">
+								<div class="data-item">
+									
+									<label class="data-label lm-fix">Район</label>
+									<div class="data-item">
+									<select class="selectpicker data-value xxl-stretch" data-live-search="true" name="district_id" required id="paramNumberDistrict">
+										@if (@Model.building_id == 0 || ViewBag.Action_for == "copy")
+										{
+											<option value="" selected disabled>Выберите район</option>
+										}
+										@foreach (var distr in ViewBag.Distr)
+										{
+											if (distr.distr_id == Model.district_id)
+											{
+												<option value="@distr.distr_id" selected>@distr.distr_name</option>
+											}
+											else
+											{
+												<option value="@distr.distr_id">@distr.distr_name</option>
+											}
+										}
+									</select>
+									<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Выберите значение из списка"></a>
+								</div>
+								</div>
+								<div class="data-item">
+									<label class="data-label">ФИАС строения/здания потребителя</label>
+									<input type="text" class="data-value" value="@Model.fias_build" name="fias_build">
+								</div>
+								<div class="data-item">
+									<label class="data-label">ФИАС земельного участка</label>
+									<input type="text" class="data-value  double" value="@Model.fias_zu" name="fias_zu">
+								</div>
+								<div class="data-item">
+									<label class="data-label">Номер функциональной зоны Генерального плана</label>
+									<input type="text" class="data-value  double" value="@Model.func_num_zone" name="func_num_zone">
+								</div>
+							</div>
+
+						</div>
+						<div class="data-item data-item-right flex-wrap flex-xl-nowrap">
+							<button type="submit" class="bttn bttn-color  mb-1 mb-xl-0">Сохранить</button>
+						</div>
+					</div>
+					<div class="table-block border-block">
+						@await Component.InvokeAsync("BuildingConsumerList_Partial", new { building_id = Model.building_id})
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript" src="@Url.Content("~/hss/js/datatables_common_scripts.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/hss/js/popup_common_scripts.js")"></script>
+<script>
+
+	$(document).ready(function () {
+		document.querySelector('#paramNumberBuilding').addEventListener('change', (event) => {
+			OpenPopupBuilging($("#paramNumberBuilding").val());
+		});
+
+	});
+
+
+	var onSuccessFormBuilding = function (xhr) {
+		if (xhr.success == true) {
+			showMessage('Данные сохранены.', 'modal', 'success');
+			$("#refresh_Building_table").val(1);
+			let select_id = "paramNumberBuilding";
+			if (xhr.is_new == true) {
+				$('#' + select_id).append('<option value=' + xhr.build_id + ' selected>' + xhr.unom_build + '</option>');
+				RefreshSelectByIdWithVal(select_id, xhr.build_id); 
+				$("#btnAddConsumer").prop('disabled', false);
+			}
+			else{
+				$("select[id=paramNumberBuilding] option[value=" + xhr.build_id + "]").text(xhr.unom_build);
+				RefreshSelectByIdWithVal(select_id, xhr.build_id);
+			}
+		}
+		else {
+			if (xhr.message === undefined) {
+				xhr.message = 'Ошибка сохранения данных'
+			}
+			showMessage(xhr.message, 'modal', 'fault');
+		}
+		hidePreloader();
+	};
+</script>

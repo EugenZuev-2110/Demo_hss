@@ -1,0 +1,153 @@
+﻿@{
+    ViewData["Title"] = "УНОМЫ";
+}
+<link rel="stylesheet" type="text/css" id="theme" href="~/Content/theme-default.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
+<style>
+    .animate__zoomInDown {
+      animation-duration: 2s; 
+    }
+    .animate__rollIn {
+      animation-duration: 2s; 
+    }
+    .animate__slideInRight {
+      animation-duration: 2s; 
+    }
+</style>
+
+<style>
+    .modal_load {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        background: rgba( 255, 255, 255, .8 ) url('http://i.stack.imgur.com/FhHRx.gif') 50% 50% no-repeat;
+    }
+
+    body {
+        overflow: visible;
+    }
+
+    body.loading {
+        overflow: hidden;
+    }
+
+    body.loading .modal_load {
+        display: block;
+    }
+
+</style>
+
+<div class="modal_load"><!-- Place at bottom of page --></div>
+<div id="partial-content">
+
+    <div class="panel panel-default">
+        <div id="panel panel-default">
+            <fieldset>
+                <div style="display: -webkit-inline-box; margin: 20px 20px 10px; width: 150px;">
+                    <label for="start" style="margin-right: 10px;">С </label>
+                    <input type="date" value="@(DateTime.Now.ToString("yyyy-MM-dd"))" name="startDate" id="startDate"/>
+                </div>
+
+                <div style="display: -webkit-inline-box; margin: 20px 20px 10px; width: 150px;">
+                    <label for="end" style="margin-right: 10px;">По</label>
+                    <input type="date" value="@(DateTime.Now.ToString("yyyy-MM-dd"))" name="endDate" id="endDate"/>
+                </div>
+
+                <div style="margin: 0px 20px 10px; width: 800px;">
+                    <div class="form-group">
+                        <label class="control-label my_lbl_cls_popup_select">Выберите тип отчёта:</label>
+                        <select class="selectpicker" data-show-subtext="true" data-live-search="true" name="report_type" id="report_type">
+                                <option value="2" selected>Техприс (Табл.2.1) ТОМ 10</option>
+                                <option value="3">Вывод (Табл.2.2) ТОМ 10</option>
+                                <option value="4">Прочие (Табл.2.3) ТОМ 10</option>
+                                <option value="5">Сводный реестр (Табл.3.1) ТОМ 10</option>
+                                <option value="6">Техприс (Табл.1.1) ТОМ 15</option>
+                                <option value="7">Вывод (Табл.2.1) ТОМ 15</option>
+                                <option value="8">КСИО (Табл.3.1) ТОМ 15</option>
+                                <option value="1">Прочие (Табл.4.1) ТОМ 15</option>
+                                <option value="9">Сводный реестр (Табл.5.1) ТОМ 15</option>
+                        </select>
+                        <button class="btn btn-default animate__animated animate__slideInRight" onclick="Export(0);">Выгрузить в Excel</button>
+                    </div>
+                    <button class="btn btn-default animate__animated animate__slideInRight" onclick="Export(-1);">Проверочный отчёт</button>
+                    <button class="btn btn-default animate__animated animate__slideInRight" onclick="window.open('http://192.168.95.157/ReportServer?%2f%d0%a1%d0%b5%d1%82%d0%b8&rs:Command=ListChildren');">Отчёты по сетям</button>
+                    @*<label for="start">Поиск по УНОМу или Исполнителю</label>
+                    <input style="width: 100%" type="text" onkeypress="return Search(event)" name="searchText" />*@
+                </div>
+            </fieldset>
+
+            @*<fieldset>
+                <div style="display: -webkit-inline-box; margin: 10px 20px 0px; width: 500px;">
+                    <button class="btn btn-default animate__animated animate__zoomInDown" style="font-weight: bold; font-style: italic; font-size: large; color: darkblue; background-color: cyan;" onclick="UnomOpen(0)">Добавить УНОМ</button>
+                </div>
+            </fieldset>*@
+        </div>
+
+        <div class="panel-body">
+        </div>
+    </div>
+
+</div>
+
+
+@section pageJs {
+    <script type="text/javascript">
+
+        $body = $("body");
+
+        function ajaxStart() {
+            $body.addClass("loading");
+        }
+        function ajaxStop() {
+            $body.removeClass("loading");
+        }
+
+        $(document).ready(function () {
+            $("#reports").addClass("active");
+
+            $('.datepicker').datepicker({
+                format: "dd.mm.yyyy",
+                autoclose: true,
+                language: 'ru'
+            });
+
+        });
+
+        function Export(report_type) {
+
+            if (report_type == 0) {
+                report_type = $('#report_type').val()
+            }
+
+            ajaxStart();
+            $.ajax({
+                type: 'POST',
+                url: '/UnomReports/ReportExport',
+                data: {
+                    startDate: document.getElementsByName("startDate")[0].value,
+                    endDate: document.getElementsByName("endDate")[0].value,
+                    report_type: report_type
+                },
+                dataType: 'json'
+            })
+                .done(function (result) {
+                    ajaxStop();
+                    if (result.success == "true") {
+                        var url = result.filename;
+                        var win = window.open(url, '_blank');
+                        win.focus();
+                    }
+                    else {
+
+                    }
+                });
+        }
+
+    </script>
+}
+

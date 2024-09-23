@@ -1,0 +1,284 @@
+﻿@model List<WebProject.Models.UnomsViewModel>
+@{
+    Layout = null;
+    ViewData["Title"] = "УНОМЫ";
+}
+
+
+<style>
+    .td-thStyle {
+        text-align: center;
+    }
+
+    .modal_load {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        background: rgba( 255, 255, 255, .8 ) url('http://i.stack.imgur.com/FhHRx.gif') 50% 50% no-repeat;
+    }
+
+    body.loading {
+        overflow: hidden;
+    }
+
+    body.loading .modal_load {
+        display: block;
+    }
+
+    .table {
+        table-layout:fixed!important;
+        margin-left: 0px; 
+        width: 2200px;
+    }
+
+</style>
+
+@*<h2>@ViewData["Title"]</h2>*@
+<div class="modal_load"><!-- Place at bottom of page --></div>
+<table class="table datatable dataTable no-footer table-hover" id="table-part" role="grid">
+    <thead>
+        <tr role="row">
+            <th class="sorting" tabindex="0">*</th>
+            <th class="sorting" tabindex="1" >УНОМ<br> обращения</th>
+            <th class="sorting" tabindex="2" >Тип<br> обращения</th>
+            @*<th class="sorting" tabindex="3">Номер проекта<br> зарегистрированный в ЭТС-Проект</th>
+            <th class="sorting" tabindex="4">Дата обращения<br> зарегистрированная в ЭТС-Проект</th>
+            <th class="sorting" tabindex="5">Номер обращения<br> зарегистрированный в ЭТС-Проект</th>*@
+            <th class="sorting" tabindex="3">Наименование организации</th>
+            <th class="sorting" tabindex="4">Дата ДЖКХ</th>
+            <th class="sorting" tabindex="5">Номер ДЖКХ</th>
+            @*<th class="sorting" tabindex="4" colspan="2" >Дата и номер обращения<br> зарегистрированные в ДЖКХ</th>*@
+            <th class="sorting" tabindex="6" >Краткое<br> содержание обращения</th>
+            <th class="sorting" tabindex="10">Результат<br> рассмотрения</th>
+            <th class="sorting" tabindex="11" >Необходимость внесения изменений</th>
+            <th class="sorting" tabindex="12" >Перечень вносимых изменений</th>
+            <th class="sorting" tabindex="13">Тэги</th>
+            <th class="sorting" tabindex="14" >Дата<br> исходящего обращения</th>
+            <th class="sorting" tabindex="15" >Номер<br> исходящего обращения</th>
+            <th class="sorting" tabindex="16">Статус</th>
+            <th class="sorting" tabindex="17" >Исполнитель</th>
+            <th class="sorting" tabindex="18" >Ссылка на папку</th>
+            @*<th class="sorting" tabindex="19">Источник данных (проект/утвержденная схема)</th>*@
+        </tr>
+        @*<tr role="row">
+            <th>Дата</th>
+            <th>Номер</th>
+        </tr>*@
+    </thead>
+    <tbody style="display: none;" id="table_tbody">
+        @if (Model.Count > 0)
+        {
+            foreach (var unoms in Model)
+            {
+                <tr style="cursor: pointer" onclick="UnomOpen(event, @unoms.Id)">
+                    @if (unoms.category_name == "Факсограмма/протокол" || unoms.category_name == "НЕ СХЕМА" || string.IsNullOrEmpty(unoms.category_name))
+                    {
+                        <td></td>
+                    }
+                    else
+                    {
+                        <td style="cursor: pointer" onclick="GetItems('@unoms.unom_num')"><a>Перейти на 2 уровень</a></td>
+                    }
+                    <td>@unoms.unom_num</td>
+                    <td>@unoms.category_name</td>
+                    @*<td>@unoms.ets_project_number</td>
+                    @if (unoms.ets_date != null)
+                    {
+                        <td>@(unoms.ets_date?.ToString("dd") + "." + unoms.ets_date?.ToString("MM") + "." + unoms.ets_date?.ToString("yy"))</td>
+                    }
+                    else
+                    {
+                        <td></td>
+                    }
+                    <td>@unoms.ets_appeal_number</td>*@
+                    <td>@unoms.organisation_name</td>
+                    @if (unoms.dzhkh_date != null)
+                    {
+                        <td>@(unoms.dzhkh_date?.ToString("dd") + "." + unoms.dzhkh_date?.ToString("MM") + "." + unoms.dzhkh_date?.ToString("yy"))</td>
+                    }
+                    else
+                    {
+                        <td></td>
+                    }
+                    <td>@unoms.dzhkh_number</td>
+                    <td>@unoms.appeal_desc_short</td>
+                    <td>@unoms.result_review</td>
+                    <td>@unoms.changes_is_required</td>
+                    <td>@unoms.changes_type</td>
+                    <td>@unoms.tags</td>
+                    @if (unoms.out_appeal_date != null)
+                    {
+                        <td>@(unoms.out_appeal_date?.ToString("dd") + "." + unoms.out_appeal_date?.ToString("MM") + "." + unoms.out_appeal_date?.ToString("yy"))</td>
+                    }
+                    else
+                    {
+                        <td></td>
+                    }
+                    <td>@unoms.out_appeal_number</td>
+                    <td>@unoms.state</td>
+                    <td>@unoms.executor_name</td>
+                    @*<td onclick="navigator.clipboard.writeText('@unoms.directory_link')"><a href="#!" onclick="navigator.clipboard.writeText('@unoms.directory_link')">@unoms.directory_link</a></td>*@
+                    @if (!string.IsNullOrEmpty(@unoms.directory_link))
+                    {
+                        <td onclick="window.open('@unoms.directory_link')">
+                            <a href="#!">Открыть папку</a>
+                        </td>
+                    }
+                    else
+                    {
+                        <td></td>
+                    }
+                    @*@if (unoms.data_status != null)
+                    {
+                        <td>@(unoms.data_status?.ToString("dd") + "." + unoms.data_status?.ToString("MM") + "." + unoms.data_status?.ToString("yy"))</td>
+                    }
+                    else
+                    {
+                        <td></td>
+                    }*@
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+@*<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>*@
+@*<script src="/js/jquery.inputmask.bundle.min.js"></script>*@
+@*<script src="/js/app.js"></script>*@
+
+<script type="text/javascript">
+
+        $body = $("body");
+
+        function ajaxStart() {
+            $body.addClass("loading");
+        }
+        function ajaxStop() {
+            $body.removeClass("loading");
+        }
+
+        $(document).ready(function () {
+
+            $("#unoms").addClass("active");
+            ajaxStart();
+            var table = $('#table-part').DataTable({
+                aaSorting: [],
+                scrollY: 600,
+                scrollX: true,
+                destroy: true,
+                dom: 'Blfrtip',
+                autoWidth: true,
+                "columnDefs": [
+                    { "width": "100px", "targets": [3,5] },
+                    { "width": "240px", "targets": [6,7] },
+                    { "width": "150px", "targets": [10] },
+                    { "width": "160px", "targets": [15] }
+                ],
+                buttons: [
+                    {
+                        extend: 'excelHtml5',
+                        //exportOptions: {
+                        //    columns: ['#upldate', '#idint', '#pr_count', '#network', '#checkhref', '#state', '#user']
+                        //},
+                        className: 'exportExcelFull'
+                    }
+                ],
+                initComplete: function () {
+                    var $buttons = $('.dt-buttons').hide();
+                    $('#excelFull').on('click',
+                        function () {
+                            $buttons.find('.exportExcelFull').click();
+                        });
+                    ajaxStop();    
+                    $("#table_tbody").show();
+                },
+                "language": {
+                    "processing": "Подождите...",
+                    "search": "Поиск:",
+                    "lengthMenu": "Показать _MENU_ записей",
+                    "info": "Записи с _START_ до _END_ из _TOTAL_ записей",
+                    "infoEmpty": "Записи с 0 до 0 из 0 записей",
+                    "infoFiltered": "(отфильтровано из _MAX_ записей)",
+                    "infoPostFix": "",
+                    "loadingRecords": "Загрузка записей...",
+                    "zeroRecords": "Записи отсутствуют.",
+                    "emptyTable": "В таблице отсутствуют данные",
+                    "paginate": {
+                        "first": "Первая",
+                        "previous": "Предыдущая",
+                        "next": "Следующая",
+                        "last": "Последняя"
+                    },
+                    "aria": {
+                        "sortAscending": ": активировать для сортировки столбца по возрастанию",
+                        "sortDescending": ": активировать для сортировки столбца по убыванию"
+                    }
+                }
+            });
+            $('#table-part').DataTable().columns.adjust().draw();
+        });
+
+        function LoadTable() {
+            GetUnoms()
+        }
+
+        function Search(e) {
+
+            $('.nav-item').removeClass('active');
+            $('#nav_item_1').addClass('active');
+
+            if (e.keyCode == 13) {
+                GetUnoms();
+                //return false;
+            }
+        }
+
+        function UnomOpen(e, id) {
+            var ind = $(e.target).index();
+            if (ind === 0 || ind === 15)
+                return;
+
+            ajx = false;
+            $.ajax({
+                type: 'GET',
+                url: '@Html.Raw(Url.Action("OpenUnom", "Home"))',
+            data: {
+                id: id
+            },
+            dataType: 'html'
+            }).done(function(result) {
+                var div = $('#div-open-fd');
+                div.html(result);
+                $("#modal-open-fd").modal('toggle');
+            });
+        }
+
+        function GetItems(unom_num) {
+            var url = '@Url.Action("Items", "Home")' + "?unom_num=" + unom_num
+                window.location = url;
+        }
+
+        function GetUnoms() {
+            ajaxStart();
+            $.ajax({
+                type: 'GET',
+                url: '/Home/OnGetCallUnomsListViewComponent',
+                data: {
+                    searchText: document.getElementsByName("searchText")[0].value
+                },
+                dataType: 'html'
+            })
+                .done(function (result) {
+                    var div = $('.panel-body');
+                    div.html("");
+                    div.html(result);
+
+                    ajaxStop();
+                });
+        }
+
+</script>

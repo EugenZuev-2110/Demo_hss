@@ -1,0 +1,165 @@
+﻿@model WebProject.Areas.TSO.Models.TZOneCalcCostsDataViewModel
+
+@{
+	string btn_disable = string.Empty; int ds = @Model.data_status - 1; string is_checked = string.Empty;
+}
+@if (Model.tz_id == 0)
+{
+	btn_disable = "disabled";
+}
+
+<div class="modal-dialog modal-dialog-centered">
+	<div class="modal-content">
+		<div class="modal-header">
+			<h3 class="modal-title" id="editDataLabel">Расходы ИП ТС и КС организации ТСО</h3>
+			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="RefreshTable();"></button>
+		</div>
+		<div class="modal-body">
+			<div class="data-block static-block data-params">
+				<div class="data-row">
+					<div class="data-item">
+						<label class="data-label">Наименование ТСО</label>
+						<select class="selectpicker data-value xxl-stretch" id="paramNumberTZ" data-live-search="true" placeholder="УНОМ ТЗ - краткое наименование ТСО">
+							@foreach (var tz_list in ViewBag.TZTSOList)
+							{
+								if (tz_list.tz_id == Model.tz_id)
+								{
+									<option value="@tz_list.tz_id" selected>@tz_list.tz_name</option>
+								}
+								if (tz_list.tz_id != Model.tz_id)
+								{
+									<option value="@tz_list.tz_id">@tz_list.tz_name</option>
+								}
+							}
+						</select>
+					</div>
+					<div class="data-item">
+						<div class="note">Базовый год - <span class="note-base-year">@ds (01.01.@Model.data_status)</span>.</div>
+					</div>
+				</div>
+				<div class="data-row">
+					<div class="data-block stretch">
+						<div class="data-row border-block">
+							<h4>Виды деятельности в границах ТЗ</h4>
+							<div class="data-block stretch">
+								<label class="data-item data-item-right">
+									<span class="data-label">Комбинированное производство, более 25 МВт</span>
+									<input type="checkbox" class="data-check" disabled @Model.combine_prod_more25>
+								</label>
+								<label class="data-item data-item-right">
+									<span class="data-label">Комбинированное производство, менее 25 МВт</span>
+									<input type="checkbox" class="data-check" disabled @Model.combine_prod_less25>
+								</label>
+							</div>
+							<div class="data-block stretch">
+								<label class="data-item data-item-right">
+									<span class="data-label">Некомбинированное производство</span>
+									<input type="checkbox" class="data-check" disabled @Model.not_combine_prod>
+								</label>
+
+								<label class="data-item data-item-right">
+									<span class="data-label">Договор поставки</span>
+									<input type="checkbox" class="data-check" disabled @Model.delivery_contract>
+								</label>
+							</div>
+							<div class="data-block stretch">
+								<label class="data-item data-item-right">
+									<span class="data-label">Передача</span>
+									<input type="checkbox" class="data-check" disabled @Model.transfer>
+								</label>
+								<label class="data-item data-item-right">
+									<span class="data-label">Сбыт</span>
+									<input type="checkbox" class="data-check" disabled @Model.sale>
+								</label>
+							</div>
+						</div>
+						<div class="data-item">
+							<span class="data-label">Территория действия ТЗ</span>
+							<input type="text" value="@Model.tz_territory" class="data-value xxl-stretch" disabled>
+						</div>
+					</div>
+					<div class="data-block data-xxl-row">
+						<h4>Дифференциация тарифов</h4>
+						<label class="data-item data-item-right">
+							<span class="data-label">без дифференциации</span>
+							@{
+								is_checked = Model.tariff_differentiation == 1 ? "checked" : "";
+							}
+							<input type="checkbox" class="data-check" disabled @is_checked>
+						</label>
+						<label class="data-item data-item-right">
+							<span class="data-label">до тепловых пунктов</span>
+							@{
+								is_checked = Model.tariff_differentiation == 2 ? "checked" : "";
+							}
+							<input type="checkbox" class="data-check" disabled @is_checked>
+						</label>
+						<label class="data-item data-item-right">
+							<span class="data-label">после тепловых пунктов</span>
+							@{
+								is_checked = Model.tariff_differentiation == 3 ? "checked" : "";
+							}
+							<input type="checkbox" class="data-check" disabled @is_checked>
+						</label>
+					</div>
+				</div>
+			</div>
+			<div class="scroll-block-wrapper" style="max-height: 42vh;">
+				<div class="data-block scroll-block">
+					<div class="accordion data-block">
+						<div class="border-block">
+							<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel26" aria-expanded="false">Фактические расходы на финансирование в соответствии с ИП ТС</button>
+							<div id="panel26" class="accordion-collapse collapse">
+								<div class="accordion-body">
+									<div class="data-block">
+										@await Component.InvokeAsync("TZ_ExpensesIPHSData_Partial", new { tz_id = Model.tz_id, data_status = Model.data_status })
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class=" border-block">
+							<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel27" aria-expanded="false">Фактические расходы на финансирование в соответствии с КС</button>
+							<div id="panel27" class="accordion-collapse collapse">
+								<div class="accordion-body">
+									<div class="data-block">
+										@await Component.InvokeAsync("TZ_ExpensesCAData_Partial", new { tz_id = Model.tz_id, data_status = Model.data_status })
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="border-block">
+							<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel28" aria-expanded="false">Фактический объем дотаций и полученные доходы сверх реализации по утвержденным тарифам</button>
+							<div id="panel28" class="accordion-collapse collapse">
+								<div class="accordion-body">
+									<div class="data-block">
+										@await Component.InvokeAsync("TZ_ExpensesAddValuesData_Partial", new { tz_id = Model.tz_id, data_status = Model.data_status })
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript" src="@Url.Content("~/hss/js/popup_common_scripts.js")"></script>
+
+<script type="text/javascript">
+
+	$(document).ready(function () {
+
+		document.querySelector('#paramNumberTZ').addEventListener('change', (event) => {
+			OpenPopupCostsPrices($('#paramNumberTZ').val(), $('#data_status').val(), '/TSO/CostsAndPrices/OpenExpenses_IPHS_CA', 'TZCostsPricesDataPopup');
+		});
+
+	});
+
+	function RefreshTable() {
+		if ($("#refresh_table").val() === "1") {
+			GetListOnPage();
+		}
+	}
+
+</script>

@@ -1,0 +1,587 @@
+﻿@model WebProject.Areas.TSO.Models.TZOneProductionDataViewModel
+
+@{
+	string btn_disable = string.Empty; int ds = @Model.data_status - 1; string is_checked = string.Empty;
+}
+@if (Model.tz_id == 0)
+{
+	btn_disable = "disabled";
+}
+<div class="modal-dialog modal-dialog-centered">
+	<div class="modal-content">
+			<div class="modal-header"> 
+				<h3 class="modal-title" id="editDataLabel">Данные тарифной зоны по тепловому балансу производства</h3>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="RefreshTable();"></button>
+				<input type="hidden" value="0" id="refresh_tz_production_table" />
+			</div>
+			<div class="modal-body">
+			<div class="data-block static-block">
+      			<div class="data-item">
+	      			<label class="data-label">Уникальный номер тарифной зоны и наименование ТСО</label>
+					<select class="selectpicker data-value xxl-stretch" id="paramNumberTZ" data-live-search="true" placeholder="УНОМ ТЗ - краткое наименвание ТСО">
+						@foreach (var tz_list in ViewBag.TZTSOList)
+						{
+							if (tz_list.tz_id == Model.tz_id)
+							{
+								<option value="@tz_list.tz_id" selected>@tz_list.tz_name</option>
+							}
+							if (tz_list.tz_id != Model.tz_id)
+							{
+								<option value="@tz_list.tz_id">@tz_list.tz_name</option>
+							}
+						}
+					</select>
+				</div>
+				<div class="data-row">
+					<div class="data-item">
+		      			<label class="data-label">Территория действия ТЗ</label>
+						<input type="text" class="data-value stretch" value="@Model.tz_territory" disabled>
+					</div>
+					<div class="data-item">
+						<label for="perspective_year_popup" class="data-label">Расчётный год:</label>
+						<select class="selectpicker md-fix" id="perspective_year_popup">
+							@foreach (var p_years_list in ViewBag.PerspectiveYearsList)
+							{
+								if (p_years_list.perspective_year == Model.perspective_year)
+								{
+									<option value="@p_years_list.perspective_year" selected>@p_years_list.perspective_year_dt</option>
+								}
+								if (p_years_list.perspective_year != Model.perspective_year)
+								{
+									<option value="@p_years_list.perspective_year">@p_years_list.perspective_year_dt</option>
+								}
+							}
+						</select>
+					</div>
+					<div class="data-item">
+						<div class="note">Базовый год - <span class="note-base-year">@ds (01.01.@Model.data_status)</span>.</div>
+					</div>	
+				</div>
+			</div>
+			<div class="scroll-block-wrapper" style="max-height:66vh">
+			    <div class="data-row scroll-block">
+					<div class="col-12 col-xxl-7">
+						<div class="data-block border-block me-xxl-1">
+							<form asp-controller="HeatBalance" asp-action="TZProduction_Save" asp-antiforgery="true" asp-area="TSO" id="tz_production_form"
+								  data-ajax-failure="onFailedFormTZ" data-ajax-success="onSuccessFormTZ" data-ajax-begin="onBeginFormTZ" data-ajax="true" data-ajax-method="POST">
+								<input type="hidden" name="tz_id" value="@Model.tz_id" />
+								<input type="hidden" name="data_status" value="@Model.data_status" />
+								<input type="hidden" name="perspective_year" value="@Model.perspective_year" />
+			      				<table id="tzOneProductionTable" class="display compact table-inp-stretch" style="width:100%" >
+				      				<thead>
+				      					<tr>
+				      						<th rowspan="2" >Показатели баланса, <span class="data-unit">Гкал</span></th>
+											<th colspan="3">Факт (на 01.01.@Model.data_status)</th>
+				      						<th colspan="3">План</th>
+				      					</tr>
+				      					<tr>
+				      						<th>I полугодие</th>
+				      						<th>II полугодие</th>
+				      						<th>Год</th>
+				      						<th>I полугодие</th>
+				      						<th>II полугодие</th>
+				      						<th>Год</th>
+				      					</tr>
+				      				</thead>
+				      				<tbody>
+				      					<tr>
+				      						<td>Выработка тепловой энергии (отпуск с коллекторов брутто) собственными источниками тепла</td>
+											<td><input type="text" name="generate_heat_energy_fact_1" id="generate_heat_energy_fact_1" value="@Model.generate_heat_energy_fact_1" class="data-value double"></td>
+											<td><input type="text" name="generate_heat_energy_fact_2" id="generate_heat_energy_fact_2" value="@Model.generate_heat_energy_fact_2" class="data-value double"></td>
+											<td><input type="text" id="generate_heat_energy_fact_3" value="@Model.generate_heat_energy_fact_3" class="data-value" disabled></td>
+											<td><input type="text" name="generate_heat_energy_plan_1" id="generate_heat_energy_plan_1" value="@Model.generate_heat_energy_plan_1" class="data-value double"></td>
+											<td><input type="text" name="generate_heat_energy_plan_2" id="generate_heat_energy_plan_2" value="@Model.generate_heat_energy_plan_2" class="data-value double"></td>
+											<td><input type="text" id="generate_heat_energy_plan_3" value="@Model.generate_heat_energy_plan_3" class="data-value" disabled></td>
+				      					</tr>
+				      					<tr>
+				      						<td>Расход тепла на собственные нужды (хозяственные нужды) собственных источников тепла</td>
+											<td><input type="text" name="heat_consump_fact_1" id="heat_consump_fact_1" value="@Model.heat_consump_fact_1" class="data-value double"></td>
+											<td><input type="text" name="heat_consump_fact_2" id="heat_consump_fact_2" value="@Model.heat_consump_fact_2" class="data-value double"></td>
+											<td><input type="text" id="heat_consump_fact_3" value="@Model.heat_consump_fact_3" class="data-value" disabled></td>
+											<td><input type="text" name="heat_consump_plan_1" id="heat_consump_plan_1" value="@Model.heat_consump_plan_1" class="data-value double"></td>
+				      						<td><input type="text" name="heat_consump_plan_2" id="heat_consump_plan_2" value="@Model.heat_consump_plan_2" class="data-value double"></td>
+											<td><input type="text" id="heat_consump_plan_3" value="@Model.heat_consump_plan_3" class="data-value" disabled></td>
+				      					</tr>
+				      					<tr>
+				      						<td>Отпуск с коллекторов (нетто), всего</td>
+											<td><input type="text" id="release_collect_fact_1" value="@Model.release_collect_fact_1" class="data-value" disabled></td>
+				      						<td><input type="text" id="release_collect_fact_2" value="@Model.release_collect_fact_2" class="data-value" disabled></td>
+				      						<td><input type="text" id="release_collect_fact_3" value="@Model.release_collect_fact_3" class="data-value" disabled></td>
+											<td><input type="text" id="release_collect_plan_1" value="@Model.release_collect_plan_1" class="data-value" disabled></td>
+				      						<td><input type="text" id="release_collect_plan_2" value="@Model.release_collect_plan_2" class="data-value" disabled></td>
+											<td><input type="text" id="release_collect_plan_3" value="@Model.release_collect_plan_3" class="data-value" disabled></td>
+				      					</tr>
+				      					<tr>
+											<td>а) на технологические нужды предприятия, всего</td>
+											<td><input type="text" id="release_collect_tech_need_fact_1" value="@Model.release_collect_tech_need_fact_1" class="data-value" disabled></td>
+				      						<td><input type="text" id="release_collect_tech_need_fact_2" value="@Model.release_collect_tech_need_fact_2" class="data-value" disabled></td>
+				      						<td><input type="text" id="release_collect_tech_need_fact_3" value="@Model.release_collect_tech_need_fact_3" class="data-value" disabled></td>
+				      						<td><input type="text" id="release_collect_tech_need_plan_1" value="@Model.release_collect_tech_need_plan_1" class="data-value" disabled></td>
+											<td><input type="text" id="release_collect_tech_need_plan_2" value="@Model.release_collect_tech_need_plan_2" class="data-value" disabled></td>
+											<td><input type="text" id="release_collect_tech_need_plan_3" value="@Model.release_collect_tech_need_plan_3" class="data-value" disabled></td>
+				      					</tr>
+				      					<tr>
+				      						<td>- собственное производство</td>
+											<td><input type="text" name="release_collect_ownprod_fact_1" id="release_collect_ownprod_fact_1" value="@Model.release_collect_ownprod_fact_1" class="data-value double"></td>
+				      						<td><input type="text" name="release_collect_ownprod_fact_2" id="release_collect_ownprod_fact_2" value="@Model.release_collect_ownprod_fact_2" class="data-value double"></td>
+				      						<td><input type="text" id="release_collect_ownprod_fact_3" value="@Model.release_collect_ownprod_fact_3" class="data-value" disabled></td>
+				      						<td><input type="text" name="release_collect_ownprod_plan_1" id="release_collect_ownprod_plan_1" value="@Model.release_collect_ownprod_plan_1" class="data-value double"></td>
+											<td><input type="text" name="release_collect_ownprod_plan_2" id="release_collect_ownprod_plan_2" value="@Model.release_collect_ownprod_plan_2" class="data-value double"></td>
+				      						<td><input type="text" id="release_collect_ownprod_plan_3" value="@Model.release_collect_ownprod_plan_3" class="data-value" disabled></td>
+				      					</tr>
+				      					<tr>
+				      						<td>- хозяйственные нужды</td>
+				      						<td><input type="text" name="release_collect_household_needs_fact_1" id="release_collect_household_needs_fact_1" value="@Model.release_collect_household_needs_fact_1" class="data-value double"></td>
+											<td><input type="text" name="release_collect_household_needs_fact_2" id="release_collect_household_needs_fact_2" value="@Model.release_collect_household_needs_fact_2" class="data-value double"></td>
+				      						<td><input type="text" id="release_collect_household_needs_fact_3" value="@Model.release_collect_household_needs_fact_3" class="data-value" disabled></td>
+				      						<td><input type="text" name="release_collect_household_needs_plan_1" id="release_collect_household_needs_plan_1" value="@Model.release_collect_household_needs_plan_1" class="data-value double"></td>
+				      						<td><input type="text" name="release_collect_household_needs_plan_2" id="release_collect_household_needs_plan_2" value="@Model.release_collect_household_needs_plan_2" class="data-value double"></td>
+				      						<td><input type="text" id="release_collect_household_needs_plan_3" value="@Model.release_collect_household_needs_plan_3" class="data-value" disabled></td>
+				      					</tr>
+				      					<tr>
+											<td>б) ТСО – перепродавцам</td>
+				      						<td><input type="text" name="release_collect_tso_salers_fact_1" id="release_collect_tso_salers_fact_1" value="@Model.release_collect_tso_salers_fact_1" class="data-value double"></td>
+				      						<td><input type="text" name="release_collect_tso_salers_fact_2" id="release_collect_tso_salers_fact_2" value="@Model.release_collect_tso_salers_fact_2" class="data-value double"></td>
+				      						<td><input type="text" id="release_collect_tso_salers_fact_3" value="@Model.release_collect_tso_salers_fact_3" class="data-value" disabled></td>
+											<td><input type="text" name="release_collect_tso_salers_plan_1" id="release_collect_tso_salers_plan_1" value="@Model.release_collect_tso_salers_plan_1" class="data-value double"></td>
+				      						<td><input type="text" name="release_collect_tso_salers_plan_2" id="release_collect_tso_salers_plan_2" value="@Model.release_collect_tso_salers_plan_2" class="data-value double"></td>
+				      						<td><input type="text" id="release_collect_tso_salers_plan_3" value="@Model.release_collect_tso_salers_plan_3" class="data-value" disabled></td>
+				      					</tr>
+				      					<tr>
+											<td>в) потребителям, всего</td>
+											<td><input type="text" id="release_collect_consumers_fact_1" value="@Model.release_collect_consumers_fact_1" class="data-value" disabled></td>
+				      						<td><input type="text" id="release_collect_consumers_fact_2" value="@Model.release_collect_consumers_fact_2" class="data-value" disabled></td>
+				      						<td><input type="text" id="release_collect_consumers_fact_3" value="@Model.release_collect_consumers_fact_3" class="data-value" disabled></td>
+											<td><input type="text" id="release_collect_consumers_plan_1" value="@Model.release_collect_consumers_plan_1" class="data-value" disabled></td>
+											<td><input type="text" id="release_collect_consumers_plan_2" value="@Model.release_collect_consumers_plan_2" class="data-value" disabled></td>
+											<td><input type="text" id="release_collect_consumers_plan_3" value="@Model.release_collect_consumers_plan_3" class="data-value" disabled></td>
+				      					</tr>
+				      					<tr>
+				      						<td>- бюджетным потребителям</td>
+											<td><input type="text" name="release_collect_buget_cons_fact_1" id="release_collect_buget_cons_fact_1" value="@Model.release_collect_buget_cons_fact_1" class="data-value double"></td>
+											<td><input type="text" name="release_collect_buget_cons_fact_2" id="release_collect_buget_cons_fact_2" value="@Model.release_collect_buget_cons_fact_2" class="data-value double"></td>
+				      						<td><input type="text" id="release_collect_buget_cons_fact_3" value="@Model.release_collect_buget_cons_fact_3" class="data-value" disabled></td>
+											<td><input type="text" name="release_collect_buget_cons_plan_1" id="release_collect_buget_cons_plan_1" value="@Model.release_collect_buget_cons_plan_1" class="data-value double"></td>
+											<td><input type="text" name="release_collect_buget_cons_plan_2" id="release_collect_buget_cons_plan_2" value="@Model.release_collect_buget_cons_plan_2" class="data-value double"></td>
+				      						<td><input type="text" id="release_collect_buget_cons_plan_3" value="@Model.release_collect_buget_cons_plan_3" class="data-value" disabled></td>
+				      					</tr>
+				      					<tr>
+				      						<td>- населению</td>
+				      						<td><input type="text" name="release_collect_public_fact_1" id="release_collect_public_fact_1" value="@Model.release_collect_public_fact_1" class="data-value double"></td>
+				      						<td><input type="text" name="release_collect_public_fact_2" id="release_collect_public_fact_2" value="@Model.release_collect_public_fact_2" class="data-value double"></td>
+				      						<td><input type="text" id="release_collect_public_fact_3" value="@Model.release_collect_public_fact_3" class="data-value" disabled></td>
+				      						<td><input type="text" name="release_collect_public_plan_1" id="release_collect_public_plan_1" value="@Model.release_collect_public_plan_1" class="data-value double"></td>
+				      						<td><input type="text" name="release_collect_public_plan_2" id="release_collect_public_plan_2" value="@Model.release_collect_public_plan_2" class="data-value double"></td>
+				      						<td><input type="text" id="release_collect_public_plan_3" value="@Model.release_collect_public_plan_3" class="data-value" disabled></td>
+				      					</tr>
+				      					<tr>
+				      						<td>- прочим потребителям</td>
+											<td><input type="text" name="release_collect_other_cons_fact_1" id="release_collect_other_cons_fact_1" value="@Model.release_collect_other_cons_fact_1" class="data-value double"></td>
+				      						<td><input type="text" name="release_collect_other_cons_fact_2" id="release_collect_other_cons_fact_2" value="@Model.release_collect_other_cons_fact_2" class="data-value double"></td>
+				      						<td><input type="text" id="release_collect_other_cons_fact_3" value="@Model.release_collect_other_cons_fact_3" class="data-value" disabled></td>
+				      						<td><input type="text" name="release_collect_other_cons_plan_1" id="release_collect_other_cons_plan_1" value="@Model.release_collect_other_cons_plan_1" class="data-value double"></td>
+				      						<td><input type="text" name="release_collect_other_cons_plan_2" id="release_collect_other_cons_plan_2" value="@Model.release_collect_other_cons_plan_2" class="data-value double"></td>
+				      						<td><input type="text" id="release_collect_other_cons_plan_3" value="@Model.release_collect_other_cons_plan_3" class="data-value" disabled></td>
+				      					</tr>
+				      					<tr>
+				      						<td>Отпуск в собственную тепловую сеть</td>
+				      						<td><input type="text" name="release_collect_ownheatnet_fact_1" id="release_collect_ownheatnet_fact_1" value="@Model.release_collect_ownheatnet_fact_1" class="data-value double"></td>
+				      						<td><input type="text" name="release_collect_ownheatnet_fact_2" id="release_collect_ownheatnet_fact_2" value="@Model.release_collect_ownheatnet_fact_2" class="data-value double"></td>
+				      						<td><input type="text" id="release_collect_ownheatnet_fact_3" value="@Model.release_collect_ownheatnet_fact_3" class="data-value" disabled></td>
+				      						<td><input type="text" name="release_collect_ownheatnet_plan_1" id="release_collect_ownheatnet_plan_1" value="@Model.release_collect_ownheatnet_plan_1" class="data-value double"></td>
+											<td><input type="text" name="release_collect_ownheatnet_plan_2" id="release_collect_ownheatnet_plan_2" value="@Model.release_collect_ownheatnet_plan_2" class="data-value double"></td>
+											<td><input type="text" id="release_collect_ownheatnet_plan_3" value="@Model.release_collect_ownheatnet_plan_3" class="data-value" disabled></td>
+				      					</tr>
+				      					<tr>
+				      						<td>Покупная тепловая энергия с коллекторов</td>
+				      						<td><input type="text" value="@Model.buy_energy_collect_fact_1" class="data-value" disabled></td>
+											<td><input type="text" value="@Model.buy_energy_collect_fact_2" class="data-value" disabled></td>
+				      						<td><input type="text" value="@Model.buy_energy_collect_fact_3" class="data-value" disabled></td>
+				      						<td><input type="text" value="@Model.buy_energy_collect_plan_1" class="data-value" disabled></td>
+											<td><input type="text" value="@Model.buy_energy_collect_plan_2" class="data-value" disabled></td>
+											<td><input type="text" value="@Model.buy_energy_collect_plan_3" class="data-value" disabled></td>
+				      					</tr>
+				      					<tr>
+											<td>- включая покупку с коллекторов потерь тепловой энергии</td>
+											<td><input type="text" value="@Model.buy_loss_collect_fact_1" class="data-value" disabled></td>
+											<td><input type="text" value="@Model.buy_loss_collect_fact_2" class="data-value" disabled></td>
+											<td><input type="text" value="@Model.buy_loss_collect_fact_3" class="data-value" disabled></td>
+											<td><input type="text" value="@Model.buy_loss_collect_plan_1" class="data-value" disabled></td>
+											<td><input type="text" value="@Model.buy_loss_collect_plan_2" class="data-value" disabled></td>
+											<td><input type="text" value="@Model.buy_loss_collect_plan_3" class="data-value" disabled></td>
+				      					</tr>
+				      					<tr>
+				      						<td>Покупная тепловая энергия из тепловой сети</td>
+				      						<td><input type="text" value="@Model.buy_energy_heatnet_fact_1" class="data-value" disabled></td>
+				      						<td><input type="text" value="@Model.buy_energy_heatnet_fact_2" class="data-value" disabled></td>
+				      						<td><input type="text" value="@Model.buy_energy_heatnet_fact_3" class="data-value" disabled></td>
+				      						<td><input type="text" value="@Model.buy_energy_heatnet_plan_1" class="data-value" disabled></td>
+				      						<td><input type="text" value="@Model.buy_energy_heatnet_plan_2" class="data-value" disabled></td>
+				      						<td><input type="text" value="@Model.buy_energy_heatnet_plan_3" class="data-value" disabled></td>
+				      					</tr>
+				      					<tr>
+											<td>- включая покупку из сети потерь тепловой энергии</td>
+											<td><input type="text" value="@Model.buy_loss_heatnet_fact_1" class="data-value" disabled></td>
+				      						<td><input type="text" value="@Model.buy_loss_heatnet_fact_2" class="data-value" disabled></td>
+				      						<td><input type="text" value="@Model.buy_loss_heatnet_fact_3" class="data-value" disabled></td>
+				      						<td><input type="text" value="@Model.buy_loss_heatnet_plan_1" class="data-value" disabled></td>
+				      						<td><input type="text" value="@Model.buy_loss_heatnet_plan_2" class="data-value" disabled></td>
+											<td><input type="text" value="@Model.buy_loss_heatnet_plan_3" class="data-value" disabled></td>
+				      					</tr>
+				      					<tr>
+				      						<td>Отпуск тепловой энергии в тепловую сеть</td>
+											<td><input type="text" id="release_heat_energy_network_fact_1" value="@Model.release_heat_energy_network_fact_1" class="data-value" disabled></td>
+				      						<td><input type="text" id="release_heat_energy_network_fact_2" value="@Model.release_heat_energy_network_fact_2" class="data-value" disabled></td>
+				      						<td><input type="text" id="release_heat_energy_network_fact_3" value="@Model.release_heat_energy_network_fact_3" class="data-value" disabled></td>
+				      						<td><input type="text" id="release_heat_energy_network_plan_1" value="@Model.release_heat_energy_network_plan_1" class="data-value" disabled></td>
+				      						<td><input type="text" id="release_heat_energy_network_plan_2" value="@Model.release_heat_energy_network_plan_2" class="data-value" disabled></td>
+											<td><input type="text" id="release_heat_energy_network_plan_3" value="@Model.release_heat_energy_network_plan_3" class="data-value" disabled></td>
+				      					</tr>
+				      					<tr>
+				      						<td>Потери тепловой энергии в тепловых сетях</td>
+				      						<td><input type="text" name="heatenrg_loss_heatnet_fact_1" id="heatenrg_loss_heatnet_fact_1" value="@Model.heatenrg_loss_heatnet_fact_1" class="data-value double"></td>
+				      						<td><input type="text" name="heatenrg_loss_heatnet_fact_2" id="heatenrg_loss_heatnet_fact_2" value="@Model.heatenrg_loss_heatnet_fact_2" class="data-value double"></td>
+				      						<td><input type="text" id="heatenrg_loss_heatnet_fact_3" value="@Model.heatenrg_loss_heatnet_fact_3" class="data-value" disabled></td>
+				      						<td><input type="text" name="heatenrg_loss_heatnet_plan_1" id="heatenrg_loss_heatnet_plan_1" value="@Model.heatenrg_loss_heatnet_plan_1" class="data-value double"></td>
+											<td><input type="text" name="heatenrg_loss_heatnet_plan_2" id="heatenrg_loss_heatnet_plan_2" value="@Model.heatenrg_loss_heatnet_plan_2" class="data-value double"></td>
+				      						<td><input type="text" id="heatenrg_loss_heatnet_plan_3" value="@Model.heatenrg_loss_heatnet_plan_3" class="data-value" disabled></td>
+				      					</tr>
+				      					<tr>
+				      						<td>Полезный отпуск тепловой энергии, всего</td>
+											<td><input type="text" id="useful_release_fact_1" value="@Model.useful_release_fact_1" class="data-value" disabled></td>
+											<td><input type="text" id="useful_release_fact_2" value="@Model.useful_release_fact_2" class="data-value" disabled></td>
+				      						<td><input type="text" id="useful_release_fact_3" value="@Model.useful_release_fact_3" class="data-value" disabled></td>
+				      						<td><input type="text" id="useful_release_plan_1" value="@Model.useful_release_plan_1" class="data-value" disabled></td>
+											<td><input type="text" id="useful_release_plan_2" value="@Model.useful_release_plan_2" class="data-value" disabled></td>
+											<td><input type="text" id="useful_release_plan_3" value="@Model.useful_release_plan_3" class="data-value" disabled></td>
+				      					</tr>
+				      					<tr>
+											<td>а) на нужды предприятия, всего</td>
+											<td><input type="text" id="useful_release_company_needs_fact_1" value="@Model.useful_release_company_needs_fact_1" class="data-value" disabled></td>
+				      						<td><input type="text" id="useful_release_company_needs_fact_2" value="@Model.useful_release_company_needs_fact_2" class="data-value" disabled></td>
+											<td><input type="text" id="useful_release_company_needs_fact_3" value="@Model.useful_release_company_needs_fact_3" class="data-value" disabled></td>
+				      						<td><input type="text" id="useful_release_company_needs_plan_1" value="@Model.useful_release_company_needs_plan_1" class="data-value" disabled></td>
+				      						<td><input type="text" id="useful_release_company_needs_plan_2" value="@Model.useful_release_company_needs_plan_2" class="data-value" disabled></td>
+											<td><input type="text" id="useful_release_company_needs_plan_3" value="@Model.useful_release_company_needs_plan_3" class="data-value" disabled></td>
+				      					</tr>
+				      					<tr>
+				      						<td>- собственное производство</td>
+				      						<td><input type="text" name="useful_release_ownprod_fact_1" id="useful_release_ownprod_fact_1" value="@Model.useful_release_ownprod_fact_1" class="data-value double"></td>
+				      						<td><input type="text" name="useful_release_ownprod_fact_2" id="useful_release_ownprod_fact_2" value="@Model.useful_release_ownprod_fact_2" class="data-value double"></td>
+				      						<td><input type="text" id="useful_release_ownprod_fact_3" value="@Model.useful_release_ownprod_fact_3" class="data-value" disabled></td>
+				      						<td><input type="text" name="useful_release_ownprod_plan_1" id="useful_release_ownprod_plan_1" value="@Model.useful_release_ownprod_plan_1" class="data-value double"></td>
+				      						<td><input type="text" name="useful_release_ownprod_plan_2" id="useful_release_ownprod_plan_2" value="@Model.useful_release_ownprod_plan_2" class="data-value double"></td>
+				      						<td><input type="text" id="useful_release_ownprod_plan_3" value="@Model.useful_release_ownprod_plan_3" class="data-value" disabled></td>
+				      					</tr>
+				      					<tr>
+				      						<td>- хозяйственные нужды</td>
+				      						<td><input type="text" name="useful_release_household_needs_fact_1" id="useful_release_household_needs_fact_1" value="@Model.useful_release_household_needs_fact_1" class="data-value double"></td>
+											<td><input type="text" name="useful_release_household_needs_fact_2" id="useful_release_household_needs_fact_2" value="@Model.useful_release_household_needs_fact_2" class="data-value double"></td>
+				      						<td><input type="text" id="useful_release_household_needs_fact_3" value="@Model.useful_release_household_needs_fact_3" class="data-value" disabled></td>
+				      						<td><input type="text" name="useful_release_household_needs_plan_1" id="useful_release_household_needs_plan_1" value="@Model.useful_release_household_needs_plan_1" class="data-value double"></td>
+											<td><input type="text" name="useful_release_household_needs_plan_2" id="useful_release_household_needs_plan_2" value="@Model.useful_release_household_needs_plan_2" class="data-value double"></td>
+											<td><input type="text" id="useful_release_household_needs_plan_3" value="@Model.useful_release_household_needs_plan_3" class="data-value" disabled></td>
+				      					</tr>
+				      					<tr>
+											<td>б) ТСО – перепродавцам</td>
+				      						<td><input type="text" name="useful_release_tso_salers_fact_1" id="useful_release_tso_salers_fact_1" value="@Model.useful_release_tso_salers_fact_1" class="data-value double"></td>
+				      						<td><input type="text" name="useful_release_tso_salers_fact_2" id="useful_release_tso_salers_fact_2" value="@Model.useful_release_tso_salers_fact_2" class="data-value double"></td>
+											<td><input type="text" id="useful_release_tso_salers_fact_3" value="@Model.useful_release_tso_salers_fact_3" class="data-value" disabled></td>
+				      						<td><input type="text" name="useful_release_tso_salers_plan_1" id="useful_release_tso_salers_plan_1" value="@Model.useful_release_tso_salers_plan_1" class="data-value double"></td>
+				      						<td><input type="text" name="useful_release_tso_salers_plan_2" id="useful_release_tso_salers_plan_2" value="@Model.useful_release_tso_salers_plan_2" class="data-value double"></td>
+											<td><input type="text" id="useful_release_tso_salers_plan_3" value="@Model.useful_release_tso_salers_plan_3" class="data-value" disabled></td>
+				      					</tr>
+				      					<tr>
+											<td>в) потребителям, всего</td>
+											<td><input type="text" id="useful_release_cons_groups_fact_1" value="@Model.useful_release_cons_groups_fact_1" class="data-value" disabled></td>
+				      						<td><input type="text" id="useful_release_cons_groups_fact_2" value="@Model.useful_release_cons_groups_fact_2" class="data-value" disabled></td>
+				      						<td><input type="text" id="useful_release_cons_groups_fact_3" value="@Model.useful_release_cons_groups_fact_3" class="data-value" disabled></td>
+				      						<td><input type="text" id="useful_release_cons_groups_plan_1" value="@Model.useful_release_cons_groups_plan_1" class="data-value" disabled></td>
+				      						<td><input type="text" id="useful_release_cons_groups_plan_2" value="@Model.useful_release_cons_groups_plan_2" class="data-value" disabled></td>
+				      						<td><input type="text" id="useful_release_cons_groups_plan_3" value="@Model.useful_release_cons_groups_plan_3" class="data-value" disabled></td>
+				      					</tr>
+				      					<tr>
+				      						<td>- бюджетным потребителям</td>
+				      						<td><input type="text" name="useful_release_buget_cons_fact_1" id="useful_release_buget_cons_fact_1" value="@Model.useful_release_buget_cons_fact_1" class="data-value double"></td>
+				      						<td><input type="text" name="useful_release_buget_cons_fact_2" id="useful_release_buget_cons_fact_2" value="@Model.useful_release_buget_cons_fact_2" class="data-value double"></td>
+				      						<td><input type="text" id="useful_release_buget_cons_fact_3" value="@Model.useful_release_buget_cons_fact_3" class="data-value" disabled></td>
+				      						<td><input type="text" name="useful_release_buget_cons_plan_1" id="useful_release_buget_cons_plan_1" value="@Model.useful_release_buget_cons_plan_1" class="data-value double"></td>
+				      						<td><input type="text" name="useful_release_buget_cons_plan_2" id="useful_release_buget_cons_plan_2" value="@Model.useful_release_buget_cons_plan_2" class="data-value double"></td>
+											<td><input type="text" id="useful_release_buget_cons_plan_3" value="@Model.useful_release_buget_cons_plan_3" class="data-value" disabled></td>
+				      					</tr>
+				      					<tr>
+				      						<td>- населению</td>
+				      						<td><input type="text" id="useful_release_public_fact_1" name="useful_release_public_fact_1" value="@Model.useful_release_public_fact_1" class="data-value double"></td>
+				      						<td><input type="text" id="useful_release_public_fact_2" name="useful_release_public_fact_2" value="@Model.useful_release_public_fact_2" class="data-value double"></td>
+				      						<td><input type="text" id="useful_release_public_fact_3" value="@Model.useful_release_public_fact_3" class="data-value" disabled></td>
+				      						<td><input type="text" id="useful_release_public_plan_1" name="useful_release_public_plan_1" value="@Model.useful_release_public_plan_1" class="data-value double"></td>
+				      						<td><input type="text" id="useful_release_public_plan_2" name="useful_release_public_plan_2" value="@Model.useful_release_public_plan_2" class="data-value double"></td>
+											<td><input type="text" id="useful_release_public_plan_3" value="@Model.useful_release_public_plan_3" class="data-value" disabled></td>
+				      					</tr>
+				      					<tr>
+				      						<td>- прочим потребителям</td>
+				      						<td><input type="text" id="useful_release_other_cons_fact_1" name="useful_release_other_cons_fact_1" value="@Model.useful_release_other_cons_fact_1" class="data-value double"></td>
+				      						<td><input type="text" id="useful_release_other_cons_fact_2" name="useful_release_other_cons_fact_2" value="@Model.useful_release_other_cons_fact_2" class="data-value double"></td>
+				      						<td><input type="text" id="useful_release_other_cons_fact_3" value="@Model.useful_release_other_cons_fact_3" class="data-value" disabled></td>
+				      						<td><input type="text" id="useful_release_other_cons_plan_1" name="useful_release_other_cons_plan_1" value="@Model.useful_release_other_cons_plan_1" class="data-value double"></td>
+											<td><input type="text" id="useful_release_other_cons_plan_2" name="useful_release_other_cons_plan_2" value="@Model.useful_release_other_cons_plan_2" class="data-value double"></td>
+											<td><input type="text" id="useful_release_other_cons_plan_3" value="@Model.useful_release_other_cons_plan_3" class="data-value" disabled></td>
+				      					</tr>
+				      				</tbody>
+				      			</table>
+							</form>
+			      		</div>
+			      	</div>
+					<div class="col-12 col-xxl-5">
+						<div class="data-block ms-xxl-1">
+			      			<div class="data-block border-block">
+			      				<h4>Виды деятельности</h4>
+			      				<div class="data-row">
+									<div class="data-block stretch">
+										<label class="data-item data-item-right">
+											<span class="data-label">Комбинированное производство, более 25 МВт</span>
+											<input type="checkbox" class="data-check" disabled @Model.combine_prod_more25>
+										</label>
+										<label class="data-item data-item-right">
+											<span class="data-label">Комбинированное производство, менее 25 МВт</span>
+											<input type="checkbox" class="data-check" disabled @Model.combine_prod_less25>
+										</label>
+										<label class="data-item data-item-right">
+											<span class="data-label">Некомбинированное производство</span>
+											<input type="checkbox" class="data-check" disabled @Model.not_combine_prod>
+										</label>
+				      				</div>
+									<div class="data-block stretch">
+										<label class="data-item data-item-right">
+											<span class="data-label">Договор поставки</span>
+											<input type="checkbox" class="data-check" disabled @Model.delivery_contract>
+										</label>
+										<label class="data-item data-item-right">
+											<span class="data-label">Передача</span>
+											<input type="checkbox" class="data-check" disabled @Model.transfer>
+										</label>
+										<label class="data-item data-item-right">
+											<span class="data-label">Сбыт</span>
+											<input type="checkbox" class="data-check" disabled @Model.sale>
+										</label>
+				      				</div>
+			      				</div>
+			      			</div>
+			      			<div class="data-block border-block">
+			      				<h4>Дифференциация тарифов</h4>
+			      				<div class="data-row">
+									<label class="data-item data-item-right">
+										<span class="data-label">без дифференциации</span>
+										@{
+											is_checked = Model.tariff_differentiation == 1 ? "checked" : "";
+										}
+										<input type="checkbox" class="data-check" disabled @is_checked>
+									</label>
+									<label class="data-item data-item-right">
+										<span class="data-label">до тепловых пунктов</span>
+										@{
+											is_checked = Model.tariff_differentiation == 2 ? "checked" : "";
+										}
+										<input type="checkbox" class="data-check" disabled @is_checked>
+									</label>
+									<label class="data-item data-item-right">
+										<span class="data-label">после тепловых пунктов</span>
+										@{
+											is_checked = Model.tariff_differentiation == 3 ? "checked" : "";
+										}
+										<input type="checkbox" class="data-check" disabled @is_checked>
+									</label>
+			      				</div>
+			      			</div>
+			      			<div class="data-block border-block">
+								@await Component.InvokeAsync("TZ_InputEnergyDataList_Partial", new { tz_id = Model.tz_id, data_status = Model.data_status })
+			      			</div>
+			      			<div class="data-block border-block" id="div_output_energy_perspective">
+								@await Component.InvokeAsync("TZ_OutputEnergyDataList_Partial", new { tz_id = Model.tz_id, data_status = Model.data_status })
+			      			</div>
+							<div class="data-block border-block">
+								<h4>Примечание</h4>
+								<div class="data-row">
+									<div class="data-item">
+										<label class="data-label">Факт</label>
+										<textarea class="data-value stretch" name="notes_fact" form="tz_production_form">@Model.notes_fact</textarea>
+									</div>
+									<div class="data-item">
+										<label class="data-label">План</label>
+										<textarea class="data-value stretch" name="notes_plan" form="tz_production_form">@Model.notes_plan</textarea>
+									</div>
+								</div>
+							</div>
+			      		</div>
+			      	</div>
+				</div>
+	    	</div>
+	    </div>
+	    <div class="modal-footer">
+			<button type="button" class="bttn" data-bs-dismiss="modal">Отмена</button>
+			<button type="submit" class="bttn bttn-color" form="tz_production_form" @btn_disable>Сохранить</button>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript" src="@Url.Content("~/hss/js/popup_common_scripts.js")"></script>
+<script type="text/javascript">
+
+	$(document).ready(function () {
+
+		document.querySelector('#paramNumberTZ').addEventListener('change', (event) => {
+			OpenPopupHeatBalance($('#paramNumberTZ').val(), $('#perspective_year_popup').val(), '/TSO/HeatBalance/OpenTZProduction', 'TZProductionDataPopup');
+		});
+
+		document.querySelector('#perspective_year_popup').addEventListener('change', (event) => {
+			OpenPopupHeatBalance($('#paramNumberTZ').val(), $('#perspective_year_popup').val(), '/TSO/HeatBalance/OpenTZProduction', 'TZProductionDataPopup');
+		});
+
+		$("input.double[type=text]").keyup(function (e) {
+			let val_id = e.target.id;
+			let s_name = val_id.substring(0, val_id.length - 1);
+			let s_fp_period = val_id.substring(val_id.length - 6, val_id.length);
+			let s_fp = val_id.substring(val_id.length - 6, val_id.length - 1);
+
+			let val_1 = $('#' + s_name + '1').val();
+			let val_2 = $('#' + s_name + '2').val();
+			let val_3 = Number(val_1.replace(",", ".")) + Number(val_2.replace(",", "."));
+
+			$('#' + s_name + '3').val(val_3.toFixed(2).toString().replace(".", ","));
+
+			if (s_name.includes('release_collect')) {
+				let rco = $('#release_collect_ownprod_' + s_fp_period).val();
+				let rchn = $('#release_collect_household_needs_' + s_fp_period).val();
+				let rcts = $('#release_collect_tso_salers_' + s_fp_period).val();
+				let rcbc = $('#release_collect_buget_cons_' + s_fp_period).val();
+				let rcp = $('#release_collect_public_' + s_fp_period).val();
+				let rcoc = $('#release_collect_other_cons_' + s_fp_period).val();
+				let rcoh = $('#release_collect_ownheatnet_' + s_fp_period).val();
+
+				//на технологические нужды предприятия, всего
+				let rctn = Number(rco.replace(",", ".")) + Number(rchn.replace(",", "."));
+				$('#release_collect_tech_need_' + s_fp_period).val(rctn.toFixed(2).toString().replace(".", ","));
+
+				let rctn_1 = $('#release_collect_tech_need_' + s_fp + '1').val();
+				let rctn_2 = $('#release_collect_tech_need_' + s_fp + '2').val();
+				let rctn_3 = Number(rctn_1.replace(",", ".")) + Number(rctn_2.replace(",", "."));
+				$('#release_collect_tech_need_' + s_fp + '3').val(rctn_3.toFixed(2).toString().replace(".", ","));
+				//на технологические нужды предприятия, всего
+
+				//потребителям, всего
+				let rcc = Number(rcbc.replace(",", ".")) + Number(rcp.replace(",", ".")) + Number(rcoc.replace(",", "."));
+				$('#release_collect_consumers_' + s_fp_period).val(rcc.toFixed(2).toString().replace(".", ","));
+
+				let rcc_1 = $('#release_collect_consumers_' + s_fp + '1').val();
+				let rcc_2 = $('#release_collect_consumers_' + s_fp + '2').val();
+				let rcc_3 = Number(rcc_1.replace(",", ".")) + Number(rcc_2.replace(",", "."));
+				$('#release_collect_consumers_' + s_fp + '3').val(rcc_3.toFixed(2).toString().replace(".", ","));
+				//потребителям, всего
+
+				//Отпуск с коллекторов (нетто), всего
+				let rc = rctn + Number(rcts.replace(",", ".")) + rcc + Number(rcoh.replace(",", "."));
+				$('#release_collect_' + s_fp_period).val(rc.toFixed(2).toString().replace(".", ","));
+
+				let rc_1 = $('#release_collect_' + s_fp + '1').val();
+				let rc_2 = $('#release_collect_' + s_fp + '2').val();
+				let rc_3 = Number(rc_1.replace(",", ".")) + Number(rc_2.replace(",", "."));
+				$('#release_collect_' + s_fp + '3').val(rc_3.toFixed(2).toString().replace(".", ","));
+				//Отпуск с коллекторов (нетто), всего
+			}
+
+			else if (s_name.includes('useful_release') || s_name.includes('heatenrg_loss')) {
+				let hlh = $('#heatenrg_loss_heatnet_' + s_fp_period).val();
+				let uro = $('#useful_release_ownprod_' + s_fp_period).val();
+				let urhn = $('#useful_release_household_needs_' + s_fp_period).val();
+				let urts = $('#useful_release_tso_salers_' + s_fp_period).val();
+				let urbc = $('#useful_release_buget_cons_' + s_fp_period).val();
+				let urp = $('#useful_release_public_' + s_fp_period).val();
+				let uroc = $('#useful_release_other_cons_' + s_fp_period).val();
+
+				//на нужды предприятия, всего
+				let urcn = Number(uro.replace(",", ".")) + Number(urhn.replace(",", "."));
+				$('#useful_release_company_needs_' + s_fp_period).val(urcn.toFixed(2).toString().replace(".", ","));
+
+				let urcn_1 = $('#useful_release_company_needs_' + s_fp + '1').val();
+				let urcn_2 = $('#useful_release_company_needs_' + s_fp + '2').val();
+				let urcn_3 = Number(urcn_1.replace(",", ".")) + Number(urcn_2.replace(",", "."));
+				$('#useful_release_company_needs_' + s_fp + '3').val(urcn_3.toFixed(2).toString().replace(".", ","));
+				//на нужды предприятия, всего
+
+				//потребителям, всего
+				let urcg = Number(urbc.replace(",", ".")) + Number(urp.replace(",", ".")) + Number(uroc.replace(",", "."));
+				$('#useful_release_cons_groups_' + s_fp_period).val(urcg.toFixed(2).toString().replace(".", ","));
+
+				let urcg_1 = $('#useful_release_cons_groups_' + s_fp + '1').val();
+				let urcg_2 = $('#useful_release_cons_groups_' + s_fp + '2').val();
+				let urcg_3 = Number(urcg_1.replace(",", ".")) + Number(urcg_2.replace(",", "."));
+				$('#useful_release_cons_groups_' + s_fp + '3').val(urcg_3.toFixed(2).toString().replace(".", ","));
+				//потребителям, всего
+
+				//Полезный отпуск тепловой энергии, всего
+				let ur = urcn + Number(urts.replace(",", ".")) + urcg;
+				$('#useful_release_' + s_fp_period).val(ur.toFixed(2).toString().replace(".", ","));
+
+				let ur_1 = $('#useful_release_' + s_fp + '1').val();
+				let ur_2 = $('#useful_release_' + s_fp + '2').val();
+				let ur_3 = Number(ur_1.replace(",", ".")) + Number(ur_2.replace(",", "."));
+				$('#useful_release_' + s_fp + '3').val(ur_3.toFixed(2).toString().replace(".", ","));
+				//Полезный отпуск тепловой энергии, всего
+
+				//Отпуск тепловой энергии в тепловую сеть
+				let rhen = ur + Number(hlh.replace(",", "."));
+				$('#release_heat_energy_network_' + s_fp_period).val(rhen.toFixed(2).toString().replace(".", ","));
+
+				let rhen_1 = $('#release_heat_energy_network_' + s_fp + '1').val();
+				let rhen_2 = $('#release_heat_energy_network_' + s_fp + '2').val();
+				let rhen_3 = Number(rhen_1.replace(",", ".")) + Number(rhen_2.replace(",", "."));
+				$('#release_heat_energy_network_' + s_fp + '3').val(rhen_3.toFixed(2).toString().replace(".", ","));
+				//Отпуск тепловой энергии в тепловую сеть
+			}
+		});
+
+	});
+
+	var onBeginFormTZ = function (xhr) {
+		showPreloader();
+	};
+
+	var onFailedFormTZ = function (xhr) {
+		hidePreloader();
+	};
+
+	var onSuccessFormTZ = function (xhr) {
+		if (xhr.success == true) {
+			$("#refresh_tz_production_table").val(1);
+		}
+		hidePreloader();
+	};
+
+	function RefreshTable() {
+		if ($("#refresh_tz_production_table").val() === "1") {
+			GetListOnPage();
+		}
+	}
+
+	function GetDataOnTabPopup() {
+		showPreloader();
+
+		$.ajax({
+			type: 'GET',
+			url: '/TSO/HeatBalance/OnGetCallTZ_OutputEnergyDataList_PartialViewComponent',
+			data: {
+				tz_id: @Model.tz_id,
+				data_status: @Model.data_status
+			},
+			dataType: 'html'
+		})
+			.done(function (result) {
+				var div = $('#div_output_energy_perspective');
+				div.html("");
+				div.html(result);
+				hidePreloader();
+			});
+	}
+
+
+</script>

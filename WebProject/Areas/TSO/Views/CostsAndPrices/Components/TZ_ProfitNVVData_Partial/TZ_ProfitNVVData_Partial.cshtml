@@ -1,0 +1,138 @@
+﻿@model WebProject.Areas.TSO.Models.TZProfitNVVViewModel
+@{
+	Layout = null; string disable = "";
+}
+@if (Model.tz_id == 0)
+{
+	disable = "disabled";
+}
+<form asp-controller="CostsAndPrices" asp-action="TZProfitNVV_Save" asp-antiforgery="true" asp-area="TSO" 
+	  data-ajax-failure="onFailedFormTZ" data-ajax-success="onSuccessFormTZ" data-ajax-begin="onBeginFormTZ" data-ajax="true" data-ajax-method="POST">
+	<input type="hidden" name="tz_id" value="@Model.tz_id" />
+	<input type="hidden" name="data_status" value="@Model.data_status" />
+	<input type="hidden" name="perspective_year" value="@Model.perspective_year" />
+	<table class="table-inp-stretch" style="width:100%;">
+		<thead>
+			<tr>
+				<th></th>
+				<th>I полугодие</th>
+				<th>II полугодие</th>
+				<th>Год</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>Норма доходности, <span class="data-unit">%</span></td>
+				<td><input type="text" asp-for="@Model.return_rate_plan_1" class="data-value double" data-double="profit_nvv"></td>
+				<td><input type="text" asp-for="@Model.return_rate_plan_2" class="data-value double" data-double="profit_nvv"></td>
+				<td><input type="text" asp-for="@Model.return_rate_plan_3" class="data-value double" data-double="profit_nvv"></td>
+			</tr>
+			<tr>
+				<td>Нормативный уровень прибыли, <span class="data-unit">%</span></td>
+				<td><input type="text" asp-for="@Model.regular_lvl_profit_percent_plan_1" class="data-value double" data-double="profit_nvv"></td>
+				<td><input type="text" asp-for="@Model.regular_lvl_profit_percent_plan_2" class="data-value double" data-double="profit_nvv"></td>
+				<td><input type="text" asp-for="@Model.regular_lvl_profit_percent_plan_3" class="data-value double" data-double="profit_nvv"></td>
+			</tr>
+			<tr>
+				<td>Нормативный уровень прибыли, <span class="data-unit">тыс. руб.</span></td>
+				<td><input type="text" asp-for="@Model.regular_lvl_profit_plan_1" class="data-value double" data-double="profit_nvv"></td>
+				<td><input type="text" asp-for="@Model.regular_lvl_profit_plan_2" class="data-value double" data-double="profit_nvv"></td>
+				<td><input type="text" asp-for="@Model.regular_lvl_profit_plan_3" class="data-value" disabled></td>
+			</tr>
+		</tbody>
+	</table>
+	<div class="scroll-table-wrapper">
+		<table class="table-inp-stretch" style="width:100%;">
+			<thead>
+				<tr>
+					<th rowspan="2"></th>
+					<th colspan="3">Факт</th>
+					<th colspan="3">План</th>
+				</tr>
+				<tr>
+					<th style="position: static;">I полугодие</th>
+					<th>II полугодие</th>
+					<th>Год</th>
+					<th>I полугодие</th>
+					<th>II полугодие</th>
+					<th>Год</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>Прибыль всего, <span class="data-unit">тыс. руб.</span></td>
+					<td><input type="text" asp-for="@Model.profit_all_fact_1" class="data-value" disabled></td>
+					<td><input type="text" asp-for="@Model.profit_all_fact_2" class="data-value" disabled></td>
+					<td><input type="text" asp-for="@Model.profit_all_fact_3" class="data-value" disabled></td>
+					<td><input type="text" asp-for="@Model.profit_all_plan_1" class="data-value" disabled></td>
+					<td><input type="text" asp-for="@Model.profit_all_plan_2" class="data-value" disabled></td>
+					<td><input type="text" asp-for="@Model.profit_all_plan_3" class="data-value" disabled></td>
+				</tr>
+				<tr>
+					<td>- на развитие производства (капитальные вложения)</td>
+					<td><input type="text" asp-for="@Model.profit_prod_develop_fact_1" class="data-value double" data-double="profit_nvv"></td>
+					<td><input type="text" asp-for="@Model.profit_prod_develop_fact_2" class="data-value double" data-double="profit_nvv"></td>
+					<td><input type="text" asp-for="@Model.profit_prod_develop_fact_3" class="data-value" disabled></td>
+					<td colspan="3"></td>
+				</tr>
+				<tr>
+					<td>- на социальное развитие</td>
+					<td><input type="text" asp-for="@Model.profit_social_develop_fact_1" class="data-value double" data-double="profit_nvv"></td>
+					<td><input type="text" asp-for="@Model.profit_social_develop_fact_2" class="data-value double" data-double="profit_nvv"></td>
+					<td><input type="text" asp-for="@Model.profit_social_develop_fact_3" class="data-value" disabled></td>
+					<td colspan="3"></td>
+				</tr>
+				<tr>
+					<td>- на поощрение</td>
+					<td><input type="text" asp-for="@Model.profit_stimul_fact_1" class="data-value double" data-double="profit_nvv"></td>
+					<td><input type="text" asp-for="@Model.profit_stimul_fact_2" class="data-value double" data-double="profit_nvv"></td>
+					<td><input type="text" asp-for="@Model.profit_stimul_fact_3" class="data-value" disabled></td>
+					<td colspan="3"></td>
+				</tr>
+				<tr>
+					<td>- на прочие цели</td>
+					<td><input type="text" asp-for="@Model.profit_other_needs_fact_1" class="data-value double" data-double="profit_nvv"></td>
+					<td><input type="text" asp-for="@Model.profit_other_needs_fact_2" class="data-value double" data-double="profit_nvv"></td>
+					<td><input type="text" asp-for="@Model.profit_other_needs_fact_3" class="data-value" disabled></td>
+					<td colspan="3"></td>
+				</tr>
+				<tr>
+					<td>Расчётная предпринимательская прибыль, <span class="data-unit">тыс. руб.</span></td>
+					<td colspan="3"></td>
+					<td><input type="text" asp-for="@Model.calc_enterprising_profit_plan_1" class="data-value double" data-double="profit_nvv"></td>
+					<td><input type="text" asp-for="@Model.calc_enterprising_profit_plan_2" class="data-value double" data-double="profit_nvv"></td>
+					<td><input type="text" asp-for="@Model.calc_enterprising_profit_plan_3" class="data-value" disabled></td>
+				</tr>
+				<tr>
+					<td>Нормативная прибыль/капитальные вложения/инвестиции, <span class="data-unit">тыс. руб.</span></td>
+					<td colspan="3"></td>
+					<td><input type="text" asp-for="@Model.regulatory_profit_plan_1" class="data-value" disabled></td>
+					<td><input type="text" asp-for="@Model.regulatory_profit_plan_2" class="data-value" disabled></td>
+					<td><input type="text" asp-for="@Model.regulatory_profit_plan_3" class="data-value" disabled></td>
+				</tr>
+				<tr>
+					<td>Средства на возврат займов и кредитов, <span class="data-unit">тыс. руб.</span></td>
+					<td colspan="3"></td>
+					<td><input type="text" asp-for="@Model.funds_repayment_credit_plan_1" class="data-value double" data-double="profit_nvv"></td>
+					<td><input type="text" asp-for="@Model.funds_repayment_credit_plan_2" class="data-value double" data-double="profit_nvv"></td>
+					<td><input type="text" asp-for="@Model.funds_repayment_credit_plan_3" class="data-value" disabled></td>
+				</tr>
+				<tr>
+					<td>Расходы на капитальные вложения (инвестиции), <span class="data-unit">тыс. руб.</span></td>
+					<td colspan="3"></td>
+					<td><input type="text" asp-for="@Model.cost_capital_invest_plan_1" class="data-value double" data-double="profit_nvv"></td>
+					<td><input type="text" asp-for="@Model.cost_capital_invest_plan_2" class="data-value double" data-double="profit_nvv"></td>
+					<td><input type="text" asp-for="@Model.cost_capital_invest_plan_3" class="data-value" disabled></td>
+				</tr>
+				<tr>
+					<td>Экономически обоснованные расходы на выплаты, предусмотренные<br>коллективными договорами, <span class="data-unit">тыс. руб.</span></td>
+					<td colspan="3"></td>
+					<td><input type="text" asp-for="@Model.cost_economic_pay_plan_1" class="data-value double" data-double="profit_nvv"></td>
+					<td><input type="text" asp-for="@Model.cost_economic_pay_plan_2" class="data-value double" data-double="profit_nvv"></td>
+					<td><input type="text" asp-for="@Model.cost_economic_pay_plan_3" class="data-value" disabled></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<button type="submit" class="bttn bttn-color ms-auto" @disable>Сохранить</button>
+</form>

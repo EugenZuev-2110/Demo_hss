@@ -1,0 +1,113 @@
+﻿@model WebProject.Areas.TSO.Models.TZEconomyCostsViewModel
+@{
+	Layout = null; string disable = "";
+}
+@if (Model.tz_id == 0)
+{
+	disable = "disabled";
+}
+<form asp-controller="CostsAndPrices" asp-action="TZEconomyCosts_Save" asp-antiforgery="true" asp-area="TSO"
+	  data-ajax-failure="onFailedFormTZ" data-ajax-success="onSuccessFormTZ" data-ajax-begin="onBeginFormTZ" data-ajax="true" data-ajax-method="POST">
+	<input type="hidden" name="tz_id" value="@Model.tz_id" />
+	<input type="hidden" name="data_status" value="@Model.data_status" />
+	<input type="hidden" name="perspective_year" value="@Model.perspective_year" />
+	<table class="table-inp-stretch" style="width:100%;">
+		<thead>
+			<tr>
+				<th rowspan="2"></th>
+				<th colspan="3">План (всего)</th>
+				<th colspan="3">План (прирост)</th>
+			</tr>
+			<tr>
+				<th>I полугодие</th>
+				<th>II полугодие</th>
+				<th>Год</th>
+				<th>I полугодие</th>
+				<th>II полугодие</th>
+				<th>Год</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>Экономия операционных расходов, <span class="data-unit">тыс. руб.</span></td>
+				<td><input type="text" asp-for="@Model.economy_operation_cost_plan_1" class="data-value double" data-double="economy_costs_nvv"></td>
+				<td><input type="text" asp-for="@Model.economy_operation_cost_plan_2" class="data-value double" data-double="economy_costs_nvv"></td>
+				<td><input type="text" asp-for="@Model.economy_operation_cost_plan_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.increase_economy_operation_cost_plan_1" class="data-value double" data-double="economy_costs_nvv"></td>
+				<td><input type="text" asp-for="@Model.increase_economy_operation_cost_plan_2" class="data-value double" data-double="economy_costs_nvv"></td>
+				<td><input type="text" asp-for="@Model.increase_economy_operation_cost_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>Экономия неподконтрольных расходов, <span class="data-unit">тыс. руб.</span></td>
+				<td><input type="text" asp-for="@Model.total_economy_noncontrol_cost_plan_1" class="data-value double" data-double="economy_costs_nvv"></td>
+				<td><input type="text" asp-for="@Model.total_economy_noncontrol_cost_plan_2" class="data-value double" data-double="economy_costs_nvv"></td>
+				<td><input type="text" asp-for="@Model.total_economy_noncontrol_cost_plan_3" class="data-value" disabled></td>
+				<td colspan="3"></td>
+			</tr>
+			<tr>
+				<td>Экономия от снижения потребления тепловой энергии, <span class="data-unit">тыс. руб.</span></td>
+				<td><input type="text" asp-for="@Model.economy_consump_heatenergy_plan_1" class="data-value double" data-double="economy_costs_nvv"></td>
+				<td><input type="text" asp-for="@Model.economy_consump_heatenergy_plan_2" class="data-value double" data-double="economy_costs_nvv"></td>
+				<td><input type="text" asp-for="@Model.economy_consump_heatenergy_plan_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.increase_economy_consump_heatenergy_plan_1" class="data-value double" data-double="economy_costs_nvv"></td>
+				<td><input type="text" asp-for="@Model.increase_economy_consump_heatenergy_plan_2" class="data-value double" data-double="economy_costs_nvv"></td>
+				<td><input type="text" asp-for="@Model.increase_economy_consump_heatenergy_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>Экономия от снижения потребления электрической энергии, <span class="data-unit">тыс. руб.</span></td>
+				<td><input type="text" asp-for="@Model.economy_consump_electroenergy_plan_1" class="data-value double" data-double="economy_costs_nvv"></td>
+				<td><input type="text" asp-for="@Model.economy_consump_electroenergy_plan_2" class="data-value double" data-double="economy_costs_nvv"></td>
+				<td><input type="text" asp-for="@Model.economy_consump_electroenergy_plan_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.increase_economy_consump_electroenergy_plan_1" class="data-value double" data-double="economy_costs_nvv"></td>
+				<td><input type="text" asp-for="@Model.increase_economy_consump_electroenergy_plan_2" class="data-value double" data-double="economy_costs_nvv"></td>
+				<td><input type="text" asp-for="@Model.increase_economy_consump_electroenergy_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>Экономия от снижения потребления топлива, <span class="data-unit">тыс. руб.</span></td>
+				<td><input type="text" asp-for="@Model.economy_consump_fuel_plan_1" class="data-value double" data-double="economy_costs_nvv"></td>
+				<td><input type="text" asp-for="@Model.economy_consump_fuel_plan_2" class="data-value double" data-double="economy_costs_nvv"></td>
+				<td><input type="text" asp-for="@Model.economy_consump_fuel_plan_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.increase_economy_consump_fuel_plan_1" class="data-value double" data-double="economy_costs_nvv"></td>
+				<td><input type="text" asp-for="@Model.increase_economy_consump_fuel_plan_2" class="data-value double" data-double="economy_costs_nvv"></td>
+				<td><input type="text" asp-for="@Model.increase_economy_consump_fuel_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>Экономия от снижения потребления холодного водоснабжения, <span class="data-unit">тыс. руб.</span></td>
+				<td><input type="text" asp-for="@Model.economy_consump_coldwater_plan_1" class="data-value double" data-double="economy_costs_nvv"></td>
+				<td><input type="text" asp-for="@Model.economy_consump_coldwater_plan_2" class="data-value double" data-double="economy_costs_nvv"></td>
+				<td><input type="text" asp-for="@Model.economy_consump_coldwater_plan_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.increase_economy_consump_coldwater_plan_1" class="data-value double" data-double="economy_costs_nvv"></td>
+				<td><input type="text" asp-for="@Model.increase_economy_consump_coldwater_plan_2" class="data-value double" data-double="economy_costs_nvv"></td>
+				<td><input type="text" asp-for="@Model.increase_economy_consump_coldwater_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>Экономия от снижения водоотведения, <span class="data-unit">тыс. руб.</span></td>
+				<td><input type="text" asp-for="@Model.economy_consump_waterdisp_plan_1" class="data-value double" data-double="economy_costs_nvv"></td>
+				<td><input type="text" asp-for="@Model.economy_consump_waterdisp_plan_2" class="data-value double" data-double="economy_costs_nvv"></td>
+				<td><input type="text" asp-for="@Model.economy_consump_waterdisp_plan_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.increase_economy_consump_waterdisp_plan_1" class="data-value double" data-double="economy_costs_nvv"></td>
+				<td><input type="text" asp-for="@Model.increase_economy_consump_waterdisp_plan_2" class="data-value double" data-double="economy_costs_nvv"></td>
+				<td><input type="text" asp-for="@Model.increase_economy_consump_waterdisp_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>Экономия от снижения потребления отопления, <span class="data-unit">тыс. руб.</span></td>
+				<td><input type="text" asp-for="@Model.economy_consump_heat_plan_1" class="data-value double" data-double="economy_costs_nvv"></td>
+				<td><input type="text" asp-for="@Model.economy_consump_heat_plan_2" class="data-value double" data-double="economy_costs_nvv"></td>
+				<td><input type="text" asp-for="@Model.economy_consump_heat_plan_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.increase_economy_consump_heat_plan_1" class="data-value double" data-double="economy_costs_nvv"></td>
+				<td><input type="text" asp-for="@Model.increase_economy_consump_heat_plan_2" class="data-value double" data-double="economy_costs_nvv"></td>
+				<td><input type="text" asp-for="@Model.increase_economy_consump_heat_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>Экономия от снижения потребления горячего водоснабжения, <span class="data-unit">тыс. руб.</span></td>
+				<td><input type="text" asp-for="@Model.economy_consump_hotwater_plan_1" class="data-value double" data-double="economy_costs_nvv"></td>
+				<td><input type="text" asp-for="@Model.economy_consump_hotwater_plan_2" class="data-value double" data-double="economy_costs_nvv"></td>
+				<td><input type="text" asp-for="@Model.economy_consump_hotwater_plan_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.increase_economy_consump_hotwater_plan_1" class="data-value double" data-double="economy_costs_nvv"></td>
+				<td><input type="text" asp-for="@Model.increase_economy_consump_hotwater_plan_2" class="data-value double" data-double="economy_costs_nvv"></td>
+				<td><input type="text" asp-for="@Model.increase_economy_consump_hotwater_plan_3" class="data-value" disabled></td>
+			</tr>
+		</tbody>
+	</table>
+	<button type="submit" class="bttn bttn-color ms-auto" @disable>Сохранить</button>
+</form>

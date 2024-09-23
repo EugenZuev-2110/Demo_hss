@@ -1,0 +1,194 @@
+﻿<div class="data-block workspace">
+	<div class="data-block title-block">
+		<div class="data-row">
+			<ul class="breadcrumb">
+				<li class="breadcrumb-item"><a class="ref-color" href="#">Главная</a></li>
+				<li class="breadcrumb-item">Теплоснабжающие организации - Тарифы и плата за подключение</li>
+			</ul>
+		</div>
+		<h1 class="title">Тарифы и плата за подключение</h1>
+	</div>
+	<div class="data-block main-content">
+		<div class="data-row table-params">
+			<div class="data-item">
+				<partial name="_PerspectiveYearsList" />
+			</div>
+			<div class="data-item">
+				<div class="note">Базовый год - <span class="note-base-year" id="base_year_info"></span>;</div>
+			</div>
+			<div class="data-item">
+				<button class="bttn bttn-color bttn-edit-data" type="button">Добавить</button>
+				<a class="bttn bttn-color bttn-load-data disabled" type="button" href="#!">Загрузить данные</a>
+				<button class="bttn bttn-color bttn-excel-export" type="button" id="excelFull">Выгрузить в Excel</button>
+			</div>
+		</div>
+		<input type="hidden" id="cur_action_name" value="OnGetCallTZ_TariffHotWaterList_PartialViewComponent" />
+		<input type="hidden" id="cur_table_name" value="tzTariffTable" />
+		<ul class="nav nav-tabs" role="tablist">
+			<li class="nav-item" role="presentation">
+				<button onclick="TabChange(event);" data-tab-action="OnGetCallTZ_TariffHotWaterList_PartialViewComponent" data-tab-tableid="tzTariffTable" class="nav-link active" data-bs-toggle="tab" data-bs-target="#tzTariffTableTab" type="button" role="tab" aria-controls="ratesTab" aria-selected="true">Тарифы - горячая вода</button>
+			</li>
+			<li class="nav-item" role="presentation">
+				<button onclick="TabChange(event);" data-tab-action="OnGetCallTZ_TariffSteamList_PartialViewComponent" data-tab-tableid="tzTariffSteamTable" class="nav-link" data-bs-toggle="tab" data-bs-target="#tzTariffTableTab" type="button" role="tab" aria-controls="ratesSteamTab" aria-selected="false">Тарифы - пар</button>
+			</li>
+			<li class="nav-item" role="presentation">
+				<button onclick="TabChange(event);" data-tab-action="OnGetCallTZ_IndividualFeeList_PartialViewComponent" data-tab-tableid="tzIndividualFeeTable" class="nav-link" data-bs-toggle="tab" data-bs-target="#tzTariffTableTab" type="button" role="tab" aria-controls="individualFeeTab" aria-selected="false">Индивидуальная <br class="d-lg-none">плата ТП</button>
+			</li>
+			<li class="nav-item" role="presentation">
+				<button onclick="TabChange(event);" data-tab-action="OnGetCallTZ_HPStandardizedRatesList_PartialViewComponent" data-tab-tableid="tzHPStandardizedRatesTable" class="nav-link" data-bs-toggle="tab" data-bs-target="#tzTariffTableTab" type="button" role="tab" aria-controls="productCostsTab" aria-selected="false">Стандартизированные <br class="d-lg-none">ставки ТП</button>
+			</li>
+			<li class="nav-item" role="presentation">
+				<button onclick="TabChange(event);" data-tab-action="OnGetCallTZ_PowerReservePaymentList_PartialViewComponent" data-tab-tableid="tzPowerReservePaymentTable" class="nav-link" data-bs-toggle="tab" data-bs-target="#tzTariffTableTab" type="button" role="tab" aria-controls="nvvTab" aria-selected="false">Плата <br class="d-lg-none">за резерв</button>
+			</li>
+		</ul>
+		<div class="tab-content">
+			<div class="tab-pane fade show active" id="tzTariffTableTab" role="tabpanel" style="display: none;">
+				<div class="data-block" id="tzTariffConnectionDiv">
+					@await Component.InvokeAsync("TZ_TariffHotWaterDataList_Partial")
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+@section pageJs {
+	<script type="text/javascript">
+
+		$(document).ready(function () {
+
+			setTimeout(function () {
+				$('#tz_tariff_connection').addClass('active');
+			}, 500);
+
+			TableInit('tzTariffTable', 'full');
+		});
+
+		function GetListOnPage() {
+			showPreloader();
+			let action_name = $('#cur_action_name').val();
+			let table_name = $('#cur_table_name').val();
+			
+			$.ajax({
+				type: 'GET',
+				url: '/TSO/TariffConnection/' + action_name,
+				data: {
+					data_status: $('#data_status').val(),
+					perspective_year: $('#perspective_year').val()
+				},
+				dataType: 'html'
+			})
+				.done(function (result) {
+					var div = $('#tzTariffConnectionDiv');
+					div.html("");
+					div.html(result);
+					TableInit(table_name, 'full');
+					hidePreloader();
+				});
+		}
+
+		function OpenPopupTariffConnection(tz_id, p_year, url, popup_name) {
+			showPreloader();
+			$.ajax({
+				type: 'POST',
+				url: url,
+				data: {
+					id: tz_id,
+					data_status: $('#data_status').val(),
+					perspective_year: p_year
+				},
+				dataType: 'html'
+			})
+				.done(function (result) {
+					var div = $('#' + popup_name);
+					div.html("");
+					div.html(result);
+					$('.selectpicker').selectpicker();
+
+					if ($('#' + popup_name).is(':hidden')) {
+						showModal(popup_name);
+					}
+					hidePreloader();
+				});
+		}
+
+		function OpenPopupIndividualFee(consumer_id = 0, decision_num = "", url = "", popup_name = "", isModified = 0) {
+			showPreloader();
+			$.ajax({
+				type: 'POST',
+				url: url,
+				data: {
+					consumer_id: consumer_id,
+					decision_num: decision_num,
+					isModified: isModified,
+					data_status: $('#data_status').val()
+				},
+				dataType: 'html'
+			})
+				.done(function (result) {
+					var div = $('#' + popup_name);
+					div.html("");
+					div.html(result);
+					$('.selectpicker').selectpicker();
+
+					if ($('#' + popup_name).is(':hidden')) {
+						showModal(popup_name);
+					}
+					hidePreloader();
+				});
+		}
+
+		
+		function OpenPopupStandardizedRates(tso_id = 0, decision_num = "", url = "", popup_name = "", isModified = 0) {
+			showPreloader();
+			$.ajax({
+				type: 'POST',
+				url: url,
+				data: {
+					tso_id: tso_id,
+					data_status: $('#data_status').val(),
+					isModified: isModified,
+					decision_num: decision_num
+				},
+				dataType: 'html'
+			})
+				.done(function (result) {
+					var div = $('#' + popup_name);
+					div.html("");
+					div.html(result);
+					$('.selectpicker').selectpicker();
+
+					if ($('#' + popup_name).is(':hidden')) {
+						showModal(popup_name);
+					}
+					hidePreloader();
+				});
+		}
+
+		function OpenPopupPowerReservePayment(tso_id = 0, decision_num = "", url = "", popup_name = "", isModified = 0) {
+			showPreloader();
+			$.ajax({
+				type: 'POST',
+				url: url,
+				data: {
+					tso_id: tso_id,
+					data_status: $('#data_status').val(),
+					isModified: isModified,
+					decision_num: decision_num
+				},
+				dataType: 'html'
+			})
+				.done(function (result) {
+					var div = $('#' + popup_name);
+					div.html("");
+					div.html(result);
+					$('.selectpicker').selectpicker();
+
+					if ($('#' + popup_name).is(':hidden')) {
+						showModal(popup_name);
+					}
+
+					hidePreloader();
+				});
+		}
+	</script>
+}

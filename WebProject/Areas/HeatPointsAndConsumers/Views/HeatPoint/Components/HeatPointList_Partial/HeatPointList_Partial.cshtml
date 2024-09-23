@@ -1,0 +1,356 @@
+﻿@model List<WebProject.Areas.HeatPointsAndConsumers.Models.HP_MainListUnit>
+@{
+	Layout = null;
+	int cnt_columns = 114;
+}
+
+<h3>Перечень тепловых пунктов</h3>
+<div class="table-block">
+	<div class="table-buttons HplistTable-buttons"></div>
+	<input type="hidden" value="0" id="refresh_table" />
+	<table id="HplistTable" class="display compact table-clicked" style="width:100%">
+		<thead>
+			<tr>
+				<th colspan="5" rowspan="3">Источник тепловой энергии</th>
+				<th colspan="12" rowspan="3">Тепловой пункт</th>
+				<th colspan="5" rowspan="3">Температурный график</th>
+				<th colspan="5" rowspan="3">Зона деятельности ЕТО / тарифная зона (ТЗ) / теплоснабжающая организация (ТСО)</th>
+				<th colspan="3" rowspan="3">Организация собственник</th>
+				<th colspan="9" rowspan="3">Условные номера</th>
+				<th rowspan="4">Объект относится к бесхозяйному имуществу</th>
+				<th rowspan="4">Объект относится к ветхому имуществу</th>
+				<th rowspan="4">Установленная тепловая мощность теплового пункта, Гкал/ч</th>
+				<th colspan="11" rowspan="2">Тепловая нагрузка по договорам теплоснабжения</th>
+				<th colspan="11" rowspan="2">Расчетная тепловая нагрузка</th>
+				<th colspan="11" rowspan="2">Зарасчетная тепловая нагрузка</th>
+				<th colspan="25">Теплопотребление</th>
+				<th rowspan="4">Фактический расход исходной воды на нужды ГВС, куб. м/год</th>
+				<th colspan="10" rowspan="2">Расход теплоносителя</th>
+				<th rowspan="4">УНОМ СЛ</th>
+				<th rowspan="4">SYS объекта в расчетном слое</th>
+				<th rowspan="4">УНОМ СЕТЬ теплового ввода</th>
+			</tr>
+			<tr>
+				<th colspan="3" rowspan="2">фактическое суммарное</th>
+				<th colspan="11">Расчетное</th>
+				<th colspan="11">Запроектное</th>
+			</tr>
+			<tr>
+				<th colspan="5">в горячей воде</th>
+				<th colspan="6">в паре</th>
+				<th colspan="5">в горячей воде</th>
+				<th colspan="6">в паре</th>
+				<th colspan="5">в горячей воде</th>
+				<th colspan="6">в паре</th>
+				<th colspan="5">в горячей воде</th>
+				<th colspan="6">в паре</th>
+				<th colspan="5">в горячей воде</th>
+				<th colspan="6">в паре</th>
+				<th colspan="5">в горячей воде</th>
+				<th colspan="5">в паре</th>
+			</tr>
+			<tr>
+				<th>УНОМ ИСТ</th>
+				<th>Наименование</th>
+				<th>Статус источника</th>
+				<th>УНОМ Вывода</th>
+				<th>Наименование вывода</th>
+
+				<th>УНОМ ТП</th>
+				<th>Номер теплового пункта</th>
+				<th>Административный округ</th>
+				<th>Район</th>
+				<th>Адрес месторасположения теплового пункта</th>
+				<th>Тип теплового пункта</th>
+				<th>Номер типовой схемы теплового пункта</th>
+				<th>Тип размещения теплового пункта</th>
+				<th>Статус теплового пункта</th>
+				<th>Год ввода в эксплуатацию</th>
+				<th>Год проведения последней реконструкции</th>
+				<th>Год ликвидации теплового пункта</th>
+
+				<th>Проектный на тепловом вводе Т1/Т2, гр.С</th>
+				<th>Проектный в системе отопления Т3/Т4, гр.С</th>
+				<th>Проектный в системе вентиляции Т3v/Т4v, гр.С</th>
+				<th>Проектный в системе ГВС Т5/Т6, гр.С</th>
+				<th>Проектный в системе технологии Тt1/Тt2, гр.С</th>
+
+				<th>КОД ЕТО</th>
+				<th>Наименование ЕТО</th>
+				<th>УНОМ ТЗ</th>
+				<th>КОД ТСО</th>
+				<th>Наименование ТСО</th>
+
+				<th>Организация собственник</th>
+				<th>ИНН организации собственника</th>
+				<th>Право владения объектом</th>
+
+				<th>Кадастровый номер земельного участка (КН ЗУ)</th>
+				<th>Кадастровый номер объекта капитального строительства (КН ОКС)</th>
+				<th>ФИАС строения/здания теплового пункта</th>
+				<th>ФИАС земельного участка</th>
+				<th>MUID</th>
+				<th>LOTUS ID</th>
+				<th>KASU_COMPOSITE_ID</th>
+				<th>KASU_ID</th>
+				<th>KASU_MAP_ID</th>
+
+				<th>Технология, Гкал/ч</th>
+				<th>Отопление, Гкал/ч</th>
+				<th>Вентиляция, Гкал/ч</th>
+				<th>ГВСср.ч., Гкал/ч</th>
+				<th>ВСЕГО, Гкал/ч</th>
+
+				<th>Технология, т/ч</th>
+				<th>Отопление, т/ч</th>
+				<th>Вентиляция, т/ч</th>
+				<th>ГВСср.ч., т/ч</th>
+				<th>ВСЕГО, т/ч</th>
+				<th>ВСЕГО, Гкал/ч</th>
+
+				<th>Технология, Гкал/ч</th>
+				<th>Отопление, Гкал/ч</th>
+				<th>Вентиляция, Гкал/ч</th>
+				<th>ГВСср.ч., Гкал/ч</th>
+				<th>Суммарная  нагрузка, Гкал/ч</th>
+
+				<th>Технология, т/ч</th>
+				<th>Отопление, т/ч</th>
+				<th>Вентиляция, т/ч</th>
+				<th>ГВСср.ч., т/ч</th>
+				<th>Суммарная  нагрузка, т/ч</th>
+				<th>Суммарная  нагрузка, Гкал/ч</th>
+
+				<th>Технология, Гкал/ч</th>
+				<th>Отопление, Гкал/ч</th>
+				<th>Вентиляция, Гкал/ч</th>
+				<th>ГВСср.ч., Гкал/ч</th>
+				<th>Суммарная  нагрузка, Гкал/ч</th>
+
+				<th>Технология, т/ч</th>
+				<th>Отопление, т/ч</th>
+				<th>Вентиляция, т/ч</th>
+				<th>ГВСср.ч., т/ч</th>
+				<th>Суммарная  нагрузка, т/ч</th>
+				<th>Суммарная  нагрузка, Гкал/ч</th>
+
+				<th>В горячей воде, Гкал/год</th>
+				<th>В паре, т/год</th>
+				<th>В паре, Гкал/год</th>
+
+				<th>Технология, Гкал/год</th>
+				<th>Отопление, Гкал/год</th>
+				<th>Вентиляция, Гкал/год</th>
+				<th>ГВС, Гкал/год</th>
+				<th>Суммарное теплопотребление, Гкал/год</th>
+
+				<th>Технология, т/год</th>
+				<th>Отопление, т/год</th>
+				<th>Вентиляция, т/год</th>
+				<th>ГВС, т/год</th>
+				<th>Суммарное теплопотребление, т/год</th>
+				<th>Суммарное теплопотребление, Гкал/год</th>
+
+				<th>Технология, Гкал/год</th>
+				<th>Отопление, Гкал/год</th>
+				<th>Вентиляция, Гкал/год</th>
+				<th>ГВС, Гкал/год</th>
+				<th>Суммарное теплопотребление, Гкал/год</th>
+
+				<th>Технология, т/год</th>
+				<th>Отопление, т/год</th>
+				<th>Вентиляция, т/год</th>
+				<th>ГВС, т/год</th>
+				<th>Суммарное теплопотребление, т/год</th>
+				<th>Суммарное теплопотребление, Гкал/год</th>
+
+				<th>Технология, т/ч</th>
+				<th>Отопление, т/ч</th>
+				<th>Вентиляция, т/ч</th>
+				<th>ГВС, т/ч</th>
+				<th>Суммарный расход, т/ч</th>
+
+				<th>Технология, т/ч</th>
+				<th>Отопление, т/ч</th>
+				<th>Вентиляция, т/ч</th>
+				<th>ГВС, т/ч</th>
+				<th>Суммарный расход, т/ч</th>
+			</tr>
+			<tr class="filter-row ">
+				@for (int i = 0; i < @cnt_columns; i++)
+				{
+					if (i == 0)
+					{
+						<th class="dtfc-fixed-left" style="left:0; position:sticky;"><input type="text" class="filter-col-0" /></th>
+					}
+					else
+					{
+						<th><input type="text" class="filter-col-@i" /></th>
+					}
+				}
+			</tr>
+		</thead>
+		<tbody>
+		@foreach (var tz_list in Model)
+		{
+				<tr ondblclick="OpenPopupHeatPointAddRemove(@tz_list.heat_point_id);">
+					<td>@tz_list.source_unom</td>
+					<td>@tz_list.source_name</td>
+					<td>@tz_list.source_status_name</td>
+					<td>@tz_list.source_output_unom</td>
+					<td>@tz_list.source_output_name</td>
+
+					<td>@tz_list.heat_point_id</td>
+					<td>@tz_list.hp_num</td>
+					<td>@tz_list.hp_region_name</td>
+					<td>@tz_list.hp_district_name</td>
+					<td>@tz_list.hp_address</td>
+
+					<td>@tz_list.hp_type_name</td>
+					<td>@tz_list.hp_type_scheme_id</td>
+					<td>@tz_list.hp_type_location_name</td>
+					<td>@tz_list.hp_status_name</td>
+					<td>@tz_list.hp_start_year_expl</td>
+
+					<td>@tz_list.hp_last_year_reconstr</td>
+					<td>@tz_list.hp_year_liquidate</td>
+					<td>@tz_list.hp_tg_ht_name</td>
+					<td>@tz_list.hp_tg_heat_name</td>
+					<td>@tz_list.hp_tg_vent_name</td>
+
+					<td>@tz_list.hp_tg_gvs_name</td>
+					<td>@tz_list.hp_tg_tech_id_name</td>
+					<td>@tz_list.hp_unom_eto</td>
+					<td>@tz_list.hp_eto_short_name</td>
+					<td>@tz_list.hp_unom_tz</td>
+
+					<td>@tz_list.hp_code_tso</td>
+					<td>@tz_list.hp_tso_short_name</td>
+					<td>@tz_list.hp_org_owner_name</td>
+					<td>@tz_list.hp_org_owner_inn</td>
+					<td>@tz_list.hp_obj_ownership_name</td>
+
+					<td>@tz_list.hp_kad_num_zu</td>
+					<td>@tz_list.hp_kad_num_oks</td>
+					<td>@tz_list.hp_fias_build</td>
+					<td>@tz_list.hp_fias_zu</td>
+					<td>@tz_list.hp_muid</td>
+
+					<td>@tz_list.hp_lotus_id</td>
+					<td>@tz_list.hp_kasu_composite_id</td>
+					<td>@tz_list.hp_kasu_id</td>
+					<td>@tz_list.hp_kasu_map_id</td>
+					<td>@tz_list.obj_vacant_prop</td>
+
+					<td>@tz_list.obj_old_prop</td>
+					<td>@tz_list.hp_inst_heat_power</td>
+					<td>@tz_list.ctr_hl_tech_hw</td>
+					<td>@tz_list.ctr_hl_heat_hw</td>
+					<td>@tz_list.ctr_hl_vent_hw</td>
+
+					<td>@tz_list.ctr_hl_gvss_hw</td>
+					<td>@tz_list.ctr_hl_hw_sum</td>
+					<td>@tz_list.ctr_hl_tech_steam</td>
+					<td>@tz_list.ctr_hl_heat_steam</td>
+					<td>@tz_list.ctr_hl_vent_steam</td>
+
+					<td>@tz_list.ctr_hl_gvss_steam</td>
+					<td>@tz_list.ctr_hl_steam_sum</td>
+					<td>@tz_list.ctr_hl_steam_sum_gkalh</td>
+					<td>@tz_list.calc_hl_tech_hw</td>
+					<td>@tz_list.calc_hl_heat_hw</td>
+
+					<td>@tz_list.calc_hl_vent_hw</td>
+					<td>@tz_list.calc_hl_gvss_hw</td>
+					<td>@tz_list.calc_hl_hw_sum</td>
+					<td>@tz_list.calc_hl_tech_steam</td>
+					<td>@tz_list.calc_hl_heat_steam</td>
+
+					<td>@tz_list.calc_hl_vent_steam</td>
+					<td>@tz_list.calc_hl_gvss_steam</td>
+					<td>@tz_list.calc_hl_steam_sum</td>
+					<td>@tz_list.calc_hl_steam_sum_gkalh</td>
+					<td>@tz_list.b_calc_hl_tech_hw</td>
+
+					<td>@tz_list.b_calc_hl_heat_hw</td>
+					<td>@tz_list.b_calc_hl_vent_hw</td>
+					<td>@tz_list.b_calc_hl_gvss_hw</td>
+					<td>@tz_list.b_calc_hl_hw_sum</td>
+					<td>@tz_list.b_calc_hl_tech_steam</td>
+
+					<td>@tz_list.b_calc_hl_heat_steam</td>
+					<td>@tz_list.b_calc_hl_vent_steam</td>
+					<td>@tz_list.b_calc_hl_gvss_steam</td>
+					<td>@tz_list.b_calc_hl_steam_sum</td>
+					<td>@tz_list.b_calc_hl_steam_sum_gkalh</td>
+
+					<td>@tz_list.fact_total_hc_hw</td>
+					<td>@tz_list.fact_total_hc_steam</td>
+					<td>@tz_list.fact_total_hc_steam_gkalh</td>
+					<td>@tz_list.calc_hc_tech_hw</td>
+					<td>@tz_list.calc_hc_heat_hw</td>
+
+					<td>@tz_list.calc_hc_vent_hw</td>
+					<td>@tz_list.calc_hc_gvs_hw</td>
+					<td>@tz_list.calc_hc_hw_sum</td>
+					<td>@tz_list.calc_hc_tech_steam</td>
+					<td>@tz_list.calc_hc_heat_steam</td>
+
+					<td>@tz_list.calc_hc_vent_steam</td>
+					<td>@tz_list.calc_hc_gvs_steam</td>
+					<td>@tz_list.calc_hc_steam_sum</td>
+					<td>@tz_list.calc_hc_steam_sum_gkalh</td>
+					<td>@tz_list.b_calc_hc_tech_hw</td>
+
+					<td>@tz_list.b_calc_hc_heat_hw</td>
+					<td>@tz_list.b_calc_hc_vent_hw</td>
+					<td>@tz_list.b_calc_hc_gvs_hw</td>
+					<td>@tz_list.b_calc_hc_hw_sum</td>
+					<td>@tz_list.b_calc_hc_tech_steam</td>
+
+					<td>@tz_list.b_calc_hc_heat_steam</td>
+					<td>@tz_list.b_calc_hc_vent_steam</td>
+					<td>@tz_list.b_calc_hc_gvs_steam</td>
+					<td>@tz_list.b_calc_hc_steam_sum</td>
+					<td>@tz_list.b_calc_hc_steam_sum_gkalh</td>
+
+					<td>@tz_list.fact_watercons_gvs</td>
+					<td>@tz_list.heat_carrier_consump_tech_hw</td>
+					<td>@tz_list.heat_carrier_consump_heat_hw</td>
+					<td>@tz_list.heat_carrier_consump_vent_hw</td>
+					<td>@tz_list.heat_carrier_consump_gvs_hw</td>
+
+					<td>@tz_list.heat_carrier_consump_sum_hw</td>
+					<td>@tz_list.heat_carrier_consump_tech_steam</td>
+					<td>@tz_list.heat_carrier_consump_heat_steam</td>
+					<td>@tz_list.heat_carrier_consump_vent_steam</td>
+					<td>@tz_list.heat_carrier_consump_gvs_steam</td>
+
+					<td>@tz_list.heat_carrier_consump_sum_steam</td>
+					<td>@tz_list.layer_unom</td>
+					<td>@tz_list.layer_sys</td>
+					<td>@tz_list.heat_network_id</td>
+		</tr>
+		}
+		</tbody>
+	</table>
+</div>
+<div class="data-row table-summary">
+	<div class="data-item rows-count">
+		<h5>Всего записей:</h5>
+		<p><span class="mark-color" id="all_cnt_rows"></span></p>
+	</div>
+	<div class="data-table-block">
+		<p class="data-item">включая бесхозяйных: <span class="mark-color" id="ownerless_hp_cnt"></span><span class="data-unit"> шт.</span></p>
+		<p class="data-item">и ветхих: <span class="mark-color" id="dilapidated_hp_cnt"></span><span class="data-unit"> шт.</span></p>
+	</div>
+	<div class="data-table-block">
+		<p class="data-item">Суммарная установленная тепловая мощность: <span class="mark-color" id="heat_exchange_sum"></span><span class="data-unit">Гкал/ч</span></p>
+		<p class="data-item">Суммарная производительность насосов: <span class="mark-color"></span><span class="data-unit">т/ч</span></p>
+	</div>
+	<div class="data-table-block">
+		<p class="data-item">Суммарная тепловая нагрузка в г.в.: по договору - <span class="mark-color" id="agreement_heatload_sum"></span><span class="data-unit">Гкал/ч</span></p>
+		<p class="data-item">расчетная - <span class="mark-color" id="calculate_heatload_sum"></span><span class="data-unit">Гкал/ч</span></p>
+	</div>
+</div>
+<script type="text/javascript" src="@Url.Content("~/hss/js/datatables_common_scripts.js")"></script>

@@ -1,0 +1,237 @@
+﻿@model List<WebProject.Areas.TSO.Models.TZTariffHotWaterTabModel>
+@{
+	Layout = null;
+	int cnt_columns = 63;
+}
+<div class="table-block">
+	<div class="table-buttons tzTariffTable-buttons"></div>
+	<input type="hidden" value="0" id="refresh_table" />
+	<table id="tzTariffTable" class="display compact table-clicked" style="width:100%">
+		<thead>
+			<tr>
+				<th rowspan="3">УНОМ ТЗ</th>
+				<th rowspan="3">Территория действия тарифной зоны</th>
+				<th rowspan="3">КОД ТСО</th>
+				<th rowspan="3">Наименование ТСО</th>
+				<th rowspan="3">
+					Виды регулируемой деятельности
+					<a class="info" data-bs-toggle="tooltip" data-bs-custom-class="info-tooltip" data-bs-html="true"
+					   data-bs-title='<ul class="list-unstyled">
+									<li>К > 25 - Комбинированное производство, более 25 МВт</li>
+									<li>К < 25 - Комбинированное производство, менее 25 МВт</li>
+									<li>НК - Некомбинированное производство</li>
+									<li>П - Передача</li>
+									<li>С - Сбыт</li>
+									<li>ДП - Договор поставки</li>
+								</ul>'
+					</a>
+				</th>
+				<th rowspan="3">Экономически обоснованный тариф, руб./Гкал без НДС</th>
+				<th rowspan="3">Объем реализации услуги (объем передаваемой тепловой энрегии при транспортировке), всего, Гкал/год</th>
+				<th rowspan="3">Средневзвешенный тариф с учётом инвестиционной составляющей, руб./Гкал без НДС</th>
+				<th rowspan="3">Инвестиционная составляющая, руб./Гкал без НДС</th>
+				<th rowspan="3">Тариф на передачу на нужды организации, руб./Гкал без НДС</th>
+
+				<th rowspan="3">Объем передаваемой тепловой энрегии на нужды организации, всего, Гкал/год</th>
+				<th colspan="3">Тарифы для ТСО-перепродавцы, руб./Гкал без НДС</th>
+				<th colspan="10">Бюджетные потребители</th>
+				<th colspan="10">Население</th>
+				<th colspan="10">Прочие потребители</th>
+
+				<th rowspan="3">Объём перекрёстного субсидирования (всего), тыс. руб.</th>
+				<th colspan="3">Тариф ЕТО, руб./Гкал без НДС</th>
+				<th colspan="3">Тариф с учётом возмещения / компенсации / субсидирования организации, руб./Гкал без НДС</th>
+				<th colspan="3">Льготный тариф, руб./Гкал без НДС</th>
+				<th rowspan="3">Тариф на теплоноситель, руб./Гкал без НДС</th>
+
+				<th colspan="2">Однокомпонентный тариф на горячую воду в закрытых системах теплоснабжения</th>
+				<th colspan="2">Двухкомпонетные тарифы в открытых системах</th>
+				<th colspan="4">Решение/протокол</th>
+			</tr>
+			<tr>
+				<th rowspan="2">Одноставочный тариф</th>
+				<th rowspan="2">Тариф на передачу</th>
+				<th rowspan="2">Объем реализации услуги, всего, Гкал/год</th>
+
+				<th rowspan="2">Одноставочный тариф</th>
+				<th rowspan="2">Тариф на передачу, руб./Гкал без НДС</th>
+				<th rowspan="2">Объем реализации услуги, всего, Гкал/год</th>
+				<th colspan="5">Двухставочный тариф</th>
+				<th rowspan="2">Объём дотаций из всех уровней бюджета, тыс. руб.</th>
+				<th rowspan="2">Удельная величина дотаций, руб./Гкал</th>
+
+				<th rowspan="2">Одноставочный тариф</th>
+				<th rowspan="2">Тариф на передачу, руб./Гкал без НДС</th>
+				<th rowspan="2">Объем реализации услуги, всего, Гкал/год</th>
+				<th colspan="5">Двухставочный тариф</th>
+				<th rowspan="2">Объём дотаций из всех уровней бюджета, тыс. руб.</th>
+				<th rowspan="2">Удельная величина дотаций, руб./Гкал</th>
+
+				<th rowspan="2">Одноставочный тариф</th>
+				<th rowspan="2">Тариф на передачу, руб./Гкал без НДС</th>
+				<th rowspan="2">Объем реализации услуги, всего, Гкал/год</th>
+				<th colspan="5">Двухставочный тариф</th>
+				<th rowspan="2">Объём дотаций из всех уровней бюджета, тыс. руб.</th>
+				<th rowspan="2">Удельная величина дотаций, руб./Гкал</th>
+
+				<th rowspan="2">Бюджетные потребители</th>
+				<th rowspan="2">Население</th>
+				<th rowspan="2">Прочие</th>
+
+				<th rowspan="2">Бюджетные потребители</th>
+				<th rowspan="2">Население</th>
+				<th rowspan="2">Прочие</th>
+
+				<th rowspan="2">Бюджетные потребители</th>
+				<th rowspan="2">Население</th>
+				<th rowspan="2">Прочие</th>
+
+				<th rowspan="2">Тариф, руб./куб. м без НДС</th>
+				<th rowspan="2">Удельный расход тепловой энергии на подогрев исходной воды, Гкал/куб. м</th>
+				<th rowspan="2">Теплоноситель, руб./куб. м без НДС</th>
+				<th rowspan="2">На тепловая энергия, руб./Гкал без НДС</th>
+				<th colspan="2">Решение</th>
+				<th colspan="2">Протокол</th>
+			</tr>
+			<tr>
+				<th>Перевод в одноставочный тариф, руб. Гкал без НДС</th>
+				<th>Ставка за тепловую энергию, руб./Гкал без НДС</th>
+				<th>Объем тепловой энрегии, Гкал/год</th>
+				<th>Ставка за тепловую нагрузку (мощность), тыс. руб./ (Гкал/ч) в месяц без НДС</th>
+				<th>Величина тепловой нагрузки, Гкал/ч</th>
+
+				<th>Перевод в одноставочный тариф, руб. Гкал без НДС</th>
+				<th>Ставка за тепловую энергию, руб./Гкал без НДС</th>
+				<th>Объем тепловой энрегии, Гкал/год</th>
+				<th>Ставка за тепловую нагрузку (мощность), тыс. руб./ (Гкал/ч) в месяц без НДС</th>
+				<th>Величина тепловой нагрузки, Гкал/ч</th>
+
+				<th>Перевод в одноставочный тариф, руб. Гкал без НДС</th>
+				<th>Ставка за тепловую энергию, руб./Гкал без НДС</th>
+				<th>Объем тепловой энрегии, Гкал/год</th>
+				<th>Ставка за тепловую нагрузку (мощность), тыс. руб./ (Гкал/ч) в месяц без НДС</th>
+				<th>Величина тепловой нагрузки, Гкал/ч</th>
+				
+				<th>Номер</th>
+				<th>Дата</th>
+				<th>Номер</th>
+				<th>Дата</th>
+			</tr>
+			<tr class="filter-row ">
+				@for (int i = 0; i < @cnt_columns; i++)
+				{
+					if (i == 0)
+					{
+						<th class="dtfc-fixed-left" style="left:0; position:sticky;"><input type="text" class="filter-col-0" /></th>
+					}
+					else
+					{
+						<th><input type="text" class="filter-col-@i" /></th>
+					}
+				}
+			</tr>
+		</thead>
+		<tbody>
+		@foreach (var tz_list in Model)
+		{
+		<tr ondblclick="OpenPopupTariffConnection(@tz_list.tz_id, @tz_list.perspective_year, '/TSO/TariffConnection/OpenTariffConnection', 'TZTariffConnectionDataPopup');">
+		<td>@tz_list.unom_tz</td>
+		<td>@tz_list.territory</td>
+		<td>@tz_list.code_tso</td>
+		<td>@tz_list.short_name</td>
+		<td>@tz_list.activity_types</td>
+					<td>@tz_list.tariff_econom_justified_calc</td>
+					<td>@tz_list.service_sold_value</td>
+					<td>@tz_list.tariff_weighted_invest</td>
+					<td>@tz_list.investСomponent</td>
+					<td>@tz_list.transfer_org_needs_tariff</td>
+
+					<td>@tz_list.transfer_org_needs_volume</td>
+					<td>@tz_list.tso_single_tariff_transfer</td>
+					<td>@tz_list.tso_tariff_transfer</td>
+					<td>@tz_list.tso_sales_service_volume</td>
+					<td>@tz_list.budjet_single_tariff_transfer</td>
+
+					<td>@tz_list.budjet_tariff_transfer</td>
+					<td>@tz_list.budjet_sales_service_volume</td>
+					<td>@tz_list.doublerate_convers_doublerate_to_singlerate</td>
+					<td>@tz_list.budjet_heat_energy_doublerate</td>
+					<td>@tz_list.volume_he_budjet_doublerate</td>
+
+					<td>@tz_list.budjet_heat_load_doublerate</td>
+					<td>@tz_list.volume_heat_load_budget_doublerate</td>
+					<td>@tz_list.amount_grants_budget</td>
+					<td>@tz_list.subsidy_spec_value_budjet</td>
+					<td>@tz_list.public_single_tariff_transfer</td>
+
+					<td>@tz_list.public_tariff_transfer</td>
+					<td>@tz_list.public_plan_transfer</td>
+					<td>@tz_list.doublerate_convers_doublerate_to_singlerate_public</td>
+					<td>@tz_list.double_heat_energy_doublerate_public</td>
+					<td>@tz_list.volume_he_public_doublerate</td>
+
+					<td>@tz_list.double_heat_load_doublerate_public</td>
+					<td>@tz_list.volume_heat_load_public_doublerate</td>
+					<td>@tz_list.amount_grants_public</td>
+					<td>@tz_list.subsidy_spec_value_public</td>
+					<td>@tz_list.other_single_tariff</td>
+
+					<td>@tz_list.other_tariff</td>
+					<td>@tz_list.volume_he_other</td>
+					<td>@tz_list.doublerate_convers_doublerate_to_singlerate_other</td>
+					<td>@tz_list.doublerate_heat_energy_rate_other</td>
+					<td>@tz_list.volume_he_other_doublerate</td>
+
+					<td>@tz_list.doublerate_heat_load_rate_other</td>
+					<td>@tz_list.volume_heat_load_other_doublerate</td>
+					<td>@tz_list.amount_grants_other</td>
+					<td>@tz_list.subsidy_spec_value_other</td>
+					<td>@tz_list.cross_subsidy_volume</td>
+
+					<td>@tz_list.tariff_eto_budjet</td>
+					<td>@tz_list.tariff_eto_public</td>
+					<td>@tz_list.tariff_eto_other</td>
+					<td>@tz_list.tariff_compensation_budjet</td>
+					<td>@tz_list.tariff_compensation_public</td>
+
+					<td>@tz_list.tariff_compensation_other</td>
+					<td>@tz_list.tariff_preferential_budjet</td>
+					<td>@tz_list.tariff_preferential_public</td>
+					<td>@tz_list.tariff_preferential_other</td>
+					<td>@tz_list.tariff_heat_carrier</td>
+
+					<td>@tz_list.tariff_single_component_hw</td>
+					<td>@tz_list.volume_buy_coldwater_plan</td>
+					<td>@tz_list.tariff_double_component_hc</td>
+					<td>@tz_list.tariff_double_open_he</td>
+					<td>@tz_list.decision_num</td>
+
+					<td>@tz_list.decision_date</td>
+					<td>@tz_list.protocol_num</td>
+					<td>@tz_list.protocol_date</td>
+		</tr>
+		}
+		</tbody>
+	</table>
+</div>
+
+<div class="data-row table-summary">
+	<div class="data-item rows-count">
+		<h5>Всего записей:</h5>
+		<p><span class="mark-color" id="all_cnt_rows"></span></p>
+	</div>
+	<div class="data-table-block">
+		<p class="data-item">Средневзвешенный тариф на тепловую энергию (г.в.): <span class="mark-color" id="cnt_sources"></span><span class="data-unit"> руб./Гкал без НДС</span></p>
+		<p class="data-item">Средневзвешенный тариф на услуги по передаче: <span class="mark-color" id="cnt_hp_all"></span><span class="data-unit"> руб./Гкал без НДС</span></p>
+	</div>
+	<div class="data-block">
+		<div class="data-table-block">
+			<p class="data-item">Тариф ТСО-перепродавцы: <span class="mark-color" id="cnt_sources"></span><span class="data-unit"> руб./Гкал без НДС</span></p>
+			<p class="data-item">Тариф бюджетнве потребители: <span class="mark-color" id="cnt_hp_all"></span><span class="data-unit"> руб./Гкал без НДС</span></p>
+			<p class="data-item">Тариф население: <span class="mark-color" id="sum_length_net_channel_all"></span><span class="data-unit"> руб./Гкал без НДС</span></p>
+			<p class="data-item">Тариф прочие потребители: <span class="mark-color" id="cnt_pump_stations"></span><span class="data-unit"> руб./Гкал без НДС</span></p>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript" src="@Url.Content("~/hss/js/datatables_common_scripts.js")"></script>

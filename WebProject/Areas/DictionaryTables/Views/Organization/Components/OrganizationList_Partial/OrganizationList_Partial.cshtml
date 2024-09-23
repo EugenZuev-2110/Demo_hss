@@ -1,0 +1,80 @@
+﻿@model List<WebProject.Areas.DictionaryTables.Models.OrganizationViewModel>
+@{
+	int cnt_columns = 15;
+}
+<div class="table-block">
+	<input type="hidden" value="0" id="refresh_org_table" />
+	<div class="table-buttons organizationTable-buttons"></div>
+	<table id="organizationTable" class="display compact table-clicked" style="width:100%">
+		<thead>
+			<tr>
+				<th rowspan="2">УНОМ организации</th>
+				<th rowspan="2">Полное наименование</th>
+				<th rowspan="2">Короткое наименование</th>
+				<th rowspan="2">Тип по виду деятельности</th>
+				<th rowspan="2">Статус</th>
+				<th rowspan="2">Организация является структурным подразделением</th>
+				<th colspan="4">Руководитель</th>
+				<th rowspan="2">ОГРН</th>
+				<th rowspan="2">ИНН</th>
+				<th rowspan="2">КПП</th>
+				<th rowspan="2">Контактный телефон</th>
+				<th rowspan="2">Электронная почта</th>
+			</tr>
+			<tr>
+				<th>Должность</th>
+				<th>Фамилия</th>
+				<th>Имя</th>
+				<th>Отчество</th>
+			</tr>
+			<tr class="filter-row ">
+				@for (int i = 0; i < @cnt_columns; i++)
+				{
+					if (i == 0)
+					{
+						<th class="dtfc-fixed-left" style="left:0; position:sticky;"><input type="text" class="filter-col-0" /></th>
+					}
+					else
+					{
+						<th><input type="text" class="filter-col-@i" /></th>
+					}
+				}
+			</tr>
+		</thead>
+		<tbody>
+			@foreach(var org_list in Model)
+			{
+				<tr ondblclick="OpenPopupOrg(@org_list.org_id);">
+					<td>@org_list.unom_org</td>
+					<td>@org_list.full_name</td>
+					<td>@org_list.short_name</td>
+					<td>@org_list.activity_type_name</td>
+					<td>@org_list.org_status_name</td>
+					<td>@org_list.org_struct</td>
+					<td>@org_list.pozition_head_manager</td>
+					<td>@org_list.l_name_head_manager</td>
+					<td>@org_list.f_name_head_manager</td>
+					<td>@org_list.m_name_head_manager</td>
+					<td>@org_list.ogrn</td>
+					<td>@org_list.inn</td>
+					<td>@org_list.kpp</td>
+					<td>@org_list.org_contact_phones</td>
+					<td>@org_list.org_emails</td>
+
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>
+<div class="data-row table-summary">
+	<div class="data-item rows-count">
+		<h5>Всего записей:</h5>
+		<p><span class="mark-color" id="all_cnt_rows"></span></p>
+	</div>
+	<div class="data-row">
+		<h5>из них теплоснабжающие или теплосетевые организации:</h5>
+		<div class="data-table-block">
+			<p><span class="mark-color" id="cnt_type_org"></span></p>
+		</div>
+	</div>
+</div>

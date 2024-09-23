@@ -1,0 +1,640 @@
+﻿@model WebProject.Models.UnomViewModel
+<link rel="stylesheet" href="~/Content/bootstrap-select.css" />
+@{
+    string selectedValue = string.Empty;
+}
+
+<style>
+    .my_lbl_cls_popup {
+        width: 24%;
+    }
+    .btn-group.bootstrap-select {
+        width: 315px !important;
+    }
+    .error {
+        color: red;
+    }
+    .my_lbl_cls_popup_select {
+        width: 26%;
+        padding-right: 20px !important;
+    }
+
+    textarea {
+        white-space:pre-wrap;
+        margin-left:0px; 
+        text-align:left;
+    }
+    .inp-marg-top-60 {
+        margin-top: 60px;
+    }
+    .inp-marg-top-45 {
+        margin-top: 45px;
+    }
+
+    .inp-marg-top-30 {
+        margin-top: 30px;
+    }
+
+    .inp-marg-top-10 {
+        margin-top: 10px;
+    }
+</style>
+
+<div class="row" id="row-open-fd" style="display: table;">
+    <div class="col-md-6">
+        <form asp-controller="Home" asp-action="UnomUpdate" asp-antiforgery="true"
+            data-ajax-failure="onFailed" data-ajax-success="onSuccess"
+            data-ajax="true" data-ajax-method="POST" id="unom_form" class="form-horizontal">
+            <div on class="panel-body" style="padding-left: 15px; padding-right: 15px; padding-top: 30px; padding-bottom: 30px;">
+                <div class="row" style="display: table-cell;">
+                    <div style="width: 550px">
+                        <div class="form-group">
+                            <div class="validation-summary-errors" style="display: none">
+                                <ul>
+                                    <li id="validation_error" style="color: red; font-size: 16px; "></li>
+                                </ul>
+                            </div>
+                        </div>
+                        @if (Model.Id > 0)
+                        {
+                            <div class="form-group">
+                                <label class="col-md-3 control-label my_lbl_cls_popup">УНОМ обращения:</label>
+                                <div class="col-md-9">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                        <input type="text" class="form-control required" name="unom_num" value="@Model.unom_num" disabled>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        <div class="form-group">
+                            <label class="col-md-3 control-label my_lbl_cls_popup_select">Тип обращения:</label>
+                            <select class="selectpicker" data-show-subtext="true" data-live-search="true" name="category_id" id="category_id">
+                                @if (@Model.Id == 0 || Model.category_id == null)
+                                {
+                                    <option value="" selected disabled>Выберите категорию</option>
+                                }
+                                @foreach (var categories in ViewBag.UnomCategoryList)
+                                {
+                                    if (categories.Id == Model.category_id)
+                                    {
+                                        <option value="@categories.Id" selected>@categories.category_name</option>
+                                    }
+                                    if (categories.Id != Model.category_id)
+                                    {
+                                        <option value="@categories.Id">@categories.category_name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label my_lbl_cls_popup">Ссылка на папку:</label>
+                            <div class="col-md-9">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <input type="text" class="form-control" name="directory_link" value="@Model.directory_link">
+                                </div>
+                            </div>
+                        </div>
+                        @*<div class="form-group">
+                            <label class="col-md-3 control-label my_lbl_cls_popup_select">Источник данных:</label>
+                            <select class="selectpicker" data-show-subtext="true" data-live-search="true" name="data_status" id="data_status">
+                                @foreach (var ds in ViewBag.DataStatusesList)
+                                {
+                                    if (ds.DataStatus == Model.data_status)
+                                    {
+                                        <option value="@ds.DataStatus" selected>@ds.Ds</option>
+                                    }
+                                    if (ds.DataStatus != Model.data_status)
+                                    {
+                                        <option value="@ds.DataStatus">@ds.Ds</option>
+                                    }
+                                }
+                            </select>
+                        </div>*@
+                        <div class="form-group">
+                            <label class="col-md-3 control-label my_lbl_cls_popup_select">Исполнитель:</label>
+                            <select class="selectpicker" data-show-subtext="true" data-live-search="true" name="executor_id" id="executor_id">
+                                @if (@Model.Id == 0 || Model.executor_id == null)
+                                {
+                                    <option value="" selected disabled>Выберите исполнителя</option>
+                                }
+                                @foreach (var executors in ViewBag.ExecutorsList)
+                                {
+                                    if (executors.Id == Model.executor_id)
+                                    {
+                                        <option value="@executors.Id" selected>@executors.executor_name</option>
+                                    }
+                                    if (executors.Id != Model.executor_id)
+                                    {
+                                        <option value="@executors.Id">@executors.executor_name</option>
+                                    }
+                                }
+                            </select>
+                            @*<p style="display: none; color: red;" id="Error_unom_num">Выберите исполн</p>*@
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label my_lbl_cls_popup_select">Тэги:</label>
+                            <select class="selectpicker" data-show-subtext="true" data-live-search="true" name="tags" id="tag_id" multiple>
+                                @if (@Model.Id == 0 || Model.tags == null || Model.tags.Length == 0)
+                                {
+                                    <option value="" selected disabled>Выберите тэг(и)</option>
+                                    @foreach (var tags in Model.tags_list)
+                                    {
+                                        <option value="@tags.Id">@tags.tag_name</option>
+                                    }
+                                }
+                                @if (Model.tags != null && Model.tags.Length > 0)
+                                {
+                                    foreach (var unom_tags_id in Model.tags)
+                                    {
+                                        <option value="@unom_tags_id" selected>@Model.tags_list.Where(x => x.Id == unom_tags_id).Select(x => x.tag_name).FirstOrDefault()</option>
+                                    }
+                                    @foreach (var tags in Model.tags_list.Where(x => !Model.tags.Any(y => y == x.Id)))
+                                    {
+                                        <option value="@tags.Id">@tags.tag_name</option>
+                                    }
+                                }
+                                
+                            </select>
+                            @if (ViewData["IsAdmin"].ToString() == "True")
+                            {
+                                <a class="button_add_plus" onclick="AddNewTag();">+</a>
+                            }
+                        </div>
+                        <div class="form-group" style="display: none" id="div_new_tag">
+                            <label class="col-md-3 control-label my_lbl_cls_popup">Новый тэг:</label>
+                            <div class="col-md-7">
+                                <div class="input-group" style="position: fixed;">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <input class="form-control" id="new_tag" type="text">
+                                    <a data-act="approve" class="btn btn-success btn-rounded btn-sm btn-approve btn-approve-input" onclick="SaveNewTag()"><span class="fa fa-check-circle"></span></a>
+                                </div>
+                            </div>
+                            <span id="new_tag-error" class="error" style="display: inline-flex;margin: 30px 0px 0px 45px;"></span>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label my_lbl_cls_popup_select">Номер проекта ЭТС-проект:</label>
+                            <select class="selectpicker inp-marg-top-10" data-show-subtext="true" data-live-search="true" name="ets_project_number">
+                                @foreach (var projects in ViewBag.EtsProjectsList)
+                                {
+                                    if (projects.Id == Model.ets_project_number)
+                                    {
+                                        <option value="@projects.Id" selected>@projects.project_name</option>
+                                    }
+                                    if (projects.Id != Model.ets_project_number)
+                                    {
+                                        <option value="@projects.Id">@projects.project_name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label my_lbl_cls_popup">Входящая дата<br> ЭТС-Проект:</label>
+                            <div class="col-md-9">
+                                <div class="input-group inp-marg-top-10">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    @if (Model.Id == 0 || Model.ets_date_dt == null)
+                                    {
+                                        <input type="text" class="form-control mask-date-short" name="ets_date" value="@(DateTime.Now.ToString("dd") + "." + DateTime.Now.ToString("MM") + "." + DateTime.Now.ToString("yyyy"))">
+                                    }
+                                    else if (Model.ets_date_dt != null)
+                                    {
+                                        <input type="text" class="form-control mask-date-short" name="ets_date" value="@(Model.ets_date_dt?.ToString("dd") + "." + Model.ets_date_dt?.ToString("MM") + "." + Model.ets_date_dt?.ToString("yyyy"))">
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label my_lbl_cls_popup">Входящий номер<br> ЭТС-Проект:</label>
+                            <div class="col-md-9">
+                                <div class="input-group inp-marg-top-10">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    @if (string.IsNullOrEmpty(Model.ets_appeal_number))
+                                    {
+                                        <input type="text" class="form-control" name="ets_appeal_number" value="вх-" id="ets_appeal_number">
+                                    }
+                                    else
+                                    {
+                                        <input type="text" class="form-control" name="ets_appeal_number" value="@Model.ets_appeal_number" id="ets_appeal_number">
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label my_lbl_cls_popup_select">Наименование организации, обратившейся в ДЖКХ г. Москвы:</label>
+                            <select class="selectpicker inp-marg-top-15" data-show-subtext="true" data-live-search="true" name="org_id" id="org_id">
+                                @if (@Model.Id == 0 || Model.org_id == null)
+                                {
+                                    <option value="" selected disabled>Выберите организацию</option>
+                                }
+                                @foreach (var organisations in ViewBag.OrganisationsList)
+                                {
+                                    if (organisations.Id == Model.org_id)
+                                    {
+                                        <option value="@organisations.Id" selected>@organisations.org_name</option>
+                                    }
+                                    if (organisations.Id != Model.org_id)
+                                    {
+                                        <option value="@organisations.Id">@organisations.org_name</option>
+                                    }
+                                }
+                            </select>
+                            @if (ViewData["IsAdmin"].ToString() == "True")
+                            {
+                                <div class="inp-marg-top-45" style="display: inline-grid;"><a class="button_add_plus" onclick="AddNewOrg();">+</a></div>
+                            }
+                        </div>
+                        <div class="form-group" style="display: none" id="div_new_org">
+                            <label class="col-md-3 control-label my_lbl_cls_popup">Новая организация:</label>
+                            <div class="col-md-7">
+                                <div class="input-group" style="position: fixed;">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <input class="form-control" id="new_org" type="text">
+                                    <a data-act="approve" class="btn btn-success btn-rounded btn-sm btn-approve btn-approve-input" onclick="SaveNewOrg();"><span class="fa fa-check-circle"></span></a>
+                                </div>
+                            </div>
+                            <span id="new_org-error" class="error" style="display: inline-flex;margin: 30px 0px 0px 45px;"></span>
+                        </div>
+                        
+                    </div>
+                </div>
+                <div class="row" style="display: table-cell;">
+                    <div style="width: 550px">
+                        <div class="form-group">
+                            <label class="col-md-3 control-label my_lbl_cls_popup">Исходящая дата ДЖКХ:</label>
+                            <div class="col-md-9">
+                                <div class="input-group inp-marg-top-10">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    @if (Model.Id == 0 || Model.dzhkh_date_dt == null)
+                                    {
+                                        <input type="text" class="form-control mask-date-short" name="dzhkh_date" value="@(DateTime.Now.ToString("dd") + "." + DateTime.Now.ToString("MM") + "." + DateTime.Now.ToString("yyyy"))">
+                                    }
+                                    else if (Model.dzhkh_date_dt != null)
+                                    {
+                                        <input type="text" class="form-control mask-date-short" name="dzhkh_date" value="@(Model.dzhkh_date_dt?.ToString("dd") + "." + Model.dzhkh_date_dt?.ToString("MM") + "." + Model.dzhkh_date_dt?.ToString("yyyy"))">
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label my_lbl_cls_popup">Исходящий номер ДЖКХ:</label>
+                            <div class="col-md-9">
+                                <div class="input-group inp-marg-top-10">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    @if (string.IsNullOrEmpty(Model.dzhkh_number))
+                                    {
+                                        <input type="text" class="form-control" name="dzhkh_number" value="01-01-">
+                                    }
+                                    else
+                                    {
+                                        <input type="text" class="form-control" name="dzhkh_number" value="@Model.dzhkh_number">
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label my_lbl_cls_popup inp-marg-top-45">Краткое содержание обращения:</label>
+                            <div class="col-md-9">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <textarea class="form-control" name="appeal_desc_short" rows="8">@Model.appeal_desc_short</textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label my_lbl_cls_popup inp-marg-top-45">Результат рассмотрения:</label>
+                            <div class="col-md-9">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <textarea class="form-control" name="result_review" rows="8" onblur="SetReq();" id="result_review">@Model.result_review</textarea>
+                                </div>
+                            </div>
+                        </div>
+                        @*<div class="form-group">
+                            <label class="col-md-3 control-label my_lbl_cls_popup_select">Необходимость внесения изменений в схему теплоснабжения:</label>
+                            <select class="selectpicker inp-marg-top-45" data-show-subtext="true" data-live-search="true" name="changes_is_required" id="changes_is_required">
+                                @if (@Model.Id == 0 || Model.changes_is_required == null)
+                                {
+                                    <option value="" selected disabled>Выберите значение</option>
+                                }
+                                @if (Model.changes_is_required == true)
+                                {
+                                    <option value="true" selected>Да</option>
+                                    <option value="false">Нет</option>
+                                    <option value="null">-</option>
+                                }
+                                else if (Model.changes_is_required == false)
+                                {
+                                    <option value="false" selected>Нет</option>
+                                    <option value="true">Да</option>
+                                    <option value="null">-</option>
+                                }
+                                else
+                                {
+                                    <option value="false">Нет</option>
+                                    <option value="true">Да</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group" id="div_changes_type" style="display: none;">
+                            <label class="col-md-3 control-label my_lbl_cls_popup">Перечень изменений, вносимых в разрабатываемую схему теплоснабжения:</label>
+                            <div class="col-md-9">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <textarea class="form-control" name="changes_type" id="changes_type" rows="6">@Model.changes_type</textarea>
+                                </div>
+                            </div>
+                        </div>*@
+                        <div class="form-group">
+                            <label class="col-md-3 control-label my_lbl_cls_popup">Дата исходящего обращения:</label>
+                            <div class="col-md-7">
+                                <div class="input-group inp-marg-top-10">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    @if (Model.Id == 0)
+                                    {
+                                        <input type="text" class="form-control mask-date-short" id="out_appeal_date" name="out_appeal_date" value="@(DateTime.Now.ToString("dd") + "." + DateTime.Now.ToString("MM") + "." + DateTime.Now.ToString("yyyy"))">
+                                    }
+                                    else if (Model.out_appeal_date_dt == null)
+                                    {
+                                        <input type="text" class="form-control mask-date-short" id="out_appeal_date" name="out_appeal_date" value="">
+                                    }
+                                    else if (Model.out_appeal_date_dt != null)
+                                    {
+                                        <input type="text" class="form-control mask-date-short" id="out_appeal_date" name="out_appeal_date" value="@(Model.out_appeal_date_dt?.ToString("dd") + "." + Model.out_appeal_date_dt?.ToString("MM") + "." + Model.out_appeal_date_dt?.ToString("yyyy"))">
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label my_lbl_cls_popup">Номер исходящего обращения:</label>
+                            <div class="col-md-9">
+                                <div class="input-group inp-marg-top-10">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    @if (string.IsNullOrEmpty(Model.out_appeal_number))
+                                    {
+                                        <input type="text" class="form-control" name="out_appeal_number" value="исх-" id="out_appeal_number">
+                                    }
+                                    else
+                                    {
+                                        <input type="text" class="form-control" name="out_appeal_number" value="@Model.out_appeal_number" id="out_appeal_number">
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label my_lbl_cls_popup_select">Статус:</label>
+                            <select class="selectpicker" data-show-subtext="true" data-live-search="true" name="state_id" id="state_id">
+                                @if (@Model.Id == 0)
+                                {
+                                    <option value="1" selected>Поступило</option>
+                                }
+                                @foreach (var states in ViewBag.UnomStateList)
+                                {
+                                    if (states.Id == Model.state_id)
+                                    {
+                                        <option value="@states.Id" selected>@states.state</option>
+                                    }
+                                    if (states.Id != Model.state_id && states.Id != 1 && Model.state_id != 0)
+                                    {
+                                        <option value="@states.Id">@states.state</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" name="Id" value="@Model.Id" />
+            </div>
+
+            @if (ViewData["IsAdmin"].ToString() == "True")
+            {
+                <div class="panel-footer" style="padding-bottom: 40px; width: 1080px;">
+                    <button type="submit" class="btn btn-primary pull-right" id="btnSave">Сохранить</button>
+                    <div id="Results"></div>
+                </div>
+            }
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    if ('@ViewData["IsAdmin"]' == 'True')
+    {
+        $(document).on('keydown', function(e){
+            if(e.ctrlKey && e.which === 83){ // Check for the Ctrl key being pressed, and if the key = [S] (83)
+                e.preventDefault();
+                $('form').submit();
+                return false;
+            }
+        });
+    }
+
+    $(document).ready(function () {
+
+        var elem = document.getElementById('unom_form');
+        elem.addEventListener("submit", function (e) {
+            if ($(this).valid()) {
+                document.getElementById("btnSave").disabled = true;
+            }
+        }, true);
+
+        $('.selectpicker').selectpicker({
+            size: 5
+        });
+
+        //$('#changes_is_required').on('change', function(e){
+        //    var s_value = this.value;
+        //    if (s_value == "true") {
+        //        $('#div_changes_type').show();
+        //        $('#changes_type').attr('required', '');
+        //    }
+        //    else {
+        //        $('#div_changes_type').hide();
+        //        $("#changes_type").val("");
+        //        $("#changes_type").removeAttr('required');
+        //    }
+        //});
+
+        maskInit();
+
+        function checkValidate() {
+        var form = $('form');
+
+            $.each(form, function () {
+                $(this).validate({
+                    ignore: [],
+                    errorClass: 'error',
+                    validClass: 'success',
+                    rules: {
+                        //appeal_date: {
+                        //    required: true
+                        //},
+                        //category_id: {
+                        //    required: true
+                        //},
+                        //appeal_number: {
+                        //    required: true,
+                        //    normalizer: function normalizer(value) {
+                        //        return $.trim(value);
+                        //    }
+                        //},
+                        //appeal_desc_short: {
+                        //    required: true,
+                        //    normalizer: function normalizer(value) {
+                        //        return $.trim(value);
+                        //    }
+                        //},
+                        //unom_num: {
+                        //    required: true,
+                        //    normalizer: function normalizer(value) {
+                        //        return $.trim(value);
+                        //    }
+                        //}
+                    },
+                    errorElement: 'span',
+                    errorPlacement: function (error, element) {
+                        var placement = $(element).data('error');
+                        if (placement) {
+                            $(placement).append(error);
+                        } else {
+                            error.insertBefore(element);
+                        }
+                    },
+                    messages: {
+                        executor_id: 'Выберите исполнителя',
+                        out_appeal_date: 'Укажите дату',
+                        //changes_is_required: 'Выберите значение',
+                        out_appeal_number: 'Укажите номер',
+                        changes_type: 'Укажите перечень изменений'
+                    }
+                });
+            });
+        }
+        checkValidate();
+
+    });
+        
+        var onFailed = function(context){
+            $("#modal-open-fd").modal('hide');
+        };
+
+        var onSuccess = function(success){
+            
+            if (success.success == true) {
+                ajaxStart();
+                $.ajax({
+                    type: 'GET',
+                    url: '/Home/OnGetCallUnomsListViewComponent',
+                    data: {
+                        searchText: success.unom_num
+                    },
+                    dataType: 'html'
+                })
+                    .done(function (result) {
+                        var div = $('.panel-body');
+                        div.html("");
+                        div.html(result);
+                        $("#modal-open-fd").modal('hide');
+
+                        ajaxStop();
+                    });
+            }
+            else {
+                document.getElementById("btnSave").disabled = false;
+                $('.validation-summary-errors').show();
+                $("#validation_error").text(success.error);
+                //window.scrollTo(0, 0);
+                document.getElementById("row-open-fd").scrollIntoView();
+            }
+        };
+
+        function AddNewTag() {
+            $('#div_new_tag').toggle();
+        }
+
+        function AddNewOrg() {
+            $('#div_new_org').toggle();
+        }
+
+        function SetReq() {
+            if ($('#result_review').val()) {
+                $('#out_appeal_number').attr('required', '');
+                $('#out_appeal_date').attr('required', '');
+                //$('#changes_is_required').attr('required', '');
+                $('#executor_id').attr('required', '');
+            }
+            else {
+                $("#out_appeal_number").removeAttr('required');
+                $("#out_appeal_date").removeAttr('required');
+                //$("#changes_is_required").removeAttr('required');
+                $("#executor_id").removeAttr('required');
+            }
+            
+        }
+
+        function SaveNewTag() {
+            if ($('#new_tag').val().trim()) {
+                $.ajax({
+                    type: 'POST',
+                    url: '/Home/SaveNewTag',
+                    dataType: 'json',
+                    data: {
+                        new_tag: $('#new_tag').val()
+                    }
+                }).done(function (result) {
+                    if (result.error) {
+                        $('#new_tag-error').html(result.error);
+                    }
+                    else {
+                        $('#new_tag').val('');
+                        $('#div_new_tag').toggle();
+                        $("#tag_id").append('<option value="'+result.new_tag_id+'" selected="">'+result.new_tag_name+'</option>');
+                        $("#tag_id").selectpicker("refresh");
+                        $('#new_tag-error').html('');
+                    }
+                });
+            }
+        }
+
+        function SaveNewOrg() {
+            if ($('#new_org').val().trim()) {
+                $.ajax({
+                    type: 'POST',
+                    url: '/Home/SaveNewOrg',
+                    dataType: 'json',
+                    data: {
+                        new_org: $('#new_org').val()
+                    }
+                }).done(function (result) {
+                    if (result.error) {
+                        $('#new_org-error').html(result.error);
+                    }
+                    else {
+                        $('#new_org').val('');
+                        $('#div_new_org').toggle();
+                        $("#org_id").append('<option selected value="'+result.new_org_id+'">'+result.new_org_name+'</option>');
+                        $("#org_id").selectpicker("refresh");
+                        $('#new_org-error').html('');
+                    }
+                });
+            }
+        }
+
+        function maskInit() {
+            $(".mask-date-short").inputmask('text',{
+                mask: "99.99.9999",
+               
+                definitions: {
+                  '*': {
+                    validator: "[0-9]"
+                  }
+                },
+                rightAlign: true,
+                "clearIncomplete": true,
+                autoUnmask: false
+            });
+        }
+
+</script>

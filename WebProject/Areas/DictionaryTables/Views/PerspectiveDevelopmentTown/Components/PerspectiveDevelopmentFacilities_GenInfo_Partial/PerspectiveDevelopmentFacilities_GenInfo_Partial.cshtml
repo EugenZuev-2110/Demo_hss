@@ -1,0 +1,232 @@
+﻿@model WebProject.Areas.DictionaryTables.Models.PerspectiveDevelopmentFacility_GenInfoViewModel
+
+@{
+    Layout = null; string is_checked = string.Empty; string is_disabled = Model.dev_prog_id == 0 || Model.dev_prog_id == null ? "disabled" : string.Empty;
+    string is_disabled_building = Model.consumer_id == 0 || Model.consumer_id == null ? string.Empty : "disabled";
+}
+
+<form asp-controller="PerspectiveDevelopmentTown" asp-action="DevProgramm_Facility_GenInfoData_Save" asp-antiforgery="true" asp-area="DictionaryTables" id="consumers_gen_info_form" class="needs-validation" novalidate
+      data-ajax-failure="onFailedFormTZ" data-ajax-success="onSuccessFormPerspectiveDevelopmentGenInfo" data-ajax-begin="onBeginFormTZ" data-ajax="true" data-ajax-method="POST">
+    <input hidden asp-for="@Model.dev_prog_id">
+    <input hidden asp-for="@Model.consumer_id_old">
+    <div class="data-block">
+        <div class="data-row">
+            <div class="data-item">
+                <label class="data-label xl-fix">Номер объекта в программе</label>
+                <input type="text" asp-for="@Model.obj_num" class="data-value xxl-stretch" placeholder="Введите номер объекта">
+            </div>
+            <div class="data-item">
+                <label class="data-label xl-fix">Адрес объекта по программе</label>
+                <input type="text" asp-for="@Model.address" class="data-value xxl-stretch" placeholder="Введите адрес объекта">
+            </div>
+        </div>
+        <div class="data-row">
+            <div class="data-item ">
+                <label class="data-label xl-fix">Район (поселение)</label>
+                <select class="selectpicker data-value xxl-stretch" name="district_id" id="district_id"
+                        value="@Model.district_id" data-live-search="true" data-size="5" placeholder="Выберите район или поселение" required>
+                    @foreach (var tz_list in ViewBag.DistrictRegionList)
+                    {
+                        if (tz_list.value_id == Model.district_id)
+                        {
+                            <option value="@tz_list.value_id" selected>@tz_list.value_name</option>
+                        }
+                        if (tz_list.value_id != Model.district_id)
+                        {
+                            <option value="@tz_list.value_id">@tz_list.value_name</option>
+                        }
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="data-row">
+            <div class="data-item">
+                <label class="data-label xl-fix">Наименование:</label>
+                <input type="text" asp-for="@Model.obj_name" class="data-value xxl-stretch" placeholder="Введите наименование или назначение потебителя">
+            </div>
+        </div>
+        <div class="data-row">
+            <div class="data-item ">
+                <label class="data-label">Уникальный номер потребителя:</label>
+                <select class="selectpicker data-value stretch" data-live-search="true" data-size="5" id="consumer_id" name="consumer_id" placeholder="Выберите УНОМ потребителя"
+                        onchange="ChangeConsumerNumberAddress(event)">
+                    <option value=@null selected>Отсутствует</option>
+                    @foreach (var tz_list in ViewBag.ConsumerNumberAddressList)
+                    {
+                        if (tz_list.value_id == Model.consumer_id)
+                        {
+                            <option value="@tz_list.value_id" selected>@tz_list.value_name</option>
+                        }
+                        if (tz_list.value_id != Model.consumer_id)
+                        {
+                            <option value="@tz_list.value_id">@tz_list.value_name</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="data-item">
+                <label class="data-label lg-fix">Здание:</label>
+                <select class="selectpicker data-value stretch" value="@Model.building_id" id="building_id" name="building_id" data-live-search="true" placeholder="Выберите здание"
+                        required @is_disabled_building onchange="ChangeBuildingAddress(event)">
+                    <option value=@null selected>Отсутствует</option>
+                    @foreach (var tz_list in ViewBag.Buildings)
+                    {
+                        if (tz_list.value_id == Model.building_id)
+                        {
+                            <option value="@tz_list.value_id" selected>@tz_list.value_name</option>
+                        }
+                        if (tz_list.value_id != Model.building_id)
+                        {
+                            <option value="@tz_list.value_id">@tz_list.value_name</option>
+                        }
+                    }
+                </select>
+                <a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Выберите значение из списка"></a>
+            </div>
+            <div class="data-item ">
+                <label class="data-label xl-fix">Наименование заявителя</label>
+                <input type="text" asp-for="@Model.appl_name" class="data-value xxl-stretch" placeholder="Введите...">
+            </div>
+        </div>
+        <div class="data-row">
+            <div class="data-item">
+                <label class="data-label xl-fix">Кадастровый номер земельного участка застройки</label>
+                <input type="text" asp-for="@Model.cad_num_zu" class="data-value xxl-stretch" placeholder="Введите...">
+            </div>
+            <div class="data-item">
+                <label class="data-label xl-fix">УНОМ строения по базе БТИ</label>
+                <input type="text" asp-for="@Model.bti_build_unom" class="data-value lg-stretch double" placeholder="Введите...">
+            </div>
+        </div>
+        <div class="data-row">
+            <div class="data-row">
+                <div class="data-item ">
+                    <label class="data-label xl-fix">Заявка о подключении: </label><label class="data-label"><span class="sublabel">от</span></label>
+                    <input type="date" asp-for="@Model.connect_req_date" class="data-value md-stretch" placeholder="Дата">
+                </div>
+                <div class="data-item ">
+                    <label class="data-label"> <span class="sublabel">№</span></label>
+                    <input type="text" asp-for="@Model.connect_req_num" class="data-value md-stretch" placeholder="Номер">
+                </div>
+            </div>
+            <div class="data-row">
+                <div class="data-item ">
+                    <label class="data-label xl-fix">Условие на подключение: </label><label class="data-label"><span class="sublabel">от</span></label>
+                    <input type="date" asp-for="@Model.connect_cond_date" class="data-value md-stretch" placeholder="Дата">
+                </div>
+                <div class="data-item ">
+                    <label class="data-label"> <span class="sublabel">№</span></label>
+                    <input type="text" asp-for="@Model.connect_cond_num" class="data-value md-stretch" placeholder="Номер">
+                </div>
+            </div>
+        </div>
+        <div class="data-row">
+            <div class="data-row">
+                <div class="data-item ">
+                    <label class="data-label xl-fix">Договор о подключении: </label><label class="data-label"><span class="sublabel">от</span></label>
+                    <input type="date" asp-for="@Model.connect_agree_date" class="data-value md-stretch" placeholder="Дата">
+                </div>
+                <div class="data-item ">
+                    <label class="data-label"> <span class="sublabel">№</span></label>
+                    <input type="text" asp-for="@Model.connect_agree_num" class="data-value md-stretch" placeholder="Номер">
+                </div>
+            </div>
+            <div class="data-item ">
+                <label class="data-label xl-fix">Точка присоединения:</label>
+                <input type="text" asp-for="@Model.connect_point_hn" class="data-value xl-stretch" placeholder="Введите...">
+            </div>
+        </div>
+        <div class="data-row">
+            <button type="submit" class="bttn bttn-color ms-auto" id="per_dev_facil_gen_info_save_btn" @is_disabled>Сохранить</button>
+        </div>
+    </div>
+</form>
+
+<script type="text/javascript" src="@Url.Content("~/hss/js/popup_common_scripts.js")"></script>
+<script type="text/javascript">
+
+    var onSuccessFormPerspectiveDevelopmentGenInfo = function (xhr) {
+        hidePreloader();
+        if (xhr.success && xhr.is_deleted == true && xhr.is_new != true) {
+            showMessage('Данные удалены.', 'modal', 'success');
+        }
+        else if (xhr.success && xhr.is_deleted != true && xhr.is_new != true) {
+            showMessage('Данные сохранены.', 'modal', 'success');
+            $('#consumer_id_old').val(xhr.model.consumer_id_old)
+            var select_consumer = $('#consumer_id');
+            var select_building = $('#building_id');
+            var select_unom_facility = $('#per_dev_gen_info_unom_facility');
+            $(select_consumer).append('<option value=' + xhr.model.consumer_id + ' selected>' + xhr.consumer_name + '</option>');
+            RefreshSelectById('consumer_id');
+            if (xhr.model.building_id != null) {
+                $(select_building).append('<option value=' + xhr.model.building_id + ' selected>' + xhr.building_name + '</option>');
+                document.querySelector('#building_id').setAttribute("disabled", "disabled");
+                RefreshSelectById('building_id');
+            }
+            $(select_unom_facility).append('<option value=' + xhr.model.consumer_id + ' selected>' + xhr.unom_facility + '</option>');
+            RefreshSelectById('per_dev_gen_info_unom_facility');
+        }
+        else if (xhr.success && xhr.is_new_dev_prog == true) {
+            showMessage('Данные добавлены.', 'modal', 'success');
+            OpenPopupPerspectiveDevelopment(xhr.dev_prog_id)
+        }
+        else {
+            if (xhr.is_address_exist == true)
+                showMessage('Здание с указанным адресом уже существует!\nВыберите его из списка "Здание".', 'modal', 'fault');
+            else
+                showMessage(xhr.error, 'modal', 'fault');
+        }
+        $("#refresh_table").val(1);
+    };
+
+    function ChangeConsumerNumberAddress(event) {
+        var consumer_id = event.target.value;
+        var action_name = 'GetBildingUnomConsumerId';
+
+        $.ajax({
+            type: 'GET',
+            url: '/DictionaryTables/PerspectiveDevelopmentTown/' + action_name,
+            data: { consumer_id: consumer_id },
+            traditional: true,
+            dataType: 'json'
+        })
+            .done(function (result) {
+                if (result.consumer_unom != null) {
+                    var select_building = $('#building_id');
+                    $(select_building).append('<option value=' + result.consumer_unom.value_id + ' selected>' + result.consumer_unom.value_name + '</option>');
+                    document.querySelector('#building_id').setAttribute("disabled", "disabled");
+                }
+                else
+                    document.querySelector('#building_id').removeAttribute("disabled");
+
+                RefreshSelectById('building_id');
+            });
+    }
+
+    function ChangeBuildingAddress(event) {
+        var building_id = event.target.value;
+        var select = $("#consumer_id");
+        var consumer_id = $("#consumer_id").val();
+        var action_name = 'GetConsumerNumberAddressList';
+        if (consumer_id != '')
+            return;
+
+        $.ajax({
+            type: 'GET',
+            url: '/DictionaryTables/PerspectiveDevelopmentTown/' + action_name,
+            data: { building_id: building_id },
+            traditional: true,
+            dataType: 'json'
+        })
+            .done(function (result) {
+                $(select).find('option').remove();
+                $(select).append('<option value="" selected>' + "Отсутствует" + '</option>');
+                if (result.consumer_unom_list.length !== 0) 
+                    for (var i = 0; i < result.consumer_unom_list.length; i++) 
+                        $(select).append('<option value=' + result.consumer_unom_list[i].value_id + '>' + result.consumer_unom_list[i].value_name + '</option>');
+
+                RefreshSelectById('consumer_id');
+            });
+    }
+
+</script>

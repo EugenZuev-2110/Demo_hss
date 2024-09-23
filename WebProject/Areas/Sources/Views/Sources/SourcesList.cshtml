@@ -1,0 +1,512 @@
+﻿
+<div class="data-block workspace">
+	<div class="data-block title-block">
+		<div class="data-row">
+			<ul class="breadcrumb">
+				<li class="breadcrumb-item"><a class="ref-color" href="index.html">Главная</a></li>
+				<li class="breadcrumb-item">Источники тепловой энергии - Перечень источников</li>
+			</ul>
+		</div>
+		<div class="data-row">
+			<h1 class="title">Источники тепловой энергии</h1>
+
+			<div class="data-item data-item-right">
+				<button class="bttn bttn-color bttn-edit-data" type="button" onclick="OpenPopupSource(0)">Добавить/Удалить</button>
+				<a class="bttn bttn-color bttn-load-data disabled" type="button" href="page2-2-1-2.html">Загрузить данные</a>
+				<button class="bttn bttn-color bttn-excel-export disabled" type="button">Выгрузить в Excel</button>
+			</div>
+		</div>
+		<div class="data-block static-block">
+			<div class="data-row">
+				<div class="data-item">
+					<partial name="_PerspectiveYearsList" />
+				</div>
+				<div class="data-item">
+					<div class="note">Базовый год - <span class="note-base-year" id="base_year_info"></span>;</div>
+				</div>
+				<div class="note">Обновление связей данных -&nbsp;<span class="note-update-date">14.11.2022</span>.</div>
+			</div>
+			<div class="data-row">
+				<div class="data-item ">
+					<label class="data-label">Эксплуатирующая ТСО:</label>
+					<select class="selectpicker data-value lg-stretch" data-live-search="true" name="tso_id" id="source_tso_select" data-size="5" placeholder="Выберите наименование ТСО" onchange="GetListOnPage()">
+						<option value="0" selected>Все</option>
+						@foreach (var tso in ViewBag.Tso)
+						{
+							<option value="@tso.tso_id">@tso.tso_name</option>
+						}
+					</select>
+				</div>
+				<div class="data-item ">
+					<label class="data-label">Тип источника:</label>
+					<select class="selectpicker data-value lg-stretch" data-live-search="true" name="source_type" id="source_type_select" data-size="5" placeholder="Выберите наименование источника">
+						<option value="0" selected>Все</option>
+						@foreach (var source_type in ViewBag.SourcesType)
+						{
+							<option value="@source_type.value_id">@source_type.value_name</option>
+						}
+					</select>
+				</div>
+				<div class="data-item d-none">
+					<label class="data-label">Параметр источника:</label>
+					<select class="selectpicker data-value lg-stretch" data-live-search="true" placeholder="Выберите наименование источника">
+						<option value="1">Параметр 1</option>
+						<option value="2">Параметр 2</option>
+						<option value="3">Параметр 3</option>
+						<option value="4">Параметр 4</option>
+					</select>
+				</div>
+			</div>
+			<div class="data-row">
+				<div class="data-row">
+					<label class="data-item">
+						<span class="data-label">Регулируемые</span>
+						<input type="checkbox" class="data-check" name="source_tz" id="source_tz" value="1" onchange="CheckCB(this)">
+					</label>
+				</div>
+				<div class="data-row">
+					<label class="data-item">
+						<span class="data-label">ТЭС</span>
+						<input type="checkbox" value="-2" name="source_type" id="CheckBox_tes" class="data-check"  onchange="CheckCB(this)">
+					</label>
+					<label class="data-item">
+						<span class="data-label">Котельные</span>
+						<input type="checkbox" value="-3" name="source_type" id="CheckBox_kot" class="data-check" onchange="CheckCB(this)">
+
+					</label>
+				</div>
+				<div class="data-row">
+					<label class="data-item">
+						<span class="data-label">Перспективные</span>
+						<input type="checkbox" name="source_status" id="CheckBox_perspective" value="-2" class="data-check" onchange="CheckCB(this)">
+					</label>
+					<label class="data-item">
+						<span class="data-label">Выводимые из эксплуатации</span>
+						<input type="checkbox" id="CheckBox_decommissioned" name="source_status" value="1" class="data-check" onchange="CheckCB(this)">
+					</label>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="data-block main-content">
+		<div class="tab-content">
+			<div class="dropdown">
+				<button class="bttn bttn-square bttn-burger" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M80 160h352M80 256h352M80 352h352" /></svg>
+				</button>
+				<ul class="dropdown-menu" role="tablist">
+					<li>
+						<button onclick="TabChange(event);" data-tab-action="OnGetSourceList_PartialViewComponent" class="dropdown-item active" data-bs-toggle="tab" data-bs-target="#sourceListTab" type="button" role="tab" aria-controls="sourceListTab" aria-selected="false">Перечень источников на расчетный год</button>
+					</li>
+					<li>
+						<button class="dropdown-item" data-tab-action="OnGetSourceEquipments_PartialViewComponent" data-bs-toggle="tab" data-bs-target="#sourceByYearTab" type="button" role="tab" aria-controls="sourceByYearTab" aria-selected="false">Перечень источников по годам</button>
+					</li>
+					<li>
+						<button class="dropdown-item" data-bs-toggle="tab" data-bs-target="#powerTab" type="button" role="tab" aria-controls="powerTab" aria-selected="false">Мощность и нагрузки</button>
+					</li>
+				</ul>
+			</div>
+			<div class="tab-pane fade show active" id="sourceListTab" role="tabpanel">
+				<div class="data-block" id="sourcelistTable_div">
+					@await Component.InvokeAsync("SourceList_Partial")
+				</div>
+			</div>
+			<div class="tab-pane fade" id="sourceByYearTab" role="tabpanel">
+				<div class="data-block">
+					<h3>Перечень источников по годам</h3>
+					<div class="table-block">
+						<div class="table-buttons sourceByYearTable-buttons"></div>
+						<table id="sourceByYearTable" class="tableblock-table display compact" style="width:100%">
+							<thead>
+								<tr>
+									<th>УНОМ ТП</th>
+									<th>УНОМ ИСТ</th>
+									<th>Адрес</th>
+									<th>Дата</th>
+									<th>Тип</th>
+									<th>Округ</th>
+									<th>Состояние</th>
+									<th>Полезная энергия</th>
+									<th>Тепловая энергия</th>
+									<th>Источники</th>
+								</tr>
+								<tr class="filter-row ">
+									<th class="dtfc-fixed-left" style="left:0; position:sticky;"><input type="text" class="filter-col-0" /></th>
+									<th><input type="text" class="filter-col-1" /></th>
+									<th><input type="text" class="filter-col-2" /></th>
+									<th><input type="text" class="filter-col-3" /></th>
+									<th><input type="text" class="filter-col-4" /></th>
+									<th><input type="text" class="filter-col-5" /></th>
+									<th><input type="text" class="filter-col-6" /></th>
+									<th><input type="text" class="filter-col-7" /></th>
+									<th><input type="text" class="filter-col-8" /></th>
+									<th><input type="text" class="filter-col-9" /></th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>1</td>
+									<td>ТСО 1</td>
+									<td>Row 1 Data 3</td>
+									<td>Row 1 Data 4</td>
+									<td>Row 1 Data 5</td>
+									<td>Row 1 Data 6</td>
+									<td>Row 1 Data 7</td>
+									<td>Row 1 Data 8</td>
+									<td>Row 1 Data 9</td>
+									<td><a href="#">>></a></td>
+								</tr>
+								
+							</tbody>
+						</table>
+					</div>
+					<div class="data-row table-summary">
+						<div class="data-item rows-count">
+							<h5>Всего записей:</h5>
+							<p><span class="mark-color">10</span></p>
+						</div>
+						<div class="scroll-table-wrapper stretch">
+							<table style="white-space: nowrap; width: 100%;">
+								<thead>
+									<tr>
+										<th colspan="2">Расчётный год</th>
+										<th>01.01.2022</th>
+										<th>01.01.2023</th>
+										<th>01.01.2024</th>
+										<th>01.01.2025</th>
+										<th>01.01.2026</th>
+										<th>01.01.2027</th>
+										<th>01.01.2028</th>
+										<th>01.01.2029</th>
+										<th>01.01.2030</th>
+										<th>01.01.2031</th>
+										<th>01.01.2032</th>
+										<th>01.01.2033</th>
+										<th>01.01.2034</th>
+										<th>01.01.2035</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td colspan="2">Количество источников всего, <span class="data-unit">шт.</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+									</tr>
+									
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="tab-pane fade" id="powerTab" role="tabpanel">
+				<div class="data-block">
+					<h3>Мощность и нагрузки</h3>
+					<div class="table-block">
+						<div class="table-buttons powerTable-buttons"></div>
+						<table id="powerTable" class="display compact" style="width:100%">
+							<thead>
+								<tr>
+									<th>УНОМ ТЗ</th>
+									<th>УНОМ ТП</th>
+									<th>Адрес</th>
+									<th>Дата</th>
+									<th>Тип</th>
+									<th>Округ</th>
+									<th>Состояние</th>
+									<th>Полезная энергия</th>
+									<th>Тепловая энергия</th>
+									<th>Источники</th>
+								</tr>
+								<tr class="filter-row ">
+									<th class="dtfc-fixed-left" style="left:0; position:sticky;"><input type="text" class="filter-col-0" /></th>
+									<th><input type="text" class="filter-col-1" /></th>
+									<th><input type="text" class="filter-col-2" /></th>
+									<th><input type="text" class="filter-col-3" /></th>
+									<th><input type="text" class="filter-col-4" /></th>
+									<th><input type="text" class="filter-col-5" /></th>
+									<th><input type="text" class="filter-col-6" /></th>
+									<th><input type="text" class="filter-col-7" /></th>
+									<th><input type="text" class="filter-col-8" /></th>
+									<th><input type="text" class="filter-col-9" /></th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>1</td>
+									<td>ТСО 1</td>
+									<td>Row 1 Data 3</td>
+									<td>Row 1 Data 4</td>
+									<td>Row 1 Data 5</td>
+									<td>Row 1 Data 6</td>
+									<td>Row 1 Data 7</td>
+									<td>Row 1 Data 8</td>
+									<td>Row 1 Data 9</td>
+									<td><a href="#">>></a></td>
+								</tr>
+								
+							</tbody>
+						</table>
+					</div>
+					<div class="data-row table-summary">
+						<div class="data-item rows-count">
+							<h5>Всего записей:</h5>
+							<p><span class="mark-color">10</span></p>
+						</div>
+						<div class="scroll-table-wrapper stretch">
+							<table style="white-space: nowrap; width: 100%;">
+								<thead>
+									<tr>
+										<th>Расчётный год</th>
+										<th>01.01.2022</th>
+										<th>01.01.2023</th>
+										<th>01.01.2024</th>
+										<th>01.01.2025</th>
+										<th>01.01.2026</th>
+										<th>01.01.2027</th>
+										<th>01.01.2028</th>
+										<th>01.01.2029</th>
+										<th>01.01.2030</th>
+										<th>01.01.2031</th>
+										<th>01.01.2032</th>
+										<th>01.01.2033</th>
+										<th>01.01.2034</th>
+										<th>01.01.2035</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>∑ N<sub>уст</sub>, <span class="data-unit">МВт</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+									</tr>
+									<tr>
+										<td>∑ Q<sub>уст</sub>, <span class="data-unit">Гкал/ч</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+									</tr>
+									<tr>
+										<td>∑ Q<sub>нетто</sub>, <span class="data-unit">Гкал/ч</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+									</tr>
+									<tr>
+										<td>∑ Q<sub>пр</sub><sup>пар</sup>, <span class="data-unit">т/ч</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+									</tr>
+									<tr>
+										<td>∑ Q<sub>пр</sub><sup>ГВ</sup>, <span class="data-unit">Гкал/ч</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+									</tr>
+									<tr>
+										<td>∑ Q<sub>резерв</sub>, <span class="data-unit">Гкал/ч</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+										<td><span class="mark-color">10</span></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<script>
+
+	$(document).ready(function () {
+		setTimeout(function () {
+			$('#sourcelist').addClass('active');
+		}, 500);
+
+		TableInit('sourcelistTable', 'full');
+
+	});
+
+	document.querySelector('#source_type_select').addEventListener('change', (event) => {
+		document.getElementById('CheckBox_kot').checked = false;
+		document.getElementById('CheckBox_tes').checked = false;
+		GetListOnPage();
+	});
+
+
+	function GetListOnPage() {
+		debugger
+		var org = document.getElementById('source_tso_select').value
+		var type = $('input[name="source_type"]').val();
+		if (document.getElementById('CheckBox_kot').checked || document.getElementById('CheckBox_tes').checked) {
+			type = $('input[name="source_type"]:checked').val()
+		}
+		else{
+			type = document.getElementById('source_type_select').value
+		}
+		showPreloader();
+		$.ajax({
+		
+			type: 'GET',
+			url: '@Html.Raw(Url.Action("OnGetSourcesViewComponent", "Sources", new { Area = "Sources" }))',
+			data: {
+				data_status: $('#data_status').val(),
+				perspective_year: $('#perspective_year').val(),
+				type: type,
+				status: $('input[name="source_status"]:checked').val(),
+				tz: $('input[name="source_tz"]:checked').val(),
+				org: document.getElementById('source_tso_select').value
+			},
+			dataType: 'html'
+		})
+			.done(function (result) {
+				var div = $('#sourcelistTable_div');
+				div.html("");
+				div.html(result);
+				TableInit('sourcelistTable', 'full');
+				hidePreloader();
+			});
+	}
+
+	function CheckCB(cb) {
+		let cb_name = cb.name;
+		let cb_value = cb.value;
+		let id = cb.id;
+		if (id == 'CheckBox_tes') {
+			document.getElementById('CheckBox_kot').checked = false;
+			RefreshSelectByIdWithVal('source_type_select', 0);
+		}
+		if (id == 'CheckBox_kot') {
+			document.getElementById('CheckBox_tes').checked = false;
+			RefreshSelectByIdWithVal('source_type_select', 0);
+		}
+		if (id == 'CheckBox_decommissioned')
+		{
+			document.getElementById('CheckBox_perspective').checked = false;
+		}
+		if (id == 'CheckBox_perspective') {
+			document.getElementById('CheckBox_decommissioned').checked = false;
+		}
+		$('input[id="' + id + '"]:checked').val(cb_value);
+		GetListOnPage();
+	};
+
+
+	function OpenPopupSource(id, action_for) {
+		showPreloader();
+		$.ajax({
+			type: 'POST',
+			url: '@Html.Raw(Url.Action("OpenSource", "Sources", new { Area = "Sources" }))',
+			data: {
+				id: id,
+				action_for: action_for,
+				data_status: $('#data_status').val(),
+				perspective_year: $('#perspective_year').val()
+			},
+			dataType: 'html'
+		})
+			.done(function (result) {
+				var div = $('#SourceDataPopup');
+				div.html("");
+				div.html(result);
+				$('.selectpicker').selectpicker();
+
+				if ($('#SourceDataPopup').is(':hidden')) {
+					showModal('SourceDataPopup');
+				}
+				hidePreloader();
+			});
+	}
+
+
+	function RefreshTable() {
+		if ($("#refresh_sourcelist_table").val() === "1") {
+			$("#refresh_sourcelist_table").val(0);
+			GetListOnPage();
+		}
+	}
+</script>

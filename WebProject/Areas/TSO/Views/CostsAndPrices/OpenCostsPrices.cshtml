@@ -1,0 +1,337 @@
+﻿@model WebProject.Areas.TSO.Models.TZOneCalcCostsDataViewModel
+
+@{
+	string btn_disable = string.Empty; int ds = @Model.data_status - 1; string is_checked = string.Empty;
+}
+@if (Model.tz_id == 0)
+{
+	btn_disable = "disabled";
+}
+
+<div class="modal-dialog modal-dialog-centered">
+	<div class="modal-content">
+		<div class="modal-header"> 
+			<h3 class="modal-title" id="editDataLabel">Калькуляция затрат и цены</h3>
+			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="RefreshTable();"></button>
+			
+		</div>
+		<div class="modal-body">
+			<div class="data-block static-block">
+				<div class="data-row">
+					<div class="data-item">
+						<label class="data-label">Наименование ТСО</label>
+						<select class="selectpicker data-value xxl-stretch" id="paramNumberTZ" data-live-search="true" placeholder="УНОМ ТЗ - краткое наименование ТСО">
+							@foreach (var tz_list in ViewBag.TZTSOList)
+							{
+								if (tz_list.tz_id == Model.tz_id)
+								{
+									<option value="@tz_list.tz_id" selected>@tz_list.tz_name</option>
+								}
+								if (tz_list.tz_id != Model.tz_id)
+								{
+									<option value="@tz_list.tz_id">@tz_list.tz_name</option>
+								}
+							}
+						</select>
+					</div>
+					<div class="data-item">
+						<label for="p_year_pop_cp" class="data-label">Расчётный год:</label>
+						<select class="selectpicker data-value md-fix" id="p_year_pop_cp">
+							@foreach (var p_years_list in ViewBag.PerspectiveYearsList)
+							{
+								if (p_years_list.perspective_year == Model.perspective_year)
+								{
+									<option value="@p_years_list.perspective_year" selected>@p_years_list.perspective_year_dt</option>
+								}
+								if (p_years_list.perspective_year != Model.perspective_year)
+								{
+									<option value="@p_years_list.perspective_year">@p_years_list.perspective_year_dt</option>
+								}
+							}
+						</select>
+					</div>
+					<div class="data-item">
+						<div class="note">Базовый год - <span class="note-base-year">@ds (01.01.@Model.data_status)</span>.</div>
+					</div>
+				</div>
+				<div class="data-row">
+					<div class="data-block stretch">
+						<div class="data-row border-block stretch">
+							<h4>Виды деятельности в границах ТЗ</h4>
+							<div class="data-block stretch">
+								<label class="data-item data-item-right">
+									<span class="data-label">Комбинированное производство, более 25 МВт</span>
+									<input type="checkbox" class="data-check" disabled @Model.combine_prod_more25>
+								</label>
+								<label class="data-item data-item-right">
+									<span class="data-label">Комбинированное производство, менее 25 МВт</span>
+									<input type="checkbox" class="data-check" disabled @Model.combine_prod_less25>
+								</label>
+							</div>
+							<div class="data-block stretch">	
+								<label class="data-item data-item-right">
+									<span class="data-label">Некомбинированное производство</span>
+									<input type="checkbox" class="data-check" disabled @Model.not_combine_prod>
+								</label>
+
+								<label class="data-item data-item-right">
+									<span class="data-label">Договор поставки</span>
+									<input type="checkbox" class="data-check" disabled @Model.delivery_contract>
+								</label>
+							</div>
+							<div class="data-block stretch">
+								<label class="data-item data-item-right">
+									<span class="data-label">Передача</span>
+									<input type="checkbox" class="data-check" disabled @Model.transfer>
+								</label>
+								<label class="data-item data-item-right">
+									<span class="data-label">Сбыт</span>
+									<input type="checkbox" class="data-check" disabled @Model.sale>
+								</label>
+							</div>
+						</div>
+						<div class="data-item">
+							<label class="data-label">Территория действия ТЗ</label>
+							<input type="text" value="@Model.tz_territory" class="data-value xxl-stretch" disabled>
+						</div>
+					</div>
+					<div class="data-block data-xxl-row">
+						<h4>Дифференциация тарифов</h4>
+						<label class="data-item data-item-right">
+							<span class="data-label">без дифференциации</span>
+							@{
+								is_checked = Model.tariff_differentiation == 1 ? "checked" : "";
+							}
+							<input type="checkbox" class="data-check" disabled @is_checked>
+						</label>
+						<label class="data-item data-item-right">
+							<span class="data-label">до тепловых пунктов</span>
+							@{
+								is_checked = Model.tariff_differentiation == 2 ? "checked" : "";
+							}
+							<input type="checkbox" class="data-check" disabled @is_checked>
+						</label>
+						<label class="data-item data-item-right">
+							<span class="data-label">после тепловых пунктов</span>
+							@{
+								is_checked = Model.tariff_differentiation == 3 ? "checked" : "";
+							}
+							<input type="checkbox" class="data-check" disabled @is_checked>
+						</label>
+					</div>
+				</div>
+				<div class="data-row border-block table-summary" id="all_calc_costs_div">
+					@await Component.InvokeAsync("TZ_CalcAllCosts_Partial", new { tz_id = Model.tz_id, data_status = Model.data_status, perspective_year = Model.perspective_year })
+				</div>
+			</div>
+			<div class="scroll-block-wrapper" style="max-height: 48vh;">
+				<div class="data-block scroll-block">
+					<div class="accordion data-block">
+						<div class=" border-block">
+							<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel0" aria-expanded="false">Распределение расходов на производство и транспорт</button>
+							<div id="panel0" class="accordion-collapse collapse">
+								<div class="accordion-body">
+									<div class="data-block" id="calcCostsDistribution">
+										@await Component.InvokeAsync("TZ_CalcCostsDistribution_Partial", new { tz_id = Model.tz_id, data_status = Model.data_status, perspective_year = Model.perspective_year })
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="tabs-block">
+						<input type="hidden" id="cur_action_name_pop" value="OnGetCallTZOne_EnergyCosts_PartialViewComponent" />
+						<input type="hidden" id="cur_table_name_pop" value="tzEnergyCostsTab" />
+						<ul class="nav nav-tabs" role="tablist">
+							<li class="nav-item" role="presentation">
+								<button onclick="TabChangePopup(event);" data-tab-action="OnGetCallTZOne_EnergyCosts_PartialViewComponent" data-tab-tableid="tzEnergyCostsTab" class="nav-link active" data-bs-toggle="tab" data-bs-target="#calcCostsTab" type="button" role="tab" aria-controls="energyTab" aria-selected="true">Энергетические <br class="d-lg-none">ресурсы</button>
+							</li>
+							<li class="nav-item" role="presentation">
+								<button onclick="TabChangePopup(event);" data-tab-action="OnGetCallTZOne_OperationCosts_PartialViewComponent" data-tab-tableid="tzOperationCostsTab" class="nav-link" data-bs-toggle="tab" data-bs-target="#calcCostsTab" type="button" role="tab" aria-controls="operationTab" aria-selected="false">Операционные <br class="d-lg-none">расходы</button>
+							</li>
+							<li class="nav-item" role="presentation">
+								<button onclick="TabChangePopup(event);" data-tab-action="OnGetCallTZOne_UncontrolCosts_PartialViewComponent" data-tab-tableid="tzUncontrolCostsTab" class="nav-link" data-bs-toggle="tab" data-bs-target="#calcCostsTab" type="button" role="tab" aria-controls="uncontrolTab" aria-selected="false">Неподконтрольные <br class="d-lg-none">расходы</button>
+							</li>
+						</ul>
+						<div class="tab-content">
+							<div class="tab-pane fade show active" id="calcCostsTab" role="tabpanel" >
+								<div class="scroll-block-wrapper" style="max-height: 38vh;" id="tz_calc_costs_div">
+									@await Component.InvokeAsync("TZ_EnergyCostsData_Partial", new { tz_id = Model.tz_id, data_status = Model.data_status, perspective_year = Model.perspective_year })
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		@*<div class="modal-footer">
+			<button type="button" class="bttn" data-bs-dismiss="modal">Отмена</button>
+			<button type="button" class="bttn bttn-color" data-bs-dismiss="modal">Сохранить</button>
+		</div>*@
+	</div>
+</div>
+
+@*<script type="text/javascript" src="@Url.Content("~/hss/js/popup_common_scripts.js")"></script>*@
+<script type="text/javascript">
+
+	$(document).ready(function () {
+
+		document.querySelector('#paramNumberTZ').addEventListener('change', (event) => {
+			OpenPopupCostsPrices($('#paramNumberTZ').val(), $('#p_year_pop_cp').val(), '/TSO/CostsAndPrices/OpenCostsPrices', 'TZCostsPricesDataPopup');
+		});
+
+		document.querySelector('#p_year_pop_cp').addEventListener('change', (event) => {
+			OpenPopupCostsPrices($('#paramNumberTZ').val(), $('#p_year_pop_cp').val(), '/TSO/CostsAndPrices/OpenCostsPrices', 'TZCostsPricesDataPopup');
+		});
+
+	});
+
+	function GetDataOnTabPopup() {
+		showPreloader();
+
+		let action_name = $('#cur_action_name_pop').val();;
+		let table_name = $('#cur_table_name_pop').val();;
+
+		$.ajax({
+			type: 'GET',
+			url: '/TSO/CostsAndPrices/' + action_name,
+			data: {
+				tz_id: @Model.tz_id,
+				data_status: $('#data_status').val(),
+				perspective_year: $('#p_year_pop_cp').val()
+			},
+			dataType: 'html'
+		})
+			.done(function (result) {
+				var div = $('#tz_calc_costs_div');
+				div.html("");
+				div.html(result);
+				$('.selectpicker').selectpicker();
+
+				$.ajax({
+					type: 'GET',
+					url: '/TSO/CostsAndPrices/OnGetCallTZ_CalcAllCosts_PartialViewComponent',
+					data: {
+						tz_id: @Model.tz_id,
+						data_status: $('#data_status').val(),
+						perspective_year: $('#p_year_pop_cp').val()
+					},
+					dataType: 'html'
+				})
+					.done(function (result) {
+						var div = $('#all_calc_costs_div');
+						div.html("");
+						div.html(result);
+					});
+
+				hidePreloader();
+			});
+	}
+
+	function SumCostsEnergy(tab) {
+		var costs_er = 0; var costs_op = 0; var costs_nc = 0;
+		if (tab === 1) {
+			let cfr_p3 = Number($('#cost_fuel_reserve_plan_3').val().replace(",", "."));
+			let paf_p3 = Number($('#price_all_fuel_plan_3').val().replace(",", "."));
+			let cae_p3 = Number($('#costs_all_energy_plan_3').val().replace(",", "."));
+			let caw_p3 = Number($('#costs_all_water_plan_3').val().replace(",", "."));
+			let chc_p3 = Number($('#cost_heatcarrier_plan_3').val().replace(",", "."));
+
+			costs_er = cfr_p3 + paf_p3 + cae_p3 + caw_p3 + chc_p3;
+			$('#costs_all_energy_res').html(costs_er.toString().replace(".", ","));
+		}
+		else {
+			costs_er = Number($('#costs_all_energy_res').html().replace(",", "."));
+		}
+
+		if (tab === 2) {
+			let cas_p3 = Number($('#costs_all_salary_plan_3').val().replace(",", "."));
+			let cma_p3 = Number($('#cost_materials_all_plan_3').val().replace(",", "."));
+			let coo_p3 = Number($('#cost_other_org_all_plan_3').val().replace(",", "."));
+			let coos_p3 = Number($('#cost_org_other_service_all_plan_3').val().replace(",", "."));
+			let crf_p3 = Number($('#cost_repair_funding_plan_3').val().replace(",", "."));
+			let cd_p3 = Number($('#cost_decomission_plan_3').val().replace(",", "."));
+
+			let ctr_p3 = Number($('#cost_travel_plan_3').val().replace(",", "."));
+			let cstr_p3 = Number($('#cost_staff_train_plan_3').val().replace(",", "."));
+			let cbs_p3 = Number($('#cost_bank_service_plan_3').val().replace(",", "."));
+			let rnoa_p3 = Number($('#rent_nonprod_obj_all_plan_3').val().replace(",", "."));
+			let lnowor_p3 = Number($('#leasing_nonprod_obj_without_own_rights_plan_3').val().replace(",", "."));
+			let cooa_p3 = Number($('#cost_other_operatings_all_plan_3').val().replace(",", "."));
+
+			costs_op = cas_p3 + cma_p3 + coo_p3 + coos_p3 + crf_p3 + cd_p3 + ctr_p3 + cstr_p3 + cbs_p3 + rnoa_p3 + lnowor_p3 + cooa_p3;
+			$('#costs_operating').html(costs_op.toString().replace(".", ","));
+		}
+		else {
+			costs_op = Number($('#costs_operating').html().replace(",", "."));
+		}
+
+		if (tab === 3) {
+			let crpa_p3 = Number($('#cost_req_pay_all_plan_3').val().replace(",", "."));
+			let caa_p3 = Number($('#cost_amortization_all_plan_3').val().replace(",", "."));
+			let cros_p3 = Number($('#cost_reg_org_service_plan_3').val().replace(",", "."));
+			let cit_p3 = Number($('#cost_income_tax_plan_3').val().replace(",", "."));
+
+			let cc_p3 = Number($('#cost_concession_plan_3').val().replace(",", "."));
+			let cdd_p3 = Number($('#cost_doubtful_debt_plan_3').val().replace(",", "."));
+			let ccc_p3 = Number($('#cost_credit_contracts_plan_3').val().replace(",", "."));
+			let rpoa_p3 = Number($('#rent_prod_obj_all_plan_3').val().replace(",", "."));
+			let loa_p3 = Number($('#leasing_obj_all_plan_3').val().replace(",", "."));
+			let cuo_p3 = Number($('#cost_uncontrol_other_plan_3').val().replace(",", "."));
+			let csda_p3 = Number($('#cost_social_deduction_all_plan_3').val().replace(",", "."));
+
+			costs_nc = crpa_p3 + caa_p3 + cros_p3 + cit_p3 + cc_p3 + cdd_p3 + ccc_p3 + rpoa_p3 + loa_p3 + cuo_p3 + csda_p3;
+			$('#costs_non_control').html(costs_nc.toString().replace(".", ","));
+			$('#amortization').html(caa_p3.toString().replace(".", ","));
+		}
+		else {
+			costs_nc = Number($('#costs_non_control').html().replace(",", "."));
+		}
+		
+		let coef = Number($('#coef_on_realize').html().replace(",", "."));
+
+		let costs_all = costs_op + costs_nc + costs_er;
+		$('#costs_all').html(costs_all.toFixed(2).toString().replace(".", ","));
+
+		if (costs_all > 0)
+		{
+			let costs_er_pr = costs_er / costs_all * 100;
+			$('#costs_all_energy_res_percent').html(costs_er_pr.toFixed(2).toString().replace(".", ","));
+
+			let costs_op_pr = costs_op / costs_all * 100;
+			$('#costs_operating_percent').html(costs_op_pr.toFixed(2).toString().replace(".", ","));
+
+			let costs_nc_pr = costs_nc / costs_all * 100;
+			$('#costs_non_control_percent').html(costs_nc_pr.toFixed(2).toString().replace(".", ","));
+
+			let costs_onr = costs_all * coef;
+			$('#costs_on_realize').html(costs_onr.toFixed(2).toString().replace(".", ","));
+		}
+	}
+
+	function RefreshTable() {
+		if ($("#refresh_table").val() === "1") {
+			GetListOnPage();
+		}
+	}
+
+	function GetDistributionCalcCosts() {
+
+		showPreloader();
+		$.ajax({
+			type: 'GET',
+			url: '@Html.Raw(Url.Action("OnGetCallTZ_CalcCostsDistribution_PartialViewComponent", "CostsAndPrices", new { Area = "TSO" }))',
+			data: {
+				tz_id: $('#paramNumberTZ').val(),
+				data_status: $('#data_status').val(),
+				perspective_year: $('#p_year_pop_cp').val(),
+			},
+			dataType: 'html'
+		}).done(function (result) {
+			var div = $('#calcCostsDistribution');
+			div.html("");
+			div.html(result);
+			hidePreloader();
+		});
+	}
+
+</script>

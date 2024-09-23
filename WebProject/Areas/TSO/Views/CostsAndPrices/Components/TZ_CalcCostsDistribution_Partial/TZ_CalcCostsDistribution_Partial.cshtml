@@ -1,0 +1,152 @@
+﻿@model WebProject.Areas.TSO.Models.TZCalcCostsDistributionViewModel
+@{
+	Layout = null; string disable = "";
+}
+@if (Model.tz_id == 0)
+{
+	disable = "disabled";
+}
+<form asp-controller="CostsAndPrices" asp-action="TZCostDistribution_Save" asp-antiforgery="true" asp-area="TSO"
+	  data-ajax-failure="onFailedFormTZ" data-ajax-success="onSuccessFormTZ" data-ajax-begin="onBeginFormTZ" data-ajax="true" data-ajax-method="POST">
+	<div class="data-table-block">
+		<div class="data-item">
+			<h5 class="data-label"></h5>
+			<h5 class="data-label text-center">Факт</h5>
+			<h5 class="data-label text-center">План</h5>
+		</div>
+		<input type="hidden" name="tz_id" value="@Model.tz_id" />
+		<input type="hidden" name="data_status" value="@Model.data_status" />
+		<input type="hidden" name="perspective_year" value="@Model.perspective_year" />
+		<div class="data-item">
+			<label class="data-label">Доля операционных и неподконтрольных расходов на производство</label>
+			<div class="data-value"><input type="text" asp-for="@Model.coef_cost_on_production_fact_3" class="data-value" disabled></div>
+			<div class="data-value"><input type="text" asp-for="@Model.coef_cost_on_production_plan_3" class="data-value" disabled></div>
+		</div>
+		<div class="data-item">
+			<label class="data-label">из них амортизация и налог на имущество</label>
+			<div class="data-value"><input type="text" asp-for="@Model.coef_amortiz_on_production_fact_3" class="data-value" disabled></div>
+			<div class="data-value"><input type="text" asp-for="@Model.coef_amortiz_on_production_plan_3" class="data-value" disabled></div>
+		</div>
+		<div class="data-item">
+			<label class="data-label">Доля операционных и неподконтрольных расходов на транспорт</label>
+			<div class="data-value"><input type="text" asp-for="@Model.coef_cost_on_transport_fact_3" class="data-value double" data-double="costs_distribution"></div>
+			<div class="data-value"><input type="text" asp-for="@Model.coef_cost_on_transport_plan_3" class="data-value double" data-double="costs_distribution"></div>
+		</div>
+		<div class="data-item">
+			<label class="data-label">из них амортизация и налог на имущество</label>
+			<div class="data-value"><input type="text" asp-for="@Model.coef_amortiz_on_transport_fact_3" class="data-value double" data-double="costs_distribution"></div>
+			<div class="data-value"><input type="text" asp-for="@Model.coef_amortiz_on_transport_plan_3" class="data-value double" data-double="costs_distribution"></div>
+		</div>
+		<div class="data-item">
+			<div class="data-value"></div>
+			<div class="data-value"></div>
+			<button type="submit" class="bttn bttn-color ms-auto" @disable>Сохранить</button>
+		</div>
+	</div>
+</form>
+<table class="table-inp-stretch" style="width:100%; white-space: nowrap;">
+	<thead>
+		<tr>
+			<th rowspan="3"><button type="button" class="bttn bttn-color ms-auto" onclick="GetDistributionCalcCosts();">Обновить таблицу</button></th>
+			<th colspan="6">Затраты на производство</th>
+			<th colspan="6">Затраты на транспорт</th>
+		</tr>
+		<tr>
+			<th colspan="3">Факт</th>
+			<th colspan="3">План</th>
+			<th colspan="3">Факт</th>
+			<th colspan="3">План</th>
+		</tr>
+		<tr>
+			<th>I полугодие</th>
+			<th>II полугодие</th>
+			<th>Год</th>
+			<th>I полугодие</th>
+			<th>II полугодие</th>
+			<th>Год</th>
+			<th>I полугодие</th>
+			<th>II полугодие</th>
+			<th>Год</th>
+			<th>I полугодие</th>
+			<th>II полугодие</th>
+			<th>Год</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>Всего расходов, <span class="data-unit">тыс. руб.</span></td>
+			<td><input type="text" asp-for="@Model.costs_onproduction_all_fact_1" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_onproduction_all_fact_2" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_onproduction_all_fact_3" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_onproduction_all_plan_1" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_onproduction_all_plan_2" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_onproduction_all_plan_3" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_ontransport_all_fact_1" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_ontransport_all_fact_2" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_ontransport_all_fact_3" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_ontransport_all_plan_1" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_ontransport_all_plan_2" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_ontransport_all_plan_3" class="data-value" disabled></td>
+		</tr>
+		<tr>
+			<td>- расходы на энеретические ресурсы</td>
+			<td><input type="text" asp-for="@Model.costs_energy_resources_fact_1" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_energy_resources_fact_2" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_energy_resources_fact_3" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_energy_resources_plan_1" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_energy_resources_plan_2" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_energy_resources_plan_3" class="data-value" disabled></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>- операционные расходы</td>
+			<td><input type="text" asp-for="@Model.costs_operation_onproduction_fact_1" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_operation_onproduction_fact_2" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_operation_onproduction_fact_3" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_operation_onproduction_plan_1" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_operation_onproduction_plan_2" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_operation_onproduction_plan_3" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_operation_ontransport_fact_1" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_operation_ontransport_fact_2" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_operation_ontransport_fact_3" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_operation_ontransport_plan_1" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_operation_ontransport_plan_2" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_operation_ontransport_plan_3" class="data-value" disabled></td>
+		</tr>
+		<tr>
+			<td>- неподконтрольные расходы</td>
+			<td><input type="text" asp-for="@Model.costs_uncontroll_onproduction_fact_1" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_uncontroll_onproduction_fact_2" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_uncontroll_onproduction_fact_3" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_uncontroll_onproduction_plan_1" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_uncontroll_onproduction_plan_2" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_uncontroll_onproduction_plan_3" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_uncontroll_ontransport_fact_1" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_uncontroll_ontransport_fact_2" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_uncontroll_ontransport_fact_3" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_uncontroll_ontransport_plan_1" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_uncontroll_ontransport_plan_2" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_uncontroll_ontransport_plan_3" class="data-value" disabled></td>
+		</tr>
+		<tr>
+			<td>- из них амортизация</td>
+			<td><input type="text" asp-for="@Model.costs_amortization_onproduction_fact_1" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_amortization_onproduction_fact_2" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_amortization_onproduction_fact_3" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_amortization_onproduction_plan_1" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_amortization_onproduction_plan_2" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_amortization_onproduction_plan_3" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_amortization_ontransport_fact_1" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_amortization_ontransport_fact_2" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_amortization_ontransport_fact_3" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_amortization_ontransport_plan_1" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_amortization_ontransport_plan_2" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_amortization_ontransport_plan_3" class="data-value" disabled></td>
+		</tr>
+	</tbody>
+</table>

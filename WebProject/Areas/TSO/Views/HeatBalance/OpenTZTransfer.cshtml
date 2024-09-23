@@ -1,0 +1,322 @@
+﻿@model WebProject.Areas.TSO.Models.TZOneTransferDataViewModel
+
+@{
+	string btn_disable = string.Empty; int ds = @Model.data_status - 1; string is_checked = string.Empty;
+}
+@if (Model.tz_id == 0)
+{
+	btn_disable = "disabled";
+}
+
+<div class="modal-dialog modal-dialog-centered">
+	<div class="modal-content">
+	    <div class="modal-header"> 
+			<h3 class="modal-title" id="editDataLabel">Данные тарифной зоны по тепловому балансу передачи</h3>
+			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="RefreshTable();"></button>
+			<input type="hidden" value="0" id="refresh_tz_production_table" />
+		</div>
+		<div class="modal-body">
+			<div class="data-block static-block data-params">
+				<div class="data-row">
+					<div class="data-item">
+						<label class="data-label">Уникальный номер тарифной зоны и наименование ТСО</label>
+						<select class="selectpicker data-value xxl-stretch" id="paramNumberTZTransfer" data-live-search="true" placeholder="УНОМ ТЗ - краткое наименвание ТСО">
+							@foreach (var tz_list in ViewBag.TZTSOList)
+							{
+								if (tz_list.tz_id == Model.tz_id)
+								{
+									<option value="@tz_list.tz_id" selected>@tz_list.tz_name</option>
+								}
+								if (tz_list.tz_id != Model.tz_id)
+								{
+									<option value="@tz_list.tz_id">@tz_list.tz_name</option>
+								}
+							}
+						</select>
+					</div>
+					<label class="data-item">
+						<span class="data-label">Только передача</span>
+						<input type="checkbox" checked disabled class="data-check">
+					</label>
+				</div>
+				<div class="data-row">
+					<div class="data-item">
+						<label class="data-label">Территория действия ТЗ</label>
+						<input type="text" value="@Model.tz_territory" class="data-value stretch" disabled>
+					</div>
+					<div class="data-item">
+						<label for="p_year_pop_tr" class="data-label">Расчётный год:</label>
+						<select class="selectpicker md-fix" id="p_year_pop_tr">
+							@foreach (var p_years_list in ViewBag.PerspectiveYearsList)
+							{
+								if (p_years_list.perspective_year == Model.perspective_year)
+								{
+									<option value="@p_years_list.perspective_year" selected>@p_years_list.perspective_year_dt</option>
+								}
+								if (p_years_list.perspective_year != Model.perspective_year)
+								{
+									<option value="@p_years_list.perspective_year">@p_years_list.perspective_year_dt</option>
+								}
+							}
+						</select>
+					</div>
+					<div class="data-item">
+						<div class="note">Базовый год - <span class="note-base-year">@ds (01.01.@Model.data_status)</span>.</div>
+					</div>
+				</div>
+			</div>
+			<div class="scroll-block-wrapper" style="max-height:66vh">
+			    <div class="data-block scroll-block">
+		      		<div class="data-block border-block">
+						<form asp-controller="HeatBalance" asp-action="TZTransfer_Save" asp-antiforgery="true" asp-area="TSO" id="tz_transfer_form"
+								data-ajax-failure="onFailedFormTZ" data-ajax-success="onSuccessFormTZ" data-ajax-begin="onBeginFormTZ" data-ajax="true" data-ajax-method="POST">
+							<input type="hidden" name="tz_id" value="@Model.tz_id" />
+							<input type="hidden" name="data_status" value="@Model.data_status" />
+							<input type="hidden" name="perspective_year" value="@Model.perspective_year" />
+		      				<table id="tzOneTransferTable" class="display compact table-inp-stretch" style="width:100%" >
+			      				<thead>
+			      					<tr>
+			      						<th rowspan="2" >Показатели баланса, <span class="data-unit">Гкал</span></th>
+										<th colspan="3">Факт (на 01.01.@Model.data_status)</th>
+			      						<th colspan="3">План</th>
+			      					</tr>
+			      					<tr>
+			      						<th>I полугодие</th>
+			      						<th>II полугодие</th>
+			      						<th>Год</th>
+			      						<th>I полугодие</th>
+			      						<th>II полугодие</th>
+			      						<th>Год</th>
+			      					</tr>
+			      				</thead>
+			      				<tbody>
+			      					<tr>
+			      						<td>Принято тепловой энергии для передачи (транспортировки)</td>
+										<td><input type="text" id="all_transfer_heat_energy_fact_1" value="@Model.all_transfer_heat_energy_fact_1" class="data-value double" disabled></td>
+										<td><input type="text" id="all_transfer_heat_energy_fact_2" value="@Model.all_transfer_heat_energy_fact_2" class="data-value double" disabled></td>
+										<td><input type="text" id="all_transfer_heat_energy_fact_3" value="@Model.all_transfer_heat_energy_fact_3" class="data-value double" disabled></td>
+										<td><input type="text" id="all_transfer_heat_energy_plan_1" value="@Model.all_transfer_heat_energy_plan_1" class="data-value double" disabled></td>
+										<td><input type="text" id="all_transfer_heat_energy_plan_2" value="@Model.all_transfer_heat_energy_plan_2" class="data-value double" disabled></td>
+										<td><input type="text" id="all_transfer_heat_energy_plan_3" value="@Model.all_transfer_heat_energy_plan_3" class="data-value double" disabled></td>
+			      					</tr>
+			      					<tr>
+			      						<td>Потери тепловой энергии в тепловых сетях</td>
+										<td><input type="text" id="loss_heatnet_fact_1" name="loss_heatnet_fact_1" value="@Model.loss_heatnet_fact_1" class="data-value double"></td>
+										<td><input type="text" id="loss_heatnet_fact_2" name="loss_heatnet_fact_2" value="@Model.loss_heatnet_fact_2" class="data-value double"></td>
+										<td><input type="text" id="loss_heatnet_fact_3" value="@Model.loss_heatnet_fact_3" class="data-value double" disabled></td>
+										<td><input type="text" id="loss_heatnet_plan_1" name="loss_heatnet_plan_1" value="@Model.loss_heatnet_plan_1" class="data-value double"></td>
+										<td><input type="text" id="loss_heatnet_plan_2" name="loss_heatnet_plan_2" value="@Model.loss_heatnet_plan_2" class="data-value double"></td>
+										<td><input type="text" id="loss_heatnet_plan_3" value="@Model.loss_heatnet_plan_3" class="data-value double" disabled></td>
+			      					</tr>
+			      					<tr>
+			      						<td>Отпуск тепловой энергии, всего</td>
+										<td><input type="text" id="all_release_heat_energy_fact_1" value="@Model.all_release_heat_energy_fact_1" class="data-value double" disabled></td>
+										<td><input type="text" id="all_release_heat_energy_fact_2" value="@Model.all_release_heat_energy_fact_2" class="data-value double" disabled></td>
+										<td><input type="text" id="all_release_heat_energy_fact_3" value="@Model.all_release_heat_energy_fact_3" class="data-value double" disabled></td>
+										<td><input type="text" id="all_release_heat_energy_plan_1" value="@Model.all_release_heat_energy_plan_1" class="data-value double" disabled></td>
+										<td><input type="text" id="all_release_heat_energy_plan_2" value="@Model.all_release_heat_energy_plan_2" class="data-value double" disabled></td>
+										<td><input type="text" id="all_release_heat_energy_plan_3" value="@Model.all_release_heat_energy_plan_3" class="data-value double" disabled></td>
+			      					</tr>
+			      					<tr>
+										<td>а) на нужды предприятия, всего</td>
+										<td><input type="text" id="company_need_fact_1" value="@Model.company_need_fact_1" class="data-value double" disabled></td>
+										<td><input type="text" id="company_need_fact_2" value="@Model.company_need_fact_2" class="data-value double" disabled></td>
+										<td><input type="text" id="company_need_fact_3" value="@Model.company_need_fact_3" class="data-value double" disabled></td>
+										<td><input type="text" id="company_need_plan_1" value="@Model.company_need_plan_1" class="data-value double" disabled></td>
+										<td><input type="text" id="company_need_plan_2" value="@Model.company_need_plan_2" class="data-value double" disabled></td>
+										<td><input type="text" id="company_need_plan_3" value="@Model.company_need_plan_3" class="data-value double" disabled></td>
+			      					</tr>
+			      					<tr>
+			      						<td>- собственное производство</td>
+										<td><input type="text" id="ownprod_fact_1" value="@Model.ownprod_fact_1" name="ownprod_fact_1" class="data-value double"></td>
+										<td><input type="text" id="ownprod_fact_2" value="@Model.ownprod_fact_2" name="ownprod_fact_2"  class="data-value double"></td>
+										<td><input type="text" id="ownprod_fact_3" value="@Model.ownprod_fact_3" class="data-value double" disabled></td>
+										<td><input type="text" id="ownprod_plan_1" value="@Model.ownprod_plan_1" name="ownprod_plan_1" class="data-value double"></td>
+										<td><input type="text" id="ownprod_plan_2" value="@Model.ownprod_plan_2" name="ownprod_plan_2" class="data-value double"></td>
+										<td><input type="text" id="ownprod_plan_3" value="@Model.ownprod_plan_3" class="data-value double" disabled></td>
+			      					</tr>
+			      					<tr>
+			      						<td>- хозяйственные нужды</td>
+										<td><input type="text" id="household_needs_fact_1" value="@Model.household_needs_fact_1" name="household_needs_fact_1" class="data-value double"></td>
+										<td><input type="text" id="household_needs_fact_2" value="@Model.household_needs_fact_2" name="household_needs_fact_2" class="data-value double"></td>
+										<td><input type="text" id="household_needs_fact_3" value="@Model.household_needs_fact_3" class="data-value double" disabled></td>
+										<td><input type="text" id="household_needs_plan_1" value="@Model.household_needs_plan_1" name="household_needs_plan_1" class="data-value double"></td>
+										<td><input type="text" id="household_needs_plan_2" value="@Model.household_needs_plan_2" name="household_needs_plan_2" class="data-value double"></td>
+										<td><input type="text" id="household_needs_plan_3" value="@Model.household_needs_plan_3" class="data-value double" disabled></td>
+			      					</tr>
+			      					<tr>
+										<td>б) теплоснабжающим организациям</td>
+										<td><input type="text" id="tso_fact_1" value="@Model.tso_fact_1" name="tso_fact_1" class="data-value double"></td>
+										<td><input type="text" id="tso_fact_2" value="@Model.tso_fact_2" name="tso_fact_2" class="data-value double"></td>
+										<td><input type="text" id="tso_fact_3" value="@Model.tso_fact_3" class="data-value double" disabled></td>
+										<td><input type="text" id="tso_plan_1" value="@Model.tso_plan_1" name="tso_plan_1" class="data-value double"></td>
+										<td><input type="text" id="tso_plan_2" value="@Model.tso_plan_2" name="tso_plan_2" class="data-value double"></td>
+										<td><input type="text" id="tso_plan_3" value="@Model.tso_plan_3" class="data-value double" disabled></td>
+			      					</tr>
+			      					<tr>
+										<td>в) потребителям, всего</td>
+										<td><input type="text" id="all_consumers_fact_1" value="@Model.all_consumers_fact_1" class="data-value double" disabled></td>
+										<td><input type="text" id="all_consumers_fact_2" value="@Model.all_consumers_fact_2" class="data-value double" disabled></td>
+										<td><input type="text" id="all_consumers_fact_3" value="@Model.all_consumers_fact_3" class="data-value double" disabled></td>
+										<td><input type="text" id="all_consumers_plan_1" value="@Model.all_consumers_plan_1" class="data-value double" disabled></td>
+										<td><input type="text" id="all_consumers_plan_2" value="@Model.all_consumers_plan_2" class="data-value double" disabled></td>
+										<td><input type="text" id="all_consumers_plan_3" value="@Model.all_consumers_plan_3" class="data-value double" disabled></td>
+			      					</tr>
+			      					<tr>
+			      						<td>- бюджетным потребителям</td>
+										<td><input type="text" id="buget_consumers_fact_1" value="@Model.buget_consumers_fact_1" name="buget_consumers_fact_1" class="data-value double"></td>
+										<td><input type="text" id="buget_consumers_fact_2" value="@Model.buget_consumers_fact_2" name="buget_consumers_fact_2" class="data-value double"></td>
+										<td><input type="text" id="buget_consumers_fact_3" value="@Model.buget_consumers_fact_3" class="data-value double" disabled></td>
+										<td><input type="text" id="buget_consumers_plan_1" value="@Model.buget_consumers_plan_1" name="buget_consumers_plan_1" class="data-value double"></td>
+										<td><input type="text" id="buget_consumers_plan_2" value="@Model.buget_consumers_plan_2" name="buget_consumers_plan_2" class="data-value double"></td>
+										<td><input type="text" id="buget_consumers_plan_3" value="@Model.buget_consumers_plan_3" class="data-value double" disabled></td>
+			      					</tr>
+			      					<tr>
+			      						<td>- населению</td>
+										<td><input type="text" id="public_fact_1" value="@Model.public_fact_1" name="public_fact_1" class="data-value double"></td>
+										<td><input type="text" id="public_fact_2" value="@Model.public_fact_2" name="public_fact_2" class="data-value double"></td>
+										<td><input type="text" id="public_fact_3" value="@Model.public_fact_3" class="data-value double" disabled></td>
+										<td><input type="text" id="public_plan_1" value="@Model.public_plan_1" name="public_plan_1" class="data-value double"></td>
+										<td><input type="text" id="public_plan_2" value="@Model.public_plan_2" name="public_plan_2" class="data-value double"></td>
+										<td><input type="text" id="public_plan_3" value="@Model.public_plan_3" class="data-value double" disabled></td>
+			      					</tr>
+			      					<tr>
+			      						<td>- прочим потребителям</td>
+										<td><input type="text" id="other_consumers_fact_1" value="@Model.other_consumers_fact_1" name="other_consumers_fact_1" class="data-value double"></td>
+										<td><input type="text" id="other_consumers_fact_2" value="@Model.other_consumers_fact_2" name="other_consumers_fact_2" class="data-value double"></td>
+										<td><input type="text" id="other_consumers_fact_3" value="@Model.other_consumers_fact_3" class="data-value double" disabled></td>
+										<td><input type="text" id="other_consumers_plan_1" value="@Model.other_consumers_plan_1" name="other_consumers_plan_1" class="data-value double"></td>
+										<td><input type="text" id="other_consumers_plan_2" value="@Model.other_consumers_plan_2" name="other_consumers_plan_2" class="data-value double"></td>
+										<td><input type="text" id="other_consumers_plan_3" value="@Model.other_consumers_plan_3" class="data-value double" disabled></td>
+			      					</tr>
+			      				</tbody>
+			      			</table>
+						</form>
+			      	</div>
+					<div class="data-block border-block" id="div_output_transfer_energy_perspective">
+						@await Component.InvokeAsync("TZ_OutputTransferEnergyDataList_Partial", new { tz_id = Model.tz_id, data_status = Model.data_status })
+	      			</div>
+	      			<div class="data-block border-block">
+	      				<h4>Примечание</h4>
+	      				<div class="data-row">
+	      					<div class="data-item">
+	      						<label class="data-label">Факт</label>
+								<textarea class="data-value stretch" name="notes_fact" form="tz_transfer_form">@Model.notes_fact</textarea>
+	      					</div>
+	      					<div class="data-item">
+	      						<label class="data-label">План</label>
+								<textarea class="data-value stretch" name="notes_plan" form="tz_transfer_form">@Model.notes_plan</textarea>
+	      					</div>
+	      				</div>
+	      			</div>
+			    </div>	
+	    	</div>
+	    </div>
+	    <div class="modal-footer">
+			<button type="button" class="bttn" data-bs-dismiss="modal">Отмена</button>
+			<button type="submit" class="bttn bttn-color" form="tz_transfer_form" @btn_disable>Сохранить</button>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript" src="@Url.Content("~/hss/js/popup_common_scripts.js")"></script>
+<script type="text/javascript">
+
+	$(document).ready(function () {
+
+		document.querySelector('#paramNumberTZTransfer').addEventListener('change', (event) => {
+			OpenPopupHeatBalance($('#paramNumberTZTransfer').val(), $('#p_year_pop_tr').val(), '/TSO/HeatBalance/OpenTZTransfer', 'TZTransferDataPopup');
+		});
+
+		document.querySelector('#p_year_pop_tr').addEventListener('change', (event) => {
+			OpenPopupHeatBalance($('#paramNumberTZTransfer').val(), $('#p_year_pop_tr').val(), '/TSO/HeatBalance/OpenTZTransfer', 'TZTransferDataPopup');
+		});
+
+		$("input.double[type=text]").keyup(function (e) {
+			
+			let val_id = e.target.id;
+			let s_name = val_id.substring(0, val_id.length - 6);
+			let s_fp_period = val_id.substring(val_id.length - 6, val_id.length);
+			let s_fp = val_id.substring(val_id.length - 6, val_id.length - 1);
+
+			SetYearValueSum(s_name, s_fp);
+
+			//Потребителям, всего
+			let bс = $('#buget_consumers_' + s_fp_period).val();
+			let pc = $('#public_' + s_fp_period).val();
+			let oc = $('#other_consumers_' + s_fp_period).val();
+			let ac = Number(bс.replace(",", ".")) + Number(pc.replace(",", ".")) + Number(oc.replace(",", "."));
+			$('#all_consumers_' + s_fp_period).val(ac.toFixed(2).toString().replace(".", ","));
+			SetYearValueSum("all_consumers_", s_fp);
+			//Потребителям, всего
+
+			//На нужды предприятия, всего
+			let op = $('#ownprod_' + s_fp_period).val();
+			let hhn = $('#household_needs_' + s_fp_period).val();
+			let cn = Number(op.replace(",", ".")) + Number(hhn.replace(",", "."));
+			$('#company_need_' + s_fp_period).val(cn.toFixed(2).toString().replace(".", ","));
+			SetYearValueSum("company_need_", s_fp);
+			//На нужды предприятия, всего
+
+			//Отпуск тепловой энергии, всего
+			let tso = $('#tso_' + s_fp_period).val();
+			let arhe = ac + cn + Number(tso.replace(",", "."));
+			$('#all_release_heat_energy_' + s_fp_period).val(arhe.toFixed(2).toString().replace(".", ","));
+			SetYearValueSum("all_release_heat_energy_", s_fp);
+			//Отпуск тепловой энергии, всего
+
+			//Принято тепловой энергии для передачи (транспортировки), всего
+			let lh = $('#loss_heatnet_' + s_fp_period).val();
+			let athe = arhe + Number(lh.replace(",", "."));
+			$('#all_transfer_heat_energy_' + s_fp_period).val(athe.toFixed(2).toString().replace(".", ","));
+			SetYearValueSum("all_transfer_heat_energy_", s_fp);
+			//Принято тепловой энергии для передачи (транспортировки), всего
+
+			
+		});
+
+	});
+
+	var onBeginFormTZ = function (xhr) {
+		showPreloader();
+	};
+
+	var onFailedFormTZ = function (xhr) {
+		hidePreloader();
+	};
+
+	var onSuccessFormTZ = function (xhr) {
+		if (xhr.success == true) {
+			$("#refresh_tz_transfer_table").val(1);
+		}
+		hidePreloader();
+	};
+
+	function RefreshTable() {
+		if ($("#refresh_tz_transfer_table").val() === "1") {
+			GetListOnPage();
+		}
+	}
+
+	function GetDataOnTabPopup() {
+		showPreloader();
+
+		$.ajax({
+			type: 'GET',
+			url: '/TSO/HeatBalance/OnGetCallTZ_OutputTransferEnergyDataList_PartialViewComponent',
+			data: {
+				tz_id: @Model.tz_id,
+				data_status: @Model.data_status
+			},
+			dataType: 'html'
+		})
+			.done(function (result) {
+				var div = $('#div_output_transfer_energy_perspective');
+				div.html("");
+				div.html(result);
+				hidePreloader();
+			});
+	}
+
+
+</script>

@@ -1,0 +1,193 @@
+﻿@model WebProject.Areas.TSO.Models.TZFuelTechNeedPlanDataViewModel
+@{
+	Layout = null; string disable = "";
+}
+@if (Model.tz_id == 0)
+{
+	disable = "disabled";
+}
+<table class="table-inp-stretch" style="width:100%;">
+	<thead>
+		<tr>
+			<th rowspan="2">Вид топлива</th>
+			<th rowspan="2">Период<br>(I и II пол., год)</th>
+			<th colspan="2">Годовой расход топлива</th>
+			@*<th colspan="2">Удельный расход на отпуск<br>тепла, <span class="data-unit">кг у.т./Гкал</span></th>*@
+			<th rowspan="2">Нормативный удельный расход топлива на отпуск тепла,<br><span class="data-unit">кг у.т./Гкал</span></th>
+			<th rowspan="2">Теплотворная<br>способность,<br><span class="data-unit">ккал/м<sup>3</sup></span> или <span class="data-unit">ккал/кг</span></th>
+			<th colspan="2">Цена топлива с учетом транспортировки</th>
+			<th rowspan="2">Стоимость<br>топлива,<br><span class="data-unit">тыс. руб.</span></th>
+			<th rowspan="2"></th>
+		</tr>
+		<tr>
+			<th style="position: static;">B<sub>н</sub>, <span class="data-unit">тыс. м<sup>3</sup></span> или<br><span class="data-unit">т н.т.</span> или <span class="data-unit">тыс.кВт*ч</span></th>
+			<th>В<sub>у</sub>, <span class="data-unit">тыс. т у.т.</span></th>
+			@*<th>нормативный</th>
+			<th>расчетный</th>*@
+			<th>Ц<sub>н</sub>, <span class="data-unit">руб./тыс. м<sup>3</sup></span> или<br><span class="data-unit">руб./т н.т</span> или <span class="data-unit">руб./кВт*ч</span></th>
+			<th>Ц<sub>у</sub>, <span class="data-unit">руб./т у.т.</span></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var tz_list in Model.TZFuelTechNeedPlanListViewModel)
+		{
+			<tr>
+				<td>
+					<input type="hidden" id="fuel_type_id_old_plan_@(tz_list.fuel_type_id_old)_@(tz_list.report_period_id_old)" value="@tz_list.fuel_type_id_old">
+					<select class="selectpicker fuel_type_select data-value" data-container="#TZCostsPricesDataPopup" id="fuel_type_id_plan_@(tz_list.fuel_type_id_old)_@(tz_list.report_period_id_old)">
+						@if (tz_list.fuel_type_id == null)
+						{
+							<option value="" selected disabled>Выберите</option>
+						}
+						@foreach (var fuels in ViewBag.FuelTypesList)
+						{
+							if (fuels.Id == tz_list.fuel_type_id)
+							{
+								<option value="@fuels.Id" selected>@fuels.fuel_type_name</option>
+							}
+							if (fuels.Id != tz_list.fuel_type_id)
+							{
+								<option value="@fuels.Id">@fuels.fuel_type_name</option>
+							}
+						}
+					</select>
+				</td>
+				<td>
+					<input type="hidden" id="report_period_id_old_plan_@(tz_list.fuel_type_id_old)_@(tz_list.report_period_id_old)" value="@tz_list.report_period_id_old">
+					<select class="selectpicker data-value" data-container="#TZCostsPricesDataPopup" id="report_period_id_plan_@(tz_list.fuel_type_id_old)_@(tz_list.report_period_id_old)">
+						@if (tz_list.report_period_id == null)
+						{
+							<option value="" selected disabled>Выберите</option>
+						}
+						@foreach (var periods in ViewBag.PeriodsList)
+						{
+							if (periods.Id == tz_list.report_period_id)
+							{
+								<option value="@periods.Id" selected>@periods.period_name</option>
+							}
+							if (periods.Id != tz_list.report_period_id)
+							{
+								<option value="@periods.Id">@periods.period_name</option>
+							}
+						}
+					</select>
+				</td>
+				<td><input type="text" class="data-value double" id="consumption_natural_fuel_plan_@(tz_list.fuel_type_id_old)_@(tz_list.report_period_id_old)" value="@tz_list.consumption_natural_fuel_plan"></td>
+				<td><input type="text" class="data-value" id="consumption_natural_fuel_calc_plan_@(tz_list.fuel_type_id_old)_@(tz_list.report_period_id_old)" value="@tz_list.consumption_natural_fuel_calc_plan" disabled></td>
+				<td><input type="text" class="data-value double" id="norm_consump_fuel_plan_@(tz_list.fuel_type_id_old)_@(tz_list.report_period_id_old)" value="@tz_list.norm_consump_fuel_plan"></td>
+				@*<td><input type="text" class="data-value" id="norm_consump_fuel_calc_plan_@(tz_list.fuel_type_id_old)_@(tz_list.report_period_id_old)" value="@tz_list.norm_consump_fuel_calc_plan" disabled></div></td>*@
+				<td><input type="text" class="data-value double" id="lowestheat_combust_fuel_plan_@(tz_list.fuel_type_id_old)_@(tz_list.report_period_id_old)" value="@tz_list.lowestheat_combust_fuel_plan"></td>
+				<td><input type="text" class="data-value double" id="price_fuel_plan_@(tz_list.fuel_type_id_old)_@(tz_list.report_period_id_old)" value="@tz_list.price_fuel_plan"></td>
+				<td><input type="text" class="data-value" id="price_fuel_calc_plan_@(tz_list.fuel_type_id_old)_@(tz_list.report_period_id_old)" value="@tz_list.price_fuel_calc_plan" disabled></td>
+				<td><input type="text" class="data-value" id="cost_fuel_calc_plan_@(tz_list.fuel_type_id_old)_@(tz_list.report_period_id_old)" value="@tz_list.cost_fuel_calc_plan" disabled></td>
+				<td>
+					<button class="bttn bttn-square bttn-icon-save" type="button" title="Сохранить" onclick="SaveFuelTechNeedPlan(@tz_list.fuel_type_id_old, @tz_list.report_period_id_old);"></button>
+					@*<button class="bttn bttn-square bttn-icon-del" type="button" title="Удалить"></button>*@
+				</td>
+			</tr>
+		}
+		<tr>
+			<td>
+				<input type="hidden" id="fuel_type_id_old_plan_0_0" value="0">
+				<select class="selectpicker fuel_type_select data-value" data-container="#TZCostsPricesDataPopup" id="fuel_type_id_plan_0_0">
+					@foreach (var fuels in ViewBag.FuelTypesList)
+					{
+						<option value="@fuels.Id">@fuels.fuel_type_name</option>
+					}
+				</select>
+			</td>
+			<td>
+				<input type="hidden" id="report_period_id_old_plan_0_0" value="0">
+				<select class="selectpicker data-value" data-container="#TZCostsPricesDataPopup" id="report_period_id_plan_0_0">
+					@foreach (var periods in ViewBag.PeriodsList)
+					{
+						<option value="@periods.Id">@periods.period_name</option>
+					}
+				</select>
+			</td>
+			<td><input type="text" id="consumption_natural_fuel_plan_0_0" class="data-value double"></td>
+			<td><input type="text" id="consumption_natural_fuel_calc_plan_0_0" class="data-value" disabled></td>
+			<td><input type="text" id="norm_consump_fuel_plan_0_0" class="data-value double"></div></td>
+			@*<td><input type="text" id="norm_consump_fuel_calc_plan_0_0" class="data-value" disabled></div></td>*@
+			<td><input type="text" id="lowestheat_combust_fuel_plan_0_0" class="data-value double"></td>
+			<td><input type="text" id="price_fuel_plan_0_0" class="data-value double"></td>
+			<td><input type="text" id="price_fuel_calc_plan_0_0" class="data-value" disabled></td>
+			<td><input type="text" id="cost_fuel_calc_plan_0_0" class="data-value" disabled></td>
+			<td>
+				<button class="bttn bttn-square bttn-icon-save" type="button" title="Сохранить" onclick="SaveFuelTechNeedPlan(0,0);" @disable></button>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<script type="text/javascript">
+
+	$(document).ready(function () {
+
+		$('.fuel_type_select').selectpicker({
+			size: 10
+		});
+	});
+
+	function SaveFuelTechNeedPlan(fuel_type_id_old, report_period_id_old) {
+		showPreloader();
+
+		var a = $('#p_year_pop_cp').val();
+		$.ajax({
+			url: '@Html.Raw(Url.Action("TZ_SaveFuelTechNeedPlan", "CostsAndPrices", new { Area = "TSO" }))',
+			type: 'POST',
+			dataType: 'json',
+			data: {
+				tz_id: $('#paramNumberTZ').val(),
+				data_status: $('#data_status').val(),
+				perspective_year: $('#p_year_pop_cp').val(),
+				fuel_type_id: $('#fuel_type_id_plan_' + fuel_type_id_old + '_' + report_period_id_old).val(),
+				fuel_type_id_old: fuel_type_id_old,
+				report_period_id: $('#report_period_id_plan_' + fuel_type_id_old + '_' + report_period_id_old).val(),
+				report_period_id_old: report_period_id_old,
+				consumption_natural_fuel_plan: $('#consumption_natural_fuel_plan_' + fuel_type_id_old + '_' + report_period_id_old).val(),
+				//consumption_natural_fuel_calc_plan: $('#consumption_natural_fuel_calc_plan_' + fuel_type_id_old + '_' + report_period_id_old).val(),
+				norm_consump_fuel_plan: $('#norm_consump_fuel_plan_' + fuel_type_id_old + '_' + report_period_id_old).val(),
+				//norm_consump_fuel_calc_plan: $('#norm_consump_fuel_calc_plan_' + fuel_type_id_old + '_' + report_period_id_old).val(),
+				lowestheat_combust_fuel_plan: $('#lowestheat_combust_fuel_plan_' + fuel_type_id_old + '_' + report_period_id_old).val(),
+				price_fuel_plan: $('#price_fuel_plan_' + fuel_type_id_old + '_' + report_period_id_old).val(),
+				//price_fuel_calc_plan: $('#price_fuel_calc_plan_' + fuel_type_id_old + '_' + report_period_id_old).val(),
+				//cost_fuel_calc_plan: $('#cost_fuel_calc_plan_' + fuel_type_id_old + '_' + report_period_id_old).val()
+			}
+		}).done(function (result) {
+			if (result.success == true) {
+				showMessage('Данные сохранены.', 'modal', 'success');
+				$("#refresh_table").val(1);
+				UpdateFuelTechNeedPlan();
+				UpdateFuelCosts();
+			}
+			else {
+				showMessage(result.error, 'modal', 'fault');
+			}
+			hidePreloader();
+		});
+
+	}
+
+	function UpdateFuelTechNeedPlan() {
+		$.ajax({
+			type: 'GET',
+			url: '@Html.Raw(Url.Action("OnGetCallTZ_FuelTechNeedPlanList_PartialViewComponent", "CostsAndPrices", new { Area = "TSO" }))',
+			data: {
+				tz_id: $('#paramNumberTZ').val(),
+				data_status: $('#data_status').val(),
+				perspective_year: $('#p_year_pop_cp').val()
+			},
+			dataType: 'html'
+		}).done(function (result) {
+			var div = $('#fuel_techneed_plan_div');
+			div.html("");
+			div.html(result);
+			$('.selectpicker').selectpicker();
+			//initDataTable('responseTable', 'simple-scroll', '210px');
+			//adjustColumns('responseTable');
+			SumCostsEnergy(1);
+		});
+	}
+
+</script>

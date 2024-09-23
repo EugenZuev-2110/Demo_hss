@@ -1,0 +1,354 @@
+﻿@model WebProject.Areas.TSO.Models.OpenStandardizedRatesTable
+
+@{
+	string btn_disable = string.Empty; int ds = @Model.standardized_rates_one_data_status - 1; string is_checked = string.Empty;
+}
+
+<div class="modal-dialog modal-dialog-centered">
+	<form asp-controller="TariffConnection" asp-action="TZStandardizedRates_Save" asp-antiforgery="true" asp-area="TSO" id="tz_other_org_costs_form"
+	data-ajax-failure="onFailedFormTZ" data-ajax-success="onSuccessFormTZ" data-ajax-begin="onBeginFormTZ" data-ajax="true" data-ajax-method="POST">
+		<input type="hidden" name="standardized_rates_one_data_status" value="@Model.standardized_rates_one_data_status" />
+		<input type="hidden" name="standardized_rates_one_is_modyfied" id="standardized_rates_one_is_modyfied" value="@Model.standardized_rates_one_is_modyfied" />
+		<div class="modal-content">
+			<div class="modal-header">
+				<h3 class="modal-title" id="editDataLabel">Утвержденные стандартизированные ставки</h3>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="RefreshTable();"></button>
+			</div>
+			<div class="modal-body">
+				<div class="data-row static-block data-params" onmouseout="LeaveFocusUnomTSOStandardizedRates()">
+					@{
+						if (Model.standardized_rates_one_is_modyfied == 1)
+						{
+							<div class="data-item" id="standardized_rates_one_tso_id_select" onmouseover="GetFocusUnomTSOStandardizedRates()">
+								<label class="data-label">Наименование ТСО</label>
+								<div class="data-value" id="standardizedRatesParamNumberTsoDiv" hidden>
+									<select class="selectpicker data-value xxl-stretch" name="standardized_rates_one_tso_id" id="standardizedRatesParamNumberTso" data-width="100%" data-live-search="true" placeholder="УНОМ ТСО - Наименование">
+										@foreach (var tz_list in ViewBag.TZTSOList)
+										{
+											if (tz_list.org_id == Model.standardized_rates_one_tso_id)
+											{
+												<option value="@tz_list.org_id" selected>@tz_list.org_name</option>
+											}
+											if (tz_list.org_id != Model.standardized_rates_one_tso_id)
+											{
+												<option value="@tz_list.org_id">@tz_list.org_name</option>
+											}
+										}
+									</select>
+								</div>
+								<div class="data-value" id="standardized_rates_one_tso_id_textbox_div">
+									<input type="text" class="data-value xxl-stretch" asp-for="@Model.standardized_rates_one_short_name" name="standardized_rates_one_tso_id_textbox" id="standardized_rates_one_tso_id_textbox" required placeholder="УНОМ ТСО - Наименование" style="width:100%;background-color:#f7f4fe" readonly>
+								</div>
+							</div>
+						}
+						else
+						{
+							<div class="data-item" id="standardized_rates_one_tso_id_select" onmouseover="GetFocusUnomTSOStandardizedRates()">
+								<label class="data-label">Наименование ТСО</label>
+								<div class="data-value" id="standardizedRatesParamNumberTsoDiv" hidden>
+									<select class="selectpicker  data-value xxl-stretch" name="standardized_rates_one_tso_id" id="standardizedRatesParamNumberTso" data-width="100%" data-live-search="true" placeholder="УНОМ ТСО - Наименование">
+										@foreach (var tz_list in ViewBag.TZTSOList)
+										{
+											if (tz_list.org_id == Model.standardized_rates_one_tso_id)
+											{
+												<option value="@tz_list.org_id" selected>@tz_list.org_name</option>
+											}
+											if (tz_list.org_id != Model.standardized_rates_one_tso_id)
+											{
+												<option value="@tz_list.org_id">@tz_list.org_name</option>
+											}
+										}
+									</select>
+								</div>
+								<div class="data-value" id="standardized_rates_one_tso_id_textbox_div">
+									<input type="text" class="data-value xxl-stretch" asp-for="@Model.standardized_rates_one_short_name" name="standardized_rates_one_tso_id_textbox" id="standardized_rates_one_tso_id_textbox" required placeholder="УНОМ ТСО - Наименование">
+								</div>
+							</div>
+						}
+					}
+				</div>
+					<div class="data-block">
+						<div class="data-item" id="standardized_rates_one_decision_status_id_select" onmouseout="LeaveFocusStatusStandardizedRates()" onmouseover="GetFocusStatusStandardizedRates()">
+							<label class="data-label">Статус решения</label>
+							<div class="data-value" id="standardizedRatesDecisionChargeStatusDiv" hidden>
+								<select class="selectpicker data-value xxl-stretch" name="standardized_rates_one_decision_status_id" id="standardizedRatesDecisionChargeStatus" data-width="100%" data-live-search="true" placeholder="Статус решения">
+									@foreach (var tz_list in ViewBag.DecisionStatusList)
+									{
+										if (tz_list.value_id == Model.standardized_rates_one_decision_status_id)
+										{
+											<option value="@tz_list.value_id" selected>@tz_list.value_name</option>
+										}
+										if (tz_list.value_id != Model.standardized_rates_one_decision_status_id)
+										{
+											<option value="@tz_list.value_id">@tz_list.value_name</option>
+										}
+									}
+								</select>
+							</div>
+							<div class="data-value" id="standardized_rates_one_decision_status_id_textbox_div">
+								<input type="text" class="data-value xxl-stretch" name="standardized_rates_one_decision_status_id_textbox" id="standardized_rates_one_decision_status_id_textbox" required placeholder="Статус решения">
+							</div>
+						</div>
+						<div class="data-row">
+							<label class="data-label">Решение:</label>
+							<div class="data-row">
+								<div class="data-item">
+									<label class="data-label sublabel">от</label>
+									<input class="data-value md-fix" type="date" asp-for="@Model.standardized_rates_one_decision_date" name="standardized_rates_one_decision_date" id="standardized_rates_one_decision_date">
+								</div>
+								<div class="data-item">
+									<label class="data-label sublabel">№</label>
+									@if (Model.standardized_rates_one_is_modyfied == 1)
+									{
+										<input class="data-value lg-fix" type="text" asp-for="@Model.standardized_rates_one_decision_num" name="standardized_rates_one_decision_num" id="standardized_rates_one_decision_num" style="background-color:#f7f4fe" readonly>
+									}
+									else
+									{
+										<input class="data-value lg-fix" type="text" asp-for="@Model.standardized_rates_one_decision_num" name="standardized_rates_one_decision_num" id="standardized_rates_one_decision_num" required>
+									}
+								</div>
+							</div>
+							<label class="data-label">Протокол:</label>
+							<div class="data-row">
+								<div class="data-item">
+									<label class="data-label sublabel">от</label>
+									<input class="data-value md-fix" type="date" asp-for="@Model.standardized_rates_one_protocol_date" name="standardized_rates_one_protocol_date" id="standardized_rates_one_protocol_date">
+								</div>
+								<div class="data-item">
+									<label class="data-label sublabel">№</label>
+									<input class="data-value lg-fix" type="text" asp-for="@Model.standardized_rates_one_protocol_num" name="standardized_rates_one_protocol_num" id="standardized_rates_one_protocol_num">
+								</div>
+							</div>
+						</div>
+						<div class="data-item">
+							<label class="data-label">Расходы на проведение мероприятий по подключению</label>
+							<input class="data-value smx-stretch" type="text" asp-for="@Model.standardized_rates_one_cost_connect_event" name="standardized_rates_one_cost_connect_event" id="standardized_rates_one_cost_connect_event">
+							<span class="data-unit">руб. /(Гкал/ч) без НДС</span>
+						</div>
+						<div class="data-block border-block">
+							<h4>Расходы на создание (реконструкцию) тепловых сетей:</h4>
+							<div class="data-table-block">
+								<div class="data-item">
+									<h5 class="data-label">1. Подземная прокладка Д<sub>у</sub>:</h5>
+									<h5 class="data-label">1.1. Канальная прокладка: </h5>
+									<h5 class="data-label">1.2. Бесканальная прокладка:</h5>
+									<h5 class="data-label"></h5>
+								</div>
+								<div class="data-item">
+									<label class="data-label">до 250 мм</label>
+									<div class="data-value">
+										<input class="data-value" type="text" asp-for="@Model.standardized_rates_one_cost_hn_underground_ch_du250" name="standardized_rates_one_cost_hn_underground_ch_du250" id="standardized_rates_one_cost_hn_underground_ch_du250">
+									</div>
+									<div class="data-value">
+										<input class="data-value" type="text" asp-for="@Model.standardized_rates_one_cost_hn_underground_ch_free_du250" name="standardized_rates_one_cost_hn_underground_ch_free_du250" id="standardized_rates_one_cost_hn_underground_ch_free_du250">
+									</div>
+									<span class="data-unit">руб. /(Гкал/ч) без НДС</span>
+								</div>
+								<div class="data-item">
+									<label class="data-label">251-400 мм</label>
+									<div class="data-value">
+										<input class="data-value" type="text" asp-for="@Model.standardized_rates_one_cost_hn_underground_ch_du251_400" name="standardized_rates_one_cost_hn_underground_ch_du251_400" id="standardized_rates_one_cost_hn_underground_ch_du251_400">
+									</div>
+									<div class="data-value">
+										<input class="data-value double" type="text" asp-for="@Model.standardized_rates_one_cost_hn_underground_ch_free_du251_400" name="standardized_rates_one_cost_hn_underground_ch_free_du251_400" id="standardized_rates_one_cost_hn_underground_ch_free_du251_400">
+									</div>
+									<span class="data-unit">руб. /(Гкал/ч) без НДС</span>
+								</div>
+								<div class="data-item">
+									<label class="data-label">401-550 мм</label>
+									<div class="data-value">
+										<input class="data-value" type="text" asp-for="@Model.standardized_rates_one_cost_hn_underground_ch_du401_550" name="standardized_rates_one_cost_hn_underground_ch_du401_550" id="standardized_rates_one_cost_hn_underground_ch_du401_550">
+									</div>
+									<div class="data-value">
+										<input class="data-value" type="text" asp-for="@Model.standardized_rates_one_cost_hn_underground_ch_free_du401_550" name="standardized_rates_one_cost_hn_underground_ch_free_du401_550" id="standardized_rates_one_cost_hn_underground_ch_free_du401_550">
+									</div>
+									<span class="data-unit">руб. /(Гкал/ч) без НДС</span>
+								</div>
+								<div class="data-item">
+									<label class="data-label">551-700 мм</label>
+									<div class="data-value">
+										<input class="data-value" type="text" asp-for="@Model.standardized_rates_one_cost_hn_underground_ch_du551_700" name="standardized_rates_one_cost_hn_underground_ch_du551_700" id="standardized_rates_one_cost_hn_underground_ch_du551_700">
+									</div>
+									<div class="data-value">
+										<input class="data-value" type="text" asp-for="@Model.standardized_rates_one_cost_hn_underground_ch_free_du551_700" name="standardized_rates_one_cost_hn_underground_ch_free_du551_700" id="standardized_rates_one_cost_hn_underground_ch_free_du551_700">
+									</div>
+									<span class="data-unit">руб. /(Гкал/ч) без НДС</span>
+								</div>
+								<div class="data-item">
+									<label class="data-label">701 и выше мм</label>
+									<div class="data-value">
+										<input class="data-value" type="text" asp-for="@Model.standardized_rates_one_cost_hn_underground_ch_du700" name="standardized_rates_one_cost_hn_underground_ch_du700" id="standardized_rates_one_cost_hn_underground_ch_du700">
+									</div>
+									<div class="data-value">
+										<input class="data-value" type="text" asp-for="@Model.standardized_rates_one_cost_hn_underground_ch_free_du700" name="standardized_rates_one_cost_hn_underground_ch_free_du700" id="standardized_rates_one_cost_hn_underground_ch_free_du700">
+									</div>
+									<span class="data-unit">руб. /(Гкал/ч) без НДС</span>
+								</div>
+							</div>
+							<div class="data-table-block">
+								<div class="data-item">
+									<h5>2. Надземная прокладка Д<sub>у</sub></h5>
+								</div>
+								<div class="data-item">
+									<label class="data-label">до 250 мм</label>
+									<div class="data-value">
+										<input class="data-value" type="text" asp-for="@Model.standardized_rates_one_cost_hn_overground_du250" name="standardized_rates_one_cost_hn_overground_du250" id="standardized_rates_one_cost_hn_overground_du250">
+									</div>
+									<span class="data-unit">руб. /(Гкал/ч) без НДС</span>
+								</div>
+								<div class="data-item">
+									<label class="data-label">251-400 мм</label>
+									<div class="data-value">
+										<input class="data-value" type="text" asp-for="@Model.standardized_rates_one_cost_hn_overground_du251_400" name="standardized_rates_one_cost_hn_overground_du251_400" id="standardized_rates_one_cost_hn_overground_du251_400">
+									</div>
+									<span class="data-unit">руб. /(Гкал/ч) без НДС</span>
+								</div>
+								<div class="data-item">
+									<label class="data-label">401-550 мм</label>
+									<div class="data-value">
+										<input class="data-value" type="text" asp-for="@Model.standardized_rates_one_cost_hn_overground_du401_550" name="standardized_rates_one_cost_hn_overground_du401_550" id="standardized_rates_one_cost_hn_overground_du401_550">
+									</div>
+									<span class="data-unit">руб. /(Гкал/ч) без НДС</span>
+								</div>
+								<div class="data-item">
+									<label class="data-label">551-700 мм</label>
+									<div class="data-value">
+										<input class="data-value" type="text" asp-for="@Model.standardized_rates_one_cost_hn_overground_du551_700" name="standardized_rates_one_cost_hn_overground_du551_700" id="standardized_rates_one_cost_hn_overground_du551_700">
+									</div>
+									<span class="data-unit">руб. /(Гкал/ч) без НДС</span>
+								</div>
+								<div class="data-item">
+									<label class="data-label">701 и выше мм</label>
+									<div class="data-value">
+										<input class="data-value" type="text" asp-for="@Model.standardized_rates_one_cost_hn_overground_du700" name="standardized_rates_one_cost_hn_overground_du700" id="standardized_rates_one_cost_hn_overground_du700">
+									</div>
+									<span class="data-unit">руб. /(Гкал/ч) без НДС</span>
+								</div>
+							</div>
+						</div>
+						<div class="data-item justify-content-start">
+							<label class="data-label">Расходы на создание (реконструкцию) тепловых пунктов</label>
+							<input class="data-value" type="text" asp-for="@Model.standardized_rates_one_cost_hp" name="standardized_rates_one_cost_hp" id="standardized_rates_one_cost_hp">
+							<span class="data-unit">руб. /(Гкал/ч) без НДС</span>
+						</div>
+						<div class="data-item justify-content-start">
+							<label class="data-label">Налог на прибыль</label>
+							<input class="data-value" type="text" asp-for="@Model.standardized_rates_one_profit_tax" name="standardized_rates_one_profit_tax" id="standardized_rates_one_profit_tax">
+							<span class="data-unit">руб. /(Гкал/ч) без НДС</span>
+						</div>
+					</div>				
+			</div>
+			<div class="modal-footer">
+				@if (Model.standardized_rates_one_is_modyfied == 1)
+				{
+					<button type="button" class="bttn" data-bs-dismiss="modal" onclick="DeleteTableRowStandardizedRatesAsking();">Удалить запись</button>
+				}
+				<button type="button" class="bttn" data-bs-dismiss="modal">Отмена</button>
+				<button type="submit" class="bttn bttn-color">Сохранить</button>
+			</div>
+		</div>
+	</form>
+	</div>
+	<script type="text/javascript" src="@Url.Content("~/hss/js/popup_common_scripts.js")"></script>
+<script type="text/javascript">
+
+	$(document).ready(function () {
+		GetFocusUnomPPLoadPageStandardizedRates();
+		LeaveFocusUnomPPLoadPageStandardizedRates();
+
+		GetFocusStatusStandardizedRates();
+		LeaveFocusStatusStandardizedRates();
+	});
+
+	function DeleteTableRowStandardizedRates() {
+		showPreloader();
+		$.ajax({
+			type: 'POST',
+			url: '/TSO/TariffConnection/TZDeleteDataRow_StandardizedRates',
+			data: {
+				tso_id: $('#standardizedRatesParamNumberTso :selected').val(),
+				decision_num: $('#standardized_rates_one_decision_num').val(),
+				data_status: $('#data_status').val()
+			},
+			dataType: 'json'
+		})
+			.done(function (result) {
+				if ($('#' + 'TZStandardizedRatesDeleteRowPopup').is(':hidden')) {
+					showModal('TZStandardizedRatesDeleteRowPopup');
+				}
+				if (result.isDelete != true) {
+					OpenPopupStandardizedRates($('#standardizedRatesParamNumberTso :selected').val(), $('#standardized_rates_one_decision_num').val(), '/TSO/TariffConnection/OpenStandardizedRates', 'TZStandardizedRatesDataPopup', 1);
+				}
+
+				onSuccessFormTZ(result);
+				hideModal('TZStandardizedRatesDeleteRowPopup');
+				hidePreloader();
+			});
+	}
+
+	function CancelDeletingTableRowStandardizedRates() {
+		showPreloader();
+		OpenPopupStandardizedRates($('#standardizedRatesParamNumberTso :selected').val(), $('#standardized_rates_one_decision_num').val(), '/TSO/TariffConnection/OpenStandardizedRates', 'TZStandardizedRatesDataPopup', 1);
+		hidePreloader();
+	}
+
+	function DeleteTableRowStandardizedRatesAsking() {
+		if ($('#' + 'TZStandardizedRatesDeleteRowPopup').is(':hidden')) {
+			showModal('TZStandardizedRatesDeleteRowPopup');
+		}
+	}
+
+	function RefreshTable() {
+		if ($("#refresh_table").val() === "1") {
+			GetListOnPage();
+		}
+	}
+
+	function GetFocusUnomTSOStandardizedRates() {
+		if ($("#standardized_rates_one_is_modyfied").val() != 1) {
+			GetFocusUnomPPLoadPageStandardizedRates();
+		}
+	}
+
+	function LeaveFocusUnomTSOStandardizedRates() {
+		if ($("#standardized_rates_one_is_modyfied").val() != 1) {
+			LeaveFocusUnomPPLoadPageStandardizedRates();
+		}
+	}
+
+	function GetFocusUnomPPLoadPageStandardizedRates() {
+		var textbox = document.getElementById("standardized_rates_one_tso_id_textbox_div");
+		var select = document.getElementById("standardizedRatesParamNumberTsoDiv");
+		textbox.hidden = true;
+		select.hidden = false;
+	}
+
+	function LeaveFocusUnomPPLoadPageStandardizedRates() {
+		var textboxDiv = document.getElementById("standardized_rates_one_tso_id_textbox_div");
+		var selectDiv = document.getElementById("standardizedRatesParamNumberTsoDiv");
+		var select_text = document.getElementById("standardizedRatesParamNumberTso");
+		var textbox_text = document.getElementById("standardized_rates_one_tso_id_textbox");
+		var text = $("#standardizedRatesParamNumberTso :selected").text();
+		textbox_text.value = text;
+		textboxDiv.hidden = false;
+		selectDiv.hidden = true;
+	}
+
+	function GetFocusStatusStandardizedRates() {
+		var textbox = document.getElementById("standardized_rates_one_decision_status_id_textbox_div");
+		var select = document.getElementById("standardizedRatesDecisionChargeStatusDiv");
+		textbox.hidden = true;
+		select.hidden = false;
+	}
+
+	function LeaveFocusStatusStandardizedRates() {
+		var textboxDiv = document.getElementById("standardized_rates_one_decision_status_id_textbox_div");
+		var selectDiv = document.getElementById("standardizedRatesDecisionChargeStatusDiv");
+		var select_text = document.getElementById("standardizedRatesDecisionChargeStatus");
+		var textbox_text = document.getElementById("standardized_rates_one_decision_status_id_textbox");
+		var text = $("#standardizedRatesDecisionChargeStatus :selected").text();
+		textbox_text.value = text;
+		textboxDiv.hidden = false;
+		selectDiv.hidden = true;
+	}
+</script>

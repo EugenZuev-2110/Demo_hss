@@ -1,0 +1,83 @@
+﻿<div class="data-block workspace">
+
+	<div class="data-block title-block">
+		<div class="data-row">
+			<ul class="breadcrumb">
+				<li class="breadcrumb-item"><a class="ref-color" href="index.html">Главная</a></li>
+				<li class="breadcrumb-item">Справочники - Нормы плотности теплового потока</li>
+			</ul>
+		</div>
+		<div class="data-row">
+			<h1 class="title">Нормы плотности теплового потока</h1>
+			<div class="data-item data-item-right">
+				<button class="bttn bttn-color bttn-edit-data" type="button" onclick="OpenNormLoss(0)">Добавить/Удалить</button>
+				<a class="bttn bttn-color bttn-load-data" type="button" href="page2-2-1-2.html">Загрузить данные</a>
+			</div>
+		</div>
+	</div>
+
+	<div class="data-block main-content border-block" id="NormLossListTable_div">
+		@await Component.InvokeAsync("NormLossList_Partial")
+	</div>
+</div>
+
+<script type="text/javascript" src="@Url.Content("~/hss/js/popup_common_scripts.js")"></script>
+<script>
+	$(document).ready(function () {
+		setTimeout(function () {
+			$('#NormLoss').addClass('active');
+		}, 500);
+
+		TableInit('NormLossListTable', 'full');
+
+	});
+
+	function GetListOnPage() {
+		showPreloader();
+		$.ajax({
+
+			type: 'GET',
+			url: '@Html.Raw(Url.Action("OnGetCallNormLossList_PartialViewComponent", "NormLoss", new { Area = "DictionaryTables" }))',
+			data: {
+			},
+			dataType: 'html'
+		})
+			.done(function (result) {
+				var div = $('#NormLossListTable_div');
+				div.html("");
+				div.html(result);
+				TableInit('NormLossListTable', 'full');
+				hidePreloader();
+			});
+	}
+
+
+
+	function OpenNormLoss(id, action_for) {
+		debugger;
+		showPreloader();
+		$.ajax({
+			type: 'POST',
+			url: '@Html.Raw(Url.Action("OpenNormLoss", "NormLoss", new { Area = "DictionaryTables" }))',
+			data: {
+				id: id,
+				data_status: $('#data_status').val(),
+				action_for: action_for
+			},
+			dataType: 'html'
+		})
+			.done(function (result) {
+				var div = $('#NormLossDataPopup');
+				div.html("");
+				div.html(result);
+				$('.selectpicker').selectpicker();
+
+				if ($('#NormLossDataPopup').is(':hidden')) {
+					showModal('NormLossDataPopup');
+				}
+				hidePreloader();
+			});
+	}
+
+
+</script>

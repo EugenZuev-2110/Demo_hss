@@ -1,0 +1,268 @@
+﻿@model WebProject.Areas.HeatPointsAndConsumers.Models.LoadsAndExpensivesMainModel
+@{
+	Layout = null;
+	int cnt_years = ViewBag.PerspectiveYears.Length * 27;
+	int num_years = ViewBag.PerspectiveYears.Length;
+	int cnt_columns = 38 + cnt_years;
+}
+<h3>Нагрузки и расходы по годам</h3>
+<div class="table-block">
+	<input type="hidden" value="@num_years" id="cnt_years_loadsExpensives" />
+	<div class="table-buttons LoadExpensiveTable-buttons"></div>
+	<table id="LoadExpensiveTable" class="display compact table-clicked" style="width:100%">
+		<thead>
+			<tr>
+				<th colspan="5" rowspan="3">Источник тепловой энергии</th>
+				<th colspan="12" rowspan="3">Тепловой пункт</th>
+				<th colspan="21">Существующее положение</th>
+				@foreach (var p_year in ViewBag.PerspectiveYears)
+				{
+					<th colspan="27">Нагрузка на @p_year год</th>
+				}
+			</tr>
+			<tr>
+				<th colspan="11">Договорная приведеная тепловая нагрузка/Расчетная тепловая нагрузка/Зарасчетная тепловая нагрузка</th>
+				<th colspan="10">Расход теплоносителя</th>
+				@foreach (var p_year in ViewBag.PerspectiveYears)
+				{
+					<th colspan="5" rowspan="2">Источник тепловой энергии</th>
+					<th rowspan="2">Тепловой пункт</th>
+					<th colspan="11">Договорная приведеная тепловая нагрузка/Расчетная тепловая нагрузка/Зарасчетная тепловая нагрузка</th>
+					<th colspan="10">Расход теплоносителя</th>
+				}
+			</tr>
+			<tr>
+				<th colspan="5">В горячей воде</th>
+				<th colspan="6">В паре</th>
+				<th colspan="5">В горячей воде</th>
+				<th colspan="5">В паре</th>
+				@foreach (var p_year in ViewBag.PerspectiveYears)
+				{
+					<th colspan="5">В горячей воде</th>
+					<th colspan="6">В паре</th>
+					<th colspan="5">В горячей воде</th>
+					<th colspan="5">В паре</th>
+				}
+			</tr>
+			<tr>
+				<th>УНОМ ИСТ</th>
+				<th>Наименование</th>
+				<th>Статус источника</th>
+				<th>УНОМ Вывода</th>
+				<th>Наименование вывода</th>
+
+				<th>УНОМ ТП</th>
+				<th>Номер теплового пункта</th>
+				<th>Административный округ</th>
+				<th>Район</th>
+				<th>Адрес месторасположения теплового пункта</th>
+
+				<th>Тип теплового пункта</th>
+				<th>Номер типовой схемы теплового пункта</th>
+				<th>Тип размещения теплового пункта</th>
+				<th>Статус теплового пункта</th>
+				<th>Год ввода в эксплуатацию</th>
+
+				<th>Год проведения последней реконструкции</th>
+				<th>Год ликвидации теплового пункта</th>
+				<th>Технология, Гкал/ч</th>
+				<th>Отопление, Гкал/ч</th>
+				<th>Вентиляция, Гкал/ч</th>
+
+				<th>ГВСср.ч., Гкал/ч</th>
+				<th>ВСЕГО, Гкал/ч</th>
+				<th>Технология, т/ч</th>
+				<th> Отопление, т/ч</th>
+				<th>Вентиляция, т/ч</th>
+
+				<th>ГВСср.ч., т/ч</th>
+				<th>ВСЕГО, т/ч</th>
+				<th>ВСЕГО, Гкал/ч</th>
+				<th>Технология, т/ч</th>
+				<th>Отопление, т/ч</th>
+
+				<th>Вентиляция, т/ч</th>
+				<th>ГВС, т/ч</th>
+				<th>ВСЕГО, т/ч</th>
+				<th>Технология, т/ч</th>
+				<th>Отопление, т/ч</th>
+
+				<th>Вентиляция, т/ч</th>
+				<th>ГВС, т/ч</th>
+				<th>ВСЕГО, т/ч</th>
+				@foreach (var p_year in ViewBag.PerspectiveYears)
+				{
+					<th>УНОМ ИСТ</th>
+					<th>Наименование</th>
+					<th>Статус источника</th>
+					<th>УНОМ Вывода</th>
+					<th>Наименование вывода</th>
+
+					<th>Статус теплового пункта</th>
+					<th>Технология, Гкал/ч</th>
+					<th>Отопление, Гкал/ч</th>
+					<th>Вентиляция, Гкал/ч</th>
+					<th>ГВСср.ч., Гкал/ч</th>
+
+					<th>ВСЕГО, Гкал/ч</th>
+					<th>Технология, т/ч</th>
+					<th>Отопление, т/ч</th>
+					<th>Вентиляция, т/ч</th>
+					<th>ГВСср.ч., т/ч</th>
+
+					<th>ВСЕГО, т/ч</th>
+					<th>ВСЕГО, Гкал/ч</th>
+					<th>Технология, т/ч</th>
+					<th>Отопление, т/ч</th>
+					<th>Вентиляция, т/ч</th>
+
+					<th>ГВС, т/ч</th>
+					<th>ВСЕГО, т/ч</th>
+					<th>Технология, т/ч</th>
+					<th> Отопление, т/ч</th>
+					<th>Вентиляция, т/ч</th>
+
+					<th>ГВС, т/ч</th>
+					<th>ВСЕГО, т/ч</th>
+				}
+			</tr>
+			<tr class="filter-row ">
+				@for (int i = 0; i < @cnt_columns; i++)
+				{
+					if (i == 0)
+					{
+						<th class="dtfc-fixed-left" style="left:0; position:sticky;"><input type="text" class="filter-col-0" /></th>
+					}
+					else
+					{
+						<th><input type="text" class="filter-col-@i" /></th>
+					}
+				}
+			</tr>
+		</thead>
+		<tbody title="Двойной клик открывает форму редактирования">
+			@foreach (var item in Model.LoadsAndExpensivesMain)
+			{
+				@*<tr ondblclick="OpenPopupLoadsAndExpensives(@item.da);">*@
+				<tr>
+					<td>@item.source_unom</td>
+					<td>@item.source_name</td>
+					<td>@item.source_status_name</td>
+					<td>@item.source_output_unom</td>
+					<td>@item.source_output_name</td>
+
+					<td>@item.heat_point_id</td>
+					<td>@item.hp_num</td>
+					<td>@item.hp_region_name</td>
+					<td>@item.hp_district_name</td>
+					<td>@item.hp_address</td>
+
+					<td>@item.hp_type_name</td>
+					<td>@item.hp_type_scheme_id</td>
+					<td>@item.hp_type_location_name</td>
+					<td>@item.hp_status_name</td>
+					<td>@item.hp_start_year_expl</td>
+
+					<td>@item.hp_last_year_reconstr</td>
+					<td>@item.hp_year_liquidate</td>
+					<td>@item.hl_tech_hw</td>
+					<td>@item.hl_heat_hw</td>
+					<td>@item.hl_vent_hw</td>
+
+					<td>@item.hl_gvss_hw</td>
+					<td>@item.hl_hw_sum</td>
+					<td>@item.hl_tech_steam</td>
+					<td>@item.hl_heat_steam</td>
+					<td>@item.hl_vent_steam</td>
+
+					<td>@item.hl_gvss_steam</td>
+					<td>@item.hl_steam_sum</td>
+					<td>@item.hl_steam_sum_gkalh</td>
+					<td>@item.heat_carrier_consump_tech_hw</td>
+					<td>@item.heat_carrier_consump_heat_hw</td>
+
+					<td>@item.heat_carrier_consump_vent_hw</td>
+					<td>@item.heat_carrier_consump_gvs_hw</td>
+					<td>@item.heat_carrier_consump_sum_hw</td>
+					<td>@item.heat_carrier_consump_tech_steam</td>
+					<td>@item.heat_carrier_consump_heat_steam</td>
+
+					<td>@item.heat_carrier_consump_vent_steam</td>
+					<td>@item.heat_carrier_consump_gvs_steam</td>
+					<td>@item.heat_carrier_consump_sum_steam</td>
+					@foreach (var p_year in Model.LoadsAndExpensivesPerspectiveMain.Where(n => n.heat_point_id == item.heat_point_id))
+					{
+						<td>@p_year.source_unom</td>
+						<td>@p_year.source_name</td>
+						<td>@p_year.source_status_name</td>
+						<td>@p_year.source_output_unom</td>
+						<td>@p_year.source_output_name</td>
+
+						<td>@p_year.hp_status_name</td>
+						<td>@p_year.hl_tech_hw</td>
+						<td>@p_year.hl_heat_hw</td>
+						<td>@p_year.hl_vent_hw</td>
+						<td>@p_year.hl_gvss_hw</td>
+
+						<td>@p_year.hl_hw_sum</td>
+						<td>@p_year.hl_tech_steam</td>
+						<td>@p_year.hl_heat_steam</td>
+						<td>@p_year.hl_vent_steam</td>
+						<td>@p_year.hl_gvss_steam</td>
+
+						<td>@p_year.hl_steam_sum</td>
+						<td>@p_year.hl_steam_sum_gkalh</td>
+						<td>@p_year.heat_carrier_consump_tech_hw</td>
+						<td>@p_year.heat_carrier_consump_heat_hw</td>
+						<td>@p_year.heat_carrier_consump_vent_hw</td>
+
+						<td>@p_year.heat_carrier_consump_gvs_hw</td>
+						<td>@p_year.heat_carrier_consump_sum_hw</td>
+						<td>@p_year.heat_carrier_consump_tech_steam</td>
+						<td>@p_year.heat_carrier_consump_heat_steam</td>
+						<td>@p_year.heat_carrier_consump_vent_steam</td>
+
+						<td>@p_year.heat_carrier_consump_gvs_steam</td>
+						<td>@p_year.heat_carrier_consump_sum_steam</td>
+					}
+				</tr>
+			}
+		</tbody>
+	</table>
+	<br />
+	<div class="data-row table-summary">
+		<div class="data-item rows-count">
+			<h5>Всего записей:</h5>
+			<p><span class="mark-color" id="all_cnt_rows"></span></p>
+		</div>
+		<div class="scroll-table-wrapper">
+			<table>
+				<thead>
+					<tr>
+			  			<th>Расчётный год</th>
+			  			@foreach (var p_year in ViewBag.FooterPerspectiveYears)
+						{
+							<th>@p_year</th>
+						}
+			  		</tr>
+				</thead>
+				<tbody>
+					<tr>
+			  			<td>Тепловая нагрузка, <span class="data-unit">Гкал/ч</span></td>
+			  			@for (int j = 0; j < ViewBag.FooterPerspectiveYears.Length; j++)
+						{
+							<th id="le_heat_load_@j"></th>
+						}
+			  		</tr>
+			  		<tr>
+			  		<td>Расход сетевой воды, <span class="data-unit">т/ч</span></td>
+			  			@for (int j = 0; j < ViewBag.FooterPerspectiveYears.Length; j++)
+						{
+							<th id="le_heat_carrier_@j"></th>
+						}
+			  		</tr>
+				</tbody> 
+		  	</table>
+		</div>
+	</div>
+</div>

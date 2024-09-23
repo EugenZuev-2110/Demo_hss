@@ -1,0 +1,286 @@
+﻿@model DataBaseHSS.Models.Layers
+@{
+	string btn_disable = string.Empty;
+}
+@if (Model.Id == 0)
+{
+	btn_disable = "disabled";
+}
+<div class="modal-dialog modal-dialog-centered">
+	<div class="modal-content">
+		<div class="modal-header">
+			<h3 class="modal-title" id="editDataLabel">Слой электронной модели</h3>
+			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="RefreshTable()"></button>
+		</div>
+		<div class="modal-body">
+			<form class="needs-validation" novalidate asp-controller="Layers" asp-action="Layers_Save" asp-antiforgery="true" asp-area="DictionaryTables" id="Layers_form"
+			 data-ajax-failure="onFailedFormTZ" data-ajax-success="onSuccessFormLayers"  data-ajax-begin="onBeginFormTZ" data-ajax="true" data-ajax-method="POST">
+				<input type="hidden" name="layer_unom" value="@Model.layer_unom" />
+			<div class="data-block static-block data-params">
+				<div class="data-row">
+					<div class="data-item">
+						<label class="data-label">Уникальный номер слоя электронной модели</label>
+							<select class="selectpicker data-value xxl-stretch" name="Id" data-live-search="true" id="paramNumberLayer" placeholder="Выберите УНОМ слоя электронной модели">
+							@if (@Model.Id == 0)
+							{
+								<option value="" selected disabled>При добавлении нового слоя, УНОМ генерируется автоматически</option>
+							}
+							@foreach (var layer in ViewBag.Layers)
+							{
+								if(layer.Id == Model.Id)
+								{
+									<option value="@layer.Id" selected>@layer.layer_unom</option>
+								}
+								else{
+								<option value="@layer.Id">@layer.layer_unom</option>
+							}}
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="data-block">
+				<div class="data-row">
+					<div class="data-item">
+						<label class="data-label lg-fix">Краткое описание слоя</label>
+							<input type="text" class="data-value xl-stretch" name="layer_description" required value="@Model.layer_description"></input>
+							<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Это поле должно быть заполнено"></a>
+					</div>
+				</div>
+				<div class="data-row">
+					<div class="data-row">
+						<label class="data-label lg-fix">Статус:</label>
+						<label class="data-item">
+							<span class="data-label">действует</span>
+								@if (Model.Id > 0 || ViewBag.Action_for == "copy")
+							{
+								string is_checked = string.Empty;
+								if(Model.layer_status_id == 1)
+								{
+									is_checked = "checked";
+								}
+									<input type="radio" name="layer_status_id" value="@(Model.layer_status_id == 1 ? 1 : 1)" onchange="CheckBox_Change('checkbox_no_liquidation')" id="checkbox_no_liquidation" class="data-check" @is_checked>
+							}
+							else
+							{
+									<input type="radio" name="layer_status_id" value="1" onchange="CheckBox_Change('checkbox_no_liquidation')" id="checkbox_no_liquidation" checked class="data-check">
+							}
+						</label>
+						<label class="data-item">
+							<span class="data-label">ликвидирован</span>
+								@if (Model.Id > 0 || ViewBag.Action_for == "copy")
+							{
+								string is_checked = string.Empty;
+								if (Model.layer_status_id == -1)
+								{
+									is_checked = "checked";
+								}
+									<input type="radio" name="layer_status_id" value="@(Model.layer_status_id == -1 ? -1 : 1)" class="data-check" onchange="CheckBox_Change('checkbox_liquidation')" @is_checked id="checkbox_liquidation">
+							}
+							else
+							{
+									<input type="radio" name="layer_status_id" value="false" onchange="CheckBox_Change('checkbox_liquidation')" id="checkbox_liquidation" class="data-check">
+							}
+						</label>
+					</div>
+					<div class="data-row">
+						<label class="data-label lg-fix">Тип слоя:</label>
+						<label class="data-item">
+							<span class="data-label">основной</span>
+								@if (Model.Id > 0 || ViewBag.Action_for == "copy")
+							{
+								string is_checked = string.Empty;
+								if (Model.layer_type_id == 1)
+								{
+									is_checked = "checked";
+								}
+									<input type="radio" name="layer_type_id" value="@(Model.layer_type_id == 1 ? 1 : 1)" class="data-check" id="CheckBox_basic" onchange="CB_ChangeValue('CheckBox_basic')" @is_checked>
+							}
+							else
+							{
+									<input type="radio" name="layer_type_id" value="1" checked class="data-check">
+							}
+						</label>
+						<label class="data-item">
+							<span class="data-label">вспомогательный</span>
+								@if (Model.Id > 0 || ViewBag.Action_for == "copy")
+							{
+								string is_checked = string.Empty;
+								if (Model.layer_type_id == 2)
+								{
+									is_checked = "checked";
+								}
+									<input type="radio" name="layer_type_id" value="@(Model.layer_type_id == 2 ? 2 : 1)" id="cb_liq" class="data-check" id="CheckBox_support" onchange="CB_ChangeValue('CheckBox_support')" @is_checked>
+							}
+							else
+							{
+									<input type="radio" name="layer_type_id" value="false" class="data-check">
+							}
+						</label>
+						<label class="data-item">
+							<span class="data-label">для программы развития</span>
+								@if (Model.Id > 0 || ViewBag.Action_for == "copy")
+							{
+								string is_checked = string.Empty;
+								if (Model.layer_type_id == 3)
+								{
+									is_checked = "checked";
+								}
+									<input type="radio" name="layer_type_id" value="@(Model.layer_type_id == 3 ? 3 : 1)" class="data-check" id="CheckBox_program" onchange="CB_ChangeValue('CheckBox_program')" @is_checked>
+							}
+							else
+							{
+									<input type="radio" name="layer_type_id" value="false" class="data-check">
+							}
+						</label>
+						<label class="data-item">
+							<span class="data-label">прочий</span>
+								@if (Model.Id > 0 || ViewBag.Action_for == "copy")
+							{
+								string is_checked = string.Empty;
+								if (Model.layer_type_id == 4)
+								{
+									is_checked = "checked";
+								}
+									<input type="radio" name="layer_type_id" value="@(Model.layer_type_id == 4 ? 4 : 1)" class="data-check" id="CheckBox_other" onchange="CB_ChangeValue('CheckBox_other')" @is_checked>
+							}
+							else
+							{
+									<input type="radio" name="layer_type_id" value="false" class="data-check">
+							}
+						</label>
+					</div>
+				</div>
+
+				<div class="data-row">
+					<div class="data-item">
+						<label class="data-label lg-fix">Год создания слоя</label>
+							<input type="number" class="data-value xl-fix" name="layer_data_status" value="@Model.layer_data_status" required></input>
+							<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Это поле должно быть заполнено"></a>
+					</div>
+					<div class="data-item">
+						<label class="data-label lg-fix">Расчетный год схемы</label>
+							<input type="number" class="data-value xl-fix" name="layer_perspective_year" value="@Model.layer_perspective_year" required></input>
+							<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Это поле должно быть заполнено"></a>
+					</div>
+				</div>
+				<div class="data-row">
+					<div class="data-item">
+						<label class="data-label lg-fix">Наименование файла слоя</label>
+							<input type="text" class="data-value xl-stretch" name="layer_filename" value="@Model.layer_filename" required></input>
+							<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Это поле должно быть заполнено"></a>
+					</div>
+				</div>
+				<div class="data-row">
+					<div class="data-item">
+						<label class="data-label lg-fix">Путь хранения файла слоя</label>
+							<input type="text" class="data-value xl-stretch" name="layer_filepath" value="@Model.layer_filepath" required></input>
+							<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Это поле должно быть заполнено"></a>
+					</div>
+				</div>
+				<div class="data-row">
+					<div class="data-item">
+						<label class="data-label lg-fix">Год удаления слоя</label>
+							@{string is_disabled = string.Empty;}
+							@if (Model.layer_status_id == 1 || Model.layer_status_id == null)
+							{
+								is_disabled = "disabled";
+							}
+							<input type="number" class="data-value xl-fix" name="layer_delete_year" id="year_liquidation" value="@Model.layer_delete_year" required @is_disabled></input>
+							<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Это поле должно быть заполнено"></a>
+					</div>
+					<div class="data-item">
+						<label class="data-label lg-fix">Причина удаления слоя</label>
+						@{
+							is_disabled = string.Empty;
+						}
+							@if (Model.layer_status_id == 1 || Model.layer_status_id == null)
+						{
+							is_disabled = "disabled";
+						}
+						<input type="text" class="data-value xl-stretch" name="layer_delete_reason" id="reason_liquidation" value="@Model.layer_delete_reason" required @is_disabled></input>
+							<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Это поле должно быть заполнено"></a>
+					</div>
+				</div>
+			</div>
+			</form>
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="bttn" data-bs-dismiss="modal">Отмена</button>
+		<button type="submit" class="bttn bttn-color" form="Layers_form">Сохранить</button>
+		<button type="button" class="bttn bttn-color" @btn_disable onclick="OpenLayer(@Model.Id, 'copy')">Создать копию</button>
+		</div>
+	</div>
+</div>
+
+
+<script type="text/javascript" src="@Url.Content("~/hss/js/popup_common_scripts.js")"></script>
+<script>
+
+	$(document).ready(function () {
+		document.querySelector('#paramNumberLayer').addEventListener('change', (event) => {
+			OpenLayer($("#paramNumberLayer").val());
+		});
+	});
+
+	
+
+	var onSuccessFormLayers = function (xhr) {
+		debugger
+		if (xhr.success == true) {
+			showMessage('Данные сохранены.', 'modal', 'success');
+			$("#refresh_Layers_table").val(1);
+			if (xhr.is_new == true) {
+				OpenLayer(xhr.layer_id);
+			}
+		}
+		else {
+			if (xhr.message === undefined) {
+				xhr.message = 'Ошибка сохранения данных'
+			}
+			showMessage(xhr.message, 'modal', 'fault');
+		}
+		hidePreloader();
+	};
+
+	function CheckBox_Change(cb){
+		debugger
+		var checkbox_liq = document.getElementById("checkbox_liquidation");
+		if (checkbox_liq.checked) {
+			document.getElementById("year_liquidation").disabled = false;
+			document.getElementById("reason_liquidation").disabled = false;
+		}
+		else {
+			document.getElementById("year_liquidation").disabled = true;
+			document.getElementById("year_liquidation").value = '';
+			document.getElementById("reason_liquidation").disabled = true;
+			document.getElementById("reason_liquidation").value = '';
+
+		}
+		
+		CB_ChangeValue(cb)
+	}
+
+	function CB_ChangeValue(cb)
+	{
+		debugger
+		var name_status = 'layer_status_id';
+		if (cb == 'checkbox_no_liquidation') {
+			$('input[name="' + name_status + '"]:checked').val(1);
+		}
+		if (cb == 'checkbox_liquidation') {
+			$('input[name="' + name_status + '"]:checked').val(-1);
+		}
+
+		var name_type = 'layer_type_id';
+		if (cb == 'CheckBox_basic') {
+			$('input[name="' + name_type + '"]:checked').val(1);
+		}
+		if (cb == 'CheckBox_support') {
+			$('input[name="' + name_type + '"]:checked').val(2);
+		} if (cb == 'CheckBox_program') {
+			$('input[name="' + name_type + '"]:checked').val(3);
+		} if (cb == 'CheckBox_other') {
+			$('input[name="' + name_type + '"]:checked').val(4);
+		}
+	}
+</script>

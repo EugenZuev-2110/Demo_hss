@@ -1,0 +1,92 @@
+﻿@{
+    ViewData["Title"] = "ПУНКТЫ";
+}
+
+<link rel="stylesheet" type="text/css" id="theme" href="~/Content/theme-default.css" />
+<div id="partial-content">
+
+    <div class="panel panel-default">
+        <div id="panel panel-default">
+            <fieldset>
+                @*<div style="display: -webkit-inline-box; margin: 20px 20px 10px; width: 150px;">
+                    <label for="start">С</label>
+                    <input type="date" value="@(DateTime.Now.ToString("yyyy-MM-dd"))" name="startDate" id="startDate"/>
+                </div>
+
+                <div style="display: -webkit-inline-box; margin: 20px 20px 10px; width: 150px;">
+                    <label for="end">По</label>
+                    <input type="date" value="@(DateTime.Now.ToString("yyyy-MM-dd"))" name="endDate" id="endDate"/>
+                </div>*@
+
+                <div style="margin: 20px 20px 10px; width: 800px;">
+                    <button class="btn btn-default" onclick="LoadTable()">Загрузить</button>
+                    <button class="btn btn-default" id="excelFull">Выгрузить в Excel</button>
+                    <label for="start">Поиск по УНОМу</label>
+                    <input style="width: 100%" type="text" onkeypress="return Search(event)" name="searchText" />
+                </div>
+                
+            </fieldset>
+
+            @if (ViewData["category_id"].ToString() != "1")
+            {
+                <fieldset>
+                    <div style="display: -webkit-inline-box; margin: 20px 20px 0px; width: 500px;">
+                        <button class="btn btn-default" style="font-weight: bold; font-style: italic; font-size: large; color: darkblue; background-color: cyan;" onclick="ItemOpen(1, 0, '@ViewData["unom_num"]')" id="btnAddNewItem">Добавить подпункт</button>
+                    </div>
+                </fieldset>
+            }
+        </div>
+
+        <div id="unom_info_div">
+            @if (ViewData["unom_num"].ToString() != "")
+            {
+                @await Component.InvokeAsync("UnomInfo", new { searchText = @ViewData["unom_num"], IsAdmin = ViewData["IsAdmin"], userId = ViewData["userId"] } )
+            }
+        </div>
+        <div class="panel-body">
+            @await Component.InvokeAsync("ItemsList", new { searchText = @ViewData["unom_num"] } )
+        </div>
+    </div>
+
+</div>
+
+
+@section modalsection {
+<div id="modal-section">
+    <div id="modal-open-fd" class="modal fade" data-backdrop="static" tabindex='-1'>
+        @*onclick="TableOff();"*@
+        <div class="modal-dialog modal-large" style="width: 600px; margin-left: 30%">
+            <div class="modal-content">
+                <div id="modal-open-fd-header" class="modal-header">
+                    <button class="close" type="button" data-dismiss="modal">×</button>
+                    <h4 class="modal-title"></h4>
+                </div>
+                <div id="div-open-fd"></div>
+            </div>
+        </div>
+    </div>
+</div>
+}
+
+@section Scripts {
+    
+
+    @*<script src="/js/jquery.validate.min.js"></script>*@
+}
+
+@section pageJs {
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $('.datepicker').datepicker({
+                format: "dd.mm.yyyy",
+                autoclose: true,
+                language: 'ru'
+            });
+
+        });
+
+    </script>
+}
+

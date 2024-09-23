@@ -1,0 +1,219 @@
+﻿@model WebProject.Areas.DictionaryTables.Models.ActiveZoneETOOneDataViewModel
+
+@{
+	string btn_disable = string.Empty;
+	string is_disabled = "disabled";
+}
+@if (Model.eto_id == 0)
+{
+	btn_disable = "disabled";
+}
+
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h3 class="modal-title" id="editDataLabel">Зона деятельности ЕТО</h3>
+			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="RefreshTable()"></button>
+			</div>
+			<div class="modal-body">
+			<form class="needs-validation" novalidate asp-controller="ActiveZoneETO" asp-action="ActiveZoneETO_Save" asp-antiforgery="true" asp-area="DictionaryTables" id="ZoneETO_form"
+			data-ajax-failure="onFailedFormZoneETO" data-ajax-success="onSuccessFormZoneETO" data-ajax-begin="onBeginFormZoneETO" data-ajax="true" data-ajax-method="POST">
+				<input type="hidden" name="eto_id" value="@Model.eto_id" id="ZoneETO_eto_id" />
+				<input type="hidden" name="unom_eto" value="@Model.unom_eto" id="ZoneETO_unom_eto" />
+				
+				<div class="data-block static-block data-params">
+					<div class="data-row">
+						<div class="data-item">
+							<label class="data-label">Уникальный номер зоны деятельности ЕТО</label>
+							<select class="selectpicker data-value xxl-stretch" data-live-search="true" placeholder="Выберите УНОМ зоны деятельности ЕТО" id="ParamNumberETO">
+								@if (@Model.eto_id == 0 || ViewBag.Action_for == "copy")
+								{
+									<option value="" selected disabled>При добавлении новоой ЕТО, УНОМ генерируется автоматически</option>
+								}
+								@foreach(var eto in ViewBag.ETOList)
+								{
+									if (eto.eto_id == Model.eto_id && ViewBag.Action_for != "copy")
+									{
+										<option value="@eto.eto_id" selected>@eto.unom_eto</option>
+									}
+									else
+									{
+										<option value="@eto.eto_id">@eto.unom_eto</option>
+									}
+								}
+						</select>
+						</div>
+					</div>
+				</div>
+				<div class="data-block">
+
+					<div class="data-block border-block">
+						<div class="data-row">
+							
+							<div class="data-item">
+								<label class="data-label">Район (поселение)</label>
+							<select class="selectpicker data-value lg-stretch" name="distr_id" data-live-search="true" placeholder="Выберите..." multiple="true" data-size="5" required>
+									@if(Model.ActiveZoneETODistrictList == null || Model.ActiveZoneETODistrictList.Count == 0)
+									{
+										foreach(var distr in Model.districts)
+										{
+											<option value="@distr.id">@distr.distr_name</option>
+										}
+									}
+									@if(Model.ActiveZoneETODistrictList != null && Model.ActiveZoneETODistrictList.Count > 0)
+									{
+										foreach(var district in Model.eto_distr)
+										{
+											<option value="@district" selected>@Model.districts.Where(x => x.id == district).Select(x => x.distr_name).FirstOrDefault()</option>
+										}
+										foreach( var distr in Model.districts.Where(x => !Model.eto_distr.Any(y => y == x.id)))
+										{
+										<option value="@distr.id">@distr.distr_name</option>
+										}
+									}
+								</select>
+								<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Выберите значение из списка"></a>
+
+							</div>
+
+						</div>
+					<table id="ETOdistrictsTable" class="display compact table-inp-stretch dataTable no-footer dtfc-has-left"  style="width:100%">
+							<thead>
+								<tr>
+									<th>Округ</th>
+									<th>Районы</th>
+								</tr>
+							</thead>
+							<tbody>
+							@foreach (var distr in Model.ActiveZoneETODistrictList)
+							{
+								<tr>
+									<td>@distr.region</td>
+									<td>@distr.territories</td>
+								</tr>
+							}
+							</tbody>
+						</table>
+					</div>
+					<div class="data-row">
+						<div class="data-item">
+							<label class="data-label lm-fix">Уникальный номер слоя электронной модели</label>
+							<select class="selectpicker data-value lg-stretch" data-live-search="true" placeholder="Выберите..." disabled>
+								<option value="2020">2020</option>
+								<option value="2021">2021</option>
+								<option value="2022">2022</option>
+								<option value="2023">2023</option>
+							</select>
+						</div>
+						<div class="data-item">
+							<label class="data-label lm-fix">SYS объекта в электронном слое</label>
+						<input type="text" class="data-value md-stretch" disabled>
+						</div>
+					</div>
+					<div class="data-row">
+						<label class="data-item">
+							<span class="data-label lm-fix">Зона деятельности ликвидирована</span>
+						@if (Model.eto_id >= 0)
+						{
+							string is_checked = string.Empty;
+								
+								@if (Model.is_liquidated == true)
+								{
+									is_checked = "checked";
+									is_disabled = "";
+								}
+								<input type="checkbox" value="@(Model.is_liquidated == true ? "true" : "false")" name="is_liquidated" id="checkbox_liquidation" class="data-check" @is_checked onchange="CB_Change(this)" onclick="CheckCB()">
+							}
+						else
+						{
+								<input type="checkbox" value="false" name="is_liquidated" id="checkbox_liquidation" class="data-check" onchange="CB_Change(this)" onclick="CheckCB()">
+						}
+					</label>
+						<div class="data-item">
+							<label class="data-label lm-fix">Год ликвидации</label>
+							<input type="number" class="data-value stretch" id="year_liquidation" required name="year_liquidation" value="@Model.year_liquidation" @is_disabled>
+							<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Это поле должно быть заполнено"></a>
+						</div>
+					</div>
+					<div class="data-row">
+						<div class="data-item">
+							<label class="data-label lm-fix">Причина ликвидации</label>
+							<input type="text" class="data-value xxl-stretch" id="reason_liquidation" required name="reason_liquidation" value="@Model.reason_liquidation" @is_disabled>
+							<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Это поле должно быть заполнено"></a>
+						</div>
+					</div>
+				</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="bttn" data-bs-dismiss="modal">Отмена</button>
+				<button type="submit" class="bttn bttn-color" form="ZoneETO_form">Сохранить</button>
+				<button type="button" class="bttn bttn-color" id="btnCopyETO" @btn_disable onclick="OpenPopupZoneETO(@Model.eto_id, 'copy'); ">Создать копию</button>
+			</div>
+		</div>
+	</div>
+
+<script type="text/javascript" src="@Url.Content("~/hss/js/popup_common_scripts.js")"></script>
+<script>
+
+	$(document).ready(function () {
+		document.querySelector('#ParamNumberETO').addEventListener('change', (event) => {
+			OpenPopupZoneETO($("#ParamNumberETO").val());
+		});
+	});
+
+	function CheckCB(){
+		var checkbox_liq = document.getElementById("checkbox_liquidation");
+		if(checkbox_liq.checked){
+			document.getElementById("year_liquidation").disabled = false;
+			document.getElementById("reason_liquidation").disabled = false;
+		}
+		else{
+			document.getElementById("year_liquidation").disabled = true;
+			document.getElementById("year_liquidation").value = '';
+			document.getElementById("reason_liquidation").disabled = true;
+			document.getElementById("reason_liquidation").value = '';
+		}
+	}
+
+
+	var onBeginFormZoneETO = function (xhr) {
+		showPreloader();
+	};
+
+	var onFailedFormZoneETO = function (xhr) {
+		showMessage('Ошибка сохранения данных.', 'modal', 'success');
+		hidePreloader();
+	};
+
+	var onSuccessFormZoneETO = function (xhr) {
+		if (xhr.success == true) {
+			showMessage('Данные сохранены.', 'modal', 'success');
+			//let select_id = "ParamNumberETO";
+			//$('#' + select_id).val(xhr.unom_eto);
+			//$('#' + select_id).append('<option value=' + xhr.eto_id + ' selected>' + xhr.unom_eto + '</option>');
+			if(xhr.is_new == true)
+			{
+				OpenPopupZoneETO(xhr.eto_id);
+			}
+			//RefreshSelectById(select_id);
+			$("#refresh_ZoneETO_table").val(1);
+			
+		}
+		else {
+			if (xhr.message === undefined) {
+				xhr.message = 'Ошибка сохранения данных'
+			}
+			showMessage(xhr.message, 'modal', 'fault');
+		}
+		hidePreloader();
+	};
+
+	function RefreshTable(){
+		if ($("#refresh_ZoneETO_table").val() === "1") {
+			$("#refresh_ZoneETO_table").val(0);
+			GetListOnPage();
+		}
+	}
+
+</script>

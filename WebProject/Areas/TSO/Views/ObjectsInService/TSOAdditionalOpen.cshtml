@@ -1,0 +1,131 @@
+﻿@model WebProject.Areas.TSO.Models.TSOAdditionalDataViewModel
+@{
+	string btn_disable = string.Empty;
+}
+@if (Model.tso_id == 0)
+{
+	btn_disable = "disabled";
+}
+<div class="modal-dialog modal-dialog-centered">
+	<div class="modal-content">
+		<div class="modal-header">
+			<h3 class="modal-title" id="editDataLabel">Дополнительные данные о ТСО</h3>
+			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="RefreshTable();"></button>
+			<input type="hidden" value="0" id="refresh_tso_additional_table" />
+		</div>
+		<div class="modal-body">
+			<div class="data-row static-block data-params">
+				<div class="data-item">
+					<label class="data-label">Наименование ТСО</label>
+					<select class="selectpicker data-value xxl-stretch " id="paramNumberTso" data-live-search="true" placeholder="УНОМ ТСО - Наименование" required>
+						@if (@Model.tso_id == 0)
+						{
+							<option value="" selected>Выберите ТО</option>
+						}
+						@foreach (var tso_list in ViewBag.TSOList)
+						{
+							if (tso_list.org_id == Model.tso_id)
+							{
+								<option value="@tso_list.org_id" selected>@tso_list.org_name</option>
+							}
+							if (tso_list.org_id != Model.tso_id)
+							{
+								<option value="@tso_list.org_id">@tso_list.org_name</option>
+							}
+						}
+					</select>
+				</div>
+				<div class="data-item">
+					<label class="data-label">на</label>
+					<input type="text" value="01.01.@Model.data_status" class="data-value" disabled>
+				</div>
+			</div>
+			<form asp-controller="ObjectsInService" asp-action="TSOAdditional_Save" asp-antiforgery="true" asp-area="TSO" id="tso_form"
+				  data-ajax-failure="onFailedFormTSO" data-ajax-success="onSuccessFormTSO" data-ajax-begin="onBeginFormTSO" data-ajax="true" data-ajax-method="POST">
+				<input type="hidden" name="tso_id" value="@Model.tso_id"/>
+				<input type="hidden" name="data_status" value="@Model.data_status"/>
+				<div class="data-table-block">
+					<div class="data-item">
+						<label class="data-label">Стоимость основных средств, относимых на источники производства тепловой энергии</label>
+						<input type="text" class="data-value smx-fix double" name="fixed_assets_cost_prod" value="@Model.fixed_assets_cost_prod">
+						<span class="data-unit">тыс. руб.</span>
+					</div>
+					<div class="data-item">
+						<label class="data-label">Стоимость основных средств, относимых на передачу тепловой энергии</label>
+						<input type="text" class="data-value smx-fix double" name="fixed_assets_cost_transfer" value="@Model.fixed_assets_cost_transfer">
+						<span class="data-unit">тыс. руб.</span>
+					</div>
+					<div class="data-item">
+						<label class="data-label">Износ основных средств</label>
+						<input type="text" class="data-value smx-fix double" name="fixed_assets_wear" value="@Model.fixed_assets_wear">
+						<span class="data-unit">%</span>
+					</div>
+					<div class="data-item">
+						<label class="data-label">Протяженность сетей (в двухтрубном исчислении)</label>
+						<input type="text" class="data-value smx-fix double" name="network_length" value="@Model.network_length">
+						<span class="data-unit">км</span>
+					</div>
+					<div class="data-item">
+						<label class="data-label">Протяженность сетей, подлежащих замене (износ 100%)</label>
+						<input type="text" class="data-value smx-fix double" name="network_length_replaced" value="@Model.network_length_replaced">
+						<span class="data-unit">км</span>
+					</div>
+					<div class="data-item">
+						<label class="data-label">Полезный отпуск наиболее крупному единичному потребителю</label>
+						<input type="text" class="data-value smx-fix double" name="useful_supply_large_consumer" value="@Model.useful_supply_large_consumer">
+						<span class="data-unit">Гкал</span>
+					</div>
+					<div class="data-item">
+						<label class="data-label">Численность обслуживаемого населения</label>
+						<input type="number" class="data-value smx-fix" name="count_service_public" value="@Model.count_service_public">
+						<span class="data-unit">чел.</span>
+					</div>
+					<div class="data-item">
+						<label class="data-label">Количество абонентов</label>
+						<input type="number" class="data-value smx-fix" name="count_abonent" value="@Model.count_abonent">
+						<span class="data-unit">тыс. шт.</span>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="bttn" data-bs-dismiss="modal" onclick="RefreshTable();">Отмена</button>
+			<button type="submit" class="bttn bttn-color" form="tso_form" @btn_disable>Сохранить</button>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript" src="@Url.Content("~/hss/js/popup_common_scripts.js")"></script>
+<script type="text/javascript">
+
+	$(document).ready(function () {
+
+		document.querySelector('#paramNumberTso').addEventListener('change', (event) => {
+			OpenPopupTSOAdditional($('#paramNumberTso').val());
+		});
+		
+	});
+
+	var onBeginFormTSO = function (xhr) {
+		showPreloader();
+	};
+
+	var onFailedFormTSO = function (xhr) {
+		hidePreloader();
+	};
+
+	var onSuccessFormTSO = function (xhr) {
+		if (xhr.success == true) {
+			$("#refresh_tso_additional_table").val(1);
+		}
+		hidePreloader();
+	};
+
+	function RefreshTable() {
+		if ($("#refresh_tso_additional_table").val() === "1") {
+			GetListOnPage();
+		}
+	}
+
+
+</script>

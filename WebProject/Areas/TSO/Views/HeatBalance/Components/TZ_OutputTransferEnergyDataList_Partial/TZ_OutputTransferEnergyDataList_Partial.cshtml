@@ -1,0 +1,24 @@
+﻿@model List<WebProject.Areas.TSO.Models.TZOutputTransferEnergyPlanListViewModel>
+
+<h4>Транспорт тепловой энергии осуществляется в ТЗ</h4>
+<table class="table-clicked">
+	<thead>
+		<tr>
+			<th>Год</th>
+			<th>УНОМ ТЗ</th>
+			<th>Наименование ТСО</th>
+			<th>Объём, <span class="data-edit">Гкал/год (план)</span></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var tz_list in Model)
+		{
+			<tr ondblclick="OpenPopupHeatBalance(@tz_list.tz_id, @tz_list.perspective_year, '/TSO/HeatBalance/OpenTZOutputTransferEnergy', 'TZOutputTransferEnergyDataPopup');">
+				<td>@tz_list.perspective_year_dt</td>
+				<td>@tz_list.unom_tz</td>
+				<td>@tz_list.tso_name</td>
+				<td>@tz_list.transfer_energy_plan</td>
+			</tr>
+		}
+	</tbody>
+</table>

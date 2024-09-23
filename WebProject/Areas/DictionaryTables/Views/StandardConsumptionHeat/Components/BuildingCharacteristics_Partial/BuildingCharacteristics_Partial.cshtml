@@ -1,0 +1,81 @@
+﻿@model List<WebProject.Areas.DictionaryTables.Models.BuildingCharacteristicsViewModel>
+
+<form class="needs-validation" novalidate asp-controller="StandardConsumptionHeat" asp-action="BuildingCharacteristics_Save" asp-antiforgery="true" asp-area="DictionaryTables" id="ZoneETO_form"
+   data-ajax-failure="onFailedForm" data-ajax-success="onSuccessFormCoef" data-ajax-begin="onBeginForm" data-ajax="true" data-ajax-method="POST">
+				
+			<table id="oksParamsTable" class="display compact table-inp-stretch" style="width:100%;">
+				<thead>
+					<tr>
+						
+						<th rowspan="2">Этажность</th>
+						<th rowspan="2">Средняя высота этажа, <span class="data-unit">м</span></th>
+						<th rowspan="2">Средняя обеспеченность здания, <span class="data-unit">чел./м<sup>2</sup></span></th>
+						<th rowspan="2">Нормируемая базовая характеристика (ОТ+В), <span class="data-unit">Вт/м<sup>3</sup>·°С</span></th>
+						<th rowspan="2">Расчетная температура воздуха внутри помещения, <span class="data-unit">°С</span></th>
+						<th rowspan="2">Нормируемый расход горячей воды, <span class="data-unit">л/сут.·чел.</span></th>
+						<th rowspan="2">Расчетная температура горячей воды в точке водоразбора, <span class="data-unit">°С</span></th>
+						
+					</tr>
+					
+				</thead>
+				<tbody>
+					
+					@foreach(var build in Model)
+					{
+						<tr class="add-row">
+							@if (build.floor_id == 1)
+							{
+								<input type="hidden" name="data_status" value="@build.data_status" />
+								<input type="hidden" name="purpose_build_type_id" value="@build.purpose_build_type_id" />
+								<input type="hidden" name="floor_id" value="@build.floor_id" />
+
+								<td>@build.floor</td>
+								<td><input type="text" class="data-value" value="@build.AvgFloorHeight" id="AvgFloorHeight" name="AvgFloorHeight" oninput="ChangeInputValuePerspective(event, 'AvgFloorHeight')"></td>
+								<td><input type="text" class="data-value" value="@build.AvgBuildProvision" name="AvgBuildProvision" id="AvgBuildProvision" oninput="ChangeInputValuePerspective(event, 'AvgBuildProvision')"></td>
+								<td><input type="text" class="data-value" value="@build.NormBasicCharact" name="NormBasicCharact"></td>
+								<td><input type="text" class="data-value" value="@build.CalcAirTemp" name="CalcAirTemp" id="CalcAirTemp" oninput="ChangeInputValuePerspective(event, 'CalcAirTemp')"></td>
+								<td><input type="text" class="data-value" value="@build.NormHWConsumption" name="NormHWConsumption" id="NormHWConsumption" oninput="ChangeInputValuePerspective(event, 'NormHWConsumption')"></td>
+								<td><input type="text" class="data-value" value="@build.TempHW" name="TempHW" id="TempHW" oninput="ChangeInputValuePerspective(event, 'TempHW')"></td>
+							}
+							else
+							{
+								<input type="hidden" name="data_status" value="@build.data_status" />
+								<input type="hidden" name="floor_id" value="@build.floor_id" />
+								<input type="hidden" name="purpose_build_type_id" value="@build.purpose_build_type_id" />
+								<input type="hidden" name="floor" value="@build.floor" />
+
+								<td>@build.floor</td>
+								<td><input type="text" class="data-value" disabled id="AvgFloorHeight" name="AvgFloorHeight" value="@build.AvgFloorHeight" data-floor="@build.floor"></td>
+								<td><input type="text" class="data-value" disabled id="AvgBuildProvision" value="@build.AvgBuildProvision"></td>
+								<td><input type="text" class="data-value" value="@build.NormBasicCharact"name="NormBasicCharact"></td>
+								<td><input type="text" class="data-value" id="CalcAirTemp" disabled value="@build.CalcAirTemp"></td>
+								<td><input type="text" class="data-value" disabled id="NormHWConsumption" value="@build.NormHWConsumption"></td>
+								<td><input type="text" class="data-value" disabled id="TempHW" value="@build.TempHW"></td>
+							}
+						</tr>
+					}
+				</tbody>
+			</table>
+			<button class="bttn bttn-color ms-auto" style="float: right;" >Сохранить</button>
+	</form>
+
+
+<script type="text/javascript" src="@Url.Content("~/hss/js/popup_common_scripts.js")"></script>
+<script>
+	
+
+	function ChangeInputValuePerspective(event, input_name) {
+
+		var elements = document.querySelectorAll('#' + input_name +'');
+
+		var input_value = event.target.value;
+
+		for (var i = 0; i < elements.length; i++) {
+			
+				var input_id = elements[i].getAttribute('id');
+
+			elements[i].value = input_value;
+		}
+	}
+
+</script>

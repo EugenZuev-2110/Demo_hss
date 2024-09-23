@@ -1,0 +1,32 @@
+﻿<label class="data-label">Статус:</label>
+<select class="selectpicker data-value lg-stretch" data-live-search="true" id="statuses_for_filter" name="statuses_for_filter" placeholder="Выберите статус">
+</select>
+
+<script type="text/javascript">
+
+    GetHpStatusesForFilterList(0);
+
+    function GetHpStatusesForFilterList(is_change_ds) {
+        $.ajax({
+            url: '@Html.Raw(Url.Action("GetHpStatusesForFilter", "HSS", new { Area = "" }))',
+            type: 'POST'
+        }).done(function (data) {
+            changeSelectStatusesForFilter(data.list, is_change_ds);
+        });
+    }
+
+    function changeSelectStatusesForFilter(newSelect, is_change_ds) {
+        var select = $('#statuses_for_filter');
+        $(select).find('option').remove();
+        if (newSelect.length !== 0) {
+            for (var i = 0; i < newSelect.length; i++) {
+                $(select).append('<option value=' + newSelect[i].value_id + '>' + newSelect[i].value_name + '</option>');
+            }
+        } else {
+            $(select).append('<option value="">' + "Пусто" + '</option>');
+        }
+        $(select).selectpicker('destroy');
+        $(select).selectpicker();
+    }
+
+</script>

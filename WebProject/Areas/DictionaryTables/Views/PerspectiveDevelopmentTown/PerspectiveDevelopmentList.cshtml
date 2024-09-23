@@ -1,0 +1,178 @@
+﻿<div class="data-block workspace">
+
+    <div class="data-block title-block">
+        <div class="data-row">
+            <ul class="breadcrumb">
+                <li class="breadcrumb-item"><a class="ref-color" href="index.html">Главная</a></li>
+                <li class="breadcrumb-item">Справочники - Программы развития города (поселения)</li>
+            </ul>
+        </div>
+        <div class="data-row">
+            <h1 class="title">Программы развития города (поселения)</h1>
+            <div class="data-item data-item-right">
+                <button class="bttn bttn-color bttn-edit-data" type="button" id="progdev">Добавить</button>
+                <a class="bttn bttn-color bttn-load-data" type="button" href="page2-2-1-2.html">Загрузить данные</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="data-block main-content">
+        <div class="data-block" id="per_dev_main_list">
+            @await Component.InvokeAsync("PerspectiveDevelopmentList_Partial")
+        </div>
+        <div class="data-row table-summary">
+            <div class="data-item rows-count">
+                <h5>Всего записей:</h5>
+                <p><span class="mark-color">70</span></p>
+            </div>
+            <div class="scroll-table-wrapper">
+                <table style="white-space: nowrap;width: 100%;">
+                    <thead>
+                        <tr>
+                            <th>Расчётный год</th>
+                            <th>01.01.2022</th>
+                            <th>01.01.2023</th>
+                            <th>01.01.2024</th>
+                            <th>01.01.2025</th>
+                            <th>01.01.2026</th>
+                            <th>01.01.2027</th>
+                            <th>01.01.2028</th>
+                            <th>01.01.2029</th>
+                            <th>01.01.2030</th>
+                            <th>01.01.2031</th>
+                            <th>01.01.2032</th>
+                            <th>01.01.2033</th>
+                            <th>01.01.2034</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Общая площадь, <span class="data-unit">тыс. м<sup>2</sup></span></td>
+                            <td><span class="mark-color">10</span></td>
+                            <td><span class="mark-color">10</span></td>
+                            <td><span class="mark-color">10</span></td>
+                            <td><span class="mark-color">10</span></td>
+                            <td><span class="mark-color">10</span></td>
+                            <td><span class="mark-color">10</span></td>
+                            <td><span class="mark-color">10</span></td>
+                            <td><span class="mark-color">10</span></td>
+                            <td><span class="mark-color">10</span></td>
+                            <td><span class="mark-color">10</span></td>
+                            <td><span class="mark-color">10</span></td>
+                            <td><span class="mark-color">10</span></td>
+                            <td><span class="mark-color">10</span></td>
+                        </tr>
+                        <tr>
+                            <td>Суммарная тепловая нагрузка в горячей воде, <span class="data-unit">Гкал/ч</span></td>
+                            <td><span class="mark-color">10</span></td>
+                            <td><span class="mark-color">10</span></td>
+                            <td><span class="mark-color">10</span></td>
+                            <td><span class="mark-color">10</span></td>
+                            <td><span class="mark-color">10</span></td>
+                            <td><span class="mark-color">10</span></td>
+                            <td><span class="mark-color">10</span></td>
+                            <td><span class="mark-color">10</span></td>
+                            <td><span class="mark-color">10</span></td>
+                            <td><span class="mark-color">10</span></td>
+                            <td><span class="mark-color">10</span></td>
+                            <td><span class="mark-color">10</span></td>
+                            <td><span class="mark-color">10</span></td>
+                        </tr>
+                        <tr>
+                            <td>- заявленная</td>
+                            <td><span class="mark-color">10</span></td>
+                            <td><span class="mark-color">10</span></td>
+                            <td><span class="mark-color">10</span></td>
+                            <td><span class="mark-color">10</span></td>
+                            <td><span class="mark-color">10</span></td>
+                            <td><span class="mark-color">10</span></td>
+                            <td><span class="mark-color">10</span></td>
+                            <td><span class="mark-color">10</span></td>
+                            <td><span class="mark-color">10</span></td>
+                            <td><span class="mark-color">10</span></td>
+                            <td><span class="mark-color">10</span></td>
+                            <td><span class="mark-color">10</span></td>
+                            <td><span class="mark-color">10</span></td>
+                        </tr>
+                        <tr>
+                            <td>- расчетная</td>
+                            <td><span class="mark-color">10</span></td>
+                            <td><span class="mark-color">10</span></td>
+                            <td><span class="mark-color">10</span></td>
+                            <td><span class="mark-color">10</span></td>
+                            <td><span class="mark-color">10</span></td>
+                            <td><span class="mark-color">10</span></td>
+                            <td><span class="mark-color">10</span></td>
+                            <td><span class="mark-color">10</span></td>
+                            <td><span class="mark-color">10</span></td>
+                            <td><span class="mark-color">10</span></td>
+                            <td><span class="mark-color">10</span></td>
+                            <td><span class="mark-color">10</span></td>
+                            <td><span class="mark-color">10</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        setTimeout(function () {
+            $('#PerspectiveDevelopmentMain').addClass('active');
+        }, 500);
+
+        TableInit('PerspectiveDevelopmentlistTable', 'full', '50vh');
+
+    });
+
+    function OpenPopupPerspectiveDevelopment(dev_prog_id) {
+        showPreloader();
+        $.ajax({
+            type: 'POST',
+            url: '/DictionaryTables/PerspectiveDevelopmentTown/OpenPerspectiveDevelopment',
+            data: {
+                dev_prog_id: dev_prog_id
+            },
+            dataType: 'html'
+        })
+            .done(function (result) {
+                var div = $('#editPerspectiveDevelopmentDataPopup');
+                div.html("");
+                div.html(result);
+                $('.selectpicker').selectpicker();
+
+                if ($('#editPerspectiveDevelopmentDataPopup').is(':hidden')) {
+                    showModal('editPerspectiveDevelopmentDataPopup');
+                }
+                hidePreloader();
+            });
+    }
+
+    function GetListOnPage() {
+        showPreloader();
+        let action_name = 'OnGetPerspectiveDevelopment_PartialViewComponent';
+        let table_name = 'PerspectiveDevelopmentlistTable';
+
+        $.ajax({
+            type: 'GET',
+            url: '/DictionaryTables/PerspectiveDevelopmentTown/' + action_name,
+            //data: curr_data,
+            traditional: true,
+            dataType: 'html'
+        })
+            .done(function (result) {
+                debugger
+                var div = $('#per_dev_main_list');
+                div.html("");
+                div.html(result);
+
+                TableInit(table_name, 'full');
+                hidePreloader();
+            });
+    }
+
+</script>

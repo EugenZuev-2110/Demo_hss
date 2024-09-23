@@ -1,0 +1,251 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+@*<div class="preloader">
+	<div class="preloader-img">
+		<svg version="1.1" id="L2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve">
+		<circle fill="none" stroke="#292e32" stroke-width="4" stroke-miterlimit="10" cx="50" cy="50" r="48" />
+		<line fill="none" stroke-linecap="round" stroke="#5f2fe7" stroke-width="4" stroke-miterlimit="10" x1="50" y1="50" x2="85" y2="50.5">
+		<animateTransform attributeName="transform"
+						  dur="2s"
+						  type="rotate"
+						  from="0 50 50"
+						  to="360 50 50"
+						  repeatCount="indefinite" />
+				</line>
+		<line fill="none" stroke-linecap="round" stroke="#5f2fe7" stroke-width="4" stroke-miterlimit="10" x1="50" y1="50" x2="49.5" y2="74">
+		<animateTransform attributeName="transform"
+						  dur="15s"
+						  type="rotate"
+						  from="0 50 50"
+						  to="360 50 50"
+						  repeatCount="indefinite" />
+				</line>
+			</svg>
+	</div>
+</div>
+
+<div class="main-container d-flex">
+	<div class="sidebar offcanvas offcanvas-start" id="offcanvas-sidebar" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1">
+		<div class="user d-flex">
+			<img src="images/user-logo.png" title="Пользователь" alt="Логотип">
+			<a class="user-name ref-white flex-grow-1" role="button" href="#"><span>Фамилия</span> Имя Отчество</a>
+			<a class="user__exit ref-white" href="#" role="button"><svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 512 512"><title>Выход</title><path d="M304 336v40a40 40 0 01-40 40H104a40 40 0 01-40-40V136a40 40 0 0140-40h152c22.09 0 48 17.91 48 40v40M368 336l80-80-80-80M176 256h256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" /></svg></a>
+		</div>
+		<div class="data-block sidebar-params">
+
+			<div class="data-item">
+				<label for="paramCity" class="data-label">Город/ поселение</label>
+				<div class="input-group">
+					<select class="selectpicker param-city" data-width="190px" id="paramCity" value="1" data-live-search="true">
+						<option value="1">Москва</option>
+						<option value="2">Санкт-Петербург</option>
+						<option value="3">Самара</option>
+						<option value="4">Химки</option>
+					</select>
+					<button class="bttn bttn-square bttn-icon-add bttn-add-city" type="button"></button>
+				</div>
+			</div>
+			<div class="data-item">
+				<label for="paramYear" class="data-label">Базовый год</label>
+				<select class="selectpicker param-year" data-width="140px" id="paramYear">
+					<option value="2020">01.01.2021</option>
+					<option value="2021">01.01.2022</option>
+					<option value="2022" selected>01.01.2023</option>
+					<option value="2023">01.01.2024</option>
+				</select>
+			</div>
+			<p class="schema-name">Краткое наименование схемы: <span>Самая наилучшая схема из всех схем</span></p>
+			<p class="schema-approve">Решение об утверждении схемы: <span>Решение №456 от 27.04.2017</span></p>
+		</div>
+		<nav class="navbar">
+			<ul class="navbar-nav me-auto mb-2 mb-lg-0 flex-column list-unstyled">
+				<li class="nav-item">
+					<a class="nav-link btn-toggle" href="#" role="button" data-bs-toggle="collapse" data-bs-target="#tso_menu" aria-expanded="true">
+						Теплоснабжающие организации
+					</a>
+					<ul class="subnav collapse list-unstyled show" id="tso_menu">
+						<li><a class="subnav-item nav-link" href="index.html">Перечень организаций</a></li>
+						<li><a class="subnav-item nav-link" href="page2-2-2.html">Объекты в обслуживании</a></li>
+						<li><a class="subnav-item nav-link" href="page2-2-3.html">Тепловой баланс</a></li>
+						<li><a class="subnav-item nav-link" href="page2-2-4.html">Затраты и цены</a></li>
+						<li><a class="subnav-item nav-link" href="page2-2-5.html">Тарифы и плата за подключение</a></li>
+						<li><a class="subnav-item nav-link active" href="#">Экологические показатели</a></li>
+					</ul>
+				</li>
+
+				<li class="nav-item">
+					<a class="nav-link btn-toggle collapsed" href="#" role="button" data-bs-toggle="collapse" data-bs-target="#ite_menu" aria-expanded="false">
+						Источники тепловой энергии
+					</a>
+					<ul class="subnav collapse list-unstyled" id="ite_menu">
+						<li><a class="subnav-item nav-link" href="#">Перечень источников</a></li>
+						<li><a class="subnav-item nav-link" href="#">Оборудование</a></li>
+						<li><a class="subnav-item nav-link" href="#">Ресурсоснабжение</a></li>
+						<li><a class="subnav-item nav-link" href="#">Выдача тепловой мощности</a></li>
+						<li><a class="subnav-item nav-link" href="#">Технико-экономические показатели</a></li>
+						<li><a class="subnav-item nav-link" href="#">Статистика отказов</a></li>
+						<li><a class="subnav-item nav-link" href="#">Мероприятия по развитию</a></li>
+						<li><a class="subnav-item nav-link" href="#">Калькуляция себестоимости</a></li>
+						<li><a class="subnav-item nav-link" href="#">Экологические показатели</a></li>
+					</ul>
+				</li>
+
+				<li class="nav-item">
+					<a class="nav-link btn-toggle collapsed" href="#" role="button" data-bs-toggle="collapse" data-bs-target="#tsio_menu" aria-expanded="false">
+						Тепловые сети и объекты
+					</a>
+					<ul class="subnav collapse list-unstyled" id="tsio_menu">
+						<li><a class="subnav-item nav-link" href="#">Участки тепловых сетей</a></li>
+						<li><a class="subnav-item nav-link" href="#">НПС и ДНС</a></li>
+						<li><a class="subnav-item nav-link" href="#">Камеры и павильоны</a></li>
+					</ul>
+				</li>
+
+				<li class="nav-item">
+					<a class="nav-link btn-toggle collapsed" href="#" role="button" data-bs-toggle="collapse" data-bs-target="#tpip_menu" aria-expanded="false">
+						Тепловые пункты и потребители
+					</a>
+					<ul class="subnav collapse list-unstyled" id="tpip_menu">
+						<li><a class="subnav-item nav-link" href="#">Тепловые пункты</a></li>
+						<li><a class="subnav-item nav-link" href="#">Потребители</a></li>
+					</ul>
+				</li>
+
+				<li class="nav-item">
+					<a class="nav-link btn-toggle collapsed" href="#" role="button" data-bs-toggle="collapse" data-bs-target="#st_menu" aria-expanded="false">
+						Справочные таблицы
+					</a>
+					<ul class="subnav collapse list-unstyled" id="st_menu">
+						<li><a class="subnav-item nav-link" href="#">Организации</a></li>
+						<li><a class="subnav-item nav-link" href="#">Территориальное деление</a></li>
+						<li><a class="subnav-item nav-link" href="#">Тарифные зоны</a></li>
+						<li><a class="subnav-item nav-link" href="#">Зоны деятельности ЕТО</a></li>
+						<li><a class="subnav-item nav-link" href="#">Системы теплоснабжения</a></li>
+						<li><a class="subnav-item nav-link" href="#">Договора на теплоснабжение</a></li>
+						<li><a class="subnav-item nav-link" href="#">Нормы расхода тепла</a></li>
+						<li><a class="subnav-item nav-link" href="#">Программы развития города (поселения)</a></li>
+						<li><a class="subnav-item nav-link" href="#">Оборудование</a></li>
+						<li><a class="subnav-item nav-link" href="#">Топливо</a></li>
+						<li><a class="subnav-item nav-link" href="#">Программы развития энергообъектов</a></li>
+						<li><a class="subnav-item nav-link" href="#">Типы схем тепловых пунктов</a></li>
+						<li><a class="subnav-item nav-link" href="#">Реестр слоев электронной модели</a></li>
+						<li><a class="subnav-item nav-link" href="#">Температурные графики/удельные расходы</a></li>
+						<li><a class="subnav-item nav-link" href="#">Головные выводы источников</a></li>
+						<li><a class="subnav-item nav-link" href="#">Условные диаметры</a></li>
+						<li><a class="subnav-item nav-link" href="#">Тепловая изоляция тепловых сетей</a></li>
+						<li><a class="subnav-item nav-link" href="#">Удельные нормативные потери тепла в т/с</a></li>
+						<li><a class="subnav-item nav-link" href="#">Удельные капитальные вложения</a></li>
+						<li><a class="subnav-item nav-link" href="#">Коэффициенты инфляции</a></li>
+						<li><a class="subnav-item nav-link" href="#">Поправочные коэффициенты на климат</a></li>
+					</ul>
+				</li>
+
+				<li class="nav-item">
+					<a class="nav-link">Выходные формы</a>
+				</li>
+
+				<li class="nav-item">
+					<a class="nav-link">Расчёты</a>
+				</li>
+
+				<li class="nav-item">
+					<a class="nav-link">Плагины и скрипты</a>
+				</li>
+
+				<li class="nav-item">
+					<a class="nav-link">Письма</a>
+				</li>
+			</ul>
+
+		</nav>
+		<div class="sidebar-close">
+			<a class="ref-white" data-bs-toggle="offcanvas" data-bs-dismiss="offcanvas-sidebar" aria-label="Close" href="#offcanvas-sidebar" role="button" aria-controls="offcanvas-sidebar">
+				<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" stroke="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
+					<path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" />
+				</svg>
+			</a>
+		</div>
+	</div>
+	<div class="sidebar-open">
+		<a class="ref-white" data-bs-toggle="offcanvas" href="#offcanvas-sidebar" role="button" aria-controls="offcanvas-sidebar">
+			<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" stroke="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
+				<path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" />
+			</svg>
+		</a>
+	</div>*@
+	<div class="data-block workspace">
+
+		<div class="data-block title-block">
+			<div class="data-row">
+				<ul class="breadcrumb">
+					<li class="breadcrumb-item"><a class="ref-color" href="#">Главная</a></li>
+					<li class="breadcrumb-item">Теплоснабжающие организации - Экологические показатели</li>
+				</ul>
+			</div>
+			<h1 class="title">Экологические показатели</h1>
+		</div>
+
+		<div class="data-block main-content">
+			<div class="data-row table-params">
+				<div class="data-item">
+				<partial name="_PerspectiveYearsList" />
+				</div>
+				<div class="data-item">
+				<div class="note">Базовый год - <span class="note-base-year" id="base_year_info"></span></div>
+				</div>
+
+				<div class="data-item">
+					<a class="bttn bttn-color bttn-load-data" type="button" href="page2-2-1-2.html">Загрузить данные</a>
+					<button class="bttn bttn-color bttn-excel-export" type="button">Выгрузить в Excel</button>
+				</div>
+
+			</div>
+		<div id="eco_div_table" style="display: none;">
+			@await Component.InvokeAsync("EcologyIndicators_Partial")
+		</div>
+
+		</div>
+	</div>
+
+
+
+@section pageJs {
+    <script type="text/javascript">
+	$(document).ready(function () {
+			setTimeout(function () {
+			$('#Ecology_Indicators').addClass('active');
+		}, 500);
+
+		TableInit('ecoTable', 'full');
+		hidePreloader();
+	});
+
+		//function GetListOnPage() {
+		//	showPreloader();
+
+		//	let action_name = $('#cur_action_name').val();;
+		//	let table_name = $('#cur_table_name').val();;
+
+		//	$.ajax({
+		//		type: 'GET',
+		//		url: '/TSO/CostsAndPrices/' + action_name,
+		//		data: {
+		//			data_status: $('#data_status').val(),
+		//			perspective_year: $('#perspective_year').val()
+		//		},
+		//		dataType: 'html'
+		//	})
+		//		.done(function (result) {
+		//			var div = $('#tzCostsPricesDiv');
+		//			div.html("");
+		//			div.html(result);
+		//			TableInit(table_name, 'full');
+		//			hidePreloader();
+		//		});
+		//}
+	</script>
+	}

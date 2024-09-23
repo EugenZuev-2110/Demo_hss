@@ -1,0 +1,166 @@
+﻿<div class="data-block workspace">
+    <div class="data-block title-block">
+        <div class="data-row">
+            <ul class="breadcrumb">
+                <li class="breadcrumb-item"><a class="ref-color" href="#">Главная</a></li>
+                <li class="breadcrumb-item">Теплоснабжающие организации - Объекты в обслуживании</li>
+            </ul>
+        </div>
+        <div class="data-row">
+			<h1 class="title">Объекты ТСО в обслуживании</h1>
+			<div class="data-item data-item-right">
+                <button class="bttn bttn-color bttn-edit-data" type="button" onclick="OpenPopupTSOAdditional(0)" style="display: none;" id="btnAdd">Добавить/Удалить</button>
+				@*<a class="bttn bttn-color bttn-load-data" type="button" href="page2-2-1-2.html">Загрузить данные</a>*@
+                <button class="bttn bttn-color bttn-excel-export" type="button" id="excelFull">Выгрузить в Excel</button>
+			</div>
+		</div>
+        <div class="data-row static-block">
+            <div class="data-item" id="py_param_div">
+                <partial name="_PerspectiveYearsList" />
+            </div>
+            <div class="note">Базовый год - <span class="note-base-year" id="base_year_info"></span>;</div>
+        </div>
+	</div>
+    <div class="data-block main-content">
+        <div class="tabs-block">
+            <input type="hidden" id="cur_action_name" value="OnGetCallTSO_SumDataList_PartialViewComponent" />
+            <input type="hidden" id="cur_table_name" value="tsoServTableSummary" />
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button onclick="TabChange(event);" data-tab-action="OnGetCallTSO_SumDataList_PartialViewComponent" data-tab-tableid="tsoServTableSummary" class="nav-link active" data-bs-toggle="tab" data-bs-target="#tsoServTab" type="button" role="tab" aria-controls="tsoServTab" aria-selected="true">Сводные <br class="d-lg-none">данные</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button onclick="TabChange(event);" data-tab-action="OnGetCallTSO_SourcesList_PartialViewComponent" data-tab-tableid="tsoServTableSources" class="nav-link" data-bs-toggle="tab" data-bs-target="#tsoServTab" type="button" role="tab" aria-controls="srcListTab" aria-selected="false">Перечень <br class="d-lg-none">источников</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button onclick="TabChange(event);" data-tab-action="OnGetCallTSO_HPList_PartialViewComponent" data-tab-tableid="tsoServTableHP" class="nav-link" data-bs-toggle="tab" data-bs-target="#tsoServTab" type="button" role="tab" aria-controls="heatPointTab" aria-selected="false">Перечень <br class="d-lg-none">тепловых пунктов</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button onclick="TabChange(event);" data-tab-action="OnGetCallTSO_AdditionalDataList_PartialViewComponent" data-tab-tableid="tsoServTableAdditional" class="nav-link" data-bs-toggle="tab" data-bs-target="#tsoServTab" type="button" role="tab" aria-controls="extraDataTab" aria-selected="false">Дополнительные <br class="d-lg-none">данные ТСО</button>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane fade show active" id="tsoServTab" role="tabpanel" style="display: none;">
+                    <div class="data-block" id="tsoServDiv">
+                        @await Component.InvokeAsync("TSO_SumDataList_Partial")
+                    </div>
+                </div>
+            </div>
+        </div>
+	</div>
+</div>
+
+@section pageJs {
+    <script type="text/javascript">
+
+  //      const editDataModal = document.getElementById('TSOeditData');
+		//editDataModal.addEventListener('shown.bs.modal', event => {
+  //          initDataTable('yearParamTable', 'simple-scroll');
+  //          initDataTable('responseTable', 'simple-scroll');
+		//    adjustColumns('yearParamTable');
+		//    adjustColumns('responseTable');
+		//});
+        showPreloader();
+        $(document).ready(function () {
+
+            setTimeout(function () {
+                $('#tso_obj_in_service').addClass('active');
+                TableInit('tsoServTableSummary', 'full');
+            }, 500);
+
+            document.querySelector('#perspective_year').addEventListener('change', (event) => {
+                GetListOnPage();
+            });
+            
+        });
+
+        function GetListOnPage() {
+            showPreloader();
+
+            let action_name = $('#cur_action_name').val();
+            let table_name = $('#cur_table_name').val();
+
+            if (table_name == "tsoServTableAdditional")
+                $('#py_param_div').hide();
+            else
+                $('#py_param_div').show();
+
+	        $.ajax({
+                type: 'GET',
+                url: '/TSO/ObjectsInService/' + action_name,
+                data: {
+                    data_status: $('#data_status').val(),
+                    perspective_year: $('#perspective_year').val()
+                },
+                dataType: 'html'
+            })
+                .done(function (result) {
+                    var div = $('#tsoServDiv');
+                    div.html("");
+                    div.html(result);
+                    TableInit(table_name, 'full');
+                    if (table_name === "tsoServTableAdditional") {
+                        $('#btnAdd').show();
+                    }
+                    else {
+                        $('#btnAdd').hide();
+                    }
+                    hidePreloader();
+                });
+        }
+
+        function OpenPopupTSOAdditional(id) {
+
+            showPreloader();
+
+            $.ajax({
+                type: 'POST',
+                url: '@Html.Raw(Url.Action("TSOAdditionalOpen", "ObjectsInService", new { Area = "TSO" }))',
+                data: {
+                    id: id,
+                    data_status: $('#data_status').val()
+                },
+                dataType: 'html'
+            })
+            .done(function (result) {
+                var div = $('#TSOeditAdditionalData');
+                div.html("");
+                div.html(result);
+                $('.selectpicker').selectpicker();
+
+                if ($('#TSOeditAdditionalData').is(':hidden')) {
+                    showModal('TSOeditAdditionalData');
+                }
+                hidePreloader();
+            });
+        }
+
+        function OpenPopupTZObjects(id, p_year) {
+           
+            showPreloader();
+
+            $.ajax({
+                type: 'POST',
+                url: '@Html.Raw(Url.Action("TZObjectsOpen", "ObjectsInService", new { Area = "TSO" }))',
+                data: {
+                    id: id,
+                    data_status: $('#data_status').val(),
+                    perspective_year: p_year
+                },
+                dataType: 'html'
+            })
+                .done(function (result) {
+                    var div = $('#TZobjectsData');
+                    div.html("");
+                    div.html(result);
+                    $('.selectpicker').selectpicker();
+
+                    if ($('#TZobjectsData').is(':hidden')) {
+                        showModal('TZobjectsData');
+                    }
+                    hidePreloader();
+                });
+        }
+
+    </script>
+}

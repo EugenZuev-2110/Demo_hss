@@ -1,0 +1,489 @@
+﻿@{
+    ViewData["Title"] = "РЭТ";
+}
+<link rel="stylesheet" type="text/css" id="theme" href="~/Content/theme-default.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
+<style>
+    .animate__zoomInDown {
+      animation-duration: 2s; 
+    }
+    .animate__rollIn {
+      animation-duration: 2s; 
+    }
+    .animate__slideInRight {
+      animation-duration: 2s; 
+    }
+</style>
+
+<style>
+    .modal_load {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        background: rgba( 255, 255, 255, .8 ) url('http://i.stack.imgur.com/FhHRx.gif') 50% 50% no-repeat;
+    }
+
+    body {
+        overflow: visible;
+    }
+
+    body.loading {
+        overflow: hidden;
+    }
+
+    body.loading .modal_load {
+        display: block;
+    }
+    .main-lbl {
+        padding-bottom: 10px;
+        font-size: 20px; 
+    }
+    .panel-new {
+        border: 1px solid transparent;
+        border-radius: 10px;
+        border-color: #ddd;
+    }
+    .col-md-6 {
+        width: 100%;
+    }
+    .panel-grid {
+        display: grid;
+    }
+    .form-group-grid {
+        display: grid;
+        width: 920px;
+    }
+    .form-group-block {
+        width: 600px;
+    }
+    .div-flex {
+        display: flex;
+    }
+    .bootstrap-select {
+        width: 305px !important;
+    }
+
+    .font_size li {
+        font-size: x-large;
+    }
+
+    .font_size li label {
+        font-size: medium;
+    }
+
+    .font_size li label {
+        font-size: medium;
+    }
+
+    .my_lbl_cls_popup_select {
+        width: 10%;
+    }
+
+    .error {
+        color: red;
+    }
+
+    .div-popup-success-mini {
+        height: 150px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        font-size: x-large;
+    }
+
+</style>
+
+<div class="modal_load"><!-- Place at bottom of page --></div>
+<div id="partial-content">
+
+    <div class="panel panel-default">
+        <div id="panel panel-default">
+            <fieldset>
+                <div style="margin: 20px 20px 10px; width: 900px;">
+                    <div class="form-group">
+                        <label class="control-label my_lbl_cls_popup_select">Отчёты:</label>
+                        <select class="selectpicker" data-show-subtext="true" data-live-search="true" name="report_type" id="report_type">
+                                <option value="" selected disabled>Выберите отчёт</option>
+                                <option value="http://srvzulu/ReportServer/Pages/ReportViewer.aspx?%2fret_otchet%2fret_source_radius&rs:Command=Render">Отчёт по РЭТ источников</option>
+                                <option value="http://srvzulu/ReportServer/Pages/ReportViewer.aspx?%2fret_otchet%2fret_otchet&rs:Command=Render">РЭТ расширенный</option>
+                                <option value="http://srvzulu/ReportServer/Pages/ReportViewer.aspx?%2fret_otchet%2fret_otchet_for_book&rs:Command=Render">РЭТ для книги</option>
+                        </select>
+                        @*<button class="btn btn-default animate__animated animate__slideInRight" onclick="Export(0);">Выгрузить в Excel</button>*@
+                    </div>
+                    @*<button class="btn btn-default animate__animated animate__slideInRight" onclick="Export(-1);">Проверочный отчёт</button>
+                    <button class="btn btn-default animate__animated animate__slideInRight" onclick="window.open('http://srvzulu/ReportServer?%2fSem_Source&rs:Command=ListChildren');">Отчёты по сетям</button>*@
+                </div>
+            </fieldset>
+        </div>
+        <div id="panel panel-default">
+            <fieldset>
+                <div style="margin: 20px 20px 10px; width: 900px;">
+                    <div class="form-group">
+                        <label class="control-label my_lbl_cls_popup_select">Год схемы:</label>
+                        <select class="selectpicker" data-show-subtext="true" data-live-search="true" name="year" id="year">
+                                <option value="" selected disabled>Выберите год схемы</option>
+                                @for (int i = 0; i < ViewBag.YearsList.Count; i++)
+                                {
+                                    <option value="@ViewBag.YearsList[i].year">@ViewBag.YearsList[i].year</option>
+                                }
+                        </select>
+                        <label class="control-label my_lbl_cls_popup_select">Название слоя:</label>
+                        <select class="selectpicker" data-show-subtext="true" data-live-search="true" name="layer_id" id="layer_id">
+                            <option value="" selected disabled>Выберите слой</option>
+                            @foreach (var layers in ViewBag.LayersList)
+                            {
+                                <option value="@layers.Id">@layers.layer_name</option>
+                            }
+                        </select>
+                    </div>
+                    @*<div class="form-group">
+                        
+                    </div>*@
+                </div>
+            </fieldset>
+        </div>
+        
+        <div class="panel-body">
+            <div class="panel-new panel-default panel-grid">
+                <label class="col-md-3 control-label main-lbl">Описание формирования РЭТ:</label>
+                <div class="form-group form-group-grid">
+                    <ol class="font_size">
+                        <li><label>Необходимо загрузить исходные экономические данные (инф. коэф., климат. коэф, коэф. темп. графиков, тарифные зоны, нормы потерь)</label>
+                            <p >
+                                <ul style="display:none;" id="lbl_koef_data">
+                                    <li>
+                                        <label>Коэффициенты ПИР и РЭТ (a,b,k) на выбранный год: 
+                                            <span id="pir_ret_k_true" style="display:none; text-decoration: underline; color: blue;"><a href="#!" onclick="DownloadKoefData(1, 1)">загружены</a> / <a href="#!" onclick="UploadKoefData(1)">загрузить новые</a></span>
+                                            <span id="pir_ret_k_false" style="display:none; text-decoration: underline; color: red;">
+                                                не загружены (<a href="#!" onclick="DownloadKoefData(1, 0)">выгрузить шаблон</a>) / <a href="#!" onclick="UploadKoefData(1)">загрузить новые</a></span>
+                                        </label>
+                                    </li>
+                                    <li>
+                                        <label>Инфляционные коэффициенты на выбранный год: 
+                                            <span id="infl_k_true" style="display:none; text-decoration: underline; color: blue;">загружены</span>
+                                            <span id="infl_k_false" style="display:none; text-decoration: underline; color: red;">не загружены</span>
+                                        </label>
+                                    </li>
+                                    <li>
+                                        <label>Климатические коэффициенты на выбранный год: 
+                                            <span id="klim_k_true" style="display:none; text-decoration: underline; color: blue;">загружены</span>
+                                            <span id="klim_k_false" style="display:none; text-decoration: underline; color: red;">не загружены</span>
+                                        </label>
+                                    </li>
+                                    <li>
+                                        <label>Коэффициенты температурных графиков на выбранный год: 
+                                            <span id="temp_k_true" style="display:none; text-decoration: underline; color: blue;">загружены</span>
+                                            <span id="temp_k_false" style="display:none; text-decoration: underline; color: red;">не загружены</span>
+                                        </label>
+                                    </li>
+                                    <li>
+                                        <label>СМР коэффициенты на выбранный год: 
+                                            <span id="smr_k_true" style="display:none; text-decoration: underline; color: blue;">загружены</span>
+                                            <span id="smr_k_false" style="display:none; text-decoration: underline; color: red;">не загружены</span>
+                                        </label>
+                                    </li>
+                                    <li>
+                                        <label>Тарифные зоны по потребителям на выбранный год: 
+                                            <span id="tz_c_true" style="display:none; text-decoration: underline; color: blue;">загружены</span>
+                                            <span id="tz_c_false" style="display:none; text-decoration: underline; color: red;">не загружены</span>
+                                        </label>
+                                    </li>
+                                    <li>
+                                        <label>Тарифные зоны по источникам на выбранный год: 
+                                            <span id="tz_s_true" style="display:none; text-decoration: underline; color: blue;">загружены</span>
+                                            <span id="tz_s_false" style="display:none; text-decoration: underline; color: red;">не загружены</span>
+                                        </label>
+                                    </li>
+                                    <li>
+                                        <label>Нормы потерь на выбранный год: 
+                                            <span id="nloss_k_true" style="display:none; text-decoration: underline; color: blue;">загружены</span>
+                                            <span id="nloss_k_false" style="display:none; text-decoration: underline; color: red;">не загружены</span>
+                                        </label>
+                                    </li>
+                                </ul>
+                            </p>
+                        </li>
+                        <li>
+                            <label>
+                                Необходимо загрузить данные по источникам:<br>
+                                Удельный расход электроэнергии на отпуск тепловой энергии, кВтч/Гкал;<br>
+                                Удельный расход условного топлива на отпуск тепловой энергии, кг у.т./Гкал;
+                            </label>
+                            <p> 
+                                <label style="display:none;" id="lbl_consumption">Данные на выбранный год: 
+                                    <span id="consumption_true" style="display:none; text-decoration: underline; color: blue;">загружены</span>
+                                    <span id="consumption_false" style="display:none; text-decoration: underline; color: red;">не загружены</span>
+                                </label>
+                            </p>
+                        </li>
+                        <li><label>Для построения отчётов по РЭТ необходимо сформировать таблицу взаимосвязи участков с ОП, для этого нужно запустить плагин в ZULU.</label>
+                            <p>
+                                <label style="display:none;" id="lbl_uch_op_true">
+                                    Последняя дата формирования данных по указанному слою: <span style="text-decoration: underline; color: blue;" id="span_upd_uch_op"></span>
+                                </label>
+                                <label style="display:none;" id="lbl_uch_op_false">
+                                    Последняя дата формирования данных по указанному слою: <span style="text-decoration: underline; color: red;">данные не формировались</span>
+                                </label>
+                            </p>
+                        </li>
+                        <li><label>Убедиться, что у всех участков проставлен Район в ZULU (для массовой записи принадлежности участков к районам, необходимо выполнить пространственный запрос)</label></li>
+                        <li><label>Убедиться, что у источников проставлены корректные температурные графики</label></li>
+                        <li><label>Сформировать/обновить данные по тепловым сетям и потребителям</label>
+                            <p><button class="btn btn-default animate__animated animate__slideInRight" onclick="UpdateRET();" id="btn_upd_ret">Сформировать</button>
+                                <label style="display:none;" id="lbl_upd_ret_true">
+                                    Последняя дата формирования данных по указанному году схемы/слою: <span style="text-decoration: underline; color: blue;" id="span_upd_ret"></span>
+                                </label>
+                                <label style="display:none;" id="lbl_upd_ret_false">
+                                    Последняя дата формирования данных по указанному году схемы/слою: <span style="text-decoration: underline; color: red;">данные не формировались</span>
+                                </label>
+                            </p>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+@section modalsection {
+<div id="modal-section">
+    <div id="modal-open-fd" class="modal fade" data-backdrop="static" tabindex='-1'>
+        @*onclick="TableOff();"*@
+        <div class="modal-dialog modal-large" style="width: 600px; margin-left: 30%">
+            <div class="modal-content">
+                <div id="modal-open-fd-header" class="modal-header">
+                    <button class="close" type="button" data-dismiss="modal">×</button>
+                    <h4 class="modal-title"></h4>
+                </div>
+                <div id="div-open-fd" class="div-popup-success-mini">Готово!</div>
+            </div>
+        </div>
+    </div>
+</div>
+}
+
+@section pageJs {
+    <script type="text/javascript">
+
+        $body = $("body");
+
+        function ajaxStart() {
+            $body.addClass("loading");
+        }
+        function ajaxStop() {
+            $body.removeClass("loading");
+        }
+
+        $(document).ready(function () {
+            $("#ret").addClass("active");
+        });
+
+        $('#report_type').on('change', function(e){
+            var s_value = this.value;
+            window.open(s_value);
+        });
+
+        $('#year').on('change', function(e){
+            var year = this.value;
+            var layer_id = $('#layer_id').val();
+
+            if (layer_id !== null)
+                GetLastData(year, layer_id);
+        });
+
+        $('#layer_id').on('change', function(e){
+            var layer_id = this.value;
+            var year = $('#year').val();
+
+            if (year !== null)
+                GetLastData(year, layer_id);
+        });
+
+        function GetLastData(year, layer_id) {
+            $.ajax({
+                type: 'POST',
+                url: '@Html.Raw(Url.Action("GetLastData", "Home"))',
+                data: {
+                    year: year,
+                    layer_id: layer_id
+                },
+                dataType: 'json'
+            }).done(function(result) {
+                $("#lbl_upd_ret_true").hide();
+                $("#lbl_upd_ret_false").hide();
+
+                $("#lbl_uch_op_true").hide();
+                $("#lbl_uch_op_false").hide();
+
+                $("#pir_ret_k_true").hide();
+                $("#pir_ret_k_false").hide();
+                $("#infl_k_true").hide();
+                $("#infl_k_false").hide();
+                $("#klim_k_true").hide();
+                $("#klim_k_false").hide();
+                $("#temp_k_true").hide();
+                $("#temp_k_false").hide();
+                $("#smr_k_true").hide();
+                $("#smr_k_false").hide();
+                $("#tz_c_true").hide();
+                $("#tz_c_false").hide();
+                $("#tz_s_true").hide();
+                $("#tz_s_false").hide();
+                $("#nloss_k_true").hide();
+                $("#nloss_k_false").hide();
+                $("#lbl_koef_data").show();
+
+                $("#consumption_true").hide();
+                $("#consumption_false").hide();
+                $("#lbl_consumption").show();
+
+                if (result.pir_ret_k == "1") {
+                    $("#pir_ret_k_true").show();
+                }
+                else {
+                    $("#pir_ret_k_false").show();
+                }
+                if (result.infl_k == "1") {
+                    $("#infl_k_true").show();
+                }
+                else {
+                    $("#infl_k_false").show();
+                }
+                if (result.klim_k == "1") {
+                    $("#klim_k_true").show();
+                }
+                else {
+                    $("#klim_k_false").show();
+                }
+                if (result.temp_k == "1") {
+                    $("#temp_k_true").show();
+                }
+                else {
+                    $("#temp_k_false").show();
+                }
+                if (result.smr_k == "1") {
+                    $("#smr_k_true").show();
+                }
+                else {
+                    $("#smr_k_false").show();
+                }
+                if (result.tz_c == "1") {
+                    $("#tz_c_true").show();
+                }
+                else {
+                    $("#tz_c_false").show();
+                }
+                if (result.tz_s == "1") {
+                    $("#tz_s_true").show();
+                }
+                else {
+                    $("#tz_s_false").show();
+                }
+                if (result.nloss_k == "1") {
+                    $("#nloss_k_true").show();
+                }
+                else {
+                    $("#nloss_k_false").show();
+                }
+                if (result.consumption_k == "1") {
+                    $("#consumption_true").show();
+                }
+                else {
+                    $("#consumption_false").show();
+                }
+
+                if (result.last_dt != "") {
+                    $("#lbl_upd_ret_true").show();
+                    $("#span_upd_ret").text(result.last_dt);
+                    //$("#lbl_upd_ret").html('Последняя дата формирования данных по указанному году схемы/слою: <span style="text-decoration: underline; color: blue;">' + result.last_dt + '</span>');
+                }
+                else {
+                    $("#lbl_upd_ret_false").show();
+                    //$("#lbl_upd_ret").html('Последняя дата формирования данных по указанному году схемы/слою: <span style="text-decoration: underline; color: red;">данные не формировались</span>');
+                }
+
+                if (result.last_dt_uch_op != "") {
+                    $("#lbl_uch_op_true").show();
+                    $("#span_upd_uch_op").text(result.last_dt_uch_op);
+                    //$("#lbl_uch_op").html('Последняя дата формирования данных по указанному году схемы/слою: <span style="text-decoration: underline; color: blue;">' + result.last_dt_uch_op + '</span>');
+                }
+                else {
+                    $("#lbl_uch_op_false").show();
+                    //$("#lbl_uch_op").html('Последняя дата формирования данных по указанному году схемы/слою: <span style="text-decoration: underline; color: red;">данные не формировались</span>');
+                }
+            });
+        }
+
+        function UpdateRET() {
+            document.getElementById("btn_upd_ret").disabled = true;
+            var year = $('#year').val();
+            var layer_id = $('#layer_id').val();
+
+            if (year === null || layer_id === null) {
+                $("#modal-open-fd").modal('toggle');
+                $("#div-open-fd").addClass(' error');
+                document.getElementById("btn_upd_ret").disabled = false;
+                if (year === null) {
+                    $("#div-open-fd").text("Необходимо выбрать год схемы.");
+                }
+                else if (layer_id === null) {
+                    $("#div-open-fd").text("Необходимо выбрать слой.");
+                }
+            }
+            else {
+                ajaxStart();
+                $.ajax({
+                    type: 'POST',
+                    url: '@Html.Raw(Url.Action("UpdateRET", "Home"))',
+                data: {
+                    year: year,
+                    layer_id: layer_id
+                },
+                dataType: 'html'
+                }).done(function(result) {
+                    //var div = $('#div-open-fd');
+                    //div.html(result);
+                    $("#div-open-fd").removeClass('error');
+                    $("#div-open-fd").text("Выполнено.");
+                    $("#modal-open-fd").modal('toggle');
+                    ajaxStop();
+                    GetLastData(year, layer_id);
+                });
+            }  
+        }
+
+        function DownloadKoefData(type_koef, is_empty) {
+            ajaxStart();
+            $.ajax({
+                type: 'POST',
+                url: '@Html.Raw(Url.Action("DownloadKoefData", "Home"))',
+                data: {
+                    type_koef: type_koef,
+                    is_empty: is_empty,
+                    year: $('#year').val()
+                },
+                dataType: 'json'
+            })
+                .done(function (result) {
+                    ajaxStop();
+                    if (result.success == "true") {
+                        var url = result.filename;
+                        var win = window.open(url, '_blank');
+                        win.focus();
+                    }
+                    else {
+
+                    }
+                });
+        }
+
+    </script>
+}

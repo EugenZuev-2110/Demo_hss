@@ -1,0 +1,469 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model WebProject.Areas.TSO.Models.OpenIndividualFeeTable
+
+@{
+	string btn_disable = string.Empty; int ds = @Model.individual_fee_one_data_status - 1; string is_checked = string.Empty; string field_disable = string.Empty;
+}
+@if (Model.individual_fee_one_tso_id == 0)
+{
+	btn_disable = "disabled";
+}
+@if (Model.individual_fee_one_is_modyfied == 1)
+{
+	field_disable = "disabled";
+}
+
+<div class="modal-dialog modal-dialog-centered">
+	<form asp-controller="TariffConnection" asp-action="TZIndividualFee_Save" asp-antiforgery="true" asp-area="TSO" id="tz_other_org_costs_form"
+	data-ajax-failure="onFailedFormTZ" data-ajax-success="onSuccessFormTZ" data-ajax-begin="onBeginFormTZ" data-ajax="true" data-ajax-method="POST">
+	<input type="hidden" name="individual_fee_one_data_status" value="@Model.individual_fee_one_data_status" />
+		<input type="hidden" name="individual_fee_one_is_modyfied" id="individual_fee_one_is_modyfied" value="@Model.individual_fee_one_is_modyfied" />
+	<div class="modal-content">
+		<div class="modal-header">
+			<h3 class="modal-title" id="editDataLabel">Плата в индивидуальном порядке</h3>
+			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="RefreshTable();"></button>
+		</div>
+		<div class="modal-body">
+				<div class="data-row static-block data-params" onmouseout="LeaveFocusUnomTSO()">
+					<div class="data-item" id="individual_fee_one_tso_id_select" onmouseover="GetFocusUnomTSO()">
+					<label class="data-label">Наименование ТСО</label>
+						<div class="data-value stretch " id="individualFeeParamNumberTsoDiv" hidden>
+							<select class="selectpicker data-value xxl-stretch" name="individual_fee_one_tso_id" id="individualFeeParamNumberTso" data-width="100%" data-live-search="true" placeholder="УНОМ ТСО - Наименование">
+							@foreach (var tz_list in ViewBag.TZTSOList)
+							{
+								if (tz_list.org_id == Model.individual_fee_one_tso_id)
+								{
+									<option value="@tz_list.org_id" selected>@tz_list.org_name</option>
+								}
+								if (tz_list.org_id != Model.individual_fee_one_tso_id)
+								{
+									<option value="@tz_list.org_id">@tz_list.org_name</option>
+								}
+							}
+							</select>
+						</div>
+						<div class="data-value stretch " id="individual_fee_one_tso_id_textbox_div">
+							<input type="text" name="individual_fee_one_tso_id_textbox" id="individual_fee_one_tso_id_textbox" required placeholder="УНОМ ТСО - Наименование" style="width:100%">
+						</div>
+				</div>
+			</div>			
+				<div class="data-block">
+					@{
+						if (Model.individual_fee_one_is_modyfied == 1)
+						{
+							<div class="data-item" id="individual_fee_one_consumer_id_select" onmouseout="LeaveFocusUnomPP()" onmouseover="GetFocusUnomPP()">
+								<label for="individualFeeUnomPPList" class="data-label">Уникальный номер перспективного потребителя</label>
+								<div class="data-value stretch" id="individualFeeUnomPPListDiv" hidden>
+									<select class="selectpicker data-value xxl-stretch" name="individual_fee_one_consumer_id" id="individualFeeUnomPPList" data-live-search="true" placeholder="УНОМ ПП">
+										@foreach (var tz_list in ViewBag.UnomPPList)
+										{
+											if (tz_list.value_id == Model.individual_fee_one_consumer_id)
+											{
+												<option value="@tz_list.value_id" selected>@tz_list.value_name</option>
+											}
+											if (tz_list.value_id != Model.individual_fee_one_consumer_id)
+											{
+												<option value="@tz_list.value_id">@tz_list.value_name</option>
+											}
+										}
+									</select>
+								</div>
+								<div class="data-value stretch " id="individual_fee_one_consumer_id_textbox_div">									
+									<input type="text" name="individual_fee_one_consumer_id_textbox" id="individual_fee_one_consumer_id_textbox" required placeholder="УНОМ ПП" style="width:100%;background-color:#f7f4fe" readonly>
+								</div>
+							</div>
+						}					
+						else
+						{
+							<div class="data-item" id="individual_fee_one_consumer_id_select" onmouseout="LeaveFocusUnomPP()" onmouseover="GetFocusUnomPP()">
+								<label for="individualFeeUnomPPList" class="data-label">Уникальный номер перспективного потребителя</label>
+								<div class="data-value stretch" id="individualFeeUnomPPListDiv" hidden>
+									<select class="selectpicker data-value xxl-stretch" name="individual_fee_one_consumer_id" id="individualFeeUnomPPList" data-live-search="true" placeholder="УНОМ ПП">
+										@foreach (var tz_list in ViewBag.UnomPPList)
+										{
+											if (tz_list.value_id == Model.individual_fee_one_consumer_id)
+											{
+												<option value="@tz_list.value_id" selected>@tz_list.value_name</option>
+											}
+											if (tz_list.value_id != Model.individual_fee_one_consumer_id)
+											{
+												<option value="@tz_list.value_id">@tz_list.value_name</option>
+											}
+										}
+									</select>
+								</div>
+								<div class="data-value stretch " id="individual_fee_one_consumer_id_textbox_div">
+									<input type="text" name="individual_fee_one_consumer_id_textbox" id="individual_fee_one_consumer_id_textbox" required placeholder="УНОМ ПП" style="width:100%">
+								</div>
+							</div>
+						}
+					}
+					<div class="data-item" id="individual_fee_one_dev_prog_id_select" onmouseout="LeaveFocusDevProg()" onmouseover="GetFocusDevProg()">
+						<label for="individualFeeDevelopmentConsumerPrograms" class="data-label">Номер программы развития</label>
+						<div class="data-value stretch" id="individualFeeDevelopmentConsumerProgramsDiv" hidden>
+							<select class="selectpicker data-value xxl-stretch" name="individual_fee_one_dev_prog_id" id="individualFeeDevelopmentConsumerPrograms" data-live-search="true" placeholder="Выберите программу">
+								@foreach (var tz_list in ViewBag.DevProgList)
+								{
+									if (tz_list.value_id == Model.individual_fee_one_dev_prog_id)
+									{
+										<option value="@tz_list.value_id" selected>@tz_list.value_name</option>
+									}
+									if (tz_list.value_id != Model.individual_fee_one_dev_prog_id)
+									{
+										<option value="@tz_list.value_id">@tz_list.value_name</option>
+									}
+								}
+							</select>
+						</div>
+						<div class="data-value stretch " id="individual_fee_one_dev_prog_id_textbox_div">
+							<input type="text" name="individual_fee_one_dev_prog_id_textbox" id="individual_fee_one_dev_prog_id_textbox" required placeholder="Выберите программу" style="width:100%">
+						</div>
+					</div>
+					<div class="data-item stretch" id="individual_fee_one_decision_status_id_select" onmouseout="LeaveFocusStatus()" onmouseover="GetFocusStatus()">
+						<label class="data-label">Статус решения</label>
+						<div class="data-value stretch " id="individualFeeDecisionChargeStatusDiv" hidden>
+							<select class="selectpicker data-value xxl-stretch" name="individual_fee_one_decision_status_id" id="individualFeeDecisionChargeStatus" data-width="100%" data-live-search="true" placeholder="Статус решения">
+								@foreach (var tz_list in ViewBag.DecisionStatusList)
+								{
+									if (tz_list.value_id == Model.individual_fee_one_decision_status_id)
+									{
+										<option value="@tz_list.value_id" selected>@tz_list.value_name</option>
+									}
+									if (tz_list.value_id != Model.individual_fee_one_decision_status_id)
+									{
+										<option value="@tz_list.value_id">@tz_list.value_name</option>
+									}
+								}
+							</select>
+						</div>
+						<div class="data-value stretch " id="individual_fee_one_decision_status_id_textbox_div">
+							<input type="text" name="individual_fee_one_decision_status_id_textbox" id="individual_fee_one_decision_status_id_textbox" required placeholder="Статус решения" style="width:100%">
+						</div>
+					</div>
+					<div class="data-item">
+						<label class="data-label">Наименование заявителя</label>
+						<input type="text" name="individual_fee_one_appl_name" id="individual_fee_one_appl_name" asp-for="@Model.individual_fee_one_appl_name" class="data-value xxl-stretch double" data-type="individual_fee_one" data-double="short_name" disabled>
+					</div>
+					<div class="data-table-block">
+						<div class="data-item">
+							<label class="data-label">Заявленная тепловая нагрузка (всего с учетом ГВС<sub>max</sub>)</label>
+							<input type="text" name="individual_fee_one_hl_gvsm_hw" id="individual_fee_one_hl_gvsm_hw" asp-for="@Model.individual_fee_one_hl_gvsm_hw" class="data-value smx-stretch double" data-type="individual_fee_one" data-double="hl_gvsm_hw" disabled>
+							<span class="data-unit">Гкал/ч</span>
+						</div>
+						<div class="data-item">
+							<label class="data-label">Утвержденный размер платы за подключение</label>
+							<input type="text" name="individual_fee_one_confirm_size_charge_connect" id="individual_fee_one_confirm_size_charge_connect" asp-for="@Model.individual_fee_one_confirm_size_charge_connect" class="data-value smx-stretch double" data-type="individual_fee_one" data-double="confirm_size_charge_connect">
+							<span class="data-unit">тыс. руб. без НДС</span>
+						</div>
+						<div class="data-item">
+							<label class="data-label"></label>
+							<input type="text" name="individual_fee_one_specific_value" id="individual_fee_one_specific_value" asp-for="@Model.individual_fee_one_specific_value" class="data-value smx-stretch double" data-type="individual_fee_one" data-double="specific_value" disabled>
+							<span class="data-unit">руб./(Гкал/ч) без НДС</span>
+						</div>
+					</div>
+					<div class="data-table-block">
+						<div class="data-item">
+							<label for="individual_fee_one_decision_date" class="data-label">Решение: <span class="sublabel">от</span></label>
+							<input type="date" id="individual_fee_one_decision_date" name="individual_fee_one_decision_date" asp-for="@Model.individual_fee_one_decision_date" class="data-value md-fix" data-type="individual_fee_one" data-double="decision_date">
+							<label for="individual_fee_one_decision_num" class="data-label"><span class="sublabel">№</span></label>
+							@{
+								if (Model.individual_fee_one_is_modyfied == 1)
+								{
+									<input type="text" id="individual_fee_one_decision_num" name="individual_fee_one_decision_num" asp-for="@Model.individual_fee_one_decision_num" class="data-value lg-fix" data-type="individual_fee_one" data-double="decision_num" readonly style="background-color:#f7f4fe">
+								}
+								else
+								{
+									<input type="text" id="individual_fee_one_decision_num" name="individual_fee_one_decision_num" asp-for="@Model.individual_fee_one_decision_num" class="data-value lg-fix" data-type="individual_fee_one" data-double="decision_num" required>
+								}
+							}
+						</div>					
+						<div class="data-item">
+							<label for="individual_fee_one_protocol_date" class="data-label">Протокол: <span class="sublabel">от</span></label>
+							<input type="date" id="individual_fee_one_protocol_date" name="individual_fee_one_protocol_date" asp-for="@Model.individual_fee_one_protocol_date" class="data-value md-fix" data-type="individual_fee_one" data-double="protocol_date">
+							<label for="individual_fee_one_protocol_num" class="data-label"><span class="sublabel">№</span></label>
+							<input type="text" id="individual_fee_one_protocol_num" name="individual_fee_one_protocol_num" asp-for="@Model.individual_fee_one_protocol_num" class="data-value lg-fix" data-type="individual_fee_one" data-double="protocol_num">
+						</div>
+					</div>
+				</div>
+		</div>
+		<div class="modal-footer">
+				@if (Model.individual_fee_one_is_modyfied == 1)
+				{
+					<button type="button" class="bttn" data-bs-dismiss="modal" onclick="DeleteTableRowIndividualFeeAsking();">Удалить запись</button>
+				}
+			<button type="button" class="bttn" data-bs-dismiss="modal">Отмена</button>
+			<button type="submit" class="bttn bttn-color">Сохранить</button>
+		</div>
+	</div>
+	</form>
+</div>
+
+<script type="text/javascript" src="@Url.Content("~/hss/js/popup_common_scripts.js")"></script>
+<script type="text/javascript">
+
+	var costumer_id_value = 0;
+
+	$(document).ready(function () {
+		let par_elem = document.getElementById("individualFeeUnomPPList").parentElement;
+		par_elem.querySelector("input.form-control[type=search]").addEventListener('keyup', (event) => {
+			
+			if (event.target.value.length >= 3) {
+				GetUnomPPListByChars(event.target.value, $('#data_status').val());
+			}
+		});
+
+		GetFocusUnomTSO();
+		LeaveFocusUnomTSO();
+
+		GetFocusUnomPPLoadPage();
+		LeaveFocusUnomPPLoadPage();
+
+		GetFocusDevProg();
+		LeaveFocusDevProg();
+
+		GetFocusStatus();
+		LeaveFocusStatus();
+	});	
+
+	function DeleteTableRowIndividualFee() {		
+		showPreloader();
+		$.ajax({
+			type: 'POST',
+			url: '/TSO/TariffConnection/TZDeleteDataRow_IndividualFee',
+			data: {
+				consumer_id: $('#individualFeeUnomPPList :selected').val(),
+				decision_num: $('#individual_fee_one_decision_num').val(),
+				data_status: $('#data_status').val()
+			},
+			dataType: 'json'
+		})
+			.done(function (result) {
+				if ($('#' + 'TZIndividualFeeDeleteRowPopup').is(':hidden')) {
+					showModal('TZIndividualFeeDeleteRowPopup');
+				}
+				if (result.isDelete != true){
+					OpenPopupIndividualFee($('#individualFeeUnomPPList :selected').val(), $('#individual_fee_one_decision_num').val(), '/TSO/TariffConnection/OpenTPIndividualFee', 'TZIndividualFeeDataPopup', 1);
+				}
+				
+				onSuccessFormTZ(result);
+				hideModal('TZIndividualFeeDeleteRowPopup');
+				hidePreloader();
+			});
+	}
+
+	function CancelDeletingTableRowIndividualFee() {
+		showPreloader();
+		OpenPopupIndividualFee($('#individualFeeUnomPPList :selected').val(), $('#individual_fee_one_decision_num').val(), '/TSO/TariffConnection/OpenTPIndividualFee', 'TZIndividualFeeDataPopup', 1);
+		hidePreloader();
+	}
+
+	function DeleteTableRowIndividualFeeAsking() {
+		if ($('#' + 'TZIndividualFeeDeleteRowPopup').is(':hidden')) {
+			showModal('TZIndividualFeeDeleteRowPopup');
+		}
+	}
+
+	function GetFocusUnomTSO(){
+		var textbox = document.getElementById("individual_fee_one_tso_id_textbox_div");
+		var select = document.getElementById("individualFeeParamNumberTsoDiv");
+		textbox.hidden = true;
+		select.hidden = false;
+	}
+
+	function LeaveFocusUnomTSO() {
+		var textboxDiv = document.getElementById("individual_fee_one_tso_id_textbox_div");
+		var selectDiv = document.getElementById("individualFeeParamNumberTsoDiv");
+		var select_text = document.getElementById("individualFeeParamNumberTso");
+		var textbox_text = document.getElementById("individual_fee_one_tso_id_textbox");
+		var text = $("#individualFeeParamNumberTso :selected").text();
+		textbox_text.value = text;
+		textboxDiv.hidden = false;
+		selectDiv.hidden = true;
+	}
+
+	function GetFocusUnomPP() {
+		if ($("#individual_fee_one_is_modyfied").val() != 1) {
+			GetFocusUnomPPLoadPage();
+		}
+	}
+
+	function LeaveFocusUnomPP() {
+		if ($("#individual_fee_one_is_modyfied").val() != 1) {
+			LeaveFocusUnomPPLoadPage();
+		}
+	}
+
+	function GetFocusUnomPPLoadPage() {
+		var textbox = document.getElementById("individual_fee_one_consumer_id_textbox_div");
+		var select = document.getElementById("individualFeeUnomPPListDiv");
+		textbox.hidden = true;
+		select.hidden = false;
+	}
+
+	function LeaveFocusUnomPPLoadPage() {
+		var textboxDiv = document.getElementById("individual_fee_one_consumer_id_textbox_div");
+		var selectDiv = document.getElementById("individualFeeUnomPPListDiv");
+		var select_text = document.getElementById("individualFeeUnomPPList");
+		var textbox_text = document.getElementById("individual_fee_one_consumer_id_textbox");
+		var text = $("#individualFeeUnomPPList :selected").text();
+		textbox_text.value = text;
+		textboxDiv.hidden = false;
+		selectDiv.hidden = true;
+	}
+
+	function GetFocusDevProg() {
+		var textbox = document.getElementById("individual_fee_one_dev_prog_id_textbox_div");
+		var select = document.getElementById("individualFeeDevelopmentConsumerProgramsDiv");
+		textbox.hidden = true;
+		select.hidden = false;
+	}
+
+	function LeaveFocusDevProg() {
+		var textboxDiv = document.getElementById("individual_fee_one_dev_prog_id_textbox_div");
+		var selectDiv = document.getElementById("individualFeeDevelopmentConsumerProgramsDiv");
+		var select_text = document.getElementById("individualFeeDevelopmentConsumerPrograms");
+		var textbox_text = document.getElementById("individual_fee_one_dev_prog_id_textbox");
+		var text = $("#individualFeeDevelopmentConsumerPrograms :selected").text();
+		textbox_text.value = text;
+		textboxDiv.hidden = false;
+		selectDiv.hidden = true;
+	}
+
+	function GetFocusStatus() {
+		var textbox = document.getElementById("individual_fee_one_decision_status_id_textbox_div");
+		var select = document.getElementById("individualFeeDecisionChargeStatusDiv");
+		textbox.hidden = true;
+		select.hidden = false;
+	}
+
+	function LeaveFocusStatus() {
+		var textboxDiv = document.getElementById("individual_fee_one_decision_status_id_textbox_div");
+		var selectDiv = document.getElementById("individualFeeDecisionChargeStatusDiv");
+		var select_text = document.getElementById("individualFeeDecisionChargeStatus");
+		var textbox_text = document.getElementById("individual_fee_one_decision_status_id_textbox");
+		var text = $("#individualFeeDecisionChargeStatus :selected").text();
+		textbox_text.value = text;
+		textboxDiv.hidden = false;
+		selectDiv.hidden = true;
+	}
+
+	document.querySelector('#individualFeeUnomPPList').addEventListener('change', (event) => {
+		var textbox_text = document.getElementById("individual_fee_one_dev_prog_id_textbox");
+		textbox_text.value = "Выберите программу";
+		costumer_id_value = event.target.value;
+		GetDevPrograms(event.target.value);		
+		});
+
+	document.querySelector('#individualFeeDevelopmentConsumerPrograms').addEventListener('change', (event) => {
+
+		costumer_id_value = $('#individualFeeUnomPPList').val();
+		GetApplName(costumer_id_value, event.target.value);
+	});
+
+	$('#individual_fee_one_confirm_size_charge_connect').keyup(function (e) {
+		let spec_text_block = $('#individual_fee_one_hl_gvsm_hw').val();
+		let confirm_size_charge_connect_text_block = $('#individual_fee_one_confirm_size_charge_connect').val();
+		CalcSpecValue(spec_text_block, confirm_size_charge_connect_text_block);
+	});
+
+	function GetUnomPPListByChars(input_chars, data_status) {
+		$.ajax({
+			url: '@Html.Raw(Url.Action("GetUnomPPListByChars", "HSS", new { Area = ""}))',
+			type: 'POST',
+			data: { chars: input_chars, data_status: data_status }
+		}).done(function (data) {
+			changeSelectByOtherSelectIndividualFeeUnomPPList(data.list, "individualFeeUnomPPList", input_chars);
+		});
+	}
+
+	function GetDevPrograms(consumer_id) {
+		$.ajax({
+			url: '@Html.Raw(Url.Action("GetDevPrograms", "HSS", new { Area = ""}))',
+			type: 'POST',
+			data: { consumer_id: consumer_id }
+		}).done(function (data) {
+			changeSelectByOtherSelectDevProgramList(data.list, "individualFeeDevelopmentConsumerPrograms");
+		});
+	}
+
+	function GetApplName(consumer_id, dev_prog_id) {
+		$.ajax({
+			url: '@Html.Raw(Url.Action("GetApplName", "HSS", new { Area = ""}))',
+			type: 'POST',
+			data: { consumer_id: consumer_id, dev_prog_id: dev_prog_id }
+		}).done(function (data) {
+			changeSelectByOtherSelectApplicantsName(data.appl_name, data.individual_fee_one_hl_gvsm_hw);
+			
+		});
+	}
+
+	function changeSelectByOtherSelectIndividualFeeUnomPPList(newSelect, select_id, input_chars) {
+		var select = $('#' + select_id);
+		$(select).find('option').remove();
+		if (newSelect.length !== 0) {
+			for (var i = 0; i < newSelect.length; i++) {
+				$(select).append('<option value=' + newSelect[i].value_id + '>' + newSelect[i].value_name + '</option>');
+			}
+		} else {
+			$(select).append('<option value="">' + "Нет записей" + '</option>');
+		}
+		$(select).selectpicker('destroy');
+		$(select).selectpicker();
+		$(select).selectpicker('open');
+		let par_elem = document.getElementById("individualFeeUnomPPList").parentElement;
+		par_elem.querySelector("input.form-control[type=search]").value = input_chars;
+		par_elem.querySelector("input.form-control[type=search]").addEventListener('keyup', (event) => {
+
+			if (event.target.value.length >= 3) {
+				GetUnomPPListByChars(event.target.value, $('#data_status').val());
+			}
+		});
+	}
+
+	function changeSelectByOtherSelectDevProgramList(newSelect, select_id) {
+		var select = $('#' + select_id);
+		$(select).find('option').remove();
+		if (newSelect.length !== 0) {
+			for (var i = 0; i < newSelect.length; i++) {
+				$(select).append('<option value=' + newSelect[i].value_id + '>' + newSelect[i].value_name + '</option>');
+			}
+		} else {
+			$(select).append('<option value="">' + "Нет записей" + '</option>');
+		}
+		$(select).selectpicker('destroy');
+		$(select).selectpicker();
+		$(select).selectpicker('open');
+	}
+
+	function changeSelectByOtherSelectApplicantsName(appl_name, individual_fee_one_hl_gvsm_hw) {
+		var appl_text_block = document.getElementById("individual_fee_one_appl_name");
+		var hl_gvsm_hw_text_block = document.getElementById("individual_fee_one_hl_gvsm_hw");
+		appl_text_block.value = appl_name;
+		hl_gvsm_hw_text_block.value = individual_fee_one_hl_gvsm_hw;
+
+		let spec_text_block = document.getElementById('individual_fee_one_hl_gvsm_hw').value;
+		let confirm_size_charge_connect_text_block = document.getElementById('individual_fee_one_confirm_size_charge_connect').value;
+		CalcSpecValue(spec_text_block, confirm_size_charge_connect_text_block);
+	}
+
+	function CalcSpecValue(spec_value, confirm_size_charge_connect_value) {
+		var answer = 0;
+		var spec_tb = document.getElementById("individual_fee_one_specific_value");
+
+		if (spec_value.replace(",", ".") != 0 && confirm_size_charge_connect_value.replace(",", ".") != 0) {
+			answer = confirm_size_charge_connect_value.replace(",", ".") / spec_value.replace(",", ".") / 1000;
+		}
+
+		spec_tb.value = answer;		
+	}
+
+	function RefreshTable() {
+		if ($("#refresh_table").val() === "1") {
+			GetListOnPage();
+		}
+	}
+</script>

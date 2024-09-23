@@ -1,0 +1,212 @@
+﻿@model List<WebProject.Areas.Sources.Models.SourcePerspectiveViewModel>
+@{
+    string btn_disable = string.Empty; short? type_selected_value = 2;
+}
+
+@if (Model[0].source_id == 0)
+{
+    btn_disable = "disabled";
+}
+<div class="data-block">
+    <form class="needs-validation" novalidate asp-controller="Sources" asp-action="Source_YearImplementSchemeParam_Save" asp-antiforgery="true" asp-area="Sources" id="source_per_form"
+          data-ajax-failure="onFailedForm" data-ajax-success="onSuccessFormSource" data-ajax-begin="onBeginForm" data-ajax="true" data-ajax-method="POST">
+        <input type="hidden" name="source_id" value="@Model[0].source_id" id="source_persp_id" />
+        <input type="hidden" name="data_status" value="@Model[0].data_status" id="data_status" />
+        <div class="data-row">
+            <div class="data-item data-item-right">
+                <button class="bttn bttn-square bttn-icon-save" @btn_disable type="submit" id="YearImplementSchemeParam_Save"></button>
+                <button class="bttn disabled" type="button">Привязать данные электронной модели</button>
+            </div>
+        </div>
+        <div class="scroll-table-wrapper">
+            <table class="table-inp-stretch" style="width:100%;">
+                <thead>
+                    <tr>
+                        <th>Год</th>
+                        <th>Статус</th>
+                        <th>УНОМ СТ</th>
+                        <th>Наименование эксплуатирующей ТСО</th>
+                        <th>N<sub>у</sub>, <span class="data-unit">МВт</span></th>
+                        <th>Q<sub>у</sub>, <span class="data-unit">Гкал/ч</span></th>
+                        <th>Q<sub>н</sub>, <span class="data-unit">Гкал/ч</span></th>
+                        <th>∑ Q<sub>пр</sub><sup>ПАР</sup>, <span class="data-unit">т/ч</span></th>
+                        <th>∑ Q<sub>пр</sub><sup>ГВ</sup>, <span class="data-unit">Гкал/ч</span></th>
+                        <th>Q<sub>резерв</sub>, <span class="data-unit">Гкал/ч</span></th>
+                        <th>∑ Q<sub>Пр.</sub><sup>пред</sup>, <span class="data-unit">Гкал/ч</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var source in Model)
+                    {
+                        <tr>
+                            <input type="hidden" name="perspective_year" value="@source.perspective_year">
+                            <td>@source.perspective_year_dt</td>
+                            <td>
+                                <div class="data-item">
+                                    <select class="selectpicker data-value" data-live-search="true" data-size="5" name="source_status_select" required id="source_status_select_@(source.perspective_year)" onchange="ChangeSelect(event, @source.perspective_year, 'source_status')" data-source_status="@source.perspective_year">
+                                        @if (source.source_status_id != null)
+                                        {
+                                            type_selected_value = source.source_status_id;
+                                        }
+                                        @foreach (var status in ViewBag.SourceStatus)
+                                        {
+                                            if (status.Id == type_selected_value)
+                                            {
+                                                <option value="@status.Id" selected>@status.source_status_name</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@status.Id">@status.source_status_name</option>
+                                            }
+                                        }
+                                        <a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Выберите значение из списка"></a>
+                                    </select>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="data-item">
+                                    <select class="selectpicker data-value" data-size="5" data-live-search="true" name="hss_select" required id="hss_select_@(source.perspective_year)" onchange="ChangeSelect(event, @source.perspective_year, 'hss')" data-hss="@source.perspective_year">
+                                        <option value="" selected>Выберите...</option>
+                                        @foreach (var hss in ViewBag.HSSList)
+                                        {
+                                            if (hss.hss_id == source.hssn_id)
+                                            {
+                                                <option value="@hss.hss_id" selected>@hss.unom_hss</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@hss.hss_id">@hss.unom_hss</option>
+                                            }
+                                        }
+                                    </select>
+                                    <a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Выберите значение из списка"></a>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="data-item">
+                                    <select class="selectpicker data-value" required data-live-search="true" data-size="5" name="tso_select" id="tso_select_@(source.perspective_year)" onchange="ChangeSelect(event, @source.perspective_year, 'tso')" data-tso="@source.perspective_year">
+                                        <option value="" selected>Выберите...</option>
+                                        @foreach (var tso in ViewBag.TSOList)
+                                        {
+                                            if (tso.org_id == source.tso_id)
+                                            {
+                                                <option value="@tso.org_id" selected>@tso.org_name</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@tso.org_id">@tso.org_name</option>
+                                            }
+                                        }
+                                    </select>
+                                    <a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Выберите значение из списка"></a>
+                                </div>
+                            </td>
+                            <td><input type="text" class="data-value" value="1200" disabled></td>
+                            <td><input type="text" class="data-value" value="4200" disabled></td>
+                            <td><input type="text" class="data-value" value="3800" disabled></td>
+                            <td><input name="calc_hl_steam_sum" type="text" class="data-value" value="@source.calc_hl_steam_sum" disabled></td>
+                            <td><input name="calc_hl_hw_sum" type="text" class="data-value" value="@source.calc_hl_hw_sum" disabled></td>
+                            <td><input type="text" class="data-value" value="782" disabled></td>
+                            <td><input type="text" class="data-value" value="3400" disabled></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </form>
+</div>
+
+<script>
+
+    $(document).ready(function () {
+        SetSelectValue();
+    });
+    function SetSelectValue(){
+         var elementsStatus = document.getElementsByName("source_status_select")
+        var elementsHss = document.getElementsByName("hss_select")
+        var elementsTso = document.getElementsByName("tso_select")
+        var elementsHl_steam_sum = document.getElementsByName("calc_hl_steam_sum")
+        var elementsHl_hw_sum = document.getElementsByName("calc_hl_hw_sum")
+        for (var i = 0; i < elementsStatus.length; i++) {
+            var selectHss_id = elementsHss[i].getAttribute('id');
+            var selectTso_id = elementsTso[i].getAttribute('id');
+            if (elementsStatus[i].value == 1) {
+                elementsHss[i].disabled = true;
+                elementsTso[i].disabled = true;
+                $('#' + selectHss_id).val('');
+                $('#' + selectTso_id).val(''); 
+                 RefreshSelectById(selectHss_id);
+                 RefreshSelectById(selectTso_id);
+            }
+            else if (elementsHss[i].disabled || elementsTso[i].disabled) {
+                elementsHss[i].disabled = false;
+                elementsTso[i].disabled = false;
+                RefreshSelectById(selectHss_id);
+                RefreshSelectById(selectTso_id);
+            }
+
+        }
+        removeRequiredAttrAll();
+    }
+
+    function ChangeSelect(event, perspective_year, select_name) {
+        ChangeSelectValuePerspective(event, perspective_year, select_name)
+        SetSelectValue();
+    }
+    //Добавить и удалить аттрибут required
+    function removeRequiredAttrAll() {
+        let names = [
+            'source_status_select',
+            'hss_select',
+            'tso_select'
+        ];
+
+        for (var i = 0; i < names.length; i++) {
+            if (!removeRequiredAttrPost(names[i])) {
+                requiredAttrSet(names[i], global_array, 'add');
+            }
+        }
+    }
+
+    function removeRequiredAttrPost(name) {
+        global_array = getArray(name);
+        add_remove_yisp_temp_ht_plan_select_required = checkIsEmptyColumns(global_array);
+        if (add_remove_yisp_temp_ht_plan_select_required) {
+            requiredAttrSet(name, global_array, 'remove');
+            return true;
+        }
+        return false;
+    }
+
+    function requiredAttrSet(name, array, operation) {
+        var years = getArray('perspective_year');
+        for (var i = 0; i < array.length; i++) {
+            var item = document.getElementById(name + '_' + years[i]);
+            if (operation == 'remove') {
+                $("#" + name + "_" + years[i]).removeAttr("required");
+            }
+            else if (operation == 'add') {
+                $("#" + name + "_" + years[i]).prop("required", true);
+            }
+        }
+    }
+
+    function checkIsEmptyColumns(array) {
+        if (array.filter(item => item === '').length == array.length) {
+            return true;
+        }
+        return false;
+    }
+
+    function getArray(name) {
+        var array = [];
+        var list = document.getElementsByName(name);
+        if (name == 'perspective_year') {
+            list = list[0];
+        }
+        for (var i = 0; i < list.length; i++) {
+            array.push(list[i].value);
+        }
+        return array;
+    }
+</script>

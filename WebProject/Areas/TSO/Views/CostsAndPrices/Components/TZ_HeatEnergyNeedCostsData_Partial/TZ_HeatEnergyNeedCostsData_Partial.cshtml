@@ -1,0 +1,98 @@
+﻿@model WebProject.Areas.TSO.Models.TZHeatEnergyNeedCostsViewModel
+@{
+	Layout = null; string disable = "";
+}
+
+@if (Model.tz_id == 0)
+{
+	disable = "disabled";
+}
+<form asp-controller="CostsAndPrices" asp-action="TZHETransferCosts_Save" asp-antiforgery="true" asp-area="TSO" id="tz_he_transfer_costs_form"
+	  data-ajax-failure="onFailedFormTZ" data-ajax-success="onSuccessFormTZ" data-ajax-begin="onBeginFormTZ" data-ajax="true" data-ajax-method="POST">
+	<input type="hidden" name="tz_id" value="@Model.tz_id" />
+	<input type="hidden" name="data_status" value="@Model.data_status" />
+	<input type="hidden" name="perspective_year" value="@Model.perspective_year" />
+	<table class="table-inp-stretch" style="width:100%;">
+		<thead>
+			<tr>
+				<th rowspan="2"></th>
+				<th colspan="3">Факт</th>
+				<th colspan="3">План</th>
+			</tr>
+			<tr>
+				<th>I полугодие</th>
+				<th>II полугодие</th>
+				<th>Год</th>
+				<th>I полугодие</th>
+				<th>II полугодие</th>
+				<th>Год</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>Всего затраты, <span class="data-unit">тыс. руб. без НДС</span></td>
+				<td><input type="text" asp-for="costs_all_heat_energy_fact_1" class="data-value" disabled></td>
+				<td><input type="text" asp-for="costs_all_heat_energy_fact_2" class="data-value" disabled></td>
+				<td><input type="text" asp-for="costs_all_heat_energy_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="costs_all_heat_energy_plan_1" class="data-value" disabled></td>
+				<td><input type="text" asp-for="costs_all_heat_energy_plan_2" class="data-value" disabled></td>
+				<td><input type="text" asp-for="costs_all_heat_energy_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- на покупку тепловой энрегии</td>
+				<td><input type="text" asp-for="costs_buy_heat_energy_fact_1" class="data-value" disabled></td>
+				<td><input type="text" asp-for="costs_buy_heat_energy_fact_2" class="data-value" disabled></td>
+				<td><input type="text" asp-for="costs_buy_heat_energy_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="costs_buy_heat_energy_plan_1" class="data-value" disabled></td>
+				<td><input type="text" asp-for="costs_buy_heat_energy_plan_2" class="data-value" disabled></td>
+				<td><input type="text" asp-for="costs_buy_heat_energy_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- оплата услуг по передачи тепловой энергии</td>
+				<td><input type="text" asp-for="costs_heat_transfer_fact_1" class="data-value double" data-double="transfer_heat_energy"></td>
+				<td><input type="text" asp-for="costs_heat_transfer_fact_2" class="data-value double" data-double="transfer_heat_energy"></td>
+				<td><input type="text" asp-for="costs_heat_transfer_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="costs_heat_transfer_plan_1" class="data-value double" data-double="transfer_heat_energy"></td>
+				<td><input type="text" asp-for="costs_heat_transfer_plan_2" class="data-value double" data-double="transfer_heat_energy"></td>
+				<td><input type="text" asp-for="costs_heat_transfer_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>Объем покупной тепловой энергии, <span class="data-unit">Гкал</span></td>
+				<td><input type="text" asp-for="volume_buy_heat_energy_fact_1" class="data-value" disabled></td>
+				<td><input type="text" asp-for="volume_buy_heat_energy_fact_2" class="data-value" disabled></td>
+				<td><input type="text" asp-for="volume_buy_heat_energy_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="volume_buy_heat_energy_plan_1" class="data-value" disabled></td>
+				<td><input type="text" asp-for="volume_buy_heat_energy_plan_2" class="data-value" disabled></td>
+				<td><input type="text" asp-for="volume_buy_heat_energy_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- технологические цели</td>
+				<td><input type="text" asp-for="volume_buy_heat_energy_techneed_fact_1" class="data-value" disabled></td>
+				<td><input type="text" asp-for="volume_buy_heat_energy_techneed_fact_2" class="data-value" disabled></td>
+				<td><input type="text" asp-for="volume_buy_heat_energy_techneed_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="volume_buy_heat_energy_techneed_plan_1" class="data-value" disabled></td>
+				<td><input type="text" asp-for="volume_buy_heat_energy_techneed_plan_2" class="data-value" disabled></td>
+				<td><input type="text" asp-for="volume_buy_heat_energy_techneed_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- хозяйственные цели</td>
+				<td><input type="text" asp-for="volume_buy_heat_energy_houseneed_fact_1" class="data-value" disabled></td>
+				<td><input type="text" asp-for="volume_buy_heat_energy_houseneed_fact_2" class="data-value" disabled></td>
+				<td><input type="text" asp-for="volume_buy_heat_energy_houseneed_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="volume_buy_heat_energy_houseneed_plan_1" class="data-value" disabled></td>
+				<td><input type="text" asp-for="volume_buy_heat_energy_houseneed_plan_2" class="data-value" disabled></td>
+				<td><input type="text" asp-for="volume_buy_heat_energy_houseneed_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>Средняя цена (тариф) покупной тепловой энергии, <span class="data-unit">руб./Гкал</span></td>
+				<td><input type="text" asp-for="avg_price_buy_heat_energy_fact_1" class="data-value" disabled></td>
+				<td><input type="text" asp-for="avg_price_buy_heat_energy_fact_2" class="data-value" disabled></td>
+				<td><input type="text" asp-for="avg_price_buy_heat_energy_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="avg_price_buy_heat_energy_plan_1" class="data-value" disabled></td>
+				<td><input type="text" asp-for="avg_price_buy_heat_energy_plan_2" class="data-value" disabled></td>
+				<td><input type="text" asp-for="avg_price_buy_heat_energy_plan_3" class="data-value" disabled></td>
+			</tr>
+		</tbody>
+	</table>
+	<button type="submit" class="bttn bttn-color ms-auto" @disable>Сохранить</button>
+</form>

@@ -1,0 +1,230 @@
+﻿@model List<WebProject.Areas.HeatPointsAndConsumers.Models.HPAddRemoveHP_HeatExchangerMappsDataViewModel>
+
+@{
+    Layout = null; int row_count = 0;
+}
+
+<div class="forms-block">
+    @foreach (var item in Model)
+    {
+        <form style="display: none;" asp-controller="HeatPoint" asp-action="HpAddRemove_HeatExchangeEquipment_Save" asp-antiforgery="true" asp-area="HeatPointsAndConsumers" id="form_@(++row_count)" data-ajax-failure="onFailedForm"
+              data-ajax-success="onSuccessFormHP_EquipmentPart" data-ajax-begin="onBeginForm" data-ajax="true" data-ajax-method="POST" class="needs-validation form-row" novalidate>
+            @Html.AntiForgeryToken()
+        </form>
+    }
+</div>
+
+@{
+    row_count = 0;
+}
+
+
+<input type="hidden" value="0" id="refresh_table_equipment_parts" />
+<table id="heatEquipTable" class="display nowrap compact table-inp-stretch" style="width:100%">
+    <thead>
+        <tr>
+            <th>№ п/п</th>
+            <th>Вид теплообменника</th>
+            <th>Марка</th>
+            <th>Тип</th>
+            <th>Q<sub>У</sub>, <span class="data-unit">Гкал/ч</span></th>
+            <th>Кол-во, <span class="data-unit">шт.</span></th>
+            <th>S<sub>т/о</sub>, <span class="data-unit">м<sup>2</sup></span></th>
+            <th>Кол-во секций, <span class="data-unit">шт.</span></th>
+            <th>D<sub>К</sub>, <span class="data-unit">мм</span></th>
+            <th>L<sub>c</sub>, <span class="data-unit">мм</span></th>
+            <th>Ступень ГВС</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            string is_disabled = string.Empty;
+            string is_disabled_2 = string.Empty;
+            if (item.ht_exch_num == 0)
+            {
+                is_disabled = "disabled";
+            }
+            if (item.heat_point_id == 0)
+            {
+                is_disabled_2 = "disabled";
+            }
+
+            <input hidden name="heat_point_id" value="@item.heat_point_id" form="form_@(++row_count)">
+            <input hidden name="data_status" value="@item.data_status" form="form_@(row_count)">
+            <input hidden name="ht_exch_num" value="@item.ht_exch_num" form="form_@(row_count)">
+            <input hidden name="is_deleted" id="is_deleted_@(row_count)" value="@item.is_deleted" form="form_@(row_count)">
+            <tr>
+                <td>@(row_count)</td>
+                <td>
+                    <div class="data-item">
+                        <select form="form_@(row_count)" class="selectpicker data-value" data-container="#editHeatPointAddRemoveDataPopup" form="form_@(row_count)" name="type_equip_id" id="type_equip_id_@row_count" placeholder="Выберите значение" required>
+                            @foreach (var tz_list in ViewBag.HtExchangerEquipTypes)
+                            {
+                                if (tz_list.Id == item.type_equip_id)
+                                {
+                                    <option value="@tz_list.Id" selected>@tz_list.htexch_equip_type_name</option>
+                                }
+                                if (tz_list.Id != item.type_equip_id)
+                                {
+                                    <option value="@tz_list.Id">@tz_list.htexch_equip_type_name</option>
+                                }
+                            }
+                        </select>
+                        <a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Выберите значение из списка"></a>
+                    </div>
+                </td>
+                <td>
+                    <div class="data-item">
+                        <select class="selectpicker data-value" data-container="#editHeatPointAddRemoveDataPopup" form="form_@(row_count)" name="equip_id" id="equip_id_@row_count" data-live-search="true" placeholder="Выберите значение" required onchange="GetDataBySelectedMark(@row_count)">
+                            @foreach (var tz_list in ViewBag.EquipmentMarks)
+                            {
+                                if (tz_list.value_id == item.equip_id)
+                                {
+                                    <option value="@tz_list.value_id" selected>@tz_list.value_name</option>
+                                }
+                                if (tz_list.value_id != item.equip_id)
+                                {
+                                    <option value="@tz_list.value_id">@tz_list.value_name</option>
+                                }
+                            }
+                        </select>
+                        <a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Выберите значение из списка"></a>
+                    </div>
+                </td>
+                <td>
+                    <select class="selectpicker data-value" data-container="#editHeatPointAddRemoveDataPopup" form="form_@(row_count)" name="type_id" id="type_id_@row_count" placeholder="Выберите значение">
+                        @foreach (var tz_list in ViewBag.EquipmentHpTypes)
+                        {
+                            if (tz_list.Id == item.type_id)
+                            {
+                                <option value="@tz_list.Id" selected>@tz_list.ht_type_name</option>
+                            }
+                            if (tz_list.Id != item.type_id)
+                            {
+                                <option value="@tz_list.Id">@tz_list.ht_type_name</option>
+                            }
+                        }
+                    </select>
+                </td>
+                <td><input type="text" class="data-value double" value="@item.inst_heat_power" form="form_@(row_count)" name="inst_heat_power" id="inst_heat_power_@row_count" onkeyup="Refresh_InstHeatPowerSum()"></td>
+                <td><input type="number" class="data-value" value="@item.ht_exch_count" form="form_@(row_count)" name="ht_exch_count" id="ht_exch_count_@row_count" onkeyup="Refresh_InstHeatPowerSum()"></td>
+                <td><input type="text" class="data-value double" value="@item.heat_exchange_surface" form="form_@(row_count)" name="heat_exchange_surface" id="heat_exchange_surface_@row_count"></td>
+                <td><input type="number" class="data-value" value="@item.section_count" form="form_@(row_count)" name="section_count" id="section_count_@row_count"></td>
+                <td><input type="text" class="data-value double" value="@item.casing_diameter" form="form_@(row_count)" name="casing_diameter" id="casing_diameter_@row_count"></td>
+                <td><input type="text" class="data-value double" value="@item.length_section" form="form_@(row_count)" name="length_section" id="length_section_@row_count"></td>
+                <td>
+                    <select class="selectpicker data-value" data-container="#editHeatPointAddRemoveDataPopup" form="form_@(row_count)" name="stage_scheme_gvs_id" id="stage_scheme_gvs_id_@row_count" placeholder="Выберите значение">
+                        @foreach (var tz_list in ViewBag.EquipmentStageGVSSchemes)
+                        {
+                            if (tz_list.Id == item.stage_scheme_gvs_id)
+                            {
+                                <option value="@tz_list.Id" selected>@tz_list.stage_scheme_gvs_name</option>
+                            }
+                            if (tz_list.Id != item.stage_scheme_gvs_id)
+                            {
+                                <option value="@tz_list.Id">@tz_list.stage_scheme_gvs_name</option>
+                            }
+                        }
+                    </select>
+                </td>
+                <td>
+                    <button class="bttn bttn-square bttn-icon-save hp_equip_he_save_btn" type="submit" form="form_@(row_count)" title="Сохранить" @is_disabled_2></button>
+                    <button class="bttn bttn-square bttn-icon-del hp_equip_he_delete_btn" type="button" form="form_@(row_count)" onclick="DeleteRow(@row_count)" title="Удалить" @is_disabled></button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+<script type="text/javascript">
+
+    var row_cnt = 0;
+
+    $(document).ready(function () {
+        Refresh_InstHeatPowerSum();
+    });
+
+    var onSuccessFormHP_EquipmentPart = function (xhr) {
+        hidePreloader();
+        $("#refresh_table_equipment_parts").val(1);
+        if (xhr.success && xhr.is_deleted) {
+            showMessage('Данные удалены.', 'modal', 'success');
+        }
+        else if (xhr.success && !xhr.is_deleted) {
+            showMessage('Данные сохранены.', 'modal', 'success');
+        }
+        else {
+            showMessage(xhr.error, 'modal', 'fault');
+        }
+        GetListOnPageHP_EquipmentPart();
+    };
+
+    function DeleteRow(row_num) {
+        $('#is_deleted_' + row_num).val(true);
+        $('#form_' + row_num).submit();
+    }
+
+    function Refresh_InstHeatPowerSum() {
+        var sum = 0.0;
+        var floor = Math.floor;
+        let items = document.getElementsByName('inst_heat_power');
+
+        for (var i = 1; i <= items.length; i++) {
+            var ih_power = $('#inst_heat_power_' + i).val();
+            var he_count = $('#ht_exch_count_' + i).val();
+
+            if (ih_power != '' && he_count != '') {
+                sum += (floor(parseFloat(ih_power)) * floor(parseFloat(he_count)));
+            }
+        }
+
+        $('#inst_heat_power_sum').val(sum);
+    }
+
+
+    function GetListOnPageHP_EquipmentPart() {
+        showPreloader();
+        $.ajax({
+            type: 'GET',
+            url: '@Html.Raw(Url.Action("OnGetHP_EquipmentPart_HeatExchange_ViewComponent", "HeatPoint", new { Area = "HeatPointsAndConsumers" }))',
+            data: {
+                data_status: $('#data_status').val(),
+                heat_point_id: $('#heat_point_id').val()
+            },
+            dataType: 'html'
+        })
+            .done(function (result) {
+                var div = $('#HP_EquipmentPart_HeatExchange');
+                div.html("");
+                div.html(result);
+                $('.selectpicker').selectpicker();
+                hidePreloader();
+            });
+    }
+
+    function GetDataBySelectedMark(row_count) {
+        row_cnt = row_count;
+        var option = document.getElementById("equip_id_" + row_cnt);
+        var id = option.value;
+        $.ajax({
+            type: 'POST',
+            url: '@Html.Raw(Url.Action("GetHPEquipmentByMark", "HSS", new { Area = ""}))',
+            data: { equip_id: id },
+            dataType: 'json'
+        })
+            .done(function (result) {
+                $('#inst_heat_power_' + row_cnt).val(result.item.inst_heat_power);
+                $('#type_id_' + row_cnt).val(result.item.htexch_type_id);
+                $('#type_id_' + row_cnt).selectpicker('destroy');
+                $('#type_id_' + row_cnt).selectpicker();
+                $('#heat_exchange_surface_' + row_cnt).val(result.item.heat_exchange_surface);
+                $('#casing_diameter_' + row_cnt).val(result.item.casing_diameter);
+                $('#section_count_' + row_cnt).val(result.item.section_count);
+                $('#length_section_' + row_cnt).val(result.item.length_section);
+            });
+    }
+
+</script>

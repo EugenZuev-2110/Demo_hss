@@ -1,0 +1,87 @@
+﻿@model WebProject.Areas.TSO.Models.HeatEnergyTariffSteamHotWater
+@{
+	Layout = null; string disable = "";
+}
+@if (Model.tz_id == 0)
+{
+	disable = "disabled";
+}
+<form asp-controller="TariffConnection" asp-action="TZHeatEnergyTariffSteamHotWater_Save" asp-antiforgery="true" asp-area="TSO" id="tz_other_org_costs_form"
+	  data-ajax-failure="onFailedFormTZ" data-ajax-success="onSuccessFormTZ" data-ajax-begin="onBeginFormTZ" data-ajax="true" data-ajax-method="POST">
+	<input type="hidden" name="tz_id" value="@Model.tz_id" />
+	<input type="hidden" name="data_status" value="@Model.data_status" />
+	<input type="hidden" name="perspective_year" value="@Model.perspective_year" />
+
+	<input hidden asp-for="@Model.he_tariff_steam_hotwater_useful_release_buget_cons_plan_per_1" data-type="buget">
+	<input hidden asp-for="@Model.he_tariff_steam_hotwater_useful_release_public_cons_plan_per_1" data-type="public">
+	<input hidden asp-for="@Model.he_tariff_steam_hotwater_useful_release_other_cons_plan_per_1" data-type="other">
+	<input hidden asp-for="@Model.he_tariff_steam_hotwater_useful_release_buget_cons_plan_per_2" data-type="buget">
+	<input hidden asp-for="@Model.he_tariff_steam_hotwater_useful_release_public_cons_plan_per_2" data-type="public">
+	<input hidden asp-for="@Model.he_tariff_steam_hotwater_useful_release_other_cons_plan_per_2" data-type="other">
+	<input hidden asp-for="@Model.he_tariff_steam_hotwater_volume_buy_heat_carrier_plan_per_1" data-type="volume_buy_heat_carrier_plan">
+	<input hidden asp-for="@Model.he_tariff_steam_hotwater_volume_buy_heat_carrier_plan_per_2" data-type="volume_buy_heat_carrier_plan">
+	<input hidden asp-for="@Model.he_tariff_steam_hotwater_volume_buy_coldwater_plan_divider_main" data-type="volume_buy_coldwater_plan_divider_main">
+	<input hidden asp-for="@Model.he_tariff_steam_hotwater_volume_buy_coldwater_plan_subdivider" data-type="volume_buy_coldwater_plan_subdivider">
+	<input hidden asp-for="@Model.he_tariff_steam_hotwater_price_coldwater_plan_div_per_1" data-type="price_coldwater_plan_div">
+	<input hidden asp-for="@Model.he_tariff_steam_hotwater_price_coldwater_plan_div_per_2" data-type="price_coldwater_plan_div">
+	<input hidden asp-for="@Model.he_tariff_steam_hotwater_tariff_other_per_1" data-type="tariff_other">
+	<input hidden asp-for="@Model.he_tariff_steam_hotwater_tariff_other_per_2" data-type="tariff_other">
+	<table class="table-inp-stretch" style="width:100%;">
+		<thead>
+			<tr>
+				<th></th>
+				<th>I полугодие</th>
+				<th>II полугодие</th>
+				<th>Год</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<th colspan="4">Тарифы на теплоноситель:</th>
+			</tr>
+			<tr>
+				<td>Тариф на теплоноситель (горячая вода), <span class="data-unit">руб./куб.м без НДС</span></td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.hot_water_heat_carrier_tariff_per_1" class="data-value double" data-type="hot_water_heat_carrier_tariff" data-double="he_tariff_steam_hotwater"></div></td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.hot_water_heat_carrier_tariff_per_2" class="data-value double" data-type="hot_water_heat_carrier_tariff" data-double="he_tariff_steam_hotwater"></div></td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.hot_water_heat_carrier_tariff_per_3" class="data-value" disabled></div></td>
+			</tr>
+			<tr>
+				<td>Тариф на теплоноситель (пар), <span class="data-unit">руб./куб.м без НДС</span></td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.steam_heat_carrier_tariff_per_1" class="data-value double" data-type="steam_heat_carrier_tariff" data-double="he_tariff_steam_hotwater"></div></td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.steam_heat_carrier_tariff_per_2" class="data-value double" data-type="steam_heat_carrier_tariff" data-double="he_tariff_steam_hotwater"></div></td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.steam_heat_carrier_tariff_per_3" class="data-value" disabled></div></td>
+			</tr>
+			<tr>
+				<th colspan="4">Однокомпонентный тариф на горячую воду в закрытых системах:</th>
+			</tr>
+			<tr>
+				<td>Однокомпонентный тариф на горячую воду, <span class="data-unit">руб./куб.м без НДС</span></td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.hot_water_tariff_per_1" class="data-value double" data-type="hot_water_tariff" data-double="he_tariff_steam_hotwater"></div></td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.hot_water_tariff_per_2" class="data-value double" data-type="hot_water_tariff" data-double="he_tariff_steam_hotwater"></div></td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.hot_water_tariff_per_3" class="data-value" disabled></div></td>
+			</tr>
+			<tr>
+				<td>Удельный расход тепловой энергии на подогрев исходной воды, <span class="data-unit">Гкал/куб.м без НДС</span></td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.heat_energy_specific_consumption_per_1" class="data-value double" disabled data-type="heat_energy_specific_consumption" data-double="he_tariff_steam_hotwater"></div></td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.heat_energy_specific_consumption_per_2" class="data-value double" disabled data-type="heat_energy_specific_consumption" data-double="he_tariff_steam_hotwater"></div></td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.heat_energy_specific_consumption_per_3" class="data-value" disabled></div></td>
+			</tr>
+			<tr>
+				<th colspan="4">Двухкомпонентный тариф на горячую воду в открытых системах:</th>
+			</tr>
+			<tr>
+				<td>Компонент на теплоноситель</td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.heat_carrier_component_per_1" class="data-value double" data-type="heat_carrier_component" data-double="he_tariff_steam_hotwater"></div></td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.heat_carrier_component_per_2" class="data-value double" data-type="heat_carrier_component" data-double="he_tariff_steam_hotwater"></div></td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.heat_carrier_component_per_3" class="data-value" disabled></div></td>
+			</tr>
+			<tr>
+				<td>Компонент на тепловую энергию</td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.heat_energy_component_per_1" class="data-value double" data-type="heat_energy_component" data-double="he_tariff_steam_hotwater"></div></td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.heat_energy_component_per_2" class="data-value double" data-type="heat_energy_component" data-double="he_tariff_steam_hotwater"></div></td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.heat_energy_component_per_3" class="data-value" disabled></div></td>
+			</tr>
+		</tbody>
+	</table>
+	<button type="submit" class="bttn bttn-color ms-auto">Сохранить</button>
+</form>

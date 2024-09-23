@@ -1,0 +1,82 @@
+﻿<div class="data-block workspace">
+	
+	<div class="data-block title-block">
+		<div class="data-row">
+			<ul class="breadcrumb">
+				<li class="breadcrumb-item"><a class="ref-color" href="#">Главная</a></li>
+				<li class="breadcrumb-item">Справочники - Зоны деятельности ЕТО</li>
+			</ul>
+		</div>
+		<div class="data-row">
+			<h1 class="title">Зоны деятельности ЕТО</h1>
+			<div class="data-item data-item-right">
+				<button class="bttn bttn-color bttn-edit-data" type="button" onclick="OpenPopupZoneETO(0)">Добавить/Удалить</button>
+				<a class="bttn bttn-color bttn-load-data disabled" type="button" href="page2-2-1-2.html">Загрузить данные</a>
+			</div>
+		</div>
+	</div>
+
+	<div class="data-block main-content border-block" display: none;" id="ZoneETOTable_div">
+		@await Component.InvokeAsync("ActiveZoneETOList_Partial")
+	</div>
+</div>
+
+<script type="text/javascript" src="@Url.Content("~/hss/js/popup_common_scripts.js")"></script>
+<script type="text/javascript">
+
+	$(document).ready(function () {
+		setTimeout(function () {
+			$('#ActiveZoneETO').addClass('active');
+		}, 500);
+
+		TableInit('ETOZonesTable', 'full');
+
+	});
+
+
+	function GetListOnPage() {
+		showPreloader();
+		$.ajax({
+
+			type: 'GET',
+			url: '@Html.Raw(Url.Action("OnGetCallActiveZoneETOList_PartialViewComponent", "ActiveZoneETO", new { Area = "DictionaryTables" }))',
+			data: {
+				data_status: $('#data_status').val()
+			},
+			dataType: 'html'
+		})
+			.done(function (result) {
+				var div = $('#ZoneETOTable_div');
+				div.html("");
+				div.html(result);
+				TableInit('ETOZonesTable', 'full');
+				hidePreloader();
+			});
+	}
+
+
+
+	function OpenPopupZoneETO(id, action_for) {
+		showPreloader();
+		$.ajax({
+			type: 'POST',
+			url: '@Html.Raw(Url.Action("OpenActiveZoneETO", "ActiveZoneETO", new { Area = "DictionaryTables" }))',
+			data: {
+				id: id,
+				action_for: action_for
+			},
+			dataType: 'html'
+		})
+			.done(function (result) {
+				var div = $('#ActiveZoneETODataPopup');
+				div.html("");
+				div.html(result);
+				$('.selectpicker').selectpicker();
+
+				if ($('#ActiveZoneETODataPopup').is(':hidden')) {
+					showModal('ActiveZoneETODataPopup');
+				}
+				hidePreloader();
+			});
+	}
+	</script>

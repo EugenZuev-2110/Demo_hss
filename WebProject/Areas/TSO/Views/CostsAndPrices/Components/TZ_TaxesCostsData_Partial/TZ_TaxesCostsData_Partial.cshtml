@@ -1,0 +1,124 @@
+﻿@model WebProject.Areas.TSO.Models.TZTaxesCostsViewModel
+@{
+	Layout = null; string disable = "";
+}
+@if (Model.tz_id == 0)
+{
+	disable = "disabled";
+}
+<form asp-controller="CostsAndPrices" asp-action="TZTaxesCosts_Save" asp-antiforgery="true" asp-area="TSO"
+	  data-ajax-failure="onFailedFormTZ" data-ajax-success="onSuccessFormTZ" data-ajax-begin="onBeginFormTZ" data-ajax="true" data-ajax-method="POST">
+	<input type="hidden" name="tz_id" value="@Model.tz_id" />
+	<input type="hidden" name="data_status" value="@Model.data_status" />
+	<input type="hidden" name="perspective_year" value="@Model.perspective_year" />
+	<table class="table-inp-stretch" style="width:100%;">
+		<thead>
+			<tr>
+				<th rowspan="2"></th>
+				<th colspan="3">Факт</th>
+				<th colspan="3">План</th>
+			</tr>
+			<tr>
+				<th>I полугодие</th>
+				<th>II полугодие</th>
+				<th>Год</th>
+				<th>I полугодие</th>
+				<th>II полугодие</th>
+				<th>Год</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>Всего расходов, <span class="data-unit">тыс. руб.</span></td>
+				<td><input type="text" asp-for="@Model.cost_req_pay_all_fact_1" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.cost_req_pay_all_fact_2" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.cost_req_pay_all_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.cost_req_pay_all_plan_1" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.cost_req_pay_all_plan_2" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.cost_req_pay_all_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>1. Плата за выбросы и сбросы загрязняющих веществ<br>в окружающую среду, размещение отходов и другие виды<br>негативного воздействия на окружающую среду, <span class="data-unit">тыс. руб.</span></td>
+				<td><input type="text" asp-for="@Model.cost_emissions_pollutant_fact_1" class="data-value double" data-double="taxes_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_emissions_pollutant_fact_2" class="data-value double" data-double="taxes_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_emissions_pollutant_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.cost_emissions_pollutant_plan_1" class="data-value double" data-double="taxes_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_emissions_pollutant_plan_2" class="data-value double" data-double="taxes_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_emissions_pollutant_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>2. Расходы на обязательное страхование<span class="data-unit">тыс. руб.</span></td>
+				<td><input type="text" asp-for="@Model.cost_required_insure_fact_1" class="data-value double" data-double="taxes_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_required_insure_fact_2" class="data-value double" data-double="taxes_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_required_insure_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.cost_required_insure_plan_1" class="data-value double" data-double="taxes_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_required_insure_plan_2" class="data-value double" data-double="taxes_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_required_insure_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>3. Расходы на уплату налогов, <span class="data-unit">тыс. руб.</span></td>
+				<td><input type="text" asp-for="@Model.cost_taxes_all_fact_1" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.cost_taxes_all_fact_2" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.cost_taxes_all_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.cost_taxes_all_plan_1" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.cost_taxes_all_plan_2" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.cost_taxes_all_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- налог на имущество ТСО</td>
+				<td><input type="text" asp-for="@Model.cost_tax_org_property_fact_1" class="data-value double" data-double="taxes_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_tax_org_property_fact_2" class="data-value double" data-double="taxes_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_tax_org_property_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.cost_tax_org_property_plan_1" class="data-value double" data-double="taxes_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_tax_org_property_plan_2" class="data-value double" data-double="taxes_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_tax_org_property_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- земельный налог</td>
+				<td><input type="text" asp-for="@Model.cost_tax_land_fact_1" class="data-value double" data-double="taxes_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_tax_land_fact_2" class="data-value double" data-double="taxes_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_tax_land_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.cost_tax_land_plan_1" class="data-value double" data-double="taxes_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_tax_land_plan_2" class="data-value double" data-double="taxes_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_tax_land_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- транспортный налог</td>
+				<td><input type="text" asp-for="@Model.cost_tax_transport_fact_1" class="data-value double" data-double="taxes_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_tax_transport_fact_2" class="data-value double" data-double="taxes_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_tax_transport_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.cost_tax_transport_plan_1" class="data-value double" data-double="taxes_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_tax_transport_plan_2" class="data-value double" data-double="taxes_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_tax_transport_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- водный налог</td>
+				<td><input type="text" asp-for="@Model.cost_tax_water_fact_1" class="data-value double" data-double="taxes_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_tax_water_fact_2" class="data-value double" data-double="taxes_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_tax_water_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.cost_tax_water_plan_1" class="data-value double" data-double="taxes_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_tax_water_plan_2" class="data-value double" data-double="taxes_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_tax_water_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- прочие налоги</td>
+				<td><input type="text" asp-for="@Model.cost_tax_other_fact_1" class="data-value double" data-double="taxes_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_tax_other_fact_2" class="data-value double" data-double="taxes_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_tax_other_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.cost_tax_other_plan_1" class="data-value double" data-double="taxes_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_tax_other_plan_2" class="data-value double" data-double="taxes_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_tax_other_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>4. Иные расходы, <span class="data-unit">тыс. руб.</span></td>
+				<td><input type="text" asp-for="@Model.cost_other_pay_fact_1" class="data-value double" data-double="taxes_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_other_pay_fact_2" class="data-value double" data-double="taxes_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_other_pay_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.cost_other_pay_plan_1" class="data-value double" data-double="taxes_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_other_pay_plan_2" class="data-value double" data-double="taxes_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_other_pay_plan_3" class="data-value" disabled></td>
+			</tr>
+		</tbody>
+	</table>
+	<button type="submit" class="bttn bttn-color ms-auto" @disable>Сохранить</button>
+</form>

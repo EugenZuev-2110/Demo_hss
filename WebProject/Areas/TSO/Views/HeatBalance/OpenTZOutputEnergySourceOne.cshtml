@@ -1,0 +1,256 @@
+﻿@model WebProject.Areas.TSO.Models.TZOutputEnergySourceOneDataViewModel
+@{
+	string btn_disable = string.Empty; string is_checked = string.Empty; short db_action = 0;
+}
+
+@if (Model.input_tz_id > 0)
+{
+	db_action = 1;	
+}
+
+<div class="data-row">
+	<h4>Поставка тепловой энергии осуществляется в зоне действия источника:</h4>
+	<button class="bttn bttn-square bttn-icon-save ms-auto" type="submit" form="tz_output_energy_form" title="Сохранить"></button>
+</div>
+<form class="needs-validation" novalidate asp-controller="HeatBalance" asp-action="TZOutputEnergySource_Save" asp-antiforgery="true" asp-area="TSO" id="tz_output_energy_form"
+		  data-ajax-failure="onFailedFormTZOutput" data-ajax-success="onSuccessFormTZOutput" data-ajax-begin="onBeginFormTZOutput" data-ajax="true" data-ajax-method="POST">
+	<input type="hidden" name="output_tz_id" value="@Model.output_tz_id" id="output_tz_id" />
+	<input type="hidden" name="data_status" value="@Model.data_status" />
+	<input type="hidden" name="perspective_year" value="@Model.perspective_year" />
+	<input type="hidden" name="db_action" value="@db_action" />
+	<input type="hidden" name="old_input_tz_id" value="@Model.input_tz_id" />
+	<input type="hidden" name="old_source_id" value="@Model.source_id" />
+	<input type="hidden" name="old_buy_place_id" value="@Model.buy_place_id" id="old_buy_place_id"/>
+	<div class="data-row">
+		<div class="data-item">
+			<label class="data-label">УНОМ тарифной зоны и наименование ТСО</label>
+			<select class="selectpicker data-value xxl-stretch" id="paramNumberTZInput" name="input_tz_id" data-live-search="true" placeholder="УНОМ ТЗ - краткое наименование ТСО" required>
+				@foreach (var tz_list in ViewBag.TZTSOList)
+				{
+					if (tz_list.tz_id == Model.input_tz_id)
+					{
+						<option value="@tz_list.tz_id" selected>@tz_list.tz_name</option>
+					}
+					if (tz_list.tz_id != Model.input_tz_id && tz_list.tz_id != Model.output_tz_id)
+					{
+						<option value="@tz_list.tz_id">@tz_list.tz_name</option>
+					}
+				}
+			</select>
+			<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Выберите значение из списка"></a>
+		</div>
+		<div class="data-item">
+			<label class="data-label">УНОМ и наименование источника</label>
+			<select class="selectpicker data-value xxl-stretch" id="paramNumberSource" name="source_id" data-live-search="true" placeholder="УНОМ ИСТ - Наименование источника тепловой энергии" required>
+				@if (Model.source_id > 0) {
+					foreach (var sources_list in ViewBag.TZSourcesList)
+					{
+						if (sources_list.value_id == Model.source_id)
+						{
+							<option value="@sources_list.value_id" selected>@sources_list.value_name</option>
+						}
+						if (sources_list.value_id != Model.source_id)
+						{
+							<option value="@sources_list.value_id">@sources_list.value_name</option>
+						}
+					}
+				}
+			</select>
+			<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Выберите значение из списка"></a>
+		</div>
+	</div>
+	<div class="data-row">
+		<label class="data-value">Покупка тепловой энергии осуществляется:</label>
+		<div class="data-row">
+			<label class="data-item">
+				<span class="data-label sublabel">с коллекторов источников тепла</span>
+				@{
+					is_checked = Model.buy_place_id == 1 ? "checked" : "";
+				}
+				<input type="radio" name="buy_place_id" value="1" class="data-check" @is_checked required>
+				<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Выберите значение"></a>
+			</label>
+			<label class="data-item">
+				<span class="data-label sublabel">из тепловой сети</span>
+				@{
+					is_checked = Model.buy_place_id == 2 ? "checked" : "";
+				}
+				<input type="radio" name="buy_place_id" value="2" class="data-check" @is_checked required>
+				<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Выберите значение"></a>
+			</label>
+		</div>
+	</div>
+	<div class="data-block">
+		@*<table class="display compact table-inp-stretch" style="width:100%">*@
+		<div class="scroll-table-wrapper">
+			<table class="table-inp-stretch" style="width:100%">
+				<thead>
+					<tr>
+						<th rowspan="2">Показатель, <span class="data-unit">Гкал</span></h4></th>
+						<th colspan="3">Факт (на 01.01.@Model.data_status)</th>
+						<th colspan="3">План</th>
+					</tr>
+					<tr>
+						<th style="position: static;">I полугодие</th>
+						<th>II полугодие</th>
+						<th>Год</th>
+						<th>I полугодие</th>
+						<th>II полугодие</th>
+						<th>Год</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>Покупная тепловая энергия, всего</td>
+						<td><input type="text" value="@Model.buy_energy_fact_1" id="buy_energy_fact_1" class="data-value" disabled></td>
+						<td><input type="text" value="@Model.buy_energy_fact_2" id="buy_energy_fact_2" class="data-value" disabled></td>
+						<td><input type="text" value="@Model.buy_energy_fact_3" id="buy_energy_fact_3" class="data-value" disabled></td>
+						<td><input type="text" value="@Model.buy_energy_plan_1" id="buy_energy_plan_1" class="data-value" disabled></td>
+						<td><input type="text" value="@Model.buy_energy_plan_2" id="buy_energy_plan_2" class="data-value" disabled></td>
+						<td><input type="text" value="@Model.buy_energy_plan_3" id="buy_energy_plan_3" class="data-value" disabled></td>
+					</tr>
+					<tr>
+						<td>а) на технологические нужды</td>
+						<td><input type="text" name="buy_energy_techneed_fact_1" id="buy_energy_techneed_fact_1" value="@Model.buy_energy_techneed_fact_1" class="data-value double"></td>
+						<td><input type="text" name="buy_energy_techneed_fact_2" id="buy_energy_techneed_fact_2" value="@Model.buy_energy_techneed_fact_2" class="data-value double"></td>
+						<td><input type="text" id="buy_energy_techneed_fact_3" value="@Model.buy_energy_techneed_fact_3" class="data-value" disabled></td>
+						<td><input type="text" name="buy_energy_techneed_plan_1" id="buy_energy_techneed_plan_1" value="@Model.buy_energy_techneed_plan_1" class="data-value double"></td>
+						<td><input type="text" name="buy_energy_techneed_plan_2" id="buy_energy_techneed_plan_2" value="@Model.buy_energy_techneed_plan_2" class="data-value double"></td>
+						<td><input type="text" id="buy_energy_techneed_plan_3" value="@Model.buy_energy_techneed_plan_3" class="data-value" disabled></td>
+					</tr>
+					<tr>
+						<td>- включая покупку потерь</td>
+						<td><input type="text" name="buy_loss_techneed_fact_1" id="buy_loss_techneed_fact_1" value="@Model.buy_loss_techneed_fact_1" class="data-value double"></td>
+						<td><input type="text" name="buy_loss_techneed_fact_2" id="buy_loss_techneed_fact_2" value="@Model.buy_loss_techneed_fact_2" class="data-value double"></td>
+						<td><input type="text" id="buy_loss_techneed_fact_3" value="@Model.buy_loss_techneed_fact_3" class="data-value" disabled></td>
+						<td><input type="text" name="buy_loss_techneed_plan_1" id="buy_loss_techneed_plan_1" value="@Model.buy_loss_techneed_plan_1" class="data-value double"></td>
+						<td><input type="text" name="buy_loss_techneed_plan_2" id="buy_loss_techneed_plan_2" value="@Model.buy_loss_techneed_plan_2" class="data-value double"></td>
+						<td><input type="text" id="buy_loss_techneed_plan_3" value="@Model.buy_loss_techneed_plan_3" class="data-value" disabled></td>
+					</tr>
+					<tr>
+						<td>б) на хозяйственные нужды</td>
+						<td><input type="text" name="buy_energy_houseneed_fact_1" id="buy_energy_houseneed_fact_1" value="@Model.buy_energy_houseneed_fact_1" class="data-value double"></td>
+						<td><input type="text" name="buy_energy_houseneed_fact_2" id="buy_energy_houseneed_fact_2" value="@Model.buy_energy_houseneed_fact_2" class="data-value double"></td>
+						<td><input type="text" id="buy_energy_houseneed_fact_3" value="@Model.buy_energy_houseneed_fact_3" class="data-value" disabled></td>
+						<td><input type="text" name="buy_energy_houseneed_plan_1" id="buy_energy_houseneed_plan_1" value="@Model.buy_energy_houseneed_plan_1" class="data-value double"></td>
+						<td><input type="text" name="buy_energy_houseneed_plan_2" id="buy_energy_houseneed_plan_2" value="@Model.buy_energy_houseneed_plan_2" class="data-value double"></td>
+						<td><input type="text" id="buy_energy_houseneed_plan_3" value="@Model.buy_energy_houseneed_plan_3" class="data-value" disabled></td>
+					</tr>
+					<tr>
+						<td>- включая покупку потерь</td>
+						<td><input type="text" name="buy_loss_houseneed_fact_1" id="buy_loss_houseneed_fact_1" value="@Model.buy_loss_houseneed_fact_1" class="data-value double"></td>
+						<td><input type="text" name="buy_loss_houseneed_fact_2" id="buy_loss_houseneed_fact_2" value="@Model.buy_loss_houseneed_fact_2" class="data-value double"></td>
+						<td><input type="text" id="buy_loss_houseneed_fact_3" value="@Model.buy_loss_houseneed_fact_3" class="data-value" disabled></td>
+						<td><input type="text" name="buy_loss_houseneed_plan_1" id="buy_loss_houseneed_plan_1" value="@Model.buy_loss_houseneed_plan_1" class="data-value double"></td>
+						<td><input type="text" name="buy_loss_houseneed_plan_2" id="buy_loss_houseneed_plan_2" value="@Model.buy_loss_houseneed_plan_2" class="data-value double"></td>
+						<td><input type="text" id="buy_loss_houseneed_plan_3" value="@Model.buy_loss_houseneed_plan_3" class="data-value" disabled></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</form>
+
+<script type="text/javascript" src="@Url.Content("~/hss/js/popup_common_scripts.js")"></script>
+<script type="text/javascript">
+
+	$(document).ready(function () {
+
+		document.querySelector('#paramNumberTZInput').addEventListener('change', (event) => {
+			GetSourcesListByTZ($('#paramNumberTZInput').val(), $('#data_status').val());
+		});
+
+		$("input.double[type=text]").keyup(function (e) {
+			let val_id = e.target.id;
+			let s_name = val_id.substring(0, val_id.length - 6);
+			let s_fp_period = val_id.substring(val_id.length - 6, val_id.length);
+			let s_fp = val_id.substring(val_id.length - 6, val_id.length - 1);
+
+			SetYearValueSum(s_name, s_fp);
+
+			//Покупная тепловая энергия, всего
+			let bet = $('#buy_energy_techneed_' + s_fp_period).val();
+			let beh = $('#buy_energy_houseneed_' + s_fp_period).val();
+			
+			let be = Number(bet.replace(",", ".")) + Number(beh.replace(",", "."));
+			$('#buy_energy_' + s_fp_period).val(be.toFixed(2).toString().replace(".", ","));
+
+			SetYearValueSum("buy_energy_", s_fp);
+			//Покупная тепловая энергия, всего
+			
+		});
+
+		$('input[type=radio][name=buy_place_id]').change(function () {
+			let bp_id = $("#old_buy_place_id").val();
+			if (bp_id === "0")
+			{
+				$.ajax({
+				type: 'GET',
+				url: '@Html.Raw(Url.Action("GetTZOutputEnergySourceOne", "HeatBalance", new { Area = "TSO" }))',
+				data: {
+					source_id: 0,
+					buy_place_id: this.value,
+					input_tz_id: 0,
+					output_tz_id: $('#output_tz_id').val(),
+					data_status: $('#data_status').val(),
+					perspective_year: $('#perspective_year_popup_second').val()
+				},
+				dataType: 'json'
+			})
+				.done(function (result) {
+					if (result.success == true) {
+						$("#buy_energy_fact_1").val(result.fact_1);
+						$("#buy_energy_fact_2").val(result.fact_2);
+						$("#buy_energy_fact_3").val(result.fact_3);
+						$("#buy_energy_plan_1").val(result.plan_1);
+						$("#buy_energy_plan_2").val(result.plan_2);
+						$("#buy_energy_plan_3").val(result.plan_3);
+					}
+				});
+			}
+		});
+
+	});
+
+	function GetSourcesListByTZ(input_tz_id, data_status) {
+        $.ajax({
+			url: '@Html.Raw(Url.Action("GetSourcesListByTZ", "HSS", new { Area = "" }))',
+            type: 'POST',
+			data: { tz_id: input_tz_id, data_status: data_status }
+        }).done(function (data) {
+			changeSelectByOtherSelect(data.sources, "paramNumberSource");
+        });
+    }
+
+	var onBeginFormTZOutput = function (xhr) {
+		showPreloader();
+	};
+
+	var onFailedFormTZOutput = function (xhr) {
+		hidePreloader();
+	};
+
+	var onSuccessFormTZOutput = function (xhr) {
+		if (xhr.success == true) {
+			$.ajax({
+				type: 'GET',
+				url: '/TSO/HeatBalance/OnGetCallTZ_OutputEnergySourcesListData_PartialViewComponent',
+				data: {
+					tz_id: $('#output_tz_id').val(),
+					data_status: $('#data_status').val(),
+					perspective_year: $('#perspective_year_popup_second').val()
+				},
+				dataType: 'html'
+			})
+				.done(function (result) {
+					var div = $('#div_tz_output_sources_list');
+					div.html("");
+					div.html(result);
+				});
+			$("#refresh_tz_output_table").val(1);
+			$("#div_tz_output_energy_one").hide();
+		}
+		hidePreloader();
+	};
+
+</script>

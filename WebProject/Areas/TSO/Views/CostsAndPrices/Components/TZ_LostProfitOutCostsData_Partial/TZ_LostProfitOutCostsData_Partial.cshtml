@@ -1,0 +1,78 @@
+﻿@model WebProject.Areas.TSO.Models.TZLostProfitOutCostsViewModel
+@{
+	Layout = null; string disable = "";
+}
+@if (Model.tz_id == 0)
+{
+	disable = "disabled";
+}
+<form asp-controller="CostsAndPrices" asp-action="TZLostProfitOutCosts_Save" asp-antiforgery="true" asp-area="TSO" 
+	  data-ajax-failure="onFailedFormTZ" data-ajax-success="onSuccessFormTZ" data-ajax-begin="onBeginFormTZ" data-ajax="true" data-ajax-method="POST">
+	<input type="hidden" name="tz_id" value="@Model.tz_id" />
+	<input type="hidden" name="data_status" value="@Model.data_status" />
+	<input type="hidden" name="perspective_year" value="@Model.perspective_year" />
+	<table class="table-inp-stretch" style="width:100%;">
+		<thead>
+			<tr>
+				<th rowspan="2"></th>
+				<th colspan="3">План</th>
+			</tr>
+			<tr>
+				<th>I полугодие</th>
+				<th>II полугодие</th>
+				<th>Год</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>Всего недополученных доходов и выпадающих расходов, <span class="data-unit">тыс. руб.</span></td>
+				<td><input type="text" asp-for="@Model.lost_revenue_all_plan_1" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.lost_revenue_all_plan_2" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.lost_revenue_all_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>1. Недополученные доходы по результатам досудебного рассмотрения споров, <span class="data-unit">тыс. руб.</span></td>
+				<td><input type="text" asp-for="@Model.lost_revenue_pretrial_dispute_plan_1" class="data-value double" data-double="lost_revenue_nvv"></td>
+				<td><input type="text" asp-for="@Model.lost_revenue_pretrial_dispute_plan_2" class="data-value double" data-double="lost_revenue_nvv"></td>
+				<td><input type="text" asp-for="@Model.lost_revenue_pretrial_dispute_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>2. Недополученные доходы по результатам рассмотрения разногласий, <span class="data-unit">тыс. руб.</span></td>
+				<td><input type="text" asp-for="@Model.lost_revenue_disagree_plan_1" class="data-value double" data-double="lost_revenue_nvv"></td>
+				<td><input type="text" asp-for="@Model.lost_revenue_disagree_plan_2" class="data-value double" data-double="lost_revenue_nvv"></td>
+				<td><input type="text" asp-for="@Model.lost_revenue_disagree_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>3. Экономически обоснованные расходы, не учтённые органом регулирования при<br>установлении тарифов в прошлом периоде, <span class="data-unit">тыс. руб.</span></td>
+				<td><input type="text" asp-for="@Model.cost_notaccounted_reg_body_plan_1" class="data-value double" data-double="lost_revenue_nvv"></td>
+				<td><input type="text" asp-for="@Model.cost_notaccounted_reg_body_plan_2" class="data-value double" data-double="lost_revenue_nvv"></td>
+				<td><input type="text" asp-for="@Model.cost_notaccounted_reg_body_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>4. Расходы, связанные с незапланированным ростом цен на продукцию, <span class="data-unit">тыс. руб.</span></td>
+				<td><input type="text" asp-for="@Model.cost_grow_price_product_plan_1" class="data-value double" data-double="lost_revenue_nvv"></td>
+				<td><input type="text" asp-for="@Model.cost_grow_price_product_plan_2" class="data-value double" data-double="lost_revenue_nvv"></td>
+				<td><input type="text" asp-for="@Model.cost_grow_price_product_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>5. Расходы, связанные с обслуживанием заёмных средств, привлекаемых для покрытия<br>недостатка средств, <span class="data-unit">тыс. руб.</span></td>
+				<td><input type="text" asp-for="@Model.cost_service_borrowed_funds_plan_1" class="data-value double" data-double="lost_revenue_nvv"></td>
+				<td><input type="text" asp-for="@Model.cost_service_borrowed_funds_plan_2" class="data-value double" data-double="lost_revenue_nvv"></td>
+				<td><input type="text" asp-for="@Model.cost_service_borrowed_funds_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>6.  Выпадающие доходы/экономия средств от подключения объектов заявителей,<br>подключаемая нагрузка которых не превышает 0,1 Гкал/ч, <span class="data-unit">тыс. руб.</span></td>
+				<td><input type="text" asp-for="@Model.lost_revenue_from_connect_obj_plan_1" class="data-value double" data-double="lost_revenue_nvv"></td>
+				<td><input type="text" asp-for="@Model.lost_revenue_from_connect_obj_plan_2" class="data-value double" data-double="lost_revenue_nvv"></td>
+				<td><input type="text" asp-for="@Model.lost_revenue_from_connect_obj_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>7. Другие недополученные доходы и выпадающие расходы, <span class="data-unit">тыс. руб.</span></td>
+				<td><input type="text" asp-for="@Model.lost_revenue_other_plan_1" class="data-value double" data-double="lost_revenue_nvv"></td>
+				<td><input type="text" asp-for="@Model.lost_revenue_other_plan_2" class="data-value double" data-double="lost_revenue_nvv"></td>
+				<td><input type="text" asp-for="@Model.lost_revenue_other_plan_3" class="data-value" disabled></td>
+			</tr>
+		</tbody>
+	</table>
+	<button type="submit" class="bttn bttn-color ms-auto" @disable>Сохранить</button>
+</form>

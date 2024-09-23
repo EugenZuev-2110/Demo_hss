@@ -1,0 +1,154 @@
+﻿@{
+    ViewData["Title"] = "УНОМЫ";
+}
+<link rel="stylesheet" type="text/css" id="theme" href="~/Content/theme-default.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
+<style>
+    .animate__zoomInDown {
+      animation-duration: 2s; 
+    }
+    .animate__rollIn {
+      animation-duration: 2s; 
+    }
+    .animate__slideInRight {
+      animation-duration: 2s; 
+    }
+
+    .nav-tabs {
+        margin-top: 10px !important;
+        margin-left: 15px;
+    }
+</style>
+
+<div id="partial-content">
+
+    <div class="panel panel-default">
+        <div id="panel panel-default">
+            <fieldset>
+                @*<div style="display: -webkit-inline-box; margin: 20px 20px 10px; width: 150px;">
+                    <label for="start">С</label>
+                    <input type="date" value="@(DateTime.Now.ToString("yyyy-MM-dd"))" name="startDate" id="startDate"/>
+                </div>
+
+                <div style="display: -webkit-inline-box; margin: 20px 20px 10px; width: 150px;">
+                    <label for="end">По</label>
+                    <input type="date" value="@(DateTime.Now.ToString("yyyy-MM-dd"))" name="endDate" id="endDate"/>
+                </div>*@
+
+                <div style="margin: 20px 20px 10px; width: 800px;">
+                    @if (ViewData["IsAdmin"].ToString() == "True")
+                    {
+                        <div style="display: -webkit-inline-box;">
+                            <button class="btn btn-default animate__animated animate__zoomInDown" style="font-weight: bold; font-style: italic; font-size: large; color: darkblue; background-color: cyan;" onclick="UnomOpen(0)">Добавить УНОМ</button>
+                        </div>
+                    }
+                    @*<button class="btn btn-default animate__animated animate__rollIn" onclick="LoadTable()">Загрузить</button>*@
+                    <button class="btn btn-default animate__animated animate__slideInRight exportExcelFull" id="excelFull">Выгрузить в Excel</button>
+                    <label for="start">Поиск по УНОМу или Исполнителю</label>
+                    <input style="width: 100%" type="text" onkeypress="return Search(event)" name="searchText" id="searchText"/>
+                    <input type="hidden" name="filter" id="filter" value="all" />
+                </div>
+            </fieldset>
+        </div>
+
+        <ul class="nav nav-tabs">
+            <li class="nav-item active" id="nav_item_1">
+                <a class="nav-link" data-filter="all" href="#!">Все</a>
+            </li>
+            <li class="nav-item" id="nav_item_2">
+                <a class="nav-link" data-filter="my" href="#!">Мои</a>
+            </li>
+            @if (ViewData["IsAdmin"].ToString() == "True")
+            {
+                <li class="nav-item" id="nav_item_3">
+                    <a class="nav-link" data-filter="execution_all" href="#!">На исполнении</a>
+                </li>
+            }
+            else
+            {
+                <li class="nav-item" id="nav_item_3">
+                    <a class="nav-link" data-filter="execution" href="#!">На исполнении</a>
+                </li>
+            }
+        </ul>
+
+        <div class="panel-body">
+            @await Component.InvokeAsync("UnomsList", new { filter = "all" })
+        </div>
+    </div>
+
+</div>
+
+@section modalsection {
+<div id="modal-section">
+    <div id="modal-open-fd" class="modal fade" data-backdrop="static" tabindex='-1'>
+        @*onclick="TableOff();"*@
+        <div class="modal-dialog modal-large" style="width: 1100px; margin-left: 25%">
+            <div class="modal-content">
+                <div id="modal-open-fd-header" class="modal-header">
+                    <button class="close" type="button" data-dismiss="modal">×</button>
+                    <h4 class="modal-title"></h4>
+                </div>
+                <div id="div-open-fd"></div>
+            </div>
+        </div>
+    </div>
+</div>
+}
+
+
+@section Scripts {
+    
+
+    @*<script src="/js/jquery.validate.min.js"></script>*@
+}
+
+@section pageJs {
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            //$('#table-part').empty();
+            //debugger
+            //oTable = $('#table-part');
+            //if(oTable != null)oTable.fnDestroy();
+            
+            $('.datepicker').datepicker({
+                format: "dd.mm.yyyy",
+                autoclose: true,
+                language: 'ru'
+            });
+
+        });
+
+        $('.nav-item').on("click", function (event) {
+            $('.nav-item').removeClass('active');
+            var nav_item = event.target.parentNode;
+            nav_item.className = nav_item.className + " active";
+            var filter = event.target.getAttribute("data-filter");
+            $('#filter').val(filter);
+            $('#searchText').val('');
+            ajaxStart();
+            $.ajax({
+                type: 'GET',
+                url: '/Home/OnGetCallUnomsListViewComponent',
+                data: {
+                    filter: filter
+                },
+                dataType: 'html'
+            })
+                .done(function (result) {
+                    var div = $('.panel-body');
+                    div.html("");
+                    div.html(result);
+
+                    ajaxStop();
+                });
+
+            //alert();
+        });
+
+    </script>
+}
+

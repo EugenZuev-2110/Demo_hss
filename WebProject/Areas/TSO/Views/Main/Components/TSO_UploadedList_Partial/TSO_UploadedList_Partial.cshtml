@@ -1,0 +1,60 @@
+﻿@model List<WebProject.Areas.TSO.Models.TSOUploadedListViewModel>
+@{
+	Layout = null;
+	int cnt_columns = 3;
+}
+
+<div class="table-block">
+	<div class="table-buttons tsoUploadTable-buttons"></div>
+	<table id="tsoUploadTable" class="display compact" style="width:100%">
+		<thead>
+			<tr>
+				<th>Наличие в базе</th>
+				<th>Наименование</th>
+				<th>ИНН</th>
+			</tr>
+			<tr class="filter-row ">
+				@for (int i = 0; i < @cnt_columns; i++)
+				{
+					if (i == 0)
+					{
+						<th class="dtfc-fixed-left" style="left:0; position:sticky;"><input type="text" class="filter-col-0" /></th>
+					}
+					else
+					{
+						<th><input type="text" class="filter-col-@i" /></th>
+					}
+				}
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var tso_list in Model)
+			{
+				<tr>
+					@if (tso_list.Id == null)
+					{
+						<td>отсутствует</td>
+					}
+					else {
+						<td>да</td>
+					}
+					<td>@tso_list.Name</td>
+					<td>@tso_list.INN</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>
+
+<div class="data-row table-summary">
+	<div class="data-item rows-count">
+		<h5>Всего записей:</h5>
+		<p><span class="mark-color" id="all_cnt_rows"></span></p>
+	</div>
+	<div class="data-item data-item-right">
+		<div class="load-status wait">Ожидание загрузки</div>
+		<button type="button" class="bttn bttn-color" onclick="UploadTSOList()">Загрузить данные</button>
+		<button type="button" class="bttn bttn-color" onclick="DownloadTemplates(1)">Выгрузить шаблон</button>
+		@*<button type="button" class="bttn bttn-color">Провести проверку</button>*@
+	</div>
+</div>

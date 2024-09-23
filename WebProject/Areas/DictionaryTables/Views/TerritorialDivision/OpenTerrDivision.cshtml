@@ -1,0 +1,89 @@
+﻿@model WebProject.Areas.DictionaryTables.Models.TerritorialDivisionGeneralInfoDataOneViewModel
+
+	<div class="modal-dialog modal-dialog-centered">
+	
+		<div class="modal-content">
+			<div class="modal-header">
+				<h3 class="modal-title" id="editDataLabel">Территориальная единица</h3>
+			<button type="button" class="btn-close" data-bs-dismiss="modal" onclick="RefreshTable();" aria-label="Close"></button>
+				<input type="hidden" name="Id" value="@Model.Id" id="terrDivision_id_input" />
+				<input type="hidden" name="unom_p" value="@Model.unom_p" id="unom_p_input" />
+				<input type="hidden" name="district_num" value="@Model.district_num" id="unom_p_input" />
+
+			</div>
+			<div class="modal-body">
+				<div class="data-block static-block data-params">
+					<div class="data-row">
+						<div class="data-item">
+							<label class="data-label">Уникальный номер района (поселения)</label>
+						<select class="selectpicker data-value xxl-stretch" data-size="5" id="paramNumberDistr" data-live-search="true" placeholder="УНОМ района (поселения)">
+							@if (@Model.Id == 0 ||  ViewBag.Action_for == "copy")
+							{
+								<option value="" selected disabled>При добавлении нового района, УНОМ генерируется автоматически</option>
+							}
+							@foreach (var distr_list in ViewBag.DistrList)
+							{
+									if (distr_list.distr_id == Model.Id && ViewBag.Action_for != "copy")
+								{
+									<option value="@distr_list.distr_id" selected>@distr_list.distr_name</option>
+								}
+								if (distr_list.distr_id != Model.Id)
+								{
+									<option value="@distr_list.distr_id">@distr_list.distr_name</option>
+								}
+							}
+							</select>
+						</div>
+					</div>
+				</div>
+	
+				<div class="scroll-block-wrapper" style="max-height: 70vh;">
+					<div class="data-block scroll-block">
+						<div class="accordion data-block">
+							<div class="border-block">
+								<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel1" aria-expanded="false">Общие сведения</button>
+								<div id="panel1" class="accordion-collapse collapse">
+									<div class="accordion-body">
+										@await Component.InvokeAsync("TerritorialDivisionGeneralInfo_Partial", new { distr_id = Model.Id, data_status = Model.data_status, action_for = ViewBag.Action_for })
+									</div>
+								</div>
+							</div>
+							<div class=" border-block">
+								<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel2" aria-expanded="false">Климатические характеристики</button>
+								<div id="panel2" class="accordion-collapse collapse">
+									<div class="accordion-body">
+										@await Component.InvokeAsync("TerritorialDivisionClimatic_Partial", new { distr_id = Model.Id, data_status = Model.data_status, action_for = ViewBag.Action_for })
+									</div>
+								</div>
+							</div>
+							<div class="border-block">
+								<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel3" aria-expanded="false">Численость населениия по годам реализации схемы</button>
+								<div id="panel3" class="accordion-collapse collapse">
+										<div class="accordion-body">
+											@await Component.InvokeAsync("TerritorialDivisionPopulation_Partial", new { distr_id = Model.Id, data_status = Model.data_status })	
+										</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="bttn" data-bs-dismiss="modal">Отмена</button>
+			<button type="button" class="bttn bttn-color" id="btnCopyTerrDivision" onclick="OpenPopupTerrDivision(@Model.Id, 'copy');">Создать копию</button>
+			</div>
+		</div>
+	
+	</div>
+
+
+<script type="text/javascript" src="@Url.Content("~/hss/js/popup_common_scripts.js")"></script>
+<script type="text/javascript">
+
+	$(document).ready(function () {
+		
+		document.querySelector('#paramNumberDistr').addEventListener('change', (event) => {
+			OpenPopupTerrDivision($('#paramNumberDistr').val());
+		});
+	});
+</script>

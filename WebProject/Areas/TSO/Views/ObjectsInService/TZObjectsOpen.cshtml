@@ -1,0 +1,267 @@
+﻿@model WebProject.Areas.TSO.Models.TZObjectsDataViewModel
+
+@{
+	string btn_disable = string.Empty; int ds = @Model.data_status - 1; string is_checked = string.Empty;
+}
+
+<div class="modal-dialog modal-dialog-centered">
+	<div class="modal-content">
+		<div class="modal-header">
+			<h3 class="modal-title" id="editDataLabel">Данные о тарифной зоне</h3>
+			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		</div>
+		<div class="modal-body">
+			<div class="data-row static-block">
+				<div class="data-item">
+					<label class="data-label">Уникальный номер тарифной зоны и наименование ТСО</label>
+					<select class="selectpicker data-value stretch" id="paramNumberTZ" data-live-search="true" placeholder="УНОМ ТЗ - краткое наименвание ТСО">
+						@foreach (var tz_list in ViewBag.TZTSOList)
+						{
+							if (tz_list.tz_id == Model.tz_id)
+							{
+								<option value="@tz_list.tz_id" selected>@tz_list.tz_name</option>
+							}
+							if (tz_list.tz_id != Model.tz_id)
+							{
+								<option value="@tz_list.tz_id">@tz_list.tz_name</option>
+							}
+						}
+					</select>
+				</div>
+				<div class="data-item">
+					<label class="data-label">Выберите год:</label>
+					<select class="selectpicker data-value md-fix" id="perspective_year_popup">
+						@foreach (var p_years_list in ViewBag.PerspectiveYearsList)
+						{
+							if (p_years_list.perspective_year == Model.perspective_year)
+							{
+								<option value="@p_years_list.perspective_year" selected>@p_years_list.perspective_year_dt</option>
+							}
+							if (p_years_list.perspective_year != Model.perspective_year)
+							{
+								<option value="@p_years_list.perspective_year">@p_years_list.perspective_year_dt</option>
+							}
+						}
+					</select>
+				</div>
+				<div class="data-item">
+					<div class="note">Базовый год - <span class="note-base-year">@ds (01.01.@Model.data_status)</span>.</div>
+				</div>
+			</div>
+			<div class="scroll-block-wrapper" style="max-height: 78vh;">
+				<div class="data-block scroll-block">
+					<div class="data-row">
+						<div class="col-12 col-lg-3">
+							<div class="data-block border-block me-lg-1">
+								<h4>Территория действия ТЗ</h4>
+								<table>
+									<thead>
+										<tr>
+											<th>Округ</th>
+											<th>Районы</th>
+										</tr>
+									</thead>
+									<tbody>
+										@foreach (var ter in ViewBag.TZTerritoryList)
+										{
+											<tr>
+												<td>@ter.region_name</td>
+												<td>@ter.districts</td>
+											</tr>
+										}
+									</tbody>
+								</table>
+							</div>
+						</div>
+						<div class="col-12 col-lg-9">
+							<div class="data-block data-params ms-lg-1">
+								<div class="data-row border-block">
+									<h4>Виды деятельности</h4>
+									<div class="data-block stretch">
+										<label class="data-item data-item-right">
+											<span class="data-label">Комбинированное производство, более 25 МВт</span>
+											@{ is_checked = Model.combine_prod_more25 == true ? "checked" : ""; }
+											<input type="checkbox" @is_checked class="data-check" disabled>
+										</label>
+										<label class="data-item data-item-right">
+											<span class="data-label">Комбинированное производство, менее 25 МВт</span>
+											@{
+												is_checked = Model.combine_prod_less25 == true ? "checked" : "";
+											}
+											<input type="checkbox" @is_checked class="data-check" disabled>
+										</label>
+									</div>
+									<div class="data-block stretch">
+										<label class="data-item data-item-right">
+											<span class="data-label">Некомбинированное производство</span>
+											@{
+												is_checked = Model.not_combine_prod == true ? "checked" : "";
+											}
+											<input type="checkbox" @is_checked class="data-check" disabled>
+										</label>
+										<label class="data-item data-item-right">
+											<span class="data-label">Договор поставки</span>
+											@{
+												is_checked = Model.delivery_contract == true ? "checked" : "";
+											}
+											<input type="checkbox" @is_checked class="data-check" disabled>
+										</label>
+									</div>
+									<div class="data-block stretch">
+										<label class="data-item data-item-right">
+											<span class="data-label">Передача</span>
+											@{
+												is_checked = Model.transfer == true ? "checked" : "";
+											}
+											<input type="checkbox" @is_checked class="data-check" disabled>
+										</label>
+										<label class="data-item data-item-right">
+											<span class="data-label">Сбыт</span>
+											@{
+												is_checked = Model.sale == true ? "checked" : "";
+											}
+											<input type="checkbox" @is_checked class="data-check" disabled>
+										</label>
+									</div>
+								</div>
+
+								<div class="data-row border-block">
+									<h4>Дифференциация тарифов</h4>
+									<label class="data-item data-item-right">
+										<span class="data-label">Без дифференциации</span>
+										@{
+											is_checked = Model.tariff_differentiation == 1 ? "checked" : "";
+										}
+										<input type="checkbox" @is_checked class="data-check" disabled>
+									</label>
+									<label class="data-item data-item-right">
+										<span class="data-label">До тепловых пунктов</span>
+										@{
+											is_checked = Model.tariff_differentiation == 2 ? "checked" : "";
+										}
+										<input type="checkbox" @is_checked class="data-check" disabled>
+									</label>
+									<label class="data-item data-item-right">
+										<span class="data-label">После тепловых пунктов</span>
+										@{
+											is_checked = Model.tariff_differentiation == 3 ? "checked" : "";
+										}
+										<input type="checkbox" @is_checked class="data-check" disabled>
+									</label>
+								</div>
+								<div class="data-row border-block">
+									<h4 class="flex-20">Общее количество объектов в обслуживании</h4>
+									<div class="table-summary data-row">
+										<div class="data-table-block">
+											<p class="data-item">Источники тепловой энергии: <span class="mark-color">@Model.cnt_sources</span><span class="data-unit"> шт.</span></p>
+											<p class="data-item">∑ Q<sub>уст</sub>: <span class="mark-color">@Model.inst_heat_power_s</span><span class="data-unit"> Гкал/ч</span></p>
+											<p class="data-item">Насосно-перекачивающие станции: <span class="mark-color">@Model.cnt_pump_stations</span><span class="data-unit"> шт.</span></p>
+											<p class="data-item">∑ G<sub>НПС</sub>: <span class="mark-color">@Model.sum_pump_capacity_ps</span><span class="data-unit"> тыс. м<sup>3</sup>/ч</span></p>
+										</div>
+										<div class="data-table-block">
+											<p class="data-item">Тепловые пункты: <span class="mark-color">@Model.cnt_hp_all</span><span class="data-unit"> шт.</span></p>
+											<p class="data-item">∑ Q<sub>уст</sub>: <span class="mark-color">@Model.inst_heat_power_all_hp</span><span class="data-unit"> Гкал/ч</span></p>
+											<p class="data-item">Участки тепловых сетей: <span class="mark-color">@Model.cnt_heat_networks</span><span class="data-unit"> шт.</span></p>
+											<p class="data-item">∑ V<sub>се</sub>: <span class="mark-color">@Model.sum_volume_all_net</span><span class="data-unit"> тыс. м<sup>3</sup></span></p>
+										</div>
+										<div class="data-table-block">
+											<p class="data-item">Ду<sub>ср</sub>: <span class="mark-color">@Model.aver_diam_all_net</span><span class="data-unit"> мм</span></p>
+											<p class="data-item">∑ М: <span class="mark-color">@Model.sum_mat_char_all_net</span><span class="data-unit"> м<sup>2</sup>/ч</span></p>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="data-block zone-objects-table">
+						<div class="data-row">
+							<h4>Объекты в тарифной зоне</h4>
+							<button class="bttn bttn-color ms-auto" type="button" title="Изменить объекты" onclick="GoToObjects();" disabled>Изменить объекты</button>
+						</div>
+						<div class="tabs-block">
+							<input type="hidden" id="cur_action_name_pop" value="OnGetCallTZOne_SourcesList_PartialViewComponent" />
+							<input type="hidden" id="cur_table_name_pop" value="tzSourcesTable" />
+							<ul class="nav nav-tabs" role="tablist">
+								<li class="nav-item" role="presentation">
+									<button onclick="TabChangePopup(event);" data-tab-action="OnGetCallTZOne_SourcesList_PartialViewComponent" data-tab-tableid="tzSourcesTable" class="nav-link active" data-bs-toggle="tab" data-bs-target="#zoneObjListTab" type="button" role="tab" aria-controls="zoneSrcListTab" aria-selected="true">Перечень <br class="d-lg-none">источников</button>
+								</li>
+								<li class="nav-item" role="presentation">
+									<button onclick="TabChangePopup(event);" data-tab-action="OnGetCallTZOne_NetworksList_PartialViewComponent" data-tab-tableid="tzNetworksTable" class="nav-link" data-bs-toggle="tab" data-bs-target="#zoneObjListTab" type="button" role="tab" aria-controls="zoneNetPartsTab" aria-selected="false">Перечень <br class="d-lg-none">участков сетей</button>
+								</li>
+								<li class="nav-item" role="presentation">
+									<button onclick="TabChangePopup(event);" data-tab-action="OnGetCallTZOne_PSList_PartialViewComponent" data-tab-tableid="tzPSTable" class="nav-link" data-bs-toggle="tab" data-bs-target="#zoneObjListTab" type="button" role="tab" aria-controls="zoneNPSTab" aria-selected="false">Перечень <br class="d-lg-none">НПС</button>
+								</li>
+								<li class="nav-item" role="presentation">
+									<button onclick="TabChangePopup(event);" data-tab-action="OnGetCallTZOne_HPList_PartialViewComponent" data-tab-tableid="tzHPTable" class="nav-link" data-bs-toggle="tab" data-bs-target="#zoneObjListTab" type="button" role="tab" aria-controls="zoneHeatPointTab" aria-selected="false">Перечень <br class="d-lg-none">ТП</button>
+								</li>
+							</ul>
+							<div class="tab-content">
+								<div class="tab-pane fade show active" id="zoneObjListTab" role="tabpanel" style="display: none;">
+									<div class="table-block" id="tz_obj_div">
+										@await Component.InvokeAsync("TZOne_SourcesList_Partial", new { tz_id = Model.tz_id, data_status = Model.data_status, perspective_year = Model.perspective_year })
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="data-row table-summary">
+							<div class="data-item rows-count">
+								<h5>Всего записей:</h5>
+								<p><span class="mark-color" id="all_cnt_rows_popup"></span></p>
+							</div>
+							<p class="data-item">∑ Q<sub>уст</sub>: <span class="mark-color" id="inst_heat_power"></span><span class="data-unit"> Гкал/ч</span></p>
+							<p class="data-item">∑ G<sub>НПС</sub>: <span class="mark-color" id="pump_capacity_ps"></span><span class="data-unit"> тыс. м<sup>3</sup>/ч</span></p>
+							<p class="data-item">∑ V<sub>се</sub>: <span class="mark-color" id="volume_net"></span><span class="data-unit"> тыс. м<sup>3</sup></span></p>
+							<p class="data-item">Ду<sub>ср</sub>: <span class="mark-color" id="aver_diam_net"></span><span class="data-unit"> мм</span></p>
+							<p class="data-item">∑ М: <span class="mark-color" id="mat_char_net"></span><span class="data-unit"> м<sup>2</sup>/ч</span></p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<script type="text/javascript">
+
+	$(document).ready(function () {
+
+		document.querySelector('#paramNumberTZ').addEventListener('change', (event) => {
+			OpenPopupTZObjects($('#paramNumberTZ').val(), $('#perspective_year_popup').val());
+		});
+
+		document.querySelector('#perspective_year_popup').addEventListener('change', (event) => {
+			OpenPopupTZObjects($('#paramNumberTZ').val(), $('#perspective_year_popup').val());
+		});
+
+		TableInit('tzSourcesTable', 'full');
+
+	});
+
+	function GetDataOnTabPopup() {
+		showPreloader();
+
+		let action_name = $('#cur_action_name_pop').val();;
+		let table_name = $('#cur_table_name_pop').val();;
+
+		$.ajax({
+			type: 'GET',
+			url: '/TSO/ObjectsInService/' + action_name,
+			data: {
+				tz_id: @Model.tz_id,
+				data_status: $('#data_status').val(),
+				perspective_year: $('#perspective_year_popup').val()
+			},
+			dataType: 'html'
+		})
+			.done(function (result) {
+				var div = $('#tz_obj_div');
+				div.html("");
+				div.html(result);
+				TableInit(table_name, 'full', '100vh');
+				hidePreloader();
+			});
+	}
+
+
+</script>

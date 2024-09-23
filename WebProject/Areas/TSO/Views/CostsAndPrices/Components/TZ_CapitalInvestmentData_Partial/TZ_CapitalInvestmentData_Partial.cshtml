@@ -1,0 +1,138 @@
+﻿@model WebProject.Areas.TSO.Models.TZCapitalInvestmentViewModel
+@{
+	Layout = null; string disable = "";
+}
+@if (Model.tz_id == 0)
+{
+	disable = "disabled";
+}
+<form asp-controller="CostsAndPrices" asp-action="TZCapitalInvestment_Save" asp-antiforgery="true" asp-area="TSO"
+	  data-ajax-failure="onFailedFormTZ" data-ajax-success="onSuccessFormTZ" data-ajax-begin="onBeginFormTZ" data-ajax="true" data-ajax-method="POST">
+	<input type="hidden" name="tz_id" value="@Model.tz_id" />
+	<input type="hidden" name="data_status" value="@Model.data_status" />
+	<input type="hidden" name="perspective_year" value="@Model.perspective_year" />
+	<table class="table-inp-stretch" style="width:100%;">
+		<thead>
+			<tr>
+				<th rowspan="2"></th>
+				<th colspan="3">План</th>
+			</tr>
+			<tr>
+				<th>I полугодие</th>
+				<th>II полугодие</th>
+				<th>Год</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>Капитальные вложения всего, <span class="data-unit">тыс. руб.</span></td>
+				<td><input type="text" asp-for="@Model.capital_investment_all_plan_1" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.capital_investment_all_plan_2" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.capital_investment_all_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- на производство электрической энергии</td>
+				<td><input type="text" asp-for="@Model.volume_invest_prod_electroenergy_plan_1" class="data-value double" data-double="cap_inv_nvv"></td>
+				<td><input type="text" asp-for="@Model.volume_invest_prod_electroenergy_plan_2" class="data-value double" data-double="cap_inv_nvv"></td>
+				<td><input type="text" asp-for="@Model.volume_invest_prod_electroenergy_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- на производство тепловой энергии</td>
+				<td><input type="text" asp-for="@Model.volume_invest_prod_heatenergy_plan_1" class="data-value double" data-double="cap_inv_nvv"></td>
+				<td><input type="text" asp-for="@Model.volume_invest_prod_heatenergy_plan_2" class="data-value double" data-double="cap_inv_nvv"></td>
+				<td><input type="text" asp-for="@Model.volume_invest_prod_heatenergy_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- на производство теплоносителя</td>
+				<td><input type="text" asp-for="@Model.volume_invest_prod_heatcarrier_plan_1" class="data-value double" data-double="cap_inv_nvv"></td>
+				<td><input type="text" asp-for="@Model.volume_invest_prod_heatcarrier_plan_2" class="data-value double" data-double="cap_inv_nvv"></td>
+				<td><input type="text" asp-for="@Model.volume_invest_prod_heatcarrier_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- на передачу тепловой энергии</td>
+				<td><input type="text" asp-for="@Model.volume_invest_transfer_heatenergy_plan_1" class="data-value double" data-double="cap_inv_nvv"></td>
+				<td><input type="text" asp-for="@Model.volume_invest_transfer_heatenergy_plan_2" class="data-value double" data-double="cap_inv_nvv"></td>
+				<td><input type="text" asp-for="@Model.volume_invest_transfer_heatenergy_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- прочие</td>
+				<td><input type="text" asp-for="@Model.volume_invest_other_plan_1" class="data-value double" data-double="cap_inv_nvv"></td>
+				<td><input type="text" asp-for="@Model.volume_invest_other_plan_2" class="data-value double" data-double="cap_inv_nvv"></td>
+				<td><input type="text" asp-for="@Model.volume_invest_other_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>Финансирование капитальных вложений всего, <span class="data-unit">тыс. руб.</span></td>
+				<td><input type="text" asp-for="@Model.finance_capital_investment_all_plan_1" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.finance_capital_investment_all_plan_2" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.finance_capital_investment_all_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- амортизационные отчисления на полное восстановление основных фондов</td>
+				<td><input type="text" asp-for="@Model.amortisation_deduction_fonds_plan_1" class="data-value double" data-double="cap_inv_nvv"></td>
+				<td><input type="text" asp-for="@Model.amortisation_deduction_fonds_plan_2" class="data-value double" data-double="cap_inv_nvv"></td>
+				<td><input type="text" asp-for="@Model.amortisation_deduction_fonds_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;в т.ч. за счёт переоценки основных средств и нематериальных активов</td>
+				<td><input type="text" asp-for="@Model.amortisation_deduction_nonmaterial_active_plan_1" class="data-value double" data-double="cap_inv_nvv"></td>
+				<td><input type="text" asp-for="@Model.amortisation_deduction_nonmaterial_active_plan_2" class="data-value double" data-double="cap_inv_nvv"></td>
+				<td><input type="text" asp-for="@Model.amortisation_deduction_nonmaterial_active_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- неиспользованные средства на начало года</td>
+				<td><input type="text" asp-for="@Model.finance_by_nonused_funds_plan_1" class="data-value double" data-double="cap_inv_nvv"></td>
+				<td><input type="text" asp-for="@Model.finance_by_nonused_funds_plan_2" class="data-value double" data-double="cap_inv_nvv"></td>
+				<td><input type="text" asp-for="@Model.finance_by_nonused_funds_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- прибыль</td>
+				<td><input type="text" asp-for="@Model.finance_by_profit_plan_1" class="data-value double" data-double="cap_inv_nvv"></td>
+				<td><input type="text" asp-for="@Model.finance_by_profit_plan_2" class="data-value double" data-double="cap_inv_nvv"></td>
+				<td><input type="text" asp-for="@Model.finance_by_profit_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- федеральный бюджет</td>
+				<td><input type="text" asp-for="@Model.finance_by_federal_budjet_plan_1" class="data-value double" data-double="cap_inv_nvv"></td>
+				<td><input type="text" asp-for="@Model.finance_by_federal_budjet_plan_2" class="data-value double" data-double="cap_inv_nvv"></td>
+				<td><input type="text" asp-for="@Model.finance_by_federal_budjet_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- местный бюджет</td>
+				<td><input type="text" asp-for="@Model.finance_by_local_budjet_plan_1" class="data-value double" data-double="cap_inv_nvv"></td>
+				<td><input type="text" asp-for="@Model.finance_by_local_budjet_plan_2" class="data-value double" data-double="cap_inv_nvv"></td>
+				<td><input type="text" asp-for="@Model.finance_by_local_budjet_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- региональный (республиканский, краевой, областной) бюджет</td>
+				<td><input type="text" asp-for="@Model.finance_by_regional_budjet_plan_1" class="data-value double" data-double="cap_inv_nvv"></td>
+				<td><input type="text" asp-for="@Model.finance_by_regional_budjet_plan_2" class="data-value double" data-double="cap_inv_nvv"></td>
+				<td><input type="text" asp-for="@Model.finance_by_regional_budjet_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- прочие источники</td>
+				<td><input type="text" asp-for="@Model.finance_by_other_sources_plan_1" class="data-value double" data-double="cap_inv_nvv"></td>
+				<td><input type="text" asp-for="@Model.finance_by_other_sources_plan_2" class="data-value double" data-double="cap_inv_nvv"></td>
+				<td><input type="text" asp-for="@Model.finance_by_other_sources_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- займы и кредиты</td>
+				<td><input type="text" asp-for="@Model.finance_by_credits_plan_1" class="data-value double" data-double="cap_inv_nvv"></td>
+				<td><input type="text" asp-for="@Model.finance_by_credits_plan_2" class="data-value double" data-double="cap_inv_nvv"></td>
+				<td><input type="text" asp-for="@Model.finance_by_credits_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- средства, полученных от реализации ценных бумаг</td>
+				<td><input type="text" asp-for="@Model.finance_by_realize_securities_plan_1" class="data-value double" data-double="cap_inv_nvv"></td>
+				<td><input type="text" asp-for="@Model.finance_by_realize_securities_plan_2" class="data-value double" data-double="cap_inv_nvv"></td>
+				<td><input type="text" asp-for="@Model.finance_by_realize_securities_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- платы за подключение</td>
+				<td><input type="text" asp-for="@Model.finance_by_connection_charge_plan_1" class="data-value double" data-double="cap_inv_nvv"></td>
+				<td><input type="text" asp-for="@Model.finance_by_connection_charge_plan_2" class="data-value double" data-double="cap_inv_nvv"></td>
+				<td><input type="text" asp-for="@Model.finance_by_connection_charge_plan_3" class="data-value" disabled></td>
+			</tr>
+		</tbody>
+	</table>
+	<button type="submit" class="bttn bttn-color ms-auto" @disable>Сохранить</button>
+</form>

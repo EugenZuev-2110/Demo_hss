@@ -1,0 +1,287 @@
+﻿<div class="data-block workspace">
+    <div class="data-block title-block">
+        <div class="data-row">
+            <ul class="breadcrumb">
+                <li class="breadcrumb-item"><a class="ref-color" href="index.html">Главная</a></li>
+                <li class="breadcrumb-item">Источники тепловой энергии - Оборудование</li>
+            </ul>
+        </div>
+        <div class="data-row">
+            <h1 class="title">Оборудование</h1>
+
+            <div class="data-item data-item-right">
+                <button class="bttn bttn-color bttn-edit-data" type="button">Добавить/Удалить</button>
+                <a class="bttn bttn-color bttn-load-data" type="button" href="page2-2-1-2.html">Загрузить данные</a>
+                <button class="bttn bttn-color bttn-excel-export" type="button" id="excelFull">Выгрузить в Excel</button>
+            </div>
+        </div>
+        <div class="data-block static-block">
+            <div class="data-row">
+                <div class="data-item">
+                    <partial name="_PerspectiveYearsList" />
+                </div>
+                <div class="data-item">
+                    <div class="note">Базовый год - <span class="note-base-year" id="base_year_info"></span>;</div>
+                </div>
+                <div class="note">Обновление связей данных -&nbsp;<span class="note-update-date">14.11.2022</span>.</div>
+            </div>
+            <div class="data-row">
+                <div class="data-item">
+                    <label class="data-label">Эксплуатирующая ТСО:</label>
+                    <select class="selectpicker data-value lg-stretch" data-live-search="true" name="tso_id" id="source_tso_select" data-size="5" placeholder="Выберите наименование ТСО" onchange="GetListOnPage()">
+                        <option value="0" selected>Все</option>
+                        @foreach (var tso in ViewBag.Tso)
+                        {
+                            <option value="@tso.tso_id">@tso.tso_name</option>
+                        }
+                    </select>
+                </div>
+                <div class="data-item">
+                    <label class="data-label">Тип источника:</label>
+                    <select class="selectpicker data-value lg-stretch" data-live-search="true" name="source_type" id="source_type_select" data-size="5" placeholder="Выберите наименование источника">
+                        <option value="0" selected>Все</option>
+                        @foreach (var source_type in ViewBag.SourcesType)
+                        {
+                            <option value="@source_type.value_id">@source_type.value_name</option>
+                        }
+                    </select>
+                </div>
+                <div class="data-item d-none">
+                    <label class="data-label">Параметр источника:</label>
+                    <select class="selectpicker data-value lg-stretch" data-live-search="true" placeholder="Выберите наименование источника">
+                        <option value="1">Параметр 1</option>
+                        <option value="2">Параметр 2</option>
+                        <option value="3">Параметр 3</option>
+                        <option value="4">Параметр 4</option>
+                    </select>
+                </div>
+            </div>
+            <div class="data-row">
+                <div class="data-row">
+                    <label class="data-item">
+                        <span class="data-label">Регулируемые</span>
+                        <input type="checkbox" class="data-check" name="source_tz" id="source_tz" value="1" onchange="CheckCB(this)">
+                    </label>
+                </div>
+                <div class="data-row">
+                    <label class="data-item">
+                        <span class="data-label">ТЭС</span>
+                        <input type="checkbox" value="-2" name="source_type" id="CheckBox_tes" class="data-check" onchange="CheckCB(this)">
+                    </label>
+                    <label class="data-item">
+                        <span class="data-label">Котельные</span>
+                        <input type="checkbox" value="-3" name="source_type" id="CheckBox_kot" class="data-check" onchange="CheckCB(this)">
+
+                    </label>
+                </div>
+                <div class="data-row">
+                    <label class="data-item">
+                        <span class="data-label">Перспективные</span>
+                        <input type="checkbox" name="source_status" id="CheckBox_perspective" value="-2" class="data-check" onchange="CheckCB(this)">
+                    </label>
+                    <label class="data-item">
+                        <span class="data-label">Выводимые из эксплуатации</span>
+                        <input type="checkbox" id="CheckBox_decommissioned" name="source_status" value="1" class="data-check" onchange="CheckCB(this)">
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="data-block main-content">
+        <div class="tab-content">
+            <input type="hidden" id="cur_action_name" value="OnGetCallTZ_ProductionList_PartialViewComponent"/>
+            <input type="hidden" id="cur_table_name" value="tzProductionTable"/>
+            <div class="dropdown">
+                <button class="bttn bttn-square bttn-burger" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M80 160h352M80 256h352M80 352h352" /></svg>
+                </button>
+                <ul class="dropdown-menu" role="tablist">
+                    <li>
+                        <button class="dropdown-item active" data-bs-toggle="tab" data-bs-target="#equipmentTab" type="button" role="tab" aria-controls="equipmentTab" aria-selected="false">Оборудование на расчетный год</button>
+                    </li>
+                    <li>
+                        <button class="dropdown-item" data-bs-toggle="tab" data-bs-target="#equipmentByYearTab" type="button" role="tab" aria-controls="equipmentByYearTab" aria-selected="false">Программа оборудования по годам</button>
+                    </li>
+                    <li>
+                        <button class="dropdown-item" data-bs-toggle="tab" data-bs-target="#powerTab" type="button" role="tab" aria-controls="powerTab" aria-selected="false">Тепловая мощность нетто</button>
+                    </li>
+                </ul>
+            </div>
+            <div class="tab-pane fade show active" id="equipmentTab" role="tabpanel">
+                <div class="data-block">
+                    <h3>Оборудование на расчетный год</h3>
+                    <div class="tabs-block">
+                        <ul class="nav nav-tabs">
+                            <li class="nav-item d-none d-xxl-block">
+                                <button onclick="TabChange(event);" data-tab-action="OnGetSourcesEquipViewComponent" data-tab-tableid="SourcesEquipmentsTable" class="nav-link active" data-bs-toggle="tab" data-bs-target="#SourcesEquipmentsTab" type="button" role="tab" aria-controls="SourcesEquipmentTab" aria-selected="true">Сводная</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button onclick="TabChange(event);" data-tab-action="OnGetSourcesEquipTurbineViewComponent" data-tab-tableid="sourcesEquipTurbineTable" class="nav-link" data-bs-toggle="tab" data-bs-target="#sourcesEquipTurbineTab" type="button" role="tab" aria-controls="SourcesEquipTurbineTab" aria-selected="true">Турбоагрегаты</button>
+                            </li>
+                           @*  <li class="nav-item d-none d-xxl-block" role="presentation">
+                                <button onclick="TabChange(event);" data-tab-action="OnGetSourcesEquipBoilerViewComponent" data-tab-tableid="sourcesEquipBoilerTable" class="nav-link" data-bs-toggle="tab" data-bs-target="#sourcesEquipTurbineTab" type="button" role="tab" aria-controls="SourcesEquipBoilerTab" aria-selected="true">Котлоагрегаты</button>
+                            </li>
+                            <li class="nav-item d-none d-xxl-block" role="presentation">
+                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#equipmentType3Tab" type="button" role="tab">Энергоблоки</button>
+                            </li>
+                            <li class="nav-item d-none d-xxl-block" role="presentation">
+                                <button onclick="TabChange(event);" data-tab-action="OnGetSourcesEquipPistonViewComponent" data-tab-tableid="sourcesEquipPistonTable" class="nav-link" data-bs-toggle="tab" data-bs-target="#sourcesEquipPistonTab" type="button" role="tab" aria-controls="SourcesEquipPistonTab" aria-selected="true">Поршневые агрегаты</button>
+                            </li>
+                            <li class="nav-item d-none d-xxl-block" role="presentation">
+                                <button onclick="TabChange(event);" data-tab-action="OnGetSourcesEquipRouViewComponent" data-tab-tableid="sourcesEquipRouTable" class="nav-link" data-bs-toggle="tab" data-bs-target="#sourcesEquipRouTab" type="button" role="tab" aria-controls="SourcesEquipRouTab" aria-selected="true">РОУ</button>
+                            </li>
+                            <li class="nav-item d-none d-xxl-block" role="presentation">
+                                <button onclick="TabChange(event);" data-tab-action="OnGetSourcesEquipHeaterViewComponent" data-tab-tableid="sourcesEquipHeaterTable" class="nav-link" data-bs-toggle="tab" data-bs-target="#sourcesEquipHeaterTab" type="button" role="tab" aria-controls="SourcesEquipHeaterTab" aria-selected="true">ПСВ / ПСГ</button>
+                            </li>
+                            <li class="nav-item d-none d-xxl-block" role="presentation">
+                                <button onclick="TabChange(event);" data-tab-action="OnGetSourcesEquipPumpViewComponent" data-tab-tableid="sourcesEquipPumpTable" class="nav-link" data-bs-toggle="tab" data-bs-target="#sourcesEquipPumpTab" type="button" role="tab" aria-controls="SourcesEquipPumpTab" aria-selected="true">Насосное оборудование</button>
+                            </li>
+                            <li class="nav-item d-none d-xxl-block" role="presentation">
+                                <button onclick="TabChange(event);" data-tab-action="OnGetSourcesEquipSmokePipeViewComponent" data-tab-tableid="sourcesEquipSmokePipeTable" class="nav-link" data-bs-toggle="tab" data-bs-target="#sourcesEquipSmokePipeTab" type="button" role="tab" aria-controls="SourcesEquipSmokePipeTab" aria-selected="true">Дымовые трубы</button>
+                            </li> *@
+                            <li class="nav-item d-xxl-none dropdown">
+                            <button class="dropdown-title nav-link dropdown-toggle active" data-bs-toggle="dropdown">Сводная</button>
+                            <ul class="dropdown-menu" role="tablist">
+
+                            <li><button class="dropdown-tab dropdown-item active" data-bs-toggle="tab" data-bs-target="#equipmentSummaryTab" type="button" role="tab">Сводная</button></li>
+                            <li><button class="dropdown-tab dropdown-item" data-bs-toggle="tab" data-bs-target="#equipmentType1Tab" type="button" role="tab">Турбоагрегаты</button></li>
+                            <li><button class="dropdown-tab dropdown-item" data-bs-toggle="tab" data-bs-target="#equipmentType2Tab" type="button" role="tab">Котлоагрегаты</button></li>
+                            <li><button class="dropdown-tab dropdown-item" data-bs-toggle="tab" data-bs-target="#equipmentType3Tab" type="button" role="tab">Энергоблоки</button></li>
+                            <li><button class="dropdown-tab dropdown-item" data-bs-toggle="tab" data-bs-target="#equipmentType4Tab" type="button" role="tab">Поршневые агрегаты</button></li>
+                            <li><button class="dropdown-tab dropdown-item" data-bs-toggle="tab" data-bs-target="#equipmentType5Tab" type="button" role="tab">РОУ</button></li>
+                            <li><button class="dropdown-tab dropdown-item" data-bs-toggle="tab" data-bs-target="#equipmentType6Tab" type="button" role="tab">ПСВ / ПСГ</button></li>
+                            <li><button class="dropdown-tab dropdown-item" data-bs-toggle="tab" data-bs-target="#equipmentType7Tab" type="button" role="tab">Насосное оборудование</button></li>
+                            <li><button class="dropdown-tab dropdown-item" data-bs-toggle="tab" data-bs-target="#equipmentType8Tab" type="button" role="tab">Дымовые трубы</button></li>
+                            </ul>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane fade show active" id="equipmentSummaryTab" role="tabpanel">
+                                <div class="data-block" id="sourcesEquipDiv">
+                                    @await Component.InvokeAsync("SourcesEquipList_Partial")
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section pageJs{
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        setTimeout(function () {
+            $('#SourcesEquipmentsList').addClass('active');
+        }, 500);
+
+       TableInit('SourcesEquipmentsTable', 'full');
+       
+     
+  });
+        const editDataModal = document.getElementById('SourceEquipmentDataPopup');
+        editDataModal.addEventListener('shown.bs.modal', event => {
+            TableInit('sourcesOpenEquipTurbineTable', 'full');
+        }); 
+
+    document.querySelector('#source_type_select').addEventListener('change', (event) => {
+        document.getElementById('CheckBox_kot').checked = false;
+        document.getElementById('CheckBox_tes').checked = false;
+        GetListOnPage();
+    });
+
+    function CheckCB(cb) {
+        let cb_name = cb.name;
+        let cb_value = cb.value;
+        let id = cb.id;
+        if (id == 'CheckBox_tes') {
+            document.getElementById('CheckBox_kot').checked = false;
+            RefreshSelectByIdWithVal('source_type_select', 0);
+        }
+        if (id == 'CheckBox_kot') {
+            document.getElementById('CheckBox_tes').checked = false;
+            RefreshSelectByIdWithVal('source_type_select', 0);
+        }
+        if (id == 'CheckBox_decommissioned') {
+            document.getElementById('CheckBox_perspective').checked = false;
+        }
+        if (id == 'CheckBox_perspective') {
+            document.getElementById('CheckBox_decommissioned').checked = false;
+        }
+        $('input[id="' + id + '"]:checked').val(cb_value);
+        GetListOnPage();
+    };
+
+    function GetListOnPage() {
+        showPreloader();
+        var org = document.getElementById('source_tso_select').value
+        var type = $('input[name="source_type"]').val();
+        if (document.getElementById('CheckBox_kot').checked || document.getElementById('CheckBox_tes').checked) {
+            type = $('input[name="source_type"]:checked').val()
+        }
+        else {
+            type = document.getElementById('source_type_select').value
+        }
+        let action_name = $('#cur_action_name').val();
+        let table_name = $('#cur_table_name').val();
+
+        $.ajax({
+            type: 'GET',
+            url: '/Sources/SourcesEquipments/' + action_name,
+            data: {
+                data_status: $('#data_status').val(),
+                perspective_year: $('#perspective_year').val(),
+                type: type,
+                status: $('input[name="source_status"]:checked').val(),
+                tz: $('input[name="source_tz"]:checked').val(),
+                org: document.getElementById('source_tso_select').value
+            },
+            dataType: 'html'
+        })
+            .done(function (result) {
+                var div = $('#sourcesEquipDiv');
+                div.html("");
+                div.html(result);
+                TableInit(table_name, 'full', '40vh');
+                hidePreloader();
+            });
+    }
+
+    function OpenPopupSourceEquip(id, action_for) {
+        showPreloader();
+        $.ajax({
+            type: 'POST',
+            url: '@Html.Raw(Url.Action("OpenSourceEquipment", "SourcesEquipments", new { Area = "Sources" }))',
+            data: {
+                id: id,
+                action_for: action_for,
+                data_status: $('#data_status').val(),
+                perspective_year: $('#perspective_year').val()
+            },
+            dataType: 'html'
+        })
+            .done(function (result) {              
+                var div = $('#SourceEquipmentDataPopup');
+                div.html("");
+                div.html(result);
+                $('.selectpicker').selectpicker();
+
+                if ($('#SourceEquipmentDataPopup').is(':hidden')) {
+                    showModal('SourceEquipmentDataPopup');
+                }
+                hidePreloader();
+            });
+    }
+
+
+    function RefreshTable() {
+        if ($("#refresh_sourcelist_table").val() === "1") {
+            $("#refresh_sourcelist_table").val(0);
+            GetListOnPage();
+        }
+    }
+
+</script>
+}

@@ -1,0 +1,63 @@
+﻿@model WebProject.Areas.DictionaryTables.Models.CoefCorrectionClimateMainViewModel
+
+<form class="needs-validation" novalidate asp-controller="CoefCorrectionClimate" asp-action="CoefCorrectionClimate_Save" asp-antiforgery="true" asp-area="DictionaryTables" id="SteamTurbine_form"
+	  data-ajax-failure="onFailedForm" data-ajax-success="onSuccessFormCoef" data-ajax-begin="onBeginForm" data-ajax="true" data-ajax-method="POST">
+	<input type="hidden" name="data_status" value="@Model.coefCorrectionPerspective[0].data_status" />
+	<div class="scroll-table-wrapper">
+		<table class="table-inp-stretch" id="coefCorrectionTable" style="width:100%;white-space: nowrap;">
+		<thead>
+			<tr>
+				<th>Расчётный год</th>
+				@foreach (var p_year in ViewBag.PerspectiveYears)
+				{
+					<input type="hidden" name="perspective_year" value="@p_year.perspective_year" id="coef_id_input" />
+					<th>@p_year.perspective_year</th>
+				}
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var coef in Model.coefCorrection)
+			{
+				<tr>
+					<td>@Html.Raw(@coef.coef_name_html) </td>
+						<input type="hidden" name="coef_name_html" value="@coef.coef_name_html" />
+						<input type="hidden" name="coef_id" value="@coef.coef_id" />
+					@foreach(var coefval in Model.coefCorrectionPerspective.Where(x => x.coef_id == coef.coef_id))
+					{
+							<td><input type="text" class="data-value double" name="coef_value_@coefval.perspective_year" value="@coefval.coef_value"></td>
+					}
+				</tr>
+			}
+		</tbody>
+	</table>
+	
+	<div class="modal-footer">
+		<button type="submit" class="bttn bttn-color mt-2">Сохранить</button>
+	</div>
+</div>
+</form>
+
+<script type="text/javascript" src="@Url.Content("~/hss/js/popup_common_scripts.js")"></script>
+
+<script type="text/javascript">
+	var onSuccessFormCoef = function (xhr) {
+		if (xhr.success == true) {
+			showMessage('Данные сохранены.', 'modal', 'success');
+			if (xhr.is_new_district === 1) {
+				let select_id = "paramNumberDistr";
+				$('#' + select_id).val(xhr.unom_distr);
+				$('#' + select_id).append('<option value=' + xhr.distr_id + ' selected>' + xhr.unom_distr + '</option>');
+				RefreshSelectById(select_id);
+			}
+
+			GetListOnPage();
+		}
+		else {
+			if (xhr.message === undefined) {
+				xhr.message = 'Ошибка сохранения данных'
+			}
+			showMessage(xhr.message, 'modal', 'fault');
+		}
+		hidePreloader();
+	};
+</script>

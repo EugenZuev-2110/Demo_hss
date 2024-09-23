@@ -1,0 +1,165 @@
+﻿@model List<WebProject.Areas.TSO.Models.TSOSourcesDataListViewModel>
+@{
+	Layout = null;
+	int cnt_columns = 37;
+}
+
+<div class="table-block">
+	<div class="table-buttons tsoServTableSources-buttons"></div>
+	<table id="tsoServTableSources" class="tableblock-table display compact table-clicked" style="width:100%">
+		<thead>
+			<tr>
+				<th rowspan="3">УНОМ ТЗ</th>
+				<th rowspan="3">Территория действия тарифной зоны</th>
+				<th rowspan="3">КОД ТСО</th>
+				<th rowspan="3">Наименование ТСО</th>
+				<th rowspan="3">
+					Виды регулируемой деятельности
+					<a href="#" class="info" data-bs-toggle="tooltip" data-bs-custom-class="info-tooltip" data-bs-html="true"
+					   data-bs-title="<ul class='list-unstyled'>
+									<li>К > 25 - Комбинированное производство, более 25 МВт</li>
+									<li>К < 25 - Комбинированное производство, менее 25 МВт</li>
+									<li>НК - Некомбинированное производство</li>
+									<li>П - Передача</li>
+									<li>С - Сбыт</li>
+									<li>ДП - Договор поставки</li>
+								</ul>"
+					</a>
+				</th>
+				<th rowspan="3">УНОМ ИСТ</th>
+				<th rowspan="3">УНОМ СТ</th>
+				<th rowspan="3">УНОМ ЕТО</th>
+				<th rowspan="3">Наименование источника тепловой энергии</th>
+				<th rowspan="3">Тип источника</th>
+				<th rowspan="3">Округ</th>
+				<th rowspan="3">Район</th>
+				<th rowspan="3">Адрес месторасположения</th>
+				<th rowspan="2" colspan="2">Установленная мощность</th>
+				<th rowspan="2" colspan="2">Расчетная подключенная тепловая нагрузка</th>
+				<th rowspan="3">Теплоснабжаемые округа/районы</th>
+				<th rowspan="3">Статус источника</th>
+				<th rowspan="3">Отпуск электрической энергии с шин электростанции, тыс. кВт.ч/год</th>
+				<th rowspan="3">Годовой отпуск тепла с коллекторов, тыс. Гкал</th>
+				<th colspan="5">Расход условного топлива на технологические цели, тыс. т у.т.</th>
+				<th colspan="4">Удельный расход условного топлива на отпуск</th>
+				<th colspan="3">Годовой расход электрической энергии на собственные нужды, тыс. кВт.ч</th>
+				<th rowspan="3">Удельный расход электрической энергии на собственные нужды на отпуск тепла, кВт.ч/Гкал</th>
+				<th rowspan="3">Годовой исходной воды, тыс. куб.м</th>
+				<th rowspan="3">Удельный годовой исходной воды на отпуск тепла, куб.м/Гкал</th>
+				<th rowspan="3">Объект относится к бесхозяйному имуществу</th>
+			</tr>
+			<tr>
+				<th rowspan="2">Всего</th>
+				<th colspan="4">в том числе на отпуск</th>
+				<th colspan="2">физический метод</th>
+				<th colspan="2">пропорциональный метод</th>
+				<th rowspan="2">Всего</th>
+				<th colspan="2">в том числе</th>
+			</tr>
+			<tr>
+				<th>электрическая, МВт</th>
+				<th>тепловая, Гкал/ч</th>
+				<th>в паре, т/ч</th>
+				<th>в горячей воде, Гкал/ч</th>
+				<th>электроэнергии (физ. метод)</th>
+				<th>теплоэнергии (физ. метод)</th>
+				<th>электроэнергии (пропорц. метод)</th>
+				<th>теплоэнергии (пропорц. метод)</th>
+				<th>электроэнергии, г у.т./кВт.ч</th>
+				<th>теплоэнергии, кг у.т./Гкал</th>
+				<th>электроэнергии, г у.т./кВт.ч</th>
+				<th>теплоэнергии, кг у.т./Гкал</th>
+				<th>на выработку электроэнергии</th>
+				<th>на отпуск теплоэнергии</th>
+			</tr>
+			<tr class="filter-row ">
+				@for (int i = 0; i < @cnt_columns; i++)
+				{
+					if (i == 0)
+					{
+						<th class="dtfc-fixed-left" style="left:0; position:sticky;"><input type="text" class="filter-col-0" /></th>
+					}
+					else
+					{
+						<th><input type="text" class="filter-col-@i" /></th>
+					}
+				}
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var tz_list in Model)
+			{
+				<tr ondblclick="OpenPopupTZObjects(@tz_list.tz_id, $('#perspective_year').val());">
+					<td>@tz_list.unom_tz</td>
+					<td><div class="data-truncate-multirow" title="@tz_list.territory">@tz_list.territory</div></td>
+					<td>@tz_list.code_tso</td>
+					<td>@tz_list.short_name</td>
+					<td>@tz_list.activity_types</td>
+					<td>@tz_list.source_unom</td>
+					<td>@tz_list.unom_hss</td>
+					<td>@tz_list.unom_eto</td>
+					<td>@tz_list.source_name</td>
+					<td>@tz_list.source_type_name</td>
+					<td>@tz_list.region_short</td>
+					<td>@tz_list.district_name</td>
+					<td>@tz_list.address</td>
+					<td>@tz_list.inst_elec_power</td>
+					<td>@tz_list.inst_heat_power</td>
+					<td>@tz_list.calc_hl_steam_hp</td>
+					<td>@tz_list.calc_hl_hw_hp</td>
+					<td>@tz_list.territories</td>
+					<td>@tz_list.source_status_name</td>
+					<td>@tz_list.release_elenergy_tires_powerplant</td>
+					<td>@tz_list.release_heatenergy_consumers</td>
+					<td>@tz_list.consump_fuel_release_elenergy</td>
+					<td>@tz_list.consump_fuel_release_elenergy_tires</td>
+					<td>@tz_list.consump_fuel_release_elenergy_collect</td>
+					<td>@tz_list.consump_fuel_release_elenergy_tires_prop</td>
+					<td>@tz_list.consump_fuel_release_elenergy_collect_prop</td>
+					<td>@tz_list.spec_cons_fuel_release_elenergy</td>
+					<td>@tz_list.spec_cons_fuel_release_heatenergy</td>
+					<td>@tz_list.spec_cons_fuel_release_elenergy_prop</td>
+					<td>@tz_list.spec_cons_fuel_release_heatenergy_prop</td>
+					<td>@tz_list.consump_elenergy_own_needs</td>
+					<td>@tz_list.consump_elenergy_prod_elenergy</td>
+					<td>@tz_list.consump_elenergy_release_heatenergy</td>
+					<td>@tz_list.spec_consump_elenergy_own_needs</td>
+					<td>@tz_list.consump_water</td>
+					<td>@tz_list.spec_consump_water</td>
+					<td>@tz_list.obj_vacant_prop</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>
+<div class="data-row table-summary">
+	<div class="data-item rows-count">
+		<h5>Всего записей:</h5>
+		<p><span class="mark-color" id="all_cnt_rows"></span></p>
+	</div>
+	<div class="data-block">
+		<div class="data-table-block">
+			<h5>Все источники тепловой энергии:</h5>
+			@*<p class="data-item">количество - <span class="mark-color" id=""></span><span class="data-unit"> шт.</span></p>*@
+			<p class="data-item">суммарная тепловая мощность - <span class="mark-color" id="all_inst_heat_power"></span><span class="data-unit"> Гкал/ч</span></p>
+			<p class="data-item">суммарная електрическая мощность - <span class="mark-color" id="all_inst_elec_power"></span><span class="data-unit"> МВт</span></p>
+		</div>
+	</div>
+	<div class="data-block">
+		<h5>Источники с комбинированной выработкой:</h5>
+		<div class="data-table-block">
+			<p class="data-item">количество - <span class="mark-color" id="cnt_comb_sources"></span><span class="data-unit"> шт.</span></p>
+			<p class="data-item">суммарная тепловая мощность - <span class="mark-color" id="comb_inst_heat_power"></span><span class="data-unit"> Гкал/ч</span></p>
+			<p class="data-item">суммарная електрическая мощность - <span class="mark-color" id="comb_inst_elec_power"></span><span class="data-unit"> Мвт</span></p>
+		</div>
+	</div>
+	<div class="data-block">
+		<h5>Котельные:</h5>
+		<div class="data-table-block">
+			<p class="data-item">количество - <span class="mark-color" id="cnt_boil_sources"></span><span class="data-unit"> шт.</span></p>
+			<p class="data-item">суммарная тепловая мощность - <span class="mark-color" id="boil_inst_heat_power"></span><span class="data-unit"> Гкал/ч</span></p>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript" src="@Url.Content("~/hss/js/datatables_common_scripts.js")"></script>

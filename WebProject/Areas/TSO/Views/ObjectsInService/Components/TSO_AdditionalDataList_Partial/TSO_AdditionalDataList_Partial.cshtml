@@ -1,0 +1,70 @@
+﻿@model List<WebProject.Areas.TSO.Models.TSOAdditionalDataListViewModel>
+@{
+	Layout = null;
+	int cnt_columns = 10;
+}
+
+<div class="table-block">
+	<div class="table-buttons tsoServTableAdditional-buttons"></div>
+	<table id="tsoServTableAdditional" class="display compact table-clicked" style="width:100%">
+		<thead>
+			<tr>
+				<th>КОД ТСО</th>
+				<th>Наименование ТСО</th>
+				<th>Стоимость основных средств, относимых на источники производства тепловой энергии, тыс. руб.</th>
+				<th>Износ основных средств, %</th>
+				<th>Стоимость основных средств, относимых на передачу тепловой энергии, тыс. руб.</th>
+				<th>Протяженность сетей (в двухтрубном исчислении), км</th>
+				<th>Протяженность сетей, подлежащих замене (износ 100%), км</th>
+				<th>Полезный отпуск наиболее крупному единичному потребителю, Гкал</th>
+				<th>Численность обслуживаемого населения, чел.</th>
+				<th>Количество абонентов, тыс. шт.</th>
+			</tr>
+			<tr class="filter-row ">
+				@for (int i = 0; i < @cnt_columns; i++)
+				{
+					if (i == 0)
+					{
+						<th class="dtfc-fixed-left" style="left:0; position:sticky;"><input type="text" class="filter-col-0" /></th>
+					}
+					else
+					{
+						<th><input type="text" class="filter-col-@i" /></th>
+					}
+				}
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var tso_list in Model)
+			{
+				<tr ondblclick="OpenPopupTSOAdditional(@tso_list.tso_id);" title="Двойной клик открывает форму редактирования">
+					<td>@tso_list.code_tso</td>
+					<td>@tso_list.short_name</td>
+					<td>@tso_list.fixed_assets_cost_prod</td>
+					<td>@tso_list.fixed_assets_wear</td>
+					<td>@tso_list.fixed_assets_cost_transfer</td>
+					<td>@tso_list.network_length</td>
+					<td>@tso_list.network_length_replaced</td>
+					<td>@tso_list.useful_supply_large_consumer</td>
+					<td>@tso_list.count_service_public</td>
+					<td>@tso_list.count_abonent</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>
+<div class="data-row table-summary">
+	<div class="data-item rows-count">
+		<h5>Всего записей:</h5>
+		<p><span class="mark-color" id="all_cnt_rows"></span></p>
+	</div>
+	<div class="data-table-block">
+		<p class="data-item">Стоимость основных средств, относимых на источники производства тепловой энергии: <span class="mark-color" id="fixed_assets_cost_prod"></span><span class="data-unit"> тыс.руб.</span></p>
+		<p class="data-item">Стоимость основных средств, относимых на передачу тепловой энергии: <span class="mark-color" id="fixed_assets_cost_transfer"></span><span class="data-unit"> тыс.руб.</span></p>
+		<p class="data-item">Численность обслуживаемого населения: <span class="mark-color" id="count_service_public"></span><span class="data-unit"> чел.</span></p>
+	</div>
+	<div class="data-table-block">
+		<p class="data-item">Количество абонентов: <span class="mark-color" id="count_abonent"></span><span class="data-unit"> тыс.шт.</span></p>
+		<p class="data-item">Износ основных средств: <span class="mark-color" id="fixed_assets_wear"></span><span class="data-unit"> %</span></p>
+	</div>
+</div>

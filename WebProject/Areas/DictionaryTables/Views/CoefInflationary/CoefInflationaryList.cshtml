@@ -1,0 +1,48 @@
+﻿
+<div class="data-block workspace">
+	<input type="hidden" value="1" id="hide_clocks"></input>
+	<div class="data-block title-block">
+		<div class="data-row">
+			<ul class="breadcrumb">
+				<li class="breadcrumb-item"><a class="ref-color" href="index.html">Главная</a></li>
+				<li class="breadcrumb-item">Справочники - Коэффициенты инфляции</li>
+			</ul>
+		</div>
+		<h1 class="title">Коэффициенты инфляции</h1>
+	</div>
+
+	<div class="data-block main-content" id="CoefInflationaryTable_div">
+		@await Component.InvokeAsync("CoefInflationaryList_Partial")
+	</div>
+</div>
+
+<script type="text/javascript" src="@Url.Content("~/hss/js/popup_common_scripts.js")"></script>
+
+<script type="text/javascript">
+	$(document).ready(function () {
+		setTimeout(function () {
+			$('#CoefInflationary').addClass('active');
+		}, 500);
+	});
+
+	function GetListOnPage() {
+		debugger
+		showPreloader();
+		$.ajax({
+
+			type: 'GET',
+			url: '@Html.Raw(Url.Action("CoefInflationaryList_PartialViewComponent", "CoefInflationary", new { Area = "DictionaryTables" }))',
+			data: {
+				data_status: $('#data_status').val()
+			},
+			dataType: 'html'
+		})
+			.done(function (result) {
+				var div = $('#CoefInflationaryTable_div');
+				div.html("");
+				div.html(result);
+
+				hidePreloader();
+			});
+	}
+</script>

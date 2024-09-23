@@ -1,0 +1,279 @@
+﻿@model WebProject.Areas.TSO.Models.OpenPowerReservePaymentTable
+
+@{
+	string btn_disable = string.Empty; int ds = @Model.power_reserve_payment_one_data_status - 1; string is_checked = string.Empty;
+}
+@if (Model.power_reserve_payment_one_tso_id == 0)
+{
+	btn_disable = "disabled";
+}
+
+<div class="modal-dialog modal-dialog-centered">
+	<form asp-controller="TariffConnection" asp-action="TZPowerReservePayment_Save" asp-antiforgery="true" asp-area="TSO" id="tz_other_org_costs_form"
+	data-ajax-failure="onFailedFormTZ" data-ajax-success="onSuccessFormTZ" data-ajax-begin="onBeginFormTZ" data-ajax="true" data-ajax-method="POST">
+		<input type="hidden" name="power_reserve_payment_one_data_status" value="@Model.power_reserve_payment_one_data_status" />
+		<input type="hidden" name="power_reserve_payment_one_is_modyfied" id="power_reserve_payment_one_is_modyfied" value="@Model.power_reserve_payment_one_is_modyfied" />
+		<div class="modal-content">
+			<div class="modal-header">
+				<h3 class="modal-title" id="editDataLabel">Утвержденные стандартизированные ставки</h3>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="RefreshTable();"></button>
+			</div>
+			<div class="modal-body">
+				<div class="data-row static-block data-params" onmouseout="LeaveFocusUnomTSOPowerReservePayment()">
+					@{
+						if (Model.power_reserve_payment_one_is_modyfied == 1)
+						{
+							<div class="data-item" id="power_reserve_payment_one_tso_id_select" onmouseover="GetFocusUnomTSOPowerReservePayment()">
+								<label class="data-label">Наименование ТСО</label>
+								<div class="data-value" id="powerReservePaymentParamNumberTsoDiv" hidden>
+									<select class="selectpicker data-value xxl-stretch" name="power_reserve_payment_one_tso_id" id="powerReservePaymentParamNumberTso" data-width="100%" data-live-search="true" placeholder="УНОМ ТСО - Наименование">
+										@foreach (var tz_list in ViewBag.TZTSOList)
+										{
+											if (tz_list.org_id == Model.power_reserve_payment_one_tso_id)
+											{
+												<option value="@tz_list.org_id" selected>@tz_list.org_name</option>
+											}
+											if (tz_list.org_id != Model.power_reserve_payment_one_tso_id)
+											{
+												<option value="@tz_list.org_id">@tz_list.org_name</option>
+											}
+										}
+									</select>
+								</div>
+								<div class="data-value " id="power_reserve_payment_one_tso_id_textbox_div">
+									<input type="text" class="data-value xxl-stretch" asp-for="@Model.power_reserve_payment_one_short_name" name="power_reserve_payment_one_tso_id_textbox" id="power_reserve_payment_one_tso_id_textbox" required placeholder="УНОМ ТСО - Наименование" style="background-color:#f7f4fe" readonly>
+								</div>
+							</div>
+						}
+						else
+						{
+							<div class="data-item" id="power_reserve_payment_one_tso_id_select" onmouseover="GetFocusUnomTSOPowerReservePayment()">
+								<label class="data-label">Наименование ТСО</label>
+								<div class="data-value" id="powerReservePaymentParamNumberTsoDiv" hidden>
+									<select class="selectpicker data-value xxl-stretch" name="power_reserve_payment_one_tso_id" id="powerReservePaymentParamNumberTso" data-width="100%" data-live-search="true" placeholder="УНОМ ТСО - Наименование">
+										@foreach (var tz_list in ViewBag.TZTSOList)
+										{
+											if (tz_list.org_id == Model.power_reserve_payment_one_tso_id)
+											{
+												<option value="@tz_list.org_id" selected>@tz_list.org_name</option>
+											}
+											if (tz_list.org_id != Model.power_reserve_payment_one_tso_id)
+											{
+												<option value="@tz_list.org_id">@tz_list.org_name</option>
+											}
+										}
+									</select>
+								</div>
+								<div class="data-value" id="power_reserve_payment_one_tso_id_textbox_div">
+									<input type="text" class="data-value xxl-stretch" asp-for="@Model.power_reserve_payment_one_short_name" name="power_reserve_payment_one_tso_id_textbox" id="power_reserve_payment_one_tso_id_textbox" required placeholder="УНОМ ТСО - Наименование">
+								</div>
+							</div>
+						}
+					}
+				</div>
+				<div class="data-block">
+					<div class="data-item" id="power_reserve_payment_one_decision_status_id_select" onmouseout="LeaveFocusStatusPowerReservePayment()" onmouseover="GetFocusStatusPowerReservePayment()">
+						<label class="data-label">Статус решения</label>
+						<div class="data-value" id="powerReservePaymentDecisionChargeStatusDiv" hidden>
+							<select class="selectpicker data-value xxl-stretch" name="power_reserve_payment_one_decision_status_id" id="powerReservePaymentDecisionChargeStatus" data-width="100%" data-live-search="true" placeholder="Статус решения">
+								@foreach (var tz_list in ViewBag.DecisionStatusList)
+								{
+									if (tz_list.value_id == Model.power_reserve_payment_one_decision_status_id)
+									{
+										<option value="@tz_list.value_id" selected>@tz_list.value_name</option>
+									}
+									if (tz_list.value_id != Model.power_reserve_payment_one_decision_status_id)
+									{
+										<option value="@tz_list.value_id">@tz_list.value_name</option>
+									}
+								}
+							</select>
+						</div>
+						<div class="data-value" id="power_reserve_payment_one_decision_status_id_textbox_div">
+							<input type="text" class="data-value xxl-stretch" name="power_reserve_payment_one_decision_status_id_textbox" id="power_reserve_payment_one_decision_status_id_textbox" required placeholder="Статус решения">
+						</div>
+					</div>
+					<h5>Плата за услуги по поддержанию резервной тепловой мощности:</h5>
+					<div class="data-table-block">
+						<div class="data-item">
+							<label class="data-label">до тепловых пунктов</label>
+							<input class="data-value" type="text" asp-for="@Model.power_reserve_payment_one_cost_service_before_hp" name="power_reserve_payment_one_cost_service_before_hp" id="power_reserve_payment_one_cost_service_before_hp" >
+							<span class="data-unit">руб./(Гкал/ч) в месяц</span>
+						</div>
+						<div class="data-item">
+							<label class="data-label">после тепловых пунктов</label>
+							<input class="data-value" type="text" asp-for="@Model.power_reserve_payment_one_cost_service_after_hp" name="power_reserve_payment_one_cost_service_after_hp" id="power_reserve_payment_one_cost_service_after_hp" >
+							<span class="data-unit">руб./(Гкал/ч) в месяц</span>
+						</div>
+					</div>
+					<div class="data-row">
+						<label class="data-label">Решение:</label>
+						<div class="data-row">
+							<div class="data-item">
+								<label class="data-label sublabel">от</label>
+								<input class="data-value md-fix" type="date" asp-for="@Model.power_reserve_payment_one_decision_date" name="power_reserve_payment_one_decision_date" id="power_reserve_payment_one_decision_date" >
+							</div>
+							<div class="data-item">
+								<label class="data-label sublabel">№</label>
+								@if (Model.power_reserve_payment_one_is_modyfied == 1)
+								{
+									<input class="data-value lg-fix" type="text" asp-for="@Model.power_reserve_payment_one_decision_num" name="power_reserve_payment_one_decision_num" id="power_reserve_payment_one_decision_num" style="background-color:#f7f4fe" readonly>
+								}
+								else
+								{
+									<input class="data-value lg-fix" type="text" asp-for="@Model.power_reserve_payment_one_decision_num" name="power_reserve_payment_one_decision_num" id="power_reserve_payment_one_decision_num" required>
+								}
+							</div>
+						</div>
+					</div>
+					<div class="data-row">
+						<label class="data-label">Протокол:</label>
+						<div class="data-row">
+							<div class="data-item">
+								<label class="data-label sublabel">от</label>
+								<input class="data-value md-fix" type="date" asp-for="@Model.power_reserve_payment_one_protocol_date" name="power_reserve_payment_one_protocol_date" id="power_reserve_payment_one_protocol_date">
+							</div>
+							<div class="data-item">
+								<label class="data-label sublabel">№</label>
+								<input class="data-value lg-fix" type="text" asp-for="@Model.power_reserve_payment_one_protocol_num" name="power_reserve_payment_one_protocol_num" id="power_reserve_payment_one_protocol_num">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				@if (Model.power_reserve_payment_one_is_modyfied == 1)
+				{
+					<button type="button" class="bttn" data-bs-dismiss="modal" onclick="DeleteTableRowPowerReservePaymentAsking();">Удалить запись</button>
+				}
+				<button type="button" class="bttn" data-bs-dismiss="modal">Отмена</button>
+				<button type="submit" class="bttn bttn-color">Сохранить</button>
+			</div>
+		</div>
+	</form>
+</div>
+<script type="text/javascript" src="@Url.Content("~/hss/js/popup_common_scripts.js")"></script>
+<script type="text/javascript">
+
+	$(document).ready(function () {
+		GetFocusUnomPPLoadPagePowerReservePayment();
+		LeaveFocusUnomPPLoadPagePowerReservePayment();
+
+		GetFocusStatusPowerReservePayment();
+		LeaveFocusStatusPowerReservePayment();
+	});
+
+	function DeleteTableRowPowerReservePayment() {
+		showPreloader();
+		$.ajax({
+			type: 'POST',
+			url: '/TSO/TariffConnection/TZDeleteDataRow_PowerReservePayment',
+			data: {
+				tso_id: $('#powerReservePaymentParamNumberTso :selected').val(),
+				decision_num: $('#power_reserve_payment_one_decision_num').val(),
+				data_status: $('#data_status').val()
+			},
+			dataType: 'json'
+		})
+			.done(function (result) {
+				if ($('#' + 'TZPowerReservePaymentDeleteRowPopup').is(':hidden')) {
+					showModal('TZPowerReservePaymentDeleteRowPopup');
+				}
+				if (result.isDelete != true) {
+					OpenPopupPowerReservePayment($('#powerReservePaymentParamNumberTso :selected').val(), $('#power_reserve_payment_one_decision_num').val(), '/TSO/TariffConnection/OpenPowerReservePayment', 'TZPowerReservePaymentDataPopup', 1);
+				}
+				GetListOnPage();
+				onSuccessFormTZ(result);
+				hideModal('TZPowerReservePaymentDeleteRowPopup');
+				hidePreloader();
+			});
+	}
+
+	function GetListOnPage() {
+		debugger;
+		let action_name = $('#cur_action_name').val();
+		let table_name = $('#cur_table_name').val();
+
+		$.ajax({
+			type: 'GET',
+			url: '/TSO/TariffConnection/' + action_name,
+			data: {
+				data_status: $('#data_status').val(),
+				perspective_year: $('#perspective_year').val()
+			},
+			dataType: 'html'
+		})
+			.done(function (result) {
+				var div = $('#tzTariffConnectionDiv');
+				div.html("");
+				div.html(result);
+				TableInit(table_name, 'full');
+			});
+	}
+
+	function CancelDeletingTableRowPowerReservePayment() {
+		showPreloader();
+		OpenPopupPowerReservePayment($('#powerReservePaymentParamNumberTso :selected').val(), $('#power_reserve_payment_one_decision_num').val(), '/TSO/TariffConnection/OpenPowerReservePayment', 'TZPowerReservePaymentDataPopup', 1);
+		hidePreloader();
+	}
+
+	function DeleteTableRowPowerReservePaymentAsking() {
+		if ($('#' + 'TZPowerReservePaymentDeleteRowPopup').is(':hidden')) {
+			showModal('TZPowerReservePaymentDeleteRowPopup');
+		}
+	}
+
+	function RefreshTable() {
+		if ($("#refresh_table").val() === "1") {
+			GetListOnPage();
+		}
+	}
+
+	function GetFocusUnomTSOPowerReservePayment() {
+		if ($("#power_reserve_payment_one_is_modyfied").val() != 1) {
+			GetFocusUnomPPLoadPagePowerReservePayment();
+		}
+	}
+
+	function LeaveFocusUnomTSOPowerReservePayment() {
+		if ($("#power_reserve_payment_one_is_modyfied").val() != 1) {
+			LeaveFocusUnomPPLoadPagePowerReservePayment();
+		}
+	}
+
+	function GetFocusUnomPPLoadPagePowerReservePayment() {
+		var textbox = document.getElementById("power_reserve_payment_one_tso_id_textbox_div");
+		var select = document.getElementById("powerReservePaymentParamNumberTsoDiv");
+		textbox.hidden = true;
+		select.hidden = false;
+	}
+
+	function LeaveFocusUnomPPLoadPagePowerReservePayment() {
+		var textboxDiv = document.getElementById("power_reserve_payment_one_tso_id_textbox_div");
+		var selectDiv = document.getElementById("powerReservePaymentParamNumberTsoDiv");
+		var select_text = document.getElementById("powerReservePaymentParamNumberTso");
+		var textbox_text = document.getElementById("power_reserve_payment_one_tso_id_textbox");
+		var text = $("#powerReservePaymentParamNumberTso :selected").text();
+		textbox_text.value = text;
+		textboxDiv.hidden = false;
+		selectDiv.hidden = true;
+	}
+
+	function GetFocusStatusPowerReservePayment() {
+		var textbox = document.getElementById("power_reserve_payment_one_decision_status_id_textbox_div");
+		var select = document.getElementById("powerReservePaymentDecisionChargeStatusDiv");
+		textbox.hidden = true;
+		select.hidden = false;
+	}
+
+	function LeaveFocusStatusPowerReservePayment() {
+		var textboxDiv = document.getElementById("power_reserve_payment_one_decision_status_id_textbox_div");
+		var selectDiv = document.getElementById("powerReservePaymentDecisionChargeStatusDiv");
+		var select_text = document.getElementById("powerReservePaymentDecisionChargeStatus");
+		var textbox_text = document.getElementById("power_reserve_payment_one_decision_status_id_textbox");
+		var text = $("#powerReservePaymentDecisionChargeStatus :selected").text();
+		textbox_text.value = text;
+		textboxDiv.hidden = false;
+		selectDiv.hidden = true;
+	}
+</script>

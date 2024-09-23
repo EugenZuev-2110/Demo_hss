@@ -1,0 +1,252 @@
+﻿@model WebProject.Areas.TSO.Models.TZHeaderTariffDataViewModel
+@{
+	string btn_disable = string.Empty; int ds = @Model.data_status - 1; string is_checked = string.Empty;
+}
+@if (Model.tz_id == 0)
+{
+	btn_disable = "disabled";
+}
+
+<div class="modal-dialog modal-dialog-centered">
+	<input type="hidden" value="0" id="refresh_table" />
+	<div class="modal-content">
+		<div class="modal-header"> 
+			<h3 class="modal-title" id="editDataLabel">Тарифы и плата за подключение</h3>
+			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="RefreshTable();"></button>
+		</div>
+		<div class="modal-body">
+			<div class="data-block static-block">
+				<div class="data-row">
+					<div class="data-item">
+						<label class="data-label">Наименование ТСО</label>
+						<div class="data-value stretch unom-name">
+							<select class="selectpicker" id="paramNumberTZTariffConnection" data-width="100%" data-live-search="true" placeholder="УНОМ ТСО - Наименование">
+								@foreach (var tz_list in ViewBag.TZTSOList)
+								{
+									if (tz_list.tz_id == Model.tz_id)
+									{
+										<option value="@tz_list.tz_id" selected>@tz_list.tz_name</option>
+									}
+									if (tz_list.tz_id != Model.tz_id)
+									{
+										<option value="@tz_list.tz_id">@tz_list.tz_name</option>
+									}
+								}
+							</select>
+						</div>
+					</div>
+					<div class="data-item">
+						<label for="p_year_pop_tariffs" class="data-label">Расчётный год:</label>
+						<select class="selectpicker data-value md-fix" data-width="140px" id="p_year_pop_tariffs" value="2022">
+							@foreach (var p_years_list in ViewBag.PerspectiveYearsList)
+							{
+								if (p_years_list.perspective_year == Model.perspective_year)
+								{
+									<option value="@p_years_list.perspective_year" selected>@p_years_list.perspective_year_dt</option>
+								}
+								if (p_years_list.perspective_year != Model.perspective_year)
+								{
+									<option value="@p_years_list.perspective_year">@p_years_list.perspective_year_dt</option>
+								}
+							}
+						</select>
+					</div>
+					<div class="data-item">
+						<div class="note">Базовый год - <span class="note-base-year">@ds (01.01.@Model.data_status)</span>.</div>
+					</div>
+				</div>
+				<div class="data-row">
+					<div class="data-block stretch">
+						<div class="data-row border-block">
+							<h4>Виды деятельности в границах ТЗ</h4>
+							<div class="data-block stretch">
+								<label class="data-item data-item-right">
+									<span class="data-label">Комбинированное производство, более 25 МВт</span>
+									<input type="checkbox" class="data-check" disabled @Model.combine_prod_more25>
+								</label>
+								<label class="data-item data-item-right">
+									<span class="data-label">Комбинированное производство, менее 25 МВт</span>
+									<input type="checkbox" class="data-check" disabled @Model.combine_prod_less25>
+								</label>
+							</div>
+							<div class="data-block stretch">
+								<label class="data-item data-item-right">
+									<span class="data-label">Некомбинированное производство</span>
+									<input type="checkbox" class="data-check" disabled @Model.not_combine_prod>
+								</label>
+
+								<label class="data-item data-item-right">
+									<span class="data-label">Договор поставки</span>
+									<input type="checkbox" class="data-check" disabled @Model.delivery_contract>
+								</label>
+							</div>
+							<div class="data-block stretch">
+								<label class="data-item data-item-right">
+									<span class="data-label">Передача</span>
+									<input type="checkbox" class="data-check" disabled @Model.transfer>
+								</label>
+								<label class="data-item data-item-right">
+									<span class="data-label">Сбыт</span>
+									<input type="checkbox" class="data-check" disabled @Model.sale>
+								</label>
+							</div>
+						</div>
+						<div class="data-item">
+							<label class="data-label">Территория действия ТЗ</label>
+							<input type="text" name="" value="@Model.tz_territory" class="data-value stretch" disabled>
+						</div>
+					</div>
+					<div class="data-block">
+						<h4>Дифференциация тарифов</h4>
+						<label class="data-item data-item-right">
+							<span class="data-label">без дифференциации</span>
+							@{
+								is_checked = Model.tariff_differentiation == 1 ? "checked" : "";
+							}
+							<input type="checkbox" class="data-check" disabled @is_checked>
+						</label>
+						<label class="data-item data-item-right">
+							<span class="data-label">до тепловых пунктов</span>
+							@{
+								is_checked = Model.tariff_differentiation == 2 ? "checked" : "";
+							}
+							<input type="checkbox" class="data-check" disabled @is_checked>
+						</label>
+						<label class="data-item data-item-right">
+							<span class="data-label">после тепловых пунктов</span>
+							@{
+								is_checked = Model.tariff_differentiation == 3 ? "checked" : "";
+							}
+							<input type="checkbox" class="data-check" disabled @is_checked>
+						</label>
+					</div>
+				</div>
+				<div class="data-row">
+					<div class="data-row">
+						<label class="data-label">Решение:</label>
+						<div class="data-row">
+							<div class="data-item">
+								<label class="data-label sublabel">от</label>
+								<input type="date" class="data-value md-fix" value="@Model.decision_date">
+							</div>
+							<div class="data-item">
+								<label class="data-label sublabel">№</label>
+								<input type="text" class="data-value lg-fix" value="@Model.decision_num">
+							</div>
+						</div>
+					</div>
+					<div class="data-row">
+						<label class="data-label">Протокол:</label>
+						<div class="data-row">
+							<div class="data-item">
+								<label class="data-label sublabel">от</label>
+								<input type="date" class="data-value md-fix" value="@Model.protocol_date">
+							</div>
+							<div class="data-item">
+								<label class="data-label sublabel">№</label>
+								<input type="text" class="data-value lg-fix" value="@Model.protocol_num">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="scroll-block-wrapper" style="max-height: 52vh;">
+				<div class="data-block scroll-block">
+					<div class="accordion data-block">
+						<div class="border-block">
+							<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel1" aria-expanded="false">Тариф на тепловую энергию в горячей воде</button>
+							<div id="panel1" class="accordion-collapse collapse">
+								<div class="accordion-body">
+									<div class="data-block">
+											@await Component.InvokeAsync("TZ_HeatEnergyMainTariffData_Partial", new { tz_id = Model.tz_id, data_status = Model.data_status, perspective_year = Model.perspective_year })
+										<div class="accordion data-block">
+											<div class="border-block">
+												<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel1-1" aria-expanded="false">Одноставочный тариф</button>
+												<div id="panel1-1" class="accordion-collapse collapse">
+													<div class="accordion-body">
+														@await Component.InvokeAsync("TZ_HeatEnergySinglerateTariffData_Partial", new { tz_id = Model.tz_id, data_status = Model.data_status, perspective_year = Model.perspective_year })
+													</div>
+												</div>
+											</div>
+											<div class=" border-block">
+												<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel1-2" aria-expanded="false">Двухставочный тариф</button>
+												<div id="panel1-2" class="accordion-collapse collapse">
+													<div class="accordion-body">
+														@await Component.InvokeAsync("TZ_HeatEnergyDoublerateTariffData_Partial", new { tz_id = Model.tz_id, data_status = Model.data_status, perspective_year = Model.perspective_year })
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class=" border-block">
+							<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel2" aria-expanded="false">Тариф на передачу тепловой энергии</button>
+							<div id="panel2" class="accordion-collapse collapse">
+								<div class="accordion-body">
+									<div class="data-block">
+										@await Component.InvokeAsync("TZ_HeatEnergyTransferTariffData_Partial", new { tz_id = Model.tz_id, data_status = Model.data_status, perspective_year = Model.perspective_year })
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="border-block">
+							<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel3" aria-expanded="false">Тариф на теплоноситель (пар / горячая вода) и тарифы на горячую воду, без НДС</button>
+							<div id="panel3" class="accordion-collapse collapse">
+								<div class="accordion-body">
+									<div class="data-block">
+										@await Component.InvokeAsync("TZ_HeatCarrierSteamHotWaterTariffData_Partial", new { tz_id = Model.tz_id, data_status = Model.data_status, perspective_year = Model.perspective_year })
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="border-block">
+							<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel4" aria-expanded="false">Тариф ЕТО / Тариф с субсидированием / Льготный тариф</button>
+							<div id="panel4" class="accordion-collapse collapse">
+								<div class="accordion-body">
+									<div class="data-block">
+										@await Component.InvokeAsync("TZ_Tariff_Eto_Amount_PreferenceData_Partial", new { tz_id = Model.tz_id, data_status = Model.data_status, perspective_year = Model.perspective_year })
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="border-block">
+							<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel6" aria-expanded="false">Объём перекрёстного субсидирования</button>
+							<div id="panel6" class="accordion-collapse collapse">
+								<div class="accordion-body">
+									<div class="data-block">
+										@await Component.InvokeAsync("TZ_CrossSubsidizationAmountTariffData_Partial", new { tz_id = Model.tz_id, data_status = Model.data_status, perspective_year = Model.perspective_year })
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="border-block">
+							<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel7" aria-expanded="false">Тариф на тепловую энергию в паре</button>
+							<div id="panel7" class="accordion-collapse collapse">
+								@await Component.InvokeAsync("TZ_HeatEnergySteamSingleRateData_Partial", new { tz_id = Model.tz_id, data_status = Model.data_status, perspective_year = Model.perspective_year })
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>	
+
+<script type="text/javascript" src="@Url.Content("~/hss/js/popup_common_scripts.js")"></script>
+<script type="text/javascript">
+	document.querySelector('#paramNumberTZTariffConnection').addEventListener('change', (event) => {
+		OpenPopupTariffConnection($('#paramNumberTZTariffConnection').val(), $('#p_year_pop_tariffs').val(), '/TSO/TariffConnection/OpenTariffConnection', 'TZTariffConnectionDataPopup');
+	});
+
+	document.querySelector('#p_year_pop_tariffs').addEventListener('change', (event) => {
+		OpenPopupTariffConnection($('#paramNumberTZTariffConnection').val(), $('#p_year_pop_tariffs').val(), '/TSO/TariffConnection/OpenTariffConnection', 'TZTariffConnectionDataPopup');
+	});
+
+	function RefreshTable() {
+		if ($("#refresh_table").val() === "1") {
+			GetListOnPage();
+		}
+	}
+</script>

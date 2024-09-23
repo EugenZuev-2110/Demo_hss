@@ -1,0 +1,125 @@
+﻿@model List<WebProject.Areas.Sources.Models.Source_DocsFootageViewModel>
+
+@{
+    Layout = null; int row_count = 0;
+}
+
+
+<table id="resAccountTable" class="display compact table-inp-stretch" style="width:100%">
+    <thead>
+        <tr>
+            <th>№ п/п</th>
+            <th>Тип материала</th>
+            <th>Краткое описание материала</th>
+            <th>Загрузить файл</th>
+            <th>Ссылка на файл материала</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            string is_disabled = string.Empty;
+            string is_disabled_2 = string.Empty;
+            if (item.doc_num == 0)
+            {
+                is_disabled = "disabled";
+            }
+            if (item.source_id == 0)
+            {
+                is_disabled_2 = "disabled";
+            }
+
+            <input hidden name="source_id" value="@item.source_id" form="form4_@(++row_count)">
+            <input hidden name="data_status" value="@item.data_status" form="form4_@(row_count)">
+            <input hidden name="doc_num" value="@item.doc_num" form="form4_@(row_count)">
+            <input hidden name="is_deleted" id="is_deleted_df_@(row_count)" value="@item.is_deleted" form="form4_@(row_count)">
+            <tr>
+                <td>@(row_count)</td>
+                <td>
+                    <div class="data-item">
+                        <select class="selectpicker data-value" data-container="#SourceDataPopup" form="form4_@(row_count)" name="doc_type_id" id="doc_type_id_@row_count" placeholder="Выберите значение" required>
+                            @foreach (var docType in ViewBag.DocumentTypes)
+                            {
+                                if (docType.Id == item.doc_type_id)
+                                {
+                                    <option value="@docType.Id" selected>@docType.doc_type</option>
+                                }
+                                if (docType.Id != item.doc_type_id)
+                                {
+                                    <option value="@docType.Id">@docType.doc_type</option>
+                                }
+                            }
+                        </select>
+                        <a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Выберите значение из списка"></a>
+                    </div>
+                </td>
+                <td><textarea class="data-value" value="@item.doc_description" form="form4_@(row_count)" name="doc_description" id="doc_description_@row_count"></textarea></td>
+
+                <td>
+                    <form enctype="multipart/form-data" asp-controller="Sources" asp-action="Source_DocsFootage_Save" asp-antiforgery="true" asp-area="Sources" id="form4_@(row_count)" data-ajax-failure="onFailedForm"
+                          data-ajax-success="onSuccessFormSource_DocsFootage" data-ajax-begin="onBeginForm" data-ajax="true" data-ajax-method="POST" class="needs-validation form-row" novalidate>
+                        <input type="file" class="data-value" form="form4_@(row_count)" id="doc_url_@row_count">
+                        @Html.AntiForgeryToken()
+                    </form>
+                </td> 
+                <td>
+                    @{
+                        string url = ViewBag.Host + item.doc_url;
+                        <a href="@url" class="data-value" form="form4_@(row_count)" target="_blank">@item.doc_name</a>
+                    }
+                </td>
+                <td>
+                    <button class="bttn bttn-square bttn-icon-save hp_docs_phootage_save_btn" type="submit" form="form4_@(row_count)" title="Сохранить" @is_disabled_2></button>
+                    <button class="bttn bttn-square bttn-icon-del hp_docs_phootage_delete_btn" type="button" form="form4_@(row_count)" onclick="DeleteRow_DocsFootage(@row_count)" title="Удалить" @is_disabled></button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+<script type="text/javascript">
+
+    var row_cnt = 0;
+
+    var onSuccessFormSource_DocsFootage = function (xhr) {
+        hidePreloader();
+        if (xhr.success && xhr.is_deleted) {
+            showMessage('Данные удалены.', 'modal', 'success');
+        }
+        else if (xhr.success && !xhr.is_deleted) {
+            showMessage('Данные сохранены.', 'modal', 'success');
+        }
+        else {
+            showMessage(xhr.error, 'modal', 'fault');
+        }
+        GetListOnPageSource_DocsFootage();
+    };
+
+    function DeleteRow_DocsFootage(row_num) {
+        $('#is_deleted_df_' + row_num).val(true);
+        $('#form4_' + row_num).submit();
+    }
+
+    function GetListOnPageSource_DocsFootage() {
+        showPreloader();
+        $.ajax({
+            type: 'GET',
+            url: '@Html.Raw(Url.Action("OnGetSource_DocsFootage_ViewComponent", "Sources", new { Area = "Sources" }))',
+            data: {
+                data_status: $('#data_status').val(),
+                source_id: $('#source_id').val()
+            },
+            dataType: 'html'
+        })
+            .done(function (result) {
+                var div = $('#Source_EquipmentPart_DocsFootage');
+                div.html("");
+                div.html(result);
+                $('.selectpicker').selectpicker();
+                hidePreloader();
+            });
+    }
+
+</script>

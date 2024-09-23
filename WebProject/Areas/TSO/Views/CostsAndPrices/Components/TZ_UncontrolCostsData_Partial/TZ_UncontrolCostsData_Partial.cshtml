@@ -1,0 +1,70 @@
+﻿@model WebProject.Areas.TSO.Models.TZViewModel
+
+<div class="data-block scroll-block">
+	<div class="accordion data-block">
+		<div class="border-block">
+			<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel13" aria-expanded="false">Отчисления на социальные нужды</button>
+			<div id="panel13" class="accordion-collapse collapse">
+				<div class="accordion-body">
+					<div class="data-block">
+						@await Component.InvokeAsync("TZ_SocialDeductionCostsData_Partial", new { tz_id = Model.tz_id, data_status = Model.data_status, perspective_year = Model.perspective_year })
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class=" border-block">
+			<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel14" aria-expanded="false">Расходы на уплату налогов, сборов и других обязательных платежей</button>
+			<div id="panel14" class="accordion-collapse collapse">
+				<div class="accordion-body">
+					<div class="data-block">
+						@await Component.InvokeAsync("TZ_TaxesCostsData_Partial", new { tz_id = Model.tz_id, data_status = Model.data_status, perspective_year = Model.perspective_year })
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="border-block">
+			<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel15" aria-expanded="false">Амортизация основных средств и нематериальных активов</button>
+			<div id="panel15" class="accordion-collapse collapse">
+				<div class="accordion-body">
+					<div class="data-block">
+						@await Component.InvokeAsync("TZ_AmortizationCostsData_Partial", new { tz_id = Model.tz_id, data_status = Model.data_status, perspective_year = Model.perspective_year })
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="border-block">
+			<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel16" aria-expanded="false">Расходы на оплату услуг, оказываемых организациями, осуществляющими регулируемые виды деятельности</button>
+			<div id="panel16" class="accordion-collapse collapse">
+				<div class="accordion-body">
+					<div class="data-block">
+						@await Component.InvokeAsync("TZ_RegOrgServiceCostsData_Partial", new { tz_id = Model.tz_id, data_status = Model.data_status, perspective_year = Model.perspective_year })
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="border-block">
+			<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel17" aria-expanded="false">Налог на прибыль</button>
+			<div id="panel17" class="accordion-collapse collapse">
+				<div class="accordion-body">
+					<div class="data-block">
+						@await Component.InvokeAsync("TZ_IncomeTaxCostsData_Partial", new { tz_id = Model.tz_id, data_status = Model.data_status, perspective_year = Model.perspective_year })
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="border-block">
+			<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel18" aria-expanded="false">Прочие неподконтрольные расходы</button>
+			<div id="panel18" class="accordion-collapse collapse">
+				<div class="accordion-body">
+					<div class="data-block">
+						@await Component.InvokeAsync("TZ_UncontrolOtherCostsData_Partial", new { tz_id = Model.tz_id, data_status = Model.data_status, perspective_year = Model.perspective_year })
+						@*<div class="scroll-table-wrapper">
+						</div>*@
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript" src="@Url.Content("~/hss/js/popup_common_scripts.js")"></script>

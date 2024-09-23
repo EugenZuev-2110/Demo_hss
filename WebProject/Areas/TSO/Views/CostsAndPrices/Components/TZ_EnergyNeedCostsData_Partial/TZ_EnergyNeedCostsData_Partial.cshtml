@@ -1,0 +1,87 @@
+﻿@model WebProject.Areas.TSO.Models.TZEnergyNeedCostsViewModel
+@{
+	Layout = null; 
+}
+
+<table class="table-inp-stretch" style="width:100%;">
+	<thead>
+		<tr>
+			<th rowspan="2"></th>
+			<th colspan="3">Факт</th>
+			<th colspan="3">План</th>
+		</tr>
+		<tr>
+			<th>I полугодие</th>
+			<th>II полугодие</th>
+			<th>Год</th>
+			<th>I полугодие</th>
+			<th>II полугодие</th>
+			<th>Год</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>Всего затраты, <span class="data-unit">тыс. руб. без НДС</span></td>
+			<td><input type="text" asp-for="@Model.costs_all_energy_fact_1" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_all_energy_fact_2" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_all_energy_fact_3" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_all_energy_plan_1" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_all_energy_plan_2" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_all_energy_plan_3" class="data-value" disabled></td>
+		</tr>
+		<tr>
+			<td>1) технологические цели</td>
+			<td><input type="text" asp-for="@Model.costs_techneed_fact_1" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_techneed_fact_2" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_techneed_fact_3" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_techneed_plan_1" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_techneed_plan_2" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_techneed_plan_3" class="data-value" disabled></td>
+		</tr>
+		<tr>
+			<td>- затраты на тепловую энергию</td>
+			<td><input type="text" asp-for="@Model.costs_techneed_heat_energy_fact_1" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_techneed_heat_energy_fact_2" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_techneed_heat_energy_fact_3" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_techneed_heat_energy_plan_1" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_techneed_heat_energy_plan_2" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_techneed_heat_energy_plan_3" class="data-value" disabled></td>
+		</tr>
+		<tr>
+			<td>- затраты на электроэнергию</td>
+			<td><input type="text" asp-for="@Model.costs_techneed_el_energy_fact_1" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_techneed_el_energy_fact_2" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_techneed_el_energy_fact_3" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_techneed_el_energy_plan_1" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_techneed_el_energy_plan_2" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_techneed_el_energy_plan_3" class="data-value" disabled></td>
+		</tr>
+		<tr>
+			<td>2) хозяйственные цели</td>
+			<td><input type="text" asp-for="@Model.costs_houseneed_fact_1" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_houseneed_fact_2" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_houseneed_fact_3" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_houseneed_plan_1" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_houseneed_plan_2" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_houseneed_plan_3" class="data-value" disabled></td>
+		</tr>
+		<tr>
+			<td>- затраты на тепловую энергию</td>
+			<td><input type="text" asp-for="@Model.costs_houseneed_heat_energy_fact_1" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_houseneed_heat_energy_fact_2" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_houseneed_heat_energy_fact_3" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_houseneed_heat_energy_plan_1" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_houseneed_heat_energy_plan_2" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_houseneed_heat_energy_plan_3" class="data-value" disabled></td>
+		</tr>
+		<tr>
+			<td>- затраты на электроэнергию</td>
+			<td><input type="text" asp-for="@Model.costs_houseneed_el_energy_fact_1" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_houseneed_el_energy_fact_2" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_houseneed_el_energy_fact_3" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_houseneed_el_energy_plan_1" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_houseneed_el_energy_plan_2" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.costs_houseneed_el_energy_plan_3" class="data-value" disabled></td>
+		</tr>
+	</tbody>
+</table>

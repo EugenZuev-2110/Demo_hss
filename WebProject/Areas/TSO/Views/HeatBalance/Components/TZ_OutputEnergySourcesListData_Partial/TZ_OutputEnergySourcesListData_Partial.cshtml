@@ -1,0 +1,54 @@
+﻿@model List<WebProject.Areas.TSO.Models.TZOutputEnergySourcesListDataViewModel>
+
+<div class="data-row">
+	<div class="data-item">
+		<h4>Поставка тепловой энергии осуществляется в:</h4>
+	</div>
+	<button class="bttn bttn-square bttn-icon-add ms-auto" type="button" title="Добавить" id="btnAddInputSource" onclick="OpenSourceEnergyOutput(0, 0, 0, $('#paramNumberTZ').val(), $('#data_status').val(), $('#perspective_year_popup_second').val(), 'div_tz_output_energy_one');"></button>
+</div>
+@*<table class="display compact table-inp-stretch table-clicked" style="width:100%">*@
+<div class="scroll-table-wrapper">
+	<table class="table-inp-stretch table-clicked" style="width:100%">
+		<thead>
+			<tr>
+				<th rowspan="3">УНОМ ТЗ/Наименование ТСО</th>
+				<th rowspan="3">УНОМ и наименование<br>источника тепловой энергии</th>
+				<th rowspan="3">Покупка тепловой<br>энергии осуществляется</th>
+				<th colspan="6">Покупная тепловая энергия, всего, <span class="data-unit">Гкал</span></th>
+				@*<th rowspan="3">Удалить</th>*@
+			</tr>
+			<tr>
+				<th colspan="3" style="position:static;">Факт</th>
+				<th colspan="3">План</th>
+			</tr>
+			<tr>
+				<th style="position:static;">I полугодие</th>
+				<th>II полугодие</th>
+				<th>Год</th>
+				<th>I полугодие</th>
+				<th>II полугодие</th>
+				<th>Год</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var table_list in Model)
+			{
+				<tr ondblclick="OpenSourceEnergyOutput(@table_list.source_id, @table_list.buy_place_id, @table_list.input_tz_id, @table_list.output_tz_id, @table_list.data_status, @table_list.perspective_year, 'div_tz_output_energy_one');">
+					<td>@table_list.tz_tso_name</td>
+					<td>@table_list.unom_source_name</td>
+					<td>@table_list.buy_place_name</td>
+					<td>@table_list.buy_energy_fact_1</td>
+					<td>@table_list.buy_energy_fact_2</td>
+					<td>@table_list.buy_energy_fact_3</td>
+					<td>@table_list.buy_energy_plan_1</td>
+					<td>@table_list.buy_energy_plan_2</td>
+					<td>@table_list.buy_energy_plan_3</td>
+					@*<td>
+						<button class="bttn bttn-square bttn-icon-del" type="button" title="Удалить" onclick="DeleteSourceEnergyOutput(@table_list.source_id, @table_list.buy_place_id, @table_list.input_tz_id, @table_list.output_tz_id, @table_list.data_status, @table_list.perspective_year);">
+						</button>
+					</td>*@
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>

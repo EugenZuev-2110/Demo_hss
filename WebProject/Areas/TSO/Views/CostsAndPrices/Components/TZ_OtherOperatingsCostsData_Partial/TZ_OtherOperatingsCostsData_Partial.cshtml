@@ -1,0 +1,134 @@
+﻿@model WebProject.Areas.TSO.Models.TZOtherOperatingsCostsViewModel
+@{
+	Layout = null; string disable = "";
+}
+@if (Model.tz_id == 0)
+{
+	disable = "disabled";
+}
+<form asp-controller="CostsAndPrices" asp-action="TZOtherOperatingsCosts_Save" asp-antiforgery="true" asp-area="TSO"
+	  data-ajax-failure="onFailedFormTZ" data-ajax-success="onSuccessFormTZ" data-ajax-begin="onBeginFormTZ" 
+	  data-ajax="true" data-ajax-method="POST">
+	<input type="hidden" name="tz_id" value="@Model.tz_id" />
+	<input type="hidden" name="data_status" value="@Model.data_status" />
+	<input type="hidden" name="perspective_year" value="@Model.perspective_year" />
+	<table class="table-inp-stretch" style="width:100%;">
+		<thead>
+			<tr>
+				<th rowspan="2"></th>
+				<th colspan="3">Факт</th>
+				<th colspan="3">План</th>
+			</tr>
+			<tr>
+				<th style="position: static;">I полугодие</th>
+				<th>II полугодие</th>
+				<th>Год</th>
+				<th>I полугодие</th>
+				<th>II полугодие</th>
+				<th>Год</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>Расходы на служебные командировки, <span class="data-unit">тыс. руб.</span></td>
+				<td><input type="text" asp-for="@Model.cost_travel_fact_1" class="data-value double" data-double="other_operatings_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_travel_fact_2" class="data-value double" data-double="other_operatings_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_travel_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.cost_travel_plan_1" class="data-value double" data-double="other_operatings_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_travel_plan_2" class="data-value double" data-double="other_operatings_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_travel_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>Расходы на обучение персонала, <span class="data-unit">тыс. руб.</span></td>
+				<td><input type="text" asp-for="@Model.cost_staff_train_fact_1" class="data-value double" data-double="other_operatings_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_staff_train_fact_2" class="data-value double" data-double="other_operatings_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_staff_train_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.cost_staff_train_plan_1" class="data-value double" data-double="other_operatings_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_staff_train_plan_2" class="data-value double" data-double="other_operatings_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_staff_train_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>Расходы на услуги банков, <span class="data-unit">тыс. руб.</span></td>
+				<td><input type="text" asp-for="@Model.cost_bank_service_fact_1" class="data-value double" data-double="other_operatings_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_bank_service_fact_2" class="data-value double" data-double="other_operatings_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_bank_service_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.cost_bank_service_plan_1" class="data-value double" data-double="other_operatings_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_bank_service_plan_2" class="data-value double" data-double="other_operatings_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_bank_service_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>Арендная плата непроизводственных объектов, <span class="data-unit">тыс. руб.</span></td>
+				<td><input type="text" asp-for="@Model.rent_nonprod_obj_all_fact_1" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.rent_nonprod_obj_all_fact_2" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.rent_nonprod_obj_all_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.rent_nonprod_obj_all_plan_1" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.rent_nonprod_obj_all_plan_2" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.rent_nonprod_obj_all_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- в государственной собственности</td>
+				<td><input type="text" asp-for="@Model.rent_nonprod_obj_state_prop_fact_1" class="data-value double" data-double="other_operatings_costs"></td>
+				<td><input type="text" asp-for="@Model.rent_nonprod_obj_state_prop_fact_2" class="data-value double" data-double="other_operatings_costs"></td>
+				<td><input type="text" asp-for="@Model.rent_nonprod_obj_state_prop_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.rent_nonprod_obj_state_prop_plan_1" class="data-value double" data-double="other_operatings_costs"></td>
+				<td><input type="text" asp-for="@Model.rent_nonprod_obj_state_prop_plan_2" class="data-value double" data-double="other_operatings_costs"></td>
+				<td><input type="text" asp-for="@Model.rent_nonprod_obj_state_prop_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- в муниципальной собственности</td>
+				<td><input type="text" asp-for="@Model.rent_nonprod_obj_municipal_prop_fact_1" class="data-value double" data-double="other_operatings_costs"></td>
+				<td><input type="text" asp-for="@Model.rent_nonprod_obj_municipal_prop_fact_2" class="data-value double" data-double="other_operatings_costs"></td>
+				<td><input type="text" asp-for="@Model.rent_nonprod_obj_municipal_prop_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.rent_nonprod_obj_municipal_prop_plan_1" class="data-value double" data-double="other_operatings_costs"></td>
+				<td><input type="text" asp-for="@Model.rent_nonprod_obj_municipal_prop_plan_2" class="data-value double" data-double="other_operatings_costs"></td>
+				<td><input type="text" asp-for="@Model.rent_nonprod_obj_municipal_prop_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- прочие</td>
+				<td><input type="text" asp-for="@Model.rent_nonprod_obj_other_fact_1" class="data-value double" data-double="other_operatings_costs"></td>
+				<td><input type="text" asp-for="@Model.rent_nonprod_obj_other_fact_2" class="data-value double" data-double="other_operatings_costs"></td>
+				<td><input type="text" asp-for="@Model.rent_nonprod_obj_other_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.rent_nonprod_obj_other_plan_1" class="data-value double" data-double="other_operatings_costs"></td>
+				<td><input type="text" asp-for="@Model.rent_nonprod_obj_other_plan_2" class="data-value double" data-double="other_operatings_costs"></td>
+				<td><input type="text" asp-for="@Model.rent_nonprod_obj_other_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>Лизинг непроизводственных объектов (без перехода права собственности), <span class="data-unit">тыс. руб.</span></td>
+				<td><input type="text" asp-for="@Model.leasing_nonprod_obj_without_own_rights_fact_1" class="data-value double" data-double="other_operatings_costs"></td>
+				<td><input type="text" asp-for="@Model.leasing_nonprod_obj_without_own_rights_fact_2" class="data-value double" data-double="other_operatings_costs"></td>
+				<td><input type="text" asp-for="@Model.leasing_nonprod_obj_without_own_rights_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.leasing_nonprod_obj_without_own_rights_plan_1" class="data-value double" data-double="other_operatings_costs"></td>
+				<td><input type="text" asp-for="@Model.leasing_nonprod_obj_without_own_rights_plan_2" class="data-value double" data-double="other_operatings_costs"></td>
+				<td><input type="text" asp-for="@Model.leasing_nonprod_obj_without_own_rights_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>Прочие операционные расходы, <span class="data-unit">тыс. руб.</span></td>
+				<td><input type="text" asp-for="@Model.cost_other_operatings_all_fact_1" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.cost_other_operatings_all_fact_2" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.cost_other_operatings_all_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.cost_other_operatings_all_plan_1" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.cost_other_operatings_all_plan_2" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.cost_other_operatings_all_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- общехозяйственные расходы</td>
+				<td><input type="text" asp-for="@Model.cost_other_operating_house_fact_1" class="data-value double" data-double="other_operatings_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_other_operating_house_fact_2" class="data-value double" data-double="other_operatings_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_other_operating_house_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.cost_other_operating_house_plan_1" class="data-value double" data-double="other_operatings_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_other_operating_house_plan_2" class="data-value double" data-double="other_operatings_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_other_operating_house_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- иные расходы</td>
+				<td><input type="text" asp-for="@Model.cost_other_operating_fact_1" class="data-value double" data-double="other_operatings_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_other_operating_fact_2" class="data-value double" data-double="other_operatings_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_other_operating_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.cost_other_operating_plan_1" class="data-value double" data-double="other_operatings_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_other_operating_plan_2" class="data-value double" data-double="other_operatings_costs"></td>
+				<td><input type="text" asp-for="@Model.cost_other_operating_plan_3" class="data-value" disabled></td>
+			</tr>
+		</tbody>
+	</table>
+	<button type="submit" class="bttn bttn-color ms-auto" @disable>Сохранить</button>
+</form>

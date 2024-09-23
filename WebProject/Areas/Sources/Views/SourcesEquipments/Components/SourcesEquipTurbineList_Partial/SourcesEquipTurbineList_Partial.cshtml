@@ -1,0 +1,130 @@
+﻿@model List<WebProject.Areas.Sources.Models.SourcesEquipTurbineViewModel>
+@{
+	int cnt_columns = 15;
+}
+
+<div class="table-block">
+	<div class="table-buttons sourcesEquipTurbineTable-buttons"></div>
+	<table id="sourcesEquipTurbineTable" class="display compact" style="width:100%">
+		<thead>
+			<tr>
+				<th>УНОМ Оборудования</th>
+				<th>Станционный номер</th>
+				<th>Статус</th>
+				<th>Тип</th>
+				<th>Марка</th>
+				<th>Очередь</th>
+				<th>Номер энергоблока</th>
+				<th>Завод изготовитель</th>
+				<th>Год ввода</th>
+				<th>УНОМ источника</th>
+				<th>Наименование источника</th>
+				<th>ТСО</th>
+				<th>УНОМ тарифной зоны</th>
+				<th>Тип источника</th>
+				<th>Статус источника</th>
+			</tr>
+			<tr class="filter-row ">
+				@for (int i = 0; i < @cnt_columns; i++)
+				{
+					if (i == 0)
+					{
+						<th class="dtfc-fixed-left" style="left:0; position:sticky;"><input type="text" class="filter-col-0" /></th>
+					}
+					else
+					{
+						<th><input type="text" class="filter-col-@i" /></th>
+					}
+				}
+			</tr>
+		</thead>
+		<tbody>
+				@foreach (var s_equip in Model)
+				{
+				<tr ondblclick="OpenPopupSourceEquip(@s_equip.s_equip_id);">
+					<td>@s_equip.equip_unom</td>
+					<td>@s_equip.turbine_num</td>
+					<td>@s_equip.equip_status_name</td>
+					<td>@s_equip.turbine_type_name</td>
+					<td>@s_equip.mark</td>
+					<td>@s_equip.queue_num</td>
+					<td>@s_equip.energy_input_num</td>
+					<td>@s_equip.manufacturer</td>
+					<td>@s_equip.start_year_turbine</td>
+					<td>@s_equip.source_unom</td>
+					<td>@s_equip.source_name</td>
+					<td>@s_equip.tso_name</td>
+					<td>@s_equip.tz_num</td>
+					<td>@s_equip.source_type_name</td>
+					<td>@s_equip.source_status_name</td>
+				</tr>
+				}
+		</tbody>
+	</table>
+</div>
+<div class="data-row table-summary">
+	<div class="data-block">
+		<div class="data-item">
+			<h5 class="data-label">Всего записей:</h5>
+			<span class="data-value mark-color">1 000</span>
+		</div>
+		<div class="data-item">
+			<span class="data-label">∑ N<sub>у</sub> =</span>
+			<span class="data-value mark-color">10</span>
+			<span class="data-unit">МВт</span>
+		</div>
+		<div class="data-item">
+			<span class="data-label">∑ Q<sub>у</sub> =</span>
+			<span class="data-value mark-color">10</span>
+			<span class="data-unit">Гкал/ч</span>
+		</div>
+	</div>
+	<div class="data-row">
+		<div class="data-row">
+			<h5>Паровые турбоагрегаты:</h5>
+			<div class="data-table-block">
+				<div class="data-item">
+					<span class="data-label">- количество:</span>
+					<span class="mark-color">4</span>
+					<span class="data-unit">шт.</span>
+				</div>
+				<div class="data-item">
+					<span class="data-label">- установленная мощность: ∑ N<sub>у</sub> =</span>
+					<span class="mark-color">4</span>
+					<span class="data-unit">МВт</span>
+					<span class="data-label">∑ Q<sub>у</sub> =</span>
+					<span class="mark-color">4</span>
+					<span class="data-unit">Гкал/ч</span>
+				</div>
+				<div class="data-item">
+					<span class="data-label">- располагаемая мощность: ∑ N<sub>у</sub> =</span>
+					<span class="mark-color">4</span>
+					<span class="data-unit">МВт</span>
+					<span class="data-label">∑ Q<sub>у</sub> =</span>
+					<span class="mark-color">4</span>
+					<span class="data-unit">Гкал/ч</span>
+				</div>
+			</div>
+		</div>
+		<div class="data-row">
+			<h5>Газовые турбоагрегаты:</h5>
+			<div class="data-table-block">
+				<div class="data-item">
+					<span class="data-label">- количество:</span>
+					<span class="mark-color">4</span>
+					<span class="data-unit">шт.</span>
+				</div>
+				<div class="data-item">
+					<span class="data-label">- установленная мощность: ∑ N<sub>у</sub> =</span>
+					<span class="mark-color">4</span>
+					<span class="data-unit">МВт</span>
+				</div>
+				<div class="data-item">
+					<span class="data-label">- располагаемая мощность: ∑ N<sub>у</sub> =</span>
+					<span class="mark-color">4</span>
+					<span class="data-unit">МВт</span>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,272 @@
+﻿<div class="data-block workspace">
+	<div class="data-block title-block">
+		<div class="data-row">
+			<ul class="breadcrumb">
+				<li class="breadcrumb-item"><a class="ref-color" href="#">Главная</a></li>
+				<li class="breadcrumb-item">Тепловые пункты и потребители - Тепловые пункты</li>
+			</ul>
+		</div>
+		<div class="data-row">
+			<h1 class="title">Тепловые пункты</h1>
+			<div class="data-row stretch justify-content-end">
+				<div class="data-item">
+					<button class="bttn bttn-color bttn-switch-hp" type="button">Переключить ТП</button>
+				</div>
+				<div class="data-item">
+					<button class="bttn bttn-color bttn-edit-data" type="button">Добавить/Удалить</button>
+					<a class="bttn bttn-color bttn-load-data" type="button" href="#!">Загрузить данные</a>
+					<button class="bttn bttn-color bttn-excel-export" type="button" id="excelFull">Выгрузить в Excel</button>
+				</div>
+			</div>
+		</div>
+		<div class="data-block static-block">
+			<div class="data-row">
+				<div class="data-item">
+					<partial name="_PerspectiveYearsList" />
+				</div>
+				<div class="note">Базовый год - <span class="note-base-year" id="base_year_info"></span>;</div>
+				<div class="note">Обновление связей данных -&nbsp;<span class="note-update-date"></span>.</div>
+			</div>
+			<div class="data-row">
+				<div class="data-item">
+					<partial name="_ExploitingOrgList" />
+				</div>
+				<div class="data-item">
+					<partial name="_HeatEnergySource" />
+				</div>
+
+				<div class="data-item">
+					<partial name="_HpTypeLocationsList" />
+				</div>
+				<div class="data-item">
+					<partial name="_HPStatusesForFilter" />
+				</div>
+				<div class="data-item" id="load_type_div" style="display: none;">
+					<partial name="_LoadTypesForFilter" />
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="data-block main-content">
+		
+		<input type="hidden" id="cur_action_name" value="OnGetHeatPointList_PartialViewComponent" />
+		<input type="hidden" id="cur_table_name" value="HplistTable" />
+
+		<div class="tab-content">
+			<div class="dropdown">
+				<button class="bttn bttn-square bttn-burger show" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M80 160h352M80 256h352M80 352h352"></path></svg>
+				</button>
+				<ul class="dropdown-menu" role="tablist">
+					<li>
+						<button onclick="TabChange(event);" data-tab-action="OnGetHeatPointList_PartialViewComponent" data-tab-tableid="HplistTable" class="dropdown-item active" data-bs-toggle="tab" data-bs-target="#listTab" type="button" role="tab" aria-controls="ratesTab" aria-selected="true">Перечень тепловых пунктов</button>
+					</li>
+					<li>
+						<button onclick="TabChange(event);" data-tab-action="OnGet_LoadExpensive_ViewComponent" data-tab-tableid="LoadExpensiveTable" class="dropdown-item" data-bs-toggle="tab" data-bs-target="#listTab" type="button" role="tab" aria-controls="ratesSteamTab" aria-selected="false">Нагрузки и расходы <br class="d-lg-none">по годам</button>
+					</li>
+					<li>
+						<button onclick="TabChange(event);" data-tab-action="OnGet_Equipment_ViewComponent" data-tab-tableid="equipmentTab" class="dropdown-item" data-bs-toggle="tab" data-bs-target="#listTab" type="button" role="tab" aria-controls="individualFeeTab" aria-selected="false">Оборудование</button>
+					</li>
+					<li>
+						<button onclick="TabChange(event);" data-tab-action="OnGet_LoadAttachmentSchemas_ViewComponent" data-tab-tableid="loadsSchemaTable" class="dropdown-item" data-bs-toggle="tab" data-bs-target="#listTab" type="button" role="tab" aria-controls="productCostsTab" aria-selected="false">Схемы присоединения <br class="d-lg-none">нагрузок</button>
+					</li>
+					<li>
+						<button onclick="TabChange(event);" data-tab-action="OnGet_Automatization_ViewComponent" data-tab-tableid="automationTable" class="dropdown-item" data-bs-toggle="tab" data-bs-target="#listTab" type="button" role="tab" aria-controls="nvvTab" aria-selected="false">Автоматизация</button>
+					</li>
+					<li>
+						<button onclick="TabChange(event);" data-tab-action="OnGet_EnergyResourceAccounting_ViewComponent" data-tab-tableid="resourcesTable" class="dropdown-item" data-bs-toggle="tab" data-bs-target="#listTab" type="button" role="tab" aria-controls="productCostsTab" aria-selected="false">Учет энергетических <br class="d-lg-none">ресурсов</button>
+					</li>
+					@*<li>
+						<button onclick="TabChange(event);" data-tab-action="OnGetCallTZ_PowerReservePaymentList_PartialViewComponent" data-tab-tableid="tzPowerReservePaymentTable" class="dropdown-item" data-bs-toggle="tab" data-bs-target="#listTab" type="button" role="tab" aria-controls="nvvTab" aria-selected="false">Мероприятия по развитию</button>
+					</li>*@
+				</ul>
+			</div>
+			<div class="tab-pane fade show active" id="listTab" role="tabpanel">				
+				<div class="data-block" id="heatPointDiv">
+					@await Component.InvokeAsync("HeatPointList_Partial")
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+@section pageJs {
+	<script type="text/javascript">
+
+		var is_page_loaded = false;
+
+		const editDataModal = document.getElementById('editHeatPointSwitchDataPopup');
+		editDataModal.addEventListener('shown.bs.modal', event => {
+			TableInit('hpSwitchTable', 'simple-scroll', '40vh', 0);
+		});
+
+		$('.bttn-switch-hp').on('click', (e) => {
+			OpenPopupHeatPointSwitch();
+		});
+
+		$(document).ready(function () {
+			setTimeout(function () {
+				$('#hp_main_view').addClass('active');
+			}, 500);
+			TableInit('HplistTable', 'full');
+		});
+
+		function GetListOnPage() {
+			showPreloader();
+			let action_name = $('#cur_action_name').val();
+			let table_name = $('#cur_table_name').val();
+			let curr_data;			
+			var per_year = document.getElementById('perspective_year');
+			$('#load_type_div').show();
+			if (action_name == 'OnGet_LoadExpensive_ViewComponent') {
+				if (!$("#perspective_year[multiple]").length) {
+					per_year.setAttribute('multiple', true);
+					$(per_year).selectpicker('destroy');
+					$(per_year).selectpicker();
+					var parent = per_year.parentElement;
+					$(parent).on('hide.bs.dropdown', function (e) {
+						GetListOnPage();
+					});
+				}				
+				curr_data = {
+					data_status: $('#data_status').val(),
+					perspective_years: $('[name="perspective_year"]').val(),
+					load_type: $('#load_types_for_filter :selected').val(),
+					hp_type_id: $('#hp_type_locations :selected').val(),
+					hp_status_id: $('#statuses_for_filter :selected').val(),
+					source_id: $('#heat_energy_source :selected').val(),
+					tso_id: $('#exp_tso :selected').val()					
+				};
+			}
+			else {
+				
+
+				per_year.removeAttribute('multiple');				
+				$(per_year).selectpicker('destroy');
+				$(per_year).selectpicker();
+				per_year.blur();
+				$('#load_type_div').hide();
+				curr_data = {
+					data_status: $('#data_status').val(),
+					perspective_year: $('#perspective_year').val(),
+					hp_type_id: $('#hp_type_locations :selected').val(),
+					hp_status_id: $('#statuses_for_filter :selected').val(),
+					source_id: $('#heat_energy_source :selected').val(),
+					tso_id: $('#exp_tso :selected').val()
+				};
+			}
+
+			$.ajax({
+				type: 'GET',
+				url: '/HeatPointsAndConsumers/HeatPoint/' + action_name,
+				data: curr_data,
+				traditional: true,
+				dataType: 'html'
+			})
+				.done(function (result) {
+					var div = $('#heatPointDiv');
+					div.html("");
+					div.html(result);
+					TableInit(table_name, 'full');
+					hidePreloader();
+				});			
+		}
+
+		function OpenPopupHeatPointSwitch() {
+			showPreloader();
+			$.ajax({
+				type: 'POST',
+				url: '/HeatPointsAndConsumers/HeatPoint/OpenHeatPointSwitch',
+				data: {
+					data_status: $('#data_status').val()
+				},
+				dataType: 'html'
+			})
+				.done(function (result) {
+					var div = $('#editHeatPointSwitchDataPopup');
+					div.html("");
+					div.html(result);
+					$('.selectpicker').selectpicker();
+
+					if ($('#editHeatPointSwitchDataPopup').is(':hidden')) {
+						showModal('editHeatPointSwitchDataPopup');
+					}
+					else {
+						TableInit('hpSwitchTable', 'simple-scroll', '40vh', 0);
+					}
+					hidePreloader();
+				});
+		}
+
+		function OpenPopupHeatPointAddRemove(heat_point_id) {
+			showPreloader();
+			$.ajax({
+				type: 'POST',
+				url: '/HeatPointsAndConsumers/HeatPoint/OpenHeatPointAddRemove',
+				data: {
+					data_status: $('#data_status').val(),
+					heat_point_id: heat_point_id
+				},
+				dataType: 'html'
+			})
+				.done(function (result) {
+					var div = $('#editHeatPointAddRemoveDataPopup');
+					div.html("");
+					div.html(result);
+					$('.selectpicker').selectpicker();
+
+					if ($('#editHeatPointAddRemoveDataPopup').is(':hidden')) {
+						showModal('editHeatPointAddRemoveDataPopup');
+					}
+
+					hidePreloader();
+				});
+		}
+
+		//function OpenPopupLoadsAndExpensives(heat_point_id) {
+		//	showPreloader();
+		//	$.ajax({
+		//		type: 'POST',
+		//		url: '/HeatPointsAndConsumers/HeatPoint/OpenLoadsAndExpensives',
+		//		data: {
+		//			data_status: $('#data_status').val(),
+		//			heat_point_id: heat_point_id
+		//		},
+		//		dataType: 'html'
+		//	})
+		//		.done(function (result) {
+		//			var div = $('#editLoadsAndExpensivesDataPopup');
+		//			div.html("");
+		//			div.html(result);
+		//			$('.selectpicker').selectpicker();
+
+		//			if ($('#editLoadsAndExpensivesDataPopup').is(':hidden')) {
+		//				showModal('editLoadsAndExpensivesDataPopup');
+		//			}
+
+		//			hidePreloader();
+		//		});
+		//}
+
+		document.querySelector('#exp_tso').addEventListener('change', (event) => {
+			GetListOnPage();
+		});
+
+		document.querySelector('#heat_energy_source').addEventListener('change', (event) => {
+			GetListOnPage();
+		});
+
+		document.querySelector('#statuses_for_filter').addEventListener('change', (event) => {
+			GetListOnPage();
+		});
+
+		document.querySelector('#hp_type_locations').addEventListener('change', (event) => {
+			GetListOnPage();
+		});
+
+		document.querySelector('#load_types_for_filter').addEventListener('change', (event) => {
+			GetListOnPage();
+		});
+
+	</script>
+}

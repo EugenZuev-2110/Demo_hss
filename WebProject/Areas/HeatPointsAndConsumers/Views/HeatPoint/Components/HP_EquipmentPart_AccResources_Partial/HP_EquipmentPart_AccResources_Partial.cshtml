@@ -1,0 +1,124 @@
+﻿@model List<WebProject.Areas.HeatPointsAndConsumers.Models.HPAddRemove_AccResourcesViewModel>
+
+@{
+	Layout = null; int row_count = 0;
+}
+
+<div class="forms-block">
+	@foreach (var item in Model)
+	{
+		<form style="display: none;" asp-controller="HeatPoint" asp-action="HpAddRemove_AccResources_Save" asp-antiforgery="true" asp-area="HeatPointsAndConsumers" id="form3_@(++row_count)" data-ajax-failure="onFailedForm"
+		data-ajax-success="onSuccessFormHP_AccResources" data-ajax-begin="onBeginForm" data-ajax="true" data-ajax-method="POST" class="needs-validation form-row" novalidate>
+			@Html.AntiForgeryToken()
+		</form>
+	}
+</div>
+
+@{ row_count = 0; }
+
+
+			<table id="resAccountTable" class="display compact table-inp-stretch" style="width:100%">
+				<thead>
+					<tr>
+						<th>№ п/п</th>
+						<th>Вид узла учета ресурса</th>
+						<th>Марка</th>
+						<th>Кол-во, <span class="data-unit">шт.</span></th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach (var item in Model)
+					{
+						string is_disabled = string.Empty;
+						string is_disabled_2 = string.Empty;
+						if (item.device_num == 0)
+						{
+							is_disabled = "disabled";
+						}
+						if (item.heat_point_id == 0)
+						{
+							is_disabled_2 = "disabled";
+						}
+
+						<input hidden name="heat_point_id" value="@item.heat_point_id" form="form3_@(++row_count)">
+						<input hidden name="data_status" value="@item.data_status" form="form3_@(row_count)">
+						<input hidden name="device_num" value="@item.device_num" form="form3_@(row_count)">
+						<input hidden name="is_deleted" id="is_deleted_ar_@(row_count)" value="@item.is_deleted" form="form3_@(row_count)">
+						<tr>
+							<td>@(row_count)</td>
+							<td>
+								<div class="data-item">
+						<select class="selectpicker data-value" data-container="#editHeatPointAddRemoveDataPopup" form="form3_@(row_count)" name="acc_resource_type_id" id="acc_resource_type_@row_count" placeholder="Выберите значение" required>
+										@foreach (var tz_list in ViewBag.AccTypes)
+										{
+											if (tz_list.Id == item.acc_resource_type_id)
+											{
+											<option value="@tz_list.Id" selected>@tz_list.acc_resource_type</option>
+											}
+											if (tz_list.Id != item.acc_resource_type_id)
+											{
+											<option value="@tz_list.Id">@tz_list.acc_resource_type</option>
+											}
+										}
+									</select>
+									<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Выберите значение из списка"></a>
+								</div>
+							</td>
+							<td><input type="text" class="data-value" value="@item.meter_device_mark" form="form3_@(row_count)" name="meter_device_mark" id="meter_device_mark_@row_count"></td>
+							<td><input type="number" class="data-value" value="@item.count_devices" form="form3_@(row_count)" name="count_devices" id="count_devices_@row_count"></td>
+							<td>
+					<button class="bttn bttn-square bttn-icon-save hp_equip_acc_res_save_btn" type="submit" form="form3_@(row_count)" title="Сохранить" @is_disabled_2></button>
+					<button class="bttn bttn-square bttn-icon-del hp_equip_acc_res_delete_btn" type="button" form="form3_@(row_count)" onclick="DeleteRow_accRes(@row_count)" title="Удалить" @is_disabled></button>
+							</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		
+
+<script type="text/javascript">
+
+	var row_cnt = 0;
+
+	var onSuccessFormHP_AccResources = function (xhr) {
+		hidePreloader();
+		$("#refresh_table_pump_parts").val(1);
+		if (xhr.success && xhr.is_deleted) {			
+			showMessage('Данные удалены.', 'modal', 'success');	
+		}
+		else if (xhr.success && !xhr.is_deleted){
+			showMessage('Данные сохранены.', 'modal', 'success');
+		}
+		else {
+			showMessage(xhr.error, 'modal', 'fault');
+		}
+		GetListOnPageHP_AccResources();
+	};
+
+	function DeleteRow_accRes(row_num){
+		$('#is_deleted_ar_' + row_num).val(true);
+		$('#form3_' + row_num).submit();
+	}
+
+	function GetListOnPageHP_AccResources() {
+		showPreloader();
+		$.ajax({
+			type: 'GET',
+			url: '@Html.Raw(Url.Action("OnGetHP_EquipmentPart_HP_AccResources_ViewComponent", "HeatPoint", new { Area = "HeatPointsAndConsumers" }))',
+			data: {
+				data_status: $('#data_status').val(),
+				heat_point_id: $('#heat_point_id').val()
+			},
+			dataType: 'html'
+		})
+			.done(function (result) {
+				var div = $('#HP_EquipmentPart_AccResources');
+				div.html("");
+				div.html(result);
+				$('.selectpicker').selectpicker();
+				hidePreloader();
+			});
+	}
+
+</script>

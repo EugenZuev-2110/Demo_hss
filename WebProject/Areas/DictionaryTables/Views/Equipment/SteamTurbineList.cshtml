@@ -1,0 +1,160 @@
+﻿<div class="data-block workspace">
+			<div class="data-block title-block">
+				<div class="data-row">
+					<ul class="breadcrumb">
+						<li class="breadcrumb-item"><a class="ref-color" href="#">Главная</a></li>
+						<li class="breadcrumb-item">Справочные таблицы - Оборудование</li>
+					</ul>
+				</div>
+				<div class="data-row">
+					<h1 class="title">Оборудование</h1>
+					<div class="data-row stretch justify-content-end">
+						<div class="data-item">
+							<button class="bttn bttn-color bttn-edit-data" type="button">Добавить/Удалить</button>
+					<a class="bttn bttn-color bttn-load-data disabled" type="button" href="page2-2-1-2.html">Загрузить данные</a>
+						</div>
+					</div>
+				</div>
+			</div>	
+	<div class="data-block main-content">
+
+				<input type="hidden" id="cur_action_name" value="OnGetSteamTurbineList_PartialViewComponent" />
+				<input type="hidden" id="cur_table_name" value="SteamTurbineTable" />
+
+		<div class="tab-content">
+			<div class="dropdown">
+					  	<button class="bttn bttn-square bttn-burger" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+					    	<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M80 160h352M80 256h352M80 352h352"/></svg>
+					  	</button>
+                <ul class="dropdown-menu" role="tablist">
+                    <li>
+                        <button onclick="TabChange(event);" data-tab-action="OnGetSteamTurbineList_PartialViewComponent" data-tab-tableid="SteamTurbineTable" class="dropdown-item active" data-bs-toggle="tab" data-bs-target="#SteamTurbineTab" type="button" role="tab" aria-selected="true">Паровые турбоагрегаты</button>
+                    </li>
+                    <li>
+						<button onclick="TabChange(event);" data-tab-action="OnGetGasTurbineList_PartialViewComponent" data-tab-tableid="GasTurbineTable" class="dropdown-item" data-bs-toggle="tab" data-bs-target="#SteamTurbineTab" type="button" role="tab" aria-selected="false">Газовые турбоагрегаты</button>
+                    </li>
+                    <li>
+						<button onclick="TabChange(event);" data-tab-action="OnGetSteamBoilersList_PartialViewComponent" class="dropdown-item" data-tab-tableid="SteamBoilersTable" data-bs-toggle="tab" data-bs-target="#SteamTurbineTab" type="button" role="tab" aria-selected="false">Паровые котлоагрегаты</button>
+                    </li>
+                    <li>
+						<button onclick="TabChange(event);" data-tab-action="OnGetHWBoilersList_PartialViewComponent" class="dropdown-item" data-tab-tableid="HWBoilersTable" data-bs-toggle="tab" data-bs-target="#SteamTurbineTab" type="button" role="tab" aria-selected="false">Водогрейные котлоагрегаты</button>
+                    </li>
+                    <li>
+						<button onclick="TabChange(event);" data-tab-action="OnGetPistonInstallationsList_PartialViewComponent" class="dropdown-item" data-tab-tableid="PistonInstallationsTable" data-bs-toggle="tab" data-bs-target="#SteamTurbineTab" type="button" role="tab" aria-controls="equipmentType3Tab" aria-selected="false">Поршневые установки</button>
+                    </li>
+                    <li>
+						<button onclick="TabChange(event);" data-tab-action="OnGetROUList_PartialViewComponent" class="dropdown-item" data-tab-tableid="ROUTable" data-bs-toggle="tab" data-bs-target="#SteamTurbineTab" type="button" role="tab" aria-selected="false">РОУ</button>
+                    </li>
+                    <li>
+						<button onclick="TabChange(event);" data-tab-action="OnGetWaterHeaterList_PartialViewComponent" class="dropdown-item" data-tab-tableid="WaterHeaterTable" data-bs-toggle="tab" data-bs-target="#SteamTurbineTab" type="button" role="tab" aria-selected="false">Водоподогреватели</button>
+                    </li>
+                    <li>
+						<button onclick="TabChange(event);" data-tab-action="OnGetPumpsList_PartialViewComponent" class="dropdown-item" data-tab-tableid="PumpsTable" data-bs-toggle="tab" data-bs-target="#SteamTurbineTab" type="button" role="tab" aria-selected="false">Насосы</button>
+                    </li>
+                    <li>
+						<button onclick="TabChange(event);" data-tab-action="OnGetFiltersVPUList_PartialViewComponent" class="dropdown-item" data-tab-tableid="FiltersVPUTable" data-bs-toggle="tab" data-bs-target="#SteamTurbineTab" type="button" role="tab" aria-selected="false">Фильтры ВПУ</button>
+                    </li>
+                    <li>
+						<button onclick="TabChange(event);" data-tab-action="OnGetClarifierVPUList_PartialViewComponent" class="dropdown-item" data-tab-tableid="ClarifierVPUTable" data-bs-toggle="tab" data-bs-target="#SteamTurbineTab" type="button" role="tab" aria-selected="false">Осветлители ВПУ</button>
+					</li>
+                    <li>
+						<button onclick="TabChange(event);" data-tab-action="OnGetReverseOsmosisInstalVPUList_PartialViewComponent" class="dropdown-item" data-tab-tableid="ReverseOsmosisTable" data-bs-toggle="tab" data-bs-target="#SteamTurbineTab" type="button" role="tab" aria-selected="false">Установки обратного осмоса ВПУ</button>
+					</li>
+                    <li>
+						<button onclick="TabChange(event);" data-tab-action="OnGetNanoFiltrationInstallVPUList_PartialViewComponent" class="dropdown-item" data-tab-tableid="NanoFiltrTable" data-bs-toggle="tab" data-bs-target="#SteamTurbineTab" type="button" role="tab" aria-selected="false">Установки нано фильтрации ВПУ</button>
+					</li>
+                    <li>
+						<button onclick="TabChange(event);" data-tab-action="OnGetDeaeratorsList_PartialViewComponent" class="dropdown-item" data-tab-tableid="DeaeratorsTable" data-bs-toggle="tab" data-bs-target="#SteamTurbineTab" type="button" role="tab" aria-selected="false">Деаэраторы</button>
+					</li>
+                    <li>
+						<button onclick="TabChange(event);" data-tab-action="OnGetTanksVPUList_PartialViewComponent" class="dropdown-item" data-tab-tableid="TanksVPUTable" data-bs-toggle="tab" data-bs-target="#SteamTurbineTab" type="button" role="tab" aria-selected="false">Баки ВПУ</button>
+					</li>
+                    <li>
+						<button onclick="TabChange(event);" data-tab-action="OnGetComplexonsVPUList_PartialViewComponent" class="dropdown-item" data-tab-tableid="ComplexonsVPUTable" data-bs-toggle="tab" data-bs-target="#SteamTurbineTab" type="button" role="tab" aria-selected="false">Комплексоны ВПУ</button>
+					</li>
+                    <li>
+						<button onclick="TabChange(event);" data-tab-action="OnGetSmokePipesList_PartialViewComponent" class="dropdown-item" data-tab-tableid="SmokePipesTable" data-bs-toggle="tab" data-bs-target="#SteamTurbineTab" type="button" role="tab" aria-selected="false">Дымовые трубы</button>
+					</li>
+                </ul>
+			</div>
+			<div class="tab-pane fade show active" id="SteamTurbineTab" role="tabpanel" >
+				<div class="data-block" id="SteamTurbine_div">
+					@await Component.InvokeAsync("SteamTurbineList_Partial")
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+
+<script type="text/javascript" src="@Url.Content("~/hss/js/popup_common_scripts.js")"></script>
+<script type="text/javascript">
+
+	$(document).ready(function () {
+		setTimeout(function () {
+			$('#Equipments').addClass('active');
+		}, 500);
+
+		TableInit('SteamTurbineTable', 'full');
+
+	});
+
+
+	function GetListOnPage() {
+		debugger
+			showPreloader();
+			let action_name = $('#cur_action_name').val();
+			let table_name = $('#cur_table_name').val();
+		$.ajax({
+
+			type: 'GET',
+				url: '/DictionaryTables/Equipment/' + action_name,
+			data: {
+			},
+			dataType: 'html'
+		})
+			.done(function (result) {
+				var div = $('#SteamTurbine_div');
+				div.html("");
+				div.html(result);
+				TableInit(table_name, 'full');
+				hidePreloader();
+			});
+	}
+
+	function OpenPopup(id, action_name, data_popup, action_for) {
+		showPreloader();
+		$.ajax({
+			type: 'POST',
+			url: '/DictionaryTables/Equipment/' + action_name,
+			data: {
+				id: id,
+				action_for: action_for
+			},
+			dataType: 'html'
+		})
+			.done(function (result) {
+				var div = $('#' + data_popup);
+				//var div = $('#SteamTurbine_div');
+				div.html("");
+				div.html(result);
+				$('.selectpicker').selectpicker();
+
+				if ($('#' + data_popup).is(':hidden')) {
+					showModal(data_popup);
+				}
+				hidePreloader();
+			});
+	}
+
+	function RefreshTable() {
+		if ($("#refresh_org_table").val() === "1") {
+			$("#refresh_org_table").val(0);
+			GetListOnPage();
+		}
+	}
+
+	
+</script>

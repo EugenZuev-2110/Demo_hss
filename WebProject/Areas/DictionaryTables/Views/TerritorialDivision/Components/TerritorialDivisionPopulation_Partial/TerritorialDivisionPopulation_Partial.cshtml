@@ -1,0 +1,75 @@
+﻿@model WebProject.Areas.DictionaryTables.Models.TerritorialDivisionPopulationViewModel
+
+@{
+	string btn_disable = "";
+}
+
+@if (ViewBag.Action_for == "copy" || Model.Id == 0)
+{
+	btn_disable = "disabled";
+}
+<form asp-controller="TerritorialDivision" asp-action="TerritorialDivisionPopulation_Save" asp-antiforgery="true" asp-area="DictionaryTables" id="terrDivisionPopulation_form"
+   data-ajax-failure="onFailedFormTZ" data-ajax-success="onSuccessFormTerrDivisionPopulation" data-ajax-begin="onBeginFormTZ" data-ajax="true" data-ajax-method="POST">
+	<input type="hidden" name="Id" value="@Model.Id" id="terrDivisionPopulate_id_input" />
+	<input type="hidden" name="data_status" value="@Model.data_status" id="terrDivisionPopulate_data_status_input" />
+
+<div class="data-row">
+	<div class="scroll-table-wrapper">
+		<table class="table-inp-stretch" style="width: 100%;">
+			<thead>
+				<tr>
+					<th>Расчётный год</th>
+					@foreach (var p_year in Model.TerritorialDivisionPopulationList)
+					{
+							<input type="hidden" name="perspective_year" value="@p_year.perspective_year" id="terrDivision_id_input" />
+
+						<th>@p_year.perspective_year</th>
+					}
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>Численность населения, <span class="data-unit">тыс. чел.</span></td>
+					@foreach (var p_year in Model.TerritorialDivisionPopulationList)
+					{
+							@*<input type="hidden" name="populate_size" value="@p_year.populate_size" id="terrDivision_size_input_@(p_year.populate_size)" />*@
+							<td><input type="text" name="populate_size" class="data-value" value="@p_year.populate_size" id="terrDivision_size_input_@(p_year.populate_size)" /></td>
+						}
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+</form>
+<div >
+	<button type="submit" class="bttn bttn-color ms-auto" style="float: right;" form="terrDivisionPopulation_form" id="btnSubmitTerrDivisionPopulate" @btn_disable>Сохранить</button>
+</div>
+
+<script type="text/javascript">
+
+	var onSuccessFormTerrDivisionPopulation = function (xhr) 
+	{
+		if (xhr.success == true) 
+		{
+			showMessage('Данные сохранены.', 'modal', 'success');
+			if (xhr.is_new_district === 1) {
+				let select_id = "paramNumberDistr";
+				$('#' + select_id).val(xhr.unom_distr);
+				$('#' + select_id).append('<option value=' + xhr.distr_id + ' selected>' + xhr.unom_distr + '</option>');
+				RefreshSelectById(select_id);
+			}
+			
+			$("#refresh_terrDivision_table").val(1);
+		}
+		else 
+		{
+			if (xhr.message === undefined) 
+			{
+				xhr.message = 'Ошибка сохранения данных'
+			}
+			showMessage(xhr.message, 'modal', 'fault');
+		}
+		hidePreloader();
+	};
+
+</script>

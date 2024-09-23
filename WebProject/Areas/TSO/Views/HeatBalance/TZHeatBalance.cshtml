@@ -1,0 +1,117 @@
+﻿<div class="data-block workspace">
+	<div class="data-block title-block">
+		<div class="data-row">
+			<ul class="breadcrumb">
+				<li class="breadcrumb-item"><a class="ref-color" href="#">Главная</a></li>
+				<li class="breadcrumb-item">Теплоснабжающие организации - Тепловой баланс</li>
+			</ul>
+		</div>
+		<div class="data-row">
+			<h1 class="title">Тепловой баланс</h1>
+			<div class="data-item data-item-right">
+				<button class="bttn bttn-color bttn-edit-data" type="button">Добавить</button>
+				<a class="bttn bttn-color bttn-load-data disabled" type="button" href="#!">Загрузить данные</a>
+				<button class="bttn bttn-color bttn-excel-export" type="button" id="excelFull">Выгрузить в Excel</button>
+			</div>
+		</div>
+		<div class="data-row static-block">
+			<div class="data-item">
+				<partial name="_PerspectiveYearsList" />
+			</div>
+			<div class="data-item">
+				<div class="note">Базовый год - <span class="note-base-year" id="base_year_info"></span>;</div>
+			</div>
+		</div>
+	</div>
+	<div class="data-block main-content">
+		<div class="tabs-block">
+			<input type="hidden" id="cur_action_name" value="OnGetCallTZ_ProductionList_PartialViewComponent" />
+			<input type="hidden" id="cur_table_name" value="tzProductionTable" />
+			<ul class="nav nav-tabs" role="tablist">
+				<li class="nav-item" role="presentation">
+					<button onclick="TabChange(event);" data-tab-action="OnGetCallTZ_ProductionList_PartialViewComponent" data-tab-tableid="tzProductionTable" class="nav-link active" data-bs-toggle="tab" data-bs-target="#tzHeatBalanceTab" type="button" role="tab" aria-controls="hpProductionTab" aria-selected="true">Производство</button>
+				</li>
+				<li class="nav-item" role="presentation">
+					<button onclick="TabChange(event);" data-tab-action="OnGetCallTZ_TransferList_PartialViewComponent" data-tab-tableid="tzTransferTable" class="nav-link" data-bs-toggle="tab" data-bs-target="#tzHeatBalanceTab" type="button" role="tab" aria-controls="hpTransferTab" aria-selected="false">Передача</button>
+				</li>
+			</ul>
+			<div class="tab-content">
+				<div class="tab-pane fade show active" id="tzHeatBalanceTab" role="tabpanel" style="display: none;">
+					<div class="data-block" id="tzHeatBalanceDiv">
+						@await Component.InvokeAsync("TZ_ProductionDataList_Partial")
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+@section pageJs {
+	<script type="text/javascript">
+
+		$(document).ready(function () {
+
+			setTimeout(function () {
+				$('#tz_heat_balance').addClass('active');
+			}, 500);
+
+			TableInit('tzProductionTable', 'full');
+		});
+
+		const editDataModal = document.getElementById('TZProductionDataPopup');
+			editDataModal.addEventListener('shown.bs.modal', event => {
+		    TableInit('tzOneProductionTable', 'simple-scroll', '1090px', 0);
+		});
+
+		function GetListOnPage() {
+			showPreloader();
+
+			let action_name = $('#cur_action_name').val();;
+			let table_name = $('#cur_table_name').val();;
+
+			$.ajax({
+				type: 'GET',
+				url: '/TSO/HeatBalance/' + action_name,
+				data: {
+					data_status: $('#data_status').val(),
+					perspective_year: $('#perspective_year').val()
+				},
+				dataType: 'html'
+			})
+				.done(function (result) {
+					var div = $('#tzHeatBalanceDiv');
+					div.html("");
+					div.html(result);
+					TableInit(table_name, 'full');
+					hidePreloader();
+				});
+		}
+
+		function OpenPopupHeatBalance(id, p_year, url, popup_name) {
+
+			showPreloader();
+			$.ajax({
+				type: 'POST',
+				url: url,
+				data: {
+					id: id,
+					data_status: $('#data_status').val(),
+					perspective_year: p_year
+				},
+				dataType: 'html'
+			})
+				.done(function (result) {
+					var div = $('#' + popup_name);
+					div.html("");
+					div.html(result);
+					$('.selectpicker').selectpicker();
+
+					if ($('#' + popup_name).is(':hidden')) {
+						showModal(popup_name);
+					}
+					hidePreloader();
+				});
+		}
+
+	</script>
+}

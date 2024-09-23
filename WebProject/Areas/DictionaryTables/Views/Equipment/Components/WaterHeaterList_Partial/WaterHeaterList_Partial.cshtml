@@ -1,0 +1,70 @@
+﻿@model List<WebProject.Areas.DictionaryTables.Models.WaterHeaterViewmodel>
+@{
+	int cnt_columns = 12;
+}
+
+<h3>Водоподогреватели</h3>
+<div class="table-block">
+	<input type="hidden" value="0" id="refresh_WaterHeater_table" />
+	<div class="table-buttons WaterHeaterTable-buttons"></div>
+	<table id="WaterHeaterTable" class="display compact table-clicked" style="width:100%">
+		<thead>
+			<tr>
+				<th rowspan="2">УНОМ водоподогревателя</th>
+				<th rowspan="2">Марка оборудования</th>
+				<th rowspan="2">Завод изготовитель</th>
+				<th rowspan="2">Тип теплообменника</th>
+				<th rowspan="2">Поверхность теплообмена<span class="data-unit">(м<sup>2</sup>)</span></th>
+				<th rowspan="2">Количество секций<span class="data-unit">(шт)</span></th>
+				<th rowspan="2">Диаметр кожуха<span class="data-unit">(м)</span></th>
+				<th rowspan="2">Длинна секции<span class="data-unit">(м)</span></th>
+				<th rowspan="2">Максимальная температура на выходе<span class="data-unit">(°С)</span></th>
+                <th rowspan="2">Теплопроизводительность<span class="data-unit">(ата)</span> </th>
+				<th colspan="2">Расход сетевой воды</th>
+			</tr>
+			<tr>
+				<th>номинальный<span class="data-unit">(т/ч)</span></th>
+				<th>максимальный<span class="data-unit">(т/ч)</span></th>
+			</tr>
+			<tr class="filter-row ">
+				@for (int i = 0; i < @cnt_columns; i++)
+				{
+					if (i == 0)
+					{
+						<th class="dtfc-fixed-left" style="left:0; position:sticky;"><input type="text" class="filter-col-0" /></th>
+					}
+					else
+					{
+						<th><input type="text" class="filter-col-@i" /></th>
+					}
+				}
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var water in Model)
+			{
+				<tr onclick="OpenPopup(@water.equip_id, 'OpenPopupWaterHeater', 'WaterHeaterDataPopup')">
+					<td>@water.unom_equip</td>
+					<td>@water.mark</td>
+					<td>@water.manufacturer</td>
+					<td>@water.htexch_type</td>
+					<td>@water.heat_exchange_surface</td>
+					<td>@water.section_count</td>
+					<td>@water.casing_diameter</td>
+					<td>@water.length_section</td>
+					<td>@water.max_temp_out</td>
+					<td>@water.inst_heat_power</td>
+					<td>@water.net_water_consump_nom</td>
+					<td>@water.net_water_consump_max</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>
+<div class="data-row table-summary">
+	<div class="data-item rows-count">
+		<h5>Всего записей:</h5>
+		<p><span class="mark-color" id="all_cnt_rows"></span></p>
+	</div>
+</div>
+<script type="text/javascript" src="@Url.Content("~/hss/js/datatables_common_scripts.js")"></script>		

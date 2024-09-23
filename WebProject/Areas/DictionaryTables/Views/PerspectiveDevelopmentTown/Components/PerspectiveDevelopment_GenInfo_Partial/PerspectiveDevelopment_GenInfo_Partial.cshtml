@@ -1,0 +1,113 @@
+﻿@model WebProject.Areas.DictionaryTables.Models.PerspectiveDevelopment_GenInfoViewModel
+
+@{
+    Layout = null; string is_checked = string.Empty;
+}
+
+<form asp-controller="PerspectiveDevelopmentTown" asp-action="DevProgramm_GenInfoData_Save" asp-antiforgery="true" asp-area="DictionaryTables" id="consumers_gen_info_form" class="needs-validation" novalidate
+      data-ajax-failure="onFailedFormTZ" data-ajax-success="onSuccessFormPerspectiveDevelopmentGenInfo" data-ajax-begin="onBeginFormTZ" data-ajax="true" data-ajax-method="POST">
+    <input hidden asp-for="@Model.dev_prog_id">
+    <div class="data-block">
+        <div class="data-row">
+            <div class="data-item">
+                <label class="data-label xl-fix">Наименование программы</label>
+                <input type="text" id="per_dev_prog_name_id" value="@Model.prog_name" name="prog_name" class="data-value xxl-stretch" required>
+                <a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Введите значение"></a>
+            </div>
+        </div>
+        <div class="data-row">
+            <div class="data-item">
+                <label class="data-label xl-fix">Тип программы</label>
+                <select class="selectpicker data-value xl-stretch" data-live-search="true" id="per_dev_type_prog_id" name="type_dev_prog_id" placeholder="Выберите..." required>
+                    @foreach (var tz_list in ViewBag.PerspectiveDevelopmentList)
+                    {
+                        if (tz_list.Id == Model.type_dev_prog_id)
+                        {
+                            <option value="@tz_list.Id" selected>@tz_list.type_prog_name</option>
+                        }
+                        if (tz_list.Id != Model.type_dev_prog_id)
+                        {
+                            <option value="@tz_list.Id">@tz_list.type_prog_name</option>
+                        }
+                    }
+                </select>
+                <a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Выберите значение из списка"></a>
+            </div>
+            <div class="data-row">
+                <div class="data-item">
+                    <label class="data-label xl-fix">Решение об утверждении: <span class="sublabel">от</span></label>
+                    <input type="date" id="date_dev_prog_id" asp-for="@Model.date_dev_prog" name="date_dev_prog" class="data-value md-stretch">
+                </div>
+                <div class="data-item">
+                    <label class="data-label"><span class="sublabel">№</span></label>
+                    <input type="text" id="prog_doc_num_id" value="@Model.prog_doc_num" name="prog_doc_num" class="data-value double md-stretch">
+                </div>
+            </div>
+        </div>
+        <div class="data-row">
+            <div class="data-item">
+                <label class="data-label xl-fix">Год принятия программы</label>
+                <input type="text" id="year_dev_prog_id" value="@Model.year_dev_prog" name="year_dev_prog" class="data-value double md-fix" required>
+                <a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Введите значение"></a>
+            </div>
+        </div>
+        <div class="data-row">
+            <div class="data-item">
+                <label class="data-label xl-fix">Уникальный номер слоя электронной модели</label>
+                <select class="selectpicker data-value xl-stretch" data-live-search="true" id="per_dev_layer_id" name="layer_id" placeholder="Выберите...">
+                    @foreach (var tz_list in ViewBag.LayerList)
+                    {
+                        if (tz_list.Id == Model.layer_id)
+                        {
+                            <option value="@tz_list.Id" selected>@tz_list.layer_unom</option>
+                        }
+                        if (tz_list.Id != Model.layer_id)
+                        {
+                            <option value="@tz_list.Id">@tz_list.layer_unom</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="data-item">
+                <label class="data-label xl-fix">SYS объекта в электронном слое</label>
+                <input type="text" id="per_dev_layer_sys_id" value="@Model.layer_sys" name="layer_sys" class="data-value double md-stretch">
+            </div>
+        </div>
+        <div class="data-row">
+            <button type="submit" class="bttn bttn-color ms-auto" id="per_dev_gen_info_save_btn">Сохранить</button>
+        </div>
+    </div>
+</form>
+
+<script type="text/javascript" src="@Url.Content("~/hss/js/popup_common_scripts.js")"></script>
+<script type="text/javascript">
+
+    var onSuccessFormPerspectiveDevelopmentGenInfo = function (xhr) {
+        hidePreloader();
+        if (xhr.success && xhr.is_deleted == true && xhr.is_new_dev_prog != true) {
+            showMessage('Данные удалены.', 'modal', 'success');
+            //document.querySelector('#open_consumer_add_remove_del_but').disabled = true;
+            //document.querySelector('#consumer_year_impl_save_btn').disabled = true;
+            //document.querySelector('#consumer_dest_rel_cat_hs_save_btn').disabled = true;
+            //document.querySelector('#consumers_gen_info_save_btn').disabled = true;
+            //document.querySelector('#consumer_heat_loads_supply_contract_save_btn').disabled = true;
+            //document.querySelector('#consumer_year_heat_consumption_save_btn').disabled = true;
+            //document.getElementById("consumer_num_sign_save_btn").disabled = true;
+        }
+        else if (xhr.success && xhr.is_deleted != true && xhr.is_new_dev_prog != true) {
+            showMessage('Данные сохранены.', 'modal', 'success');
+            $("select[id=per_dev_gen_info_unom] option[value=" + xhr.per_dev_name.value_id + "]").text(xhr.per_dev_name.value_name);
+            RefreshSelectById('per_dev_gen_info_unom');
+            //$("#add_remove_gen_info_district_id").val(xhr.district);
+        }
+        else if (xhr.success && xhr.is_new_dev_prog == true) {
+            showMessage('Данные добавлены.', 'modal', 'success');
+            OpenPopupPerspectiveDevelopment(xhr.dev_prog_id)
+        }
+        else {
+            showMessage(xhr.error, 'modal', 'fault');
+        }
+        $("#refresh_table").val(1);
+    };
+
+</script>

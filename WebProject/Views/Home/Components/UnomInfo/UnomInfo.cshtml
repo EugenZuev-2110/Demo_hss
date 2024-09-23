@@ -1,0 +1,473 @@
+﻿@model WebProject.Models.UnomInfoViewModel
+@{
+    Layout = null;
+    ViewData["Title"] = "ПУНКТЫ";
+}
+<style>
+    .panel-grid {
+        display: grid;
+        padding-bottom: 30px;
+    }
+    .lbl-font-20 {
+        font-size: 18px; 
+    }
+    .lbl-font-unom {
+        font-size: xx-large; 
+        text-decoration-line: underline;
+    }
+    .lbl-font-14 {
+        font-size: 14px; 
+    }
+    .ui_select {
+        width: 280px !important;
+    }
+    .form-group-block {
+        width: 520px;
+    }
+    .div-flex {
+        display: flex;
+    }
+    .td-txtarea {
+        width: 350px;
+    }
+    .error {
+        color: red;
+    }
+    .div-popup-success-mini {
+        height: 150px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        font-size: x-large;
+    }
+</style>
+
+@if (!string.IsNullOrEmpty(Model.unom_num))
+{
+    <div class="panel-new panel-default panel-grid">
+        <div class="form-group">
+            <label class="col-md-6 control-label lbl-font-unom">Уном обращения: <b>@Model.unom_num</b></label>
+        </div>
+        <div class="div-flex">
+            <div class="form-group form-group-block">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td rowspan="2" class="col-md-3 lbl-font-20"><label>реквизиты ДЖКХ</label></td>
+                            <td class="col-md-5 lbl-font-20">Номер: @Model.dzhkh_number</td>
+                        </tr>
+                        <tr>
+                            @if (Model.dzhkh_date != null)
+                            {
+                                <td class="col-md-5 lbl-font-20">Дата: @(Model.dzhkh_date?.ToString("dd") + "." + Model.dzhkh_date?.ToString("MM") + "." + Model.dzhkh_date?.ToString("yy"))</td>
+                            }
+                            else
+                            {
+                                <td class="col-md-5 lbl-font-20">Дата: </td>
+                            }
+                        </tr>
+                        <tr>
+                            <td class="col-md-2 lbl-font-20"><label>Тип обращения:</label></td>
+                            <td class="col-md-5 lbl-font-20">@Model.category_name</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="form-group form-group-block">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td rowspan="2" class="col-md-2 lbl-font-20"><label>исходящего обращения</label></td>
+                            <td class="col-md-5 lbl-font-20">Номер: @Model.out_appeal_number</td>
+                        </tr>
+                        <tr>
+                            @if (Model.out_appeal_date != null)
+                            {
+                                <td class="col-md-5 lbl-font-20">Дата: @(Model.out_appeal_date?.ToString("dd") + "." + Model.out_appeal_date?.ToString("MM") + "." + Model.out_appeal_date?.ToString("yy"))</td>
+                            }
+                            else
+                            {
+                                <td class="col-md-5 lbl-font-20">Дата: </td>
+                            }
+                        </tr>
+                        <tr>
+                            <td class="col-md-2 lbl-font-20"><label>Схема теплоснабжения на:</label></td>
+                            <td class="col-md-5 lbl-font-20">@(Model.data_status?.ToString("dd") + "." + Model.data_status?.ToString("MM") + "." + Model.data_status?.ToString("yyyy"))</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="form-group form-group-block">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td class="col-md-4 lbl-font-20"><label>ссылка на папку:</label></td>
+                            @*<td class="col-md-5 lbl-font-20"><a href="#!" onclick="navigator.clipboard.writeText('@Model.directory_link')">@Model.directory_link</a>*@
+                            <td class="col-md-5 lbl-font-20">
+                                @if (!string.IsNullOrEmpty(@Model.directory_link))
+                                {
+                                    <a href="#!" onclick="window.open('/@Model.directory_link')">Открыть папку</a>
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-2 lbl-font-20"><label>тэги:</label></td>
+                            <td class="col-md-5 lbl-font-20">@Model.tags</td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-2 lbl-font-20"><label>статус:</label></td>
+                            <td class="col-md-5 lbl-font-20">@Model.state</td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-2 lbl-font-20"><label>исполнитель:</label></td>
+                            <td class="col-md-5 lbl-font-20">@Model.executor_name</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="div-flex">
+            <form asp-controller="Home" asp-action="UnomUpdateFromItem" asp-antiforgery="false"
+                            data-ajax-failure="onFailed" data-ajax-success="onSuccess"
+                            data-ajax="true" data-ajax-method="POST" id="unom_form" class="div-flex">
+                <div class="form-group form-group-block">
+                    <table>
+                        <tbody>
+                            <input type="hidden" name="Id" value="@Model.Id">
+                            <input type="hidden" name="unom_num" value="@Model.unom_num" id="unom_num">
+                            <input type="hidden" name="changes_is_required" value="@(Model.changes_is_required == true ? "true" : Model.changes_is_required == false ? "false" : "null")" id="changes_is_required_val">
+                            <input type="hidden" name="is_appr_scheme_exist" value="@(Model.is_appr_scheme_exist == true ? "true" : Model.is_appr_scheme_exist == false ? "false" : "null")" id="is_appr_scheme_exist_val">
+                            <input type="hidden" name="accordance_events" value="@(Model.accordance_events == true ? "true" : Model.accordance_events == false ? "false" : "null")" id="accordance_events_val">
+                            <input type="hidden" name="data_status" value="@Model.data_status" id="ds_val">
+                            <input type="hidden" name="layer_id" value="@Model.layer_id" id="layer_val">
+                            <tr style="height: 60px;">
+                                <td class="col-md-2 lbl-font-14"><label>Год базы DataManager:</label></td>
+                                <td class="col-md-5 lbl-font-20">
+                                    <select class="selectpicker ui_select" data-show-subtext="true" data-live-search="true" id="data_status">
+                                        @*@if (@Model.Id == 0 || Model.data_status == null)
+                                        {
+                                            <option value="" selected disabled>Выберите схему</option>
+                                        }*@
+                                        @foreach (var ds in ViewBag.DataStatusesList)
+                                        {
+                                            if (ds.DataStatus == Model.data_status)
+                                            {
+                                                <option value="@ds.DataStatus" selected>@ds.Ds</option>
+                                            }
+                                            if (ds.DataStatus != Model.data_status)
+                                            {
+                                                <option value="@ds.DataStatus">@ds.Ds</option>
+                                            }
+                                        }
+                                    </select>
+                                </td>
+                            </tr>
+                            @if (Model.category_name.Contains("Техприс"))
+                            {
+                                <tr>
+                                    <td class="col-md-2 lbl-font-14"><label>Слой Zulu:</label></td>
+                                    <td class="col-md-5 lbl-font-20">
+                                        <select class="selectpicker ui_select" data-show-subtext="true" data-live-search="true" id="layer_id">
+                                            @if (@Model.Id == 0 || Model.layer_id == null)
+                                            {
+                                                <option value="" selected disabled>Выберите слой</option>
+                                            }
+                                            @foreach (var layers in ViewBag.LayersList)
+                                            {
+                                                if (layers.Id == Model.layer_id)
+                                                {
+                                                    <option value="@layers.Id" selected>@layers.layer_name</option>
+                                                }
+                                                if (layers.Id != Model.layer_id)
+                                                {
+                                                    <option value="@layers.Id">@layers.layer_name</option>
+                                                }
+                                            }
+                                        </select>
+                                    </td>
+                                </tr>
+                            }
+                            <tr>
+                                <td class="col-md-4 lbl-font-14"><label>Необходимость внесения изменений в схему теплоснабжения:</label></td>
+                                <td class="col-md-5 lbl-font-20">
+                                    <select class="selectpicker ui_select" data-show-subtext="true" data-live-search="true" id="changes_is_required">
+                                        @if (@Model.Id == 0 || Model.changes_is_required == null)
+                                        {
+                                            <option value="" selected disabled>Выберите значение</option>
+                                        }
+                                        @if (Model.changes_is_required == true)
+                                        {
+                                            <option value="true" selected>Да</option>
+                                            <option value="false">Нет</option>
+                                            <option value="null">-</option>
+                                        }
+                                        else if (Model.changes_is_required == false)
+                                        {
+                                            <option value="false" selected>Нет</option>
+                                            <option value="true">Да</option>
+                                            <option value="null">-</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="false">Нет</option>
+                                            <option value="true">Да</option>
+                                        }
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr id="div_changes_type" style="display: none;">
+                                <td class="col-md-2 lbl-font-14"><label>Перечень изменений, вносимых в разрабатываемую схему теплоснабжения:</label></td>
+                                <td class="col-md-5 lbl-font-20">
+                                    <textarea class="form-control" name="changes_type" id="changes_type" rows="6">@Model.changes_type</textarea>
+                                </td>
+                            </tr>
+                            @if (!Model.category_name.Contains("Техприс"))
+                            {
+                                <tr>
+                                    <td class="col-md-2 lbl-font-14"><label>Учтено в утверждённой схеме:</label></td>
+                                    <td class="col-md-5 lbl-font-20">
+                                        <select class="selectpicker ui_select" data-show-subtext="true" data-live-search="true" id="is_appr_scheme_exist">
+                                            @if (@Model.Id == 0 || Model.is_appr_scheme_exist == null)
+                                            {
+                                                <option value="" selected disabled>Выберите значение</option>
+                                            }
+                                            @if (Model.is_appr_scheme_exist == true)
+                                            {
+                                                <option value="true" selected>Да</option>
+                                                <option value="false">Нет</option>
+                                                <option value="null">-</option>
+                                            }
+                                            else if (Model.is_appr_scheme_exist == false)
+                                            {
+                                                <option value="false" selected>Нет</option>
+                                                <option value="true">Да</option>
+                                                <option value="null">-</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="false">Нет</option>
+                                                <option value="true">Да</option>
+                                            }
+                                        </select>
+                                    </td>
+                                </tr>
+                            }
+                            @if (Model.ItsExecutorOrAdmin == true)
+                            {
+                                <tr>
+                                    <td class="col-md-2"></td>
+                                    <td class="col-md-2">
+                                        <button type="submit" class="btn btn-primary pull-right" style="margin-right: 20px; margin-top: 10px;" id="btnSaveUnom">Сохранить</button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                @if (Model.category_name.Contains("Техприс"))
+                {
+                    <div class="form-group form-group-block" style="width: 450px;">
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td class="col-md-5 lbl-font-14"><label class="control-label frst-label41 lbl-font-12">Перечень <bold style="font-style: oblique;">учтенных</bold><br> мероприятий в утвержденной схеме теплоснабжения:</label></td>
+                                    <td class="col-md-5 lbl-font-20 td-txtarea">
+                                        <textarea class="form-control" name="accounted_events" rows="5">@Model.accounted_events</textarea>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-5 lbl-font-14"><label class="control-label frst-label41 lbl-font-12">Перечень <bold style="font-style: oblique;">новых</bold> мероприятий<br> для учета в схеме теплоснабжения:</label></td>
+                                    <td class="col-md-5 lbl-font-20 td-txtarea">
+                                        <textarea class="form-control" name="new_events" rows="5">@Model.new_events</textarea>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="form-group form-group-block" style="width: 450px;">
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td class="col-md-2 lbl-font-14"><label class="control-label frst-label41 lbl-font-12">Перечень мероприятий <bold style="font-style: oblique;">предложенных в обращении</bold>:</label></td>
+                                    <td class="col-md-5 lbl-font-20 td-txtarea">
+                                        <textarea class="form-control" name="tso_events" rows="5">@Model.tso_events</textarea>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4 lbl-font-14"><label>Несоответствие мероприятий:</label></td>
+                                    <td class="col-md-5 lbl-font-20">
+                                        <select class="selectpicker ui_select" data-show-subtext="true" data-live-search="true" id="accordance_events">
+                                            @if (@Model.Id == 0 || Model.accordance_events == null)
+                                            {
+                                                <option value="" selected disabled>Выберите значение</option>
+                                            }
+                                            @if (Model.accordance_events == true)
+                                            {
+                                                <option value="true" selected>Да</option>
+                                                <option value="false">Нет</option>
+                                                <option value="null">-</option>
+                                            }
+                                            else if (Model.accordance_events == false)
+                                            {
+                                                <option value="false" selected>Нет</option>
+                                                <option value="true">Да</option>
+                                                <option value="null">-</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="false">Нет</option>
+                                                <option value="true">Да</option>
+                                            }
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr id="div_accordance_events" style="display: none;">
+                                    <td class="col-md-2 lbl-font-14"><label class="control-label frst-label41 lbl-font-12">Причины несоответствия мероприятий:</label></td>
+                                    <td class="col-md-5 lbl-font-20 td-txtarea">
+                                        <textarea class="form-control" name="reasons_mismath_events" id="reasons_mismath_events" rows="5">@Model.reasons_mismath_events</textarea>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </form>
+        </div>
+    </div>
+}
+
+    <div id="modal-section">
+        <div id="modal-open-fd2" class="modal fade">
+            @*onclick="TableOff();"*@
+            <div class="modal-dialog modal-large" style="width: 550px; margin-left: 35%">
+                <div class="modal-content">
+                    <div id="modal-open-fd-header" class="modal-header">
+                        <button class="close" type="button" data-dismiss="modal">×</button>
+                        <h4 class="modal-title"></h4>
+                    </div>
+                    <div id="div-open-fd2" class="div-popup-success-mini"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        if ('@Model.changes_is_required' == 'True')
+            $('#div_changes_type').show();
+
+        if ('@Model.accordance_events' == 'True')
+            $('#div_accordance_events').show();
+
+        var elem = document.getElementById('unom_form');
+        elem.addEventListener("submit", function (e) {
+            if ($(this).valid()) {
+                document.getElementById("btnSaveUnom").disabled = true;
+            }
+        }, true);
+
+        $('.selectpicker').selectpicker({
+            size: 3
+        });
+
+        $('#changes_is_required').on('change', function(e){
+            let s_value = this.value;
+            $('#changes_is_required_val').val(s_value);
+            
+            if (s_value == "true") {
+                $('#div_changes_type').show();
+                $('#changes_type').attr('required', '');
+                $("#changes_type").val("Величины площадных характеристик и тепловых нагрузок объектов КС");
+            }
+            else {
+                $('#div_changes_type').hide();
+                $("#changes_type").val("");
+                $("#changes_type").removeAttr('required');
+            }
+        });
+
+        $('#accordance_events').on('change', function (e) {
+            let s_value = this.value;
+            $('#accordance_events_val').val(s_value);
+            
+            if (s_value == "true") {
+                $('#div_accordance_events').show();
+                $('#reasons_mismath_events').attr('required', '');
+            }
+            else {
+                $('#div_accordance_events').hide();
+                $("#reasons_mismath_events").val("");
+                $("#reasons_mismath_events").removeAttr('required');
+            }
+        });
+
+        $('#is_appr_scheme_exist').on('change', function(e){
+            var s_value = this.value;
+            $('#is_appr_scheme_exist_val').val(s_value);
+        });
+
+        $('#data_status').on('change', function(e){
+            var s_value = this.value;
+            $('#ds_val').val(s_value);
+        });
+
+        $('#layer_id').on('change', function(e){
+            var s_value = this.value;
+            $('#layer_val').val(s_value);
+        });
+
+        function checkValidate() {
+        var form = $('form');
+
+            $.each(form, function () {
+                $(this).validate({
+                    ignore: [],
+                    errorClass: 'error',
+                    validClass: 'success',
+                    rules: {
+                    },
+                    errorElement: 'span',
+                    errorPlacement: function (error, element) {
+                        var placement = $(element).data('error');
+                        if (placement) {
+                            $(placement).append(error);
+                        } else {
+                            error.insertBefore(element);
+                        }
+                    },
+                    messages: {
+                        //executor_id: 'Выберите исполнителя',
+                        //out_appeal_date: 'Укажите дату',
+                        //changes_is_required: 'Выберите значение',
+                        //out_appeal_number: 'Укажите номер',
+                        changes_type: 'Укажите перечень изменений',
+                        reasons_mismath_events: 'Укажите причины несоответствия'
+                    }
+                });
+            });
+        }
+        checkValidate();
+
+    });
+
+    var onFailed = function(context){ 
+        $("#div-open-fd2").text("При сохранении произошла ошибка. Обратитесь в тех.поддержку.");
+        $("#div-open-fd2").addClass(' error');
+        $("#modal-open-fd2").modal('show');
+        document.getElementById("btnSaveUnom").disabled = false;
+    };
+
+    var onSuccess = function(success){
+        $("#div-open-fd2").text("Информация сохранена.");
+        $("#div-open-fd2").removeClass('error');
+        $("#modal-open-fd2").modal('show');
+        document.getElementById("btnSaveUnom").disabled = false;
+        //var url = '@Url.Action("Items", "Home")' + "?unom_num=" + $('#unom_num').val();
+        //    window.location = url;
+
+    };
+
+</script>

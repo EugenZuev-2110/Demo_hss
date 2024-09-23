@@ -1,0 +1,383 @@
+﻿@model WebProject.Areas.TSO.Models.TZSalaryCostsViewModel
+@{
+	Layout = null; string disable = "";
+}
+@if (Model.tz_id == 0)
+{
+	disable = "disabled";
+}
+<form asp-controller="CostsAndPrices" asp-action="TZSalaryCosts_Save" asp-antiforgery="true" asp-area="TSO" id="tz_salary_costs_form"
+	  data-ajax-failure="onFailedFormTZ" data-ajax-success="onSuccessFormTZ" data-ajax-begin="onBeginFormTZ" data-ajax="true" data-ajax-method="POST">
+	<input type="hidden" name="tz_id" value="@Model.tz_id" />
+	<input type="hidden" name="data_status" value="@Model.data_status" />
+	<input type="hidden" name="perspective_year" value="@Model.perspective_year" />
+	<table class="table-inp-stretch" style="width:100%;">
+		<thead>
+			<tr>
+				<th rowspan="2"></th>
+				<th colspan="3">Факт</th>
+				<th colspan="3">План</th>
+			</tr>
+			<tr>
+				<th>I полугодие</th>
+				<th>II полугодие</th>
+				<th>Год</th>
+				<th>I полугодие</th>
+				<th>II полугодие</th>
+				<th>Год</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>Расходы на оплату труда без отчислений, <span class="data-unit">тыс. руб.</span></td>
+				<td><input type="text" asp-for="@Model.costs_all_salary_fact_1" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.costs_all_salary_fact_2" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.costs_all_salary_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.costs_all_salary_plan_1" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.costs_all_salary_plan_2" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.costs_all_salary_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>Средняя списочная численность персонала, <span class="data-unit">чел.</span></td>
+				<td><input type="text" asp-for="@Model.avg_count_workers_fact_1" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.avg_count_workers_fact_2" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.avg_count_workers_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.avg_count_workers_plan_1" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.avg_count_workers_plan_2" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.avg_count_workers_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>Среднемесячная оплата труда, <span class="data-unit">руб./мес.</span></td>
+				<td><input type="text" asp-for="@Model.avg_salary_all_fact_1" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.avg_salary_all_fact_2" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.avg_salary_all_fact_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.avg_salary_all_plan_1" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.avg_salary_all_plan_2" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.avg_salary_all_plan_3" class="data-value" disabled></td>
+			</tr>
+		</tbody>
+	</table>
+	<div class="accordion data-block">
+		<div class="border-block">
+			<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel6-1" aria-expanded="false">Основные производственные рабочие</button>
+			<div id="panel6-1" class="accordion-collapse collapse">
+				<div class="accordion-body">
+					<div class="data-block">
+						<table class="table-inp-stretch" style="width:100%;">
+							<thead>
+								<tr>
+									<th rowspan="2"></th>
+									<th colspan="3">Факт</th>
+									<th colspan="3">План</th>
+								</tr>
+								<tr>
+									<th>I полугодие</th>
+									<th>II полугодие</th>
+									<th>Год</th>
+									<th>I полугодие</th>
+									<th>II полугодие</th>
+									<th>Год</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>Затраты на оплату труда без отчислений, <span class="data-unit">тыс. руб.</span></td>
+									<td><input type="text" asp-for="@Model.costs_prod_workers_salary_fact_1" class="data-value" disabled data-type="prod"></td>
+									<td><input type="text" asp-for="@Model.costs_prod_workers_salary_fact_2" class="data-value" disabled data-type="prod"></td>
+									<td><input type="text" asp-for="@Model.costs_prod_workers_salary_fact_3" class="data-value" disabled data-type="prod"></td>
+									<td><input type="text" asp-for="@Model.costs_prod_workers_salary_plan_1" class="data-value" disabled data-type="prod"></td>
+									<td><input type="text" asp-for="@Model.costs_prod_workers_salary_plan_2" class="data-value" disabled data-type="prod"></td>
+									<td><input type="text" asp-for="@Model.costs_prod_workers_salary_plan_3" class="data-value" disabled data-type="prod"></td>
+								</tr>
+								<tr>
+									<td>Численность персонала, <span class="data-unit">чел.</span></td>
+									<td><input type="text" asp-for="@Model.count_prod_workers_fact_1" class="data-value double" data-double="salary_costs" data-type="prod"></td>
+									<td><input type="text" asp-for="@Model.count_prod_workers_fact_2" class="data-value double" data-double="salary_costs" data-type="prod"></td>
+									<td><input type="text" asp-for="@Model.count_prod_workers_fact_3" class="data-value" disabled data-type="prod"></td>
+									<td><input type="text" asp-for="@Model.count_prod_workers_plan_1" class="data-value double" data-double="salary_costs" data-type="prod"></td>
+									<td><input type="text" asp-for="@Model.count_prod_workers_plan_2" class="data-value double" data-double="salary_costs" data-type="prod"></td>
+									<td><input type="text" asp-for="@Model.count_prod_workers_plan_3" class="data-value" disabled data-type="prod"></td>
+								</tr>
+								<tr>
+									<td>Среднемесячная оплата труда, <span class="data-unit">руб./мес.</span></td>
+									<td><input type="text" asp-for="@Model.avg_salary_prod_workers_fact_1" class="data-value double" data-double="salary_costs" data-type="prod"></td>
+									<td><input type="text" asp-for="@Model.avg_salary_prod_workers_fact_2" class="data-value double" data-double="salary_costs" data-type="prod"></td>
+									<td><input type="text" asp-for="@Model.avg_salary_prod_workers_fact_3" class="data-value" disabled data-type="prod"></td>
+									<td><input type="text" asp-for="@Model.avg_salary_prod_workers_plan_1" class="data-value double" data-double="salary_costs" data-type="prod"></td>
+									<td><input type="text" asp-for="@Model.avg_salary_prod_workers_plan_2" class="data-value double" data-double="salary_costs" data-type="prod"></td>
+									<td><input type="text" asp-for="@Model.avg_salary_prod_workers_plan_3" class="data-value" disabled data-type="prod"></td>
+								</tr>
+								<tr>
+									<td>Отчисления на социальные нужды, <span class="data-unit">%</span></td>
+									<td><input type="text" asp-for="@Model.soc_deduction_prod_workers_fact_1" class="data-value double" data-double="salary_costs" data-type="prod"></td>
+									<td><input type="text" asp-for="@Model.soc_deduction_prod_workers_fact_2" class="data-value double" data-double="salary_costs" data-type="prod"></td>
+									<td><input type="text" asp-for="@Model.soc_deduction_prod_workers_fact_3" class="data-value" disabled data-type="prod"></td>
+									<td><input type="text" asp-for="@Model.soc_deduction_prod_workers_plan_1" class="data-value double" data-double="salary_costs" data-type="prod"></td>
+									<td><input type="text" asp-for="@Model.soc_deduction_prod_workers_plan_2" class="data-value double" data-double="salary_costs" data-type="prod"></td>
+									<td><input type="text" asp-for="@Model.soc_deduction_prod_workers_plan_3" class="data-value" disabled data-type="prod"></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="border-block">
+			<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel6-2" aria-expanded="false">Ремонтный персонал</button>
+			<div id="panel6-2" class="accordion-collapse collapse">
+				<div class="accordion-body">
+					<div class="data-block">
+						<table class="table-inp-stretch" style="width:100%;">
+							<thead>
+								<tr>
+									<th rowspan="2"></th>
+									<th colspan="3">Факт</th>
+									<th colspan="3">План</th>
+								</tr>
+								<tr>
+									<th>I полугодие</th>
+									<th>II полугодие</th>
+									<th>Год</th>
+									<th>I полугодие</th>
+									<th>II полугодие</th>
+									<th>Год</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>Затраты на оплату труда без отчислений, <span class="data-unit">тыс. руб.</span></td>
+									<td><input type="text" asp-for="@Model.costs_repair_workers_salary_fact_1" class="data-value" disabled data-type="repair"></td>
+									<td><input type="text" asp-for="@Model.costs_repair_workers_salary_fact_2" class="data-value" disabled data-type="repair"></td>
+									<td><input type="text" asp-for="@Model.costs_repair_workers_salary_fact_3" class="data-value" disabled data-type="repair"></td>
+									<td><input type="text" asp-for="@Model.costs_repair_workers_salary_plan_1" class="data-value" disabled data-type="repair"></td>
+									<td><input type="text" asp-for="@Model.costs_repair_workers_salary_plan_2" class="data-value" disabled data-type="repair"></td>
+									<td><input type="text" asp-for="@Model.costs_repair_workers_salary_plan_3" class="data-value" disabled data-type="repair"></td>
+								</tr>
+								<tr>
+									<td>Численность персонала, <span class="data-unit">чел.</span></td>
+									<td><input type="text" asp-for="@Model.count_repair_workers_fact_1" class="data-value double" data-double="salary_costs" data-type="repair"></td>
+									<td><input type="text" asp-for="@Model.count_repair_workers_fact_2" class="data-value double" data-double="salary_costs" data-type="repair"></td>
+									<td><input type="text" asp-for="@Model.count_repair_workers_fact_3" class="data-value" disabled data-type="repair"></td>
+									<td><input type="text" asp-for="@Model.count_repair_workers_plan_1" class="data-value double" data-double="salary_costs" data-type="repair"></td>
+									<td><input type="text" asp-for="@Model.count_repair_workers_plan_2" class="data-value double" data-double="salary_costs" data-type="repair"></td>
+									<td><input type="text" asp-for="@Model.count_repair_workers_plan_3" class="data-value" disabled data-type="repair"></td>
+								</tr>
+								<tr>
+									<td>Среднемесячная оплата труда, <span class="data-unit">руб./мес.</span></td>
+									<td><input type="text" asp-for="@Model.avg_salary_repair_workers_fact_1" class="data-value double" data-double="salary_costs" data-type="repair"></td>
+									<td><input type="text" asp-for="@Model.avg_salary_repair_workers_fact_2" class="data-value double" data-double="salary_costs" data-type="repair"></td>
+									<td><input type="text" asp-for="@Model.avg_salary_repair_workers_fact_3" class="data-value" disabled data-type="repair"></td>
+									<td><input type="text" asp-for="@Model.avg_salary_repair_workers_plan_1" class="data-value double" data-double="salary_costs" data-type="repair"></td>
+									<td><input type="text" asp-for="@Model.avg_salary_repair_workers_plan_2" class="data-value double" data-double="salary_costs" data-type="repair"></td>
+									<td><input type="text" asp-for="@Model.avg_salary_repair_workers_plan_3" class="data-value" disabled data-type="repair"></td>
+								</tr>
+								<tr>
+									<td>Отчисления на социальные нужды, <span class="data-unit">%</span></td>
+									<td><input type="text" asp-for="@Model.soc_deduction_repair_workers_fact_1" class="data-value double" data-double="salary_costs" data-type="repair"></td>
+									<td><input type="text" asp-for="@Model.soc_deduction_repair_workers_fact_2" class="data-value double" data-double="salary_costs" data-type="repair"></td>
+									<td><input type="text" asp-for="@Model.soc_deduction_repair_workers_fact_3" class="data-value" disabled data-type="repair"></td>
+									<td><input type="text" asp-for="@Model.soc_deduction_repair_workers_plan_1" class="data-value double" data-double="salary_costs" data-type="repair"></td>
+									<td><input type="text" asp-for="@Model.soc_deduction_repair_workers_plan_2" class="data-value double" data-double="salary_costs" data-type="repair"></td>
+									<td><input type="text" asp-for="@Model.soc_deduction_repair_workers_plan_3" class="data-value" disabled data-type="repair"></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="border-block">
+			<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel6-2" aria-expanded="false">Цеховой персонал</button>
+			<div id="panel6-2" class="accordion-collapse collapse">
+				<div class="accordion-body">
+					<div class="data-block">
+						<table class="table-inp-stretch" style="width:100%;">
+							<thead>
+								<tr>
+									<th rowspan="2"></th>
+									<th colspan="3">Факт</th>
+									<th colspan="3">План</th>
+								</tr>
+								<tr>
+									<th>I полугодие</th>
+									<th>II полугодие</th>
+									<th>Год</th>
+									<th>I полугодие</th>
+									<th>II полугодие</th>
+									<th>Год</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>Затраты на оплату труда без отчислений, <span class="data-unit">тыс. руб.</span></td>
+									<td><input type="text" asp-for="@Model.costs_shop_workers_salary_fact_1" class="data-value" disabled data-type="shop"></td>
+									<td><input type="text" asp-for="@Model.costs_shop_workers_salary_fact_2" class="data-value" disabled data-type="shop"></td>
+									<td><input type="text" asp-for="@Model.costs_shop_workers_salary_fact_3" class="data-value" disabled data-type="shop"></td>
+									<td><input type="text" asp-for="@Model.costs_shop_workers_salary_plan_1" class="data-value" disabled data-type="shop"></td>
+									<td><input type="text" asp-for="@Model.costs_shop_workers_salary_plan_2" class="data-value" disabled data-type="shop"></td>
+									<td><input type="text" asp-for="@Model.costs_shop_workers_salary_plan_3" class="data-value" disabled data-type="shop"></td>
+								</tr>
+								<tr>
+									<td>Численность персонала, <span class="data-unit">чел.</span></td>
+									<td><input type="text" asp-for="@Model.count_shop_workers_fact_1" class="data-value double" data-double="salary_costs" data-type="shop"></td>
+									<td><input type="text" asp-for="@Model.count_shop_workers_fact_2" class="data-value double" data-double="salary_costs" data-type="shop"></td>
+									<td><input type="text" asp-for="@Model.count_shop_workers_fact_3" class="data-value" disabled data-type="shop"></td>
+									<td><input type="text" asp-for="@Model.count_shop_workers_plan_1" class="data-value double" data-double="salary_costs" data-type="shop"></td>
+									<td><input type="text" asp-for="@Model.count_shop_workers_plan_2" class="data-value double" data-double="salary_costs" data-type="shop"></td>
+									<td><input type="text" asp-for="@Model.count_shop_workers_plan_3" class="data-value" disabled data-type="shop"></td>
+								</tr>
+								<tr>
+									<td>Среднемесячная оплата труда, <span class="data-unit">руб./мес.</span></td>
+									<td><input type="text" asp-for="@Model.avg_salary_shop_workers_fact_1" class="data-value double" data-double="salary_costs" data-type="shop"></td>
+									<td><input type="text" asp-for="@Model.avg_salary_shop_workers_fact_2" class="data-value double" data-double="salary_costs" data-type="shop"></td>
+									<td><input type="text" asp-for="@Model.avg_salary_shop_workers_fact_3" class="data-value" disabled data-type="shop"></td>
+									<td><input type="text" asp-for="@Model.avg_salary_shop_workers_plan_1" class="data-value double" data-double="salary_costs" data-type="shop"></td>
+									<td><input type="text" asp-for="@Model.avg_salary_shop_workers_plan_2" class="data-value double" data-double="salary_costs" data-type="shop"></td>
+									<td><input type="text" asp-for="@Model.avg_salary_shop_workers_plan_3" class="data-value" disabled data-type="shop"></td>
+								</tr>
+								<tr>
+									<td>Отчисления на социальные нужды, <span class="data-unit">%</span></td>
+									<td><input type="text" asp-for="@Model.soc_deduction_shop_workers_fact_1" class="data-value double" data-double="salary_costs" data-type="shop"></td>
+									<td><input type="text" asp-for="@Model.soc_deduction_shop_workers_fact_2" class="data-value double" data-double="salary_costs" data-type="shop"></td>
+									<td><input type="text" asp-for="@Model.soc_deduction_shop_workers_fact_3" class="data-value" disabled data-type="shop"></td>
+									<td><input type="text" asp-for="@Model.soc_deduction_shop_workers_plan_1" class="data-value double" data-double="salary_costs" data-type="shop"></td>
+									<td><input type="text" asp-for="@Model.soc_deduction_shop_workers_plan_2" class="data-value double" data-double="salary_costs" data-type="shop"></td>
+									<td><input type="text" asp-for="@Model.soc_deduction_shop_workers_plan_3" class="data-value" disabled data-type="shop"></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="border-block">
+			<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel6-3" aria-expanded="false">Административно-управленческий персонал</button>
+			<div id="panel6-3" class="accordion-collapse collapse">
+				<div class="accordion-body">
+					<div class="data-block">
+						<table class="table-inp-stretch" style="width:100%;">
+							<thead>
+								<tr>
+									<th rowspan="2"></th>
+									<th colspan="3">Факт</th>
+									<th colspan="3">План</th>
+								</tr>
+								<tr>
+									<th>I полугодие</th>
+									<th>II полугодие</th>
+									<th>Год</th>
+									<th>I полугодие</th>
+									<th>II полугодие</th>
+									<th>Год</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>Затраты на оплату труда без отчислений, <span class="data-unit">тыс. руб.</span></td>
+									<td><input type="text" asp-for="@Model.costs_adm_manag_workers_salary_fact_1" class="data-value" disabled data-type="adm_manag"></td>
+									<td><input type="text" asp-for="@Model.costs_adm_manag_workers_salary_fact_2" class="data-value" disabled data-type="adm_manag"></td>
+									<td><input type="text" asp-for="@Model.costs_adm_manag_workers_salary_fact_3" class="data-value" disabled data-type="adm_manag"></td>
+									<td><input type="text" asp-for="@Model.costs_adm_manag_workers_salary_plan_1" class="data-value" disabled data-type="adm_manag"></td>
+									<td><input type="text" asp-for="@Model.costs_adm_manag_workers_salary_plan_2" class="data-value" disabled data-type="adm_manag"></td>
+									<td><input type="text" asp-for="@Model.costs_adm_manag_workers_salary_plan_3" class="data-value" disabled data-type="adm_manag"></td>
+								</tr>
+								<tr>
+									<td>Численность персонала, <span class="data-unit">чел.</span></td>
+									<td><input type="text" asp-for="@Model.count_adm_manag_workers_fact_1" class="data-value double" data-double="salary_costs" data-type="adm_manag"></td>
+									<td><input type="text" asp-for="@Model.count_adm_manag_workers_fact_2" class="data-value double" data-double="salary_costs" data-type="adm_manag"></td>
+									<td><input type="text" asp-for="@Model.count_adm_manag_workers_fact_3" class="data-value" disabled data-type="adm_manag"></td>
+									<td><input type="text" asp-for="@Model.count_adm_manag_workers_plan_1" class="data-value double" data-double="salary_costs" data-type="adm_manag"></td>
+									<td><input type="text" asp-for="@Model.count_adm_manag_workers_plan_2" class="data-value double" data-double="salary_costs" data-type="adm_manag"></td>
+									<td><input type="text" asp-for="@Model.count_adm_manag_workers_plan_3" class="data-value" disabled data-type="adm_manag"></td>
+								</tr>
+								<tr>
+									<td>Среднемесячная оплата труда, <span class="data-unit">руб./мес.</span></td>
+									<td><input type="text" asp-for="@Model.avg_salary_adm_manag_workers_fact_1" class="data-value double" data-double="salary_costs" data-type="adm_manag"></td>
+									<td><input type="text" asp-for="@Model.avg_salary_adm_manag_workers_fact_2" class="data-value double" data-double="salary_costs" data-type="adm_manag"></td>
+									<td><input type="text" asp-for="@Model.avg_salary_adm_manag_workers_fact_3" class="data-value" disabled data-type="adm_manag"></td>
+									<td><input type="text" asp-for="@Model.avg_salary_adm_manag_workers_plan_1" class="data-value double" data-double="salary_costs" data-type="adm_manag"></td>
+									<td><input type="text" asp-for="@Model.avg_salary_adm_manag_workers_plan_2" class="data-value double" data-double="salary_costs" data-type="adm_manag"></td>
+									<td><input type="text" asp-for="@Model.avg_salary_adm_manag_workers_plan_3" class="data-value" disabled data-type="adm_manag"></td>
+								</tr>
+								<tr>
+									<td>Отчисления на социальные нужды, <span class="data-unit">%</span></td>
+									<td><input type="text" asp-for="@Model.soc_deduction_adm_manag_workers_fact_1" class="data-value double" data-double="salary_costs" data-type="adm_manag"></td>
+									<td><input type="text" asp-for="@Model.soc_deduction_adm_manag_workers_fact_2" class="data-value double" data-double="salary_costs" data-type="adm_manag"></td>
+									<td><input type="text" asp-for="@Model.soc_deduction_adm_manag_workers_fact_3" class="data-value" disabled data-type="adm_manag"></td>
+									<td><input type="text" asp-for="@Model.soc_deduction_adm_manag_workers_plan_1" class="data-value double" data-double="salary_costs" data-type="adm_manag"></td>
+									<td><input type="text" asp-for="@Model.soc_deduction_adm_manag_workers_plan_2" class="data-value double" data-double="salary_costs" data-type="adm_manag"></td>
+									<td><input type="text" asp-for="@Model.soc_deduction_adm_manag_workers_plan_3" class="data-value" disabled data-type="adm_manag"></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="border-block">
+			<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel6-4" aria-expanded="false">Прочий персонал</button>
+			<div id="panel6-4" class="accordion-collapse collapse">
+				<div class="accordion-body">
+					<div class="data-block">
+						<table class="table-inp-stretch" style="width:100%;">
+							<thead>
+								<tr>
+									<th rowspan="2"></th>
+									<th colspan="3">Факт</th>
+									<th colspan="3">План</th>
+								</tr>
+								<tr>
+									<th>I полугодие</th>
+									<th>II полугодие</th>
+									<th>Год</th>
+									<th>I полугодие</th>
+									<th>II полугодие</th>
+									<th>Год</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>Затраты на оплату труда без отчислений, <span class="data-unit">тыс. руб.</span></td>
+									<td><input type="text" asp-for="@Model.costs_other_workers_salary_fact_1" class="data-value" disabled data-type="other"></td>
+									<td><input type="text" asp-for="@Model.costs_other_workers_salary_fact_2" class="data-value" disabled data-type="other"></td>
+									<td><input type="text" asp-for="@Model.costs_other_workers_salary_fact_3" class="data-value" disabled data-type="other"></td>
+									<td><input type="text" asp-for="@Model.costs_other_workers_salary_plan_1" class="data-value" disabled data-type="other"></td>
+									<td><input type="text" asp-for="@Model.costs_other_workers_salary_plan_2" class="data-value" disabled data-type="other"></td>
+									<td><input type="text" asp-for="@Model.costs_other_workers_salary_plan_3" class="data-value" disabled data-type="other"></td>
+								</tr>
+								<tr>
+									<td>Численность персонала, <span class="data-unit">чел.</span></td>
+									<td><input type="text" asp-for="@Model.count_other_workers_fact_1" class="data-value double" data-double="salary_costs" data-type="other"></td>
+									<td><input type="text" asp-for="@Model.count_other_workers_fact_2" class="data-value double" data-double="salary_costs" data-type="other"></td>
+									<td><input type="text" asp-for="@Model.count_other_workers_fact_3" class="data-value" disabled data-type="other"></td>
+									<td><input type="text" asp-for="@Model.count_other_workers_plan_1" class="data-value double" data-double="salary_costs" data-type="other"></td>
+									<td><input type="text" asp-for="@Model.count_other_workers_plan_2" class="data-value double" data-double="salary_costs" data-type="other"></td>
+									<td><input type="text" asp-for="@Model.count_other_workers_plan_3" class="data-value" disabled data-type="other"></td>
+								</tr>
+								<tr>
+									<td>Среднемесячная оплата труда, <span class="data-unit">руб./мес.</span></td>
+									<td><input type="text" asp-for="@Model.avg_salary_other_workers_fact_1" class="data-value double" data-double="salary_costs" data-type="other"></td>
+									<td><input type="text" asp-for="@Model.avg_salary_other_workers_fact_2" class="data-value double" data-double="salary_costs" data-type="other"></td>
+									<td><input type="text" asp-for="@Model.avg_salary_other_workers_fact_3" class="data-value" disabled data-type="other"></td>
+									<td><input type="text" asp-for="@Model.avg_salary_other_workers_plan_1" class="data-value double" data-double="salary_costs" data-type="other"></td>
+									<td><input type="text" asp-for="@Model.avg_salary_other_workers_plan_2" class="data-value double" data-double="salary_costs" data-type="other"></td>
+									<td><input type="text" asp-for="@Model.avg_salary_other_workers_plan_3" class="data-value" disabled data-type="other"></td>
+								</tr>
+								<tr>
+									<td>Отчисления на социальные нужды, <span class="data-unit">%</span></td>
+									<td><input type="text" asp-for="@Model.soc_deduction_other_workers_fact_1" class="data-value double" data-double="salary_costs" data-type="other"></td>
+									<td><input type="text" asp-for="@Model.soc_deduction_other_workers_fact_2" class="data-value double" data-double="salary_costs" data-type="other"></td>
+									<td><input type="text" asp-for="@Model.soc_deduction_other_workers_fact_3" class="data-value" disabled data-type="other"></td>
+									<td><input type="text" asp-for="@Model.soc_deduction_other_workers_plan_1" class="data-value double" data-double="salary_costs" data-type="other"></td>
+									<td><input type="text" asp-for="@Model.soc_deduction_other_workers_plan_2" class="data-value double" data-double="salary_costs" data-type="other"></td>
+									<td><input type="text" asp-for="@Model.soc_deduction_other_workers_plan_3" class="data-value"disabled data-type="other"></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>  
+		</div>
+	</div>
+	<button type="submit" class="bttn bttn-color ms-auto" @disable>Сохранить</button>
+</form>

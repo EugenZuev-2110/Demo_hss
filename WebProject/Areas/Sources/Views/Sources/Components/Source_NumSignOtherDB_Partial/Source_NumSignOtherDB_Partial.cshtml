@@ -1,0 +1,33 @@
+﻿@model WebProject.Areas.Sources.Models.SourceNumSignOtherDBViewModel
+
+	<form class="needs-validation" novalidate asp-controller="Sources" asp-action="Save" asp-antiforgery="true" asp-area="Sources" id="source_form"
+			data-ajax-failure="onFailedForm" data-ajax-success="onSuccessFormSource" data-ajax-begin="onBeginForm" data-ajax="true" data-ajax-method="POST">
+				<input type="hidden" name="source_id" value="@Model.source_id" id="source_id"/>
+				<input type="hidden" name="data_status" value="@Model.data_status" id="data_status" />
+				<input hidden asp-for="@Model.GetType().FullName">
+	<div class="data-row">
+		<div class="data-item ">
+			<label class="data-label ">MUID</label>
+			<input type="text" class="data-value stretch" name="muid" value="@Model.muid" placeholder="Наименование номер MUID">
+		</div>
+		<div class="data-item ">
+			<label class="data-label ">LOTUS ID</label>
+			<input type="text" class="data-value stretch" name="lotus_id" value="@Model.lotus_id" placeholder="Наименование номер LOTUS ID">
+		</div>
+		<div class="data-item ">
+			<label class="data-label ">KASU_ID</label>
+			<input type="text" class="data-value stretch" name="kasu_id" value="@Model.kasu_id" placeholder="Наименование номер KASU_ID">
+		</div>
+	</div>
+	<div class="data-row">
+		<div class="data-item ">
+			<label class="data-label ">KASU_COMPOSITE_ID</label>
+			<input type="text" class="data-value stretch" name="kasu_composite_id" value="@Model.kasu_composite_id" placeholder="Наименование номер KASU_COMPOSITE_ID">
+		</div>
+		<div class="data-item ">
+			<label class="data-label ">KASU_MAP_ID</label>
+			<input type="text" class="data-value stretch" name="kasu_map_id" value="@Model.kasu_map_id" placeholder="Наименование номер KASU_MAP_ID">
+		</div>
+	</div>
+	<button type="submit" id="genInfo_save" class="bttn bttn-color ms-auto">Сохранить</button>
+</form>

@@ -1,0 +1,365 @@
+﻿@model WebProject.Areas.HPConsumers.Models.Consumers_SubPartialYearDynamicViewModel
+
+@{
+    Layout = null; string is_disabled = ViewBag.IsDisabled;
+}
+
+
+<input hidden name="consumer_id" value="@Model.Consumers_PerspectiveDev_SubPartialViewModel.consumer_id">
+<input hidden name="data_status" value="@Model.Consumers_PerspectiveDev_SubPartialViewModel.data_status">
+<input hidden name="dev_prog_id" value="@Model.Consumers_PerspectiveDev_SubPartialViewModel.dev_prog_id">
+<div class="data-block">
+    <div class="data-row">
+        <div class="col-12 col-xl-5">
+            <div class="data-block me-xl-3">
+                <div class="data-item">
+                    <label class="data-label lg-fix">Программа развития:</label>
+                    <input type="text" class="data-value stretch" name="type_prog_name" value="@Model.Consumers_PerspectiveDev_SubPartialViewModel.type_prog_name" id="type_prog_name"
+                           placeholder="Наименование типа программы" disabled>
+                </div>
+                <div class="data-item">
+                    <label class="data-label lg-fix">Уникальный номер объекта по программе:</label>
+                    <input type="text" class="data-value stretch" name="obj_num" value="@Model.Consumers_PerspectiveDev_SubPartialViewModel.obj_num" id="obj_num"
+                           placeholder="Номер объекта в программе" disabled>
+                </div>
+                <div class="data-row">
+                    <div class="data-item ">
+                        <label class="data-label lg-fix">Заявка о подключении: </label><label class="data-label sublabel">от</label>
+                        <input type="date" class="data-value smx-stretch" name="connect_req_date" value="@Model.Consumers_PerspectiveDev_SubPartialViewModel.connect_req_date" id="connect_req_date"
+                               placeholder="Дата" disabled>
+                    </div>
+                    <div class="data-item ">
+                        <label class="data-label sublabel">№</label>
+                        <input type="text" class="data-value smx-stretch" name="connect_req_num" value="@Model.Consumers_PerspectiveDev_SubPartialViewModel.connect_req_num" id="connect_req_num"
+                               placeholder="Номер" disabled>
+                    </div>
+                </div>
+                <div class="data-row">
+                    <div class="data-item ">
+                        <label class="data-label lg-fix">Договор о подключении: </label><label class="data-label sublabel">от</label>
+                        <input type="date" class="data-value smx-stretch" name="connect_agree_date" value="@Model.Consumers_PerspectiveDev_SubPartialViewModel.connect_agree_date" id="connect_agree_date"
+                               placeholder="Дата" disabled>
+                    </div>
+                    <div class="data-item ">
+                        <label class="data-label sublabel">№</label>
+                        <input type="text" class="data-value smx-stretch" name="connect_agree_num" value="@Model.Consumers_PerspectiveDev_SubPartialViewModel.connect_agree_num" id="connect_agree_num"
+                               placeholder="Номер" disabled>
+                    </div>
+                </div>
+                <div class="data-item">
+                    <label class="data-label lg-fix">Общий объем строительства:</label>
+                    <input type="text" class="data-value smx-stretch" name="area" value="@Model.Consumers_PerspectiveDev_SubPartialViewModel.area" id="area"
+                           placeholder="Общая площадь" disabled>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-xl-7">
+            <div class="data-block ms-xl-3">
+                <div class="data-row">
+                    <div class="data-item ">
+                        <label class="data-label lg-fix">Год программы:</label>
+                        <input type="text" class="data-value smx-stretch" name="year_dev_prog" value="@Model.Consumers_PerspectiveDev_SubPartialViewModel.year_dev_prog" id="year_dev_prog"
+                               placeholder="Год" disabled>
+                    </div>
+                    <div class="data-row stretch">
+                        <div class="data-item ">
+                            <label class="data-label lg-fix">Решение: </label><label class="data-label sublabel">от</label>
+                            <input type="date" class="data-value md-fix" name="date_dev_prog" value="@Model.Consumers_PerspectiveDev_SubPartialViewModel.date_dev_prog" id="date_dev_prog"
+                                   placeholder="Дата" disabled>
+                        </div>
+                        <div class="data-item ">
+                            <label class="data-label sublabel">№</label>
+                            <input type="text" class="data-value sm-stretch" name="prog_doc_num" value="@Model.Consumers_PerspectiveDev_SubPartialViewModel.prog_doc_num" id="prog_doc_num"
+                                   placeholder="Номер" disabled>
+                        </div>
+                    </div>
+                </div>
+                <div class="data-item">
+                    <label class="data-label lg-fix">Наименование заявителя:</label>
+                    <input type="text" class="data-value xl-stretch" name="appl_name" value="@Model.Consumers_PerspectiveDev_SubPartialViewModel.appl_name" id="appl_name"
+                           placeholder="Наименование заявителя по объекту" disabled>
+                </div>
+                <div class="data-row">
+                    <div class="data-item">
+                        <label class="data-label lg-fix">Условие на подключение: </label><label class="data-label sublabel">от</label>
+                        <input type="date" class="data-value md-fix" name="connect_cond_date" value="@Model.Consumers_PerspectiveDev_SubPartialViewModel.connect_cond_date" id="connect_cond_date"
+                               placeholder="Дата" disabled>
+                    </div>
+                    <div class="data-item ">
+                        <label class="data-label sublabel">№</label>
+                        <input type="text" class="data-value sm-stretch" name="connect_cond_num" value="@Model.Consumers_PerspectiveDev_SubPartialViewModel.connect_cond_num" id="connect_cond_num"
+                               placeholder="Номер" disabled>
+                    </div>
+                </div>
+                <div class="data-item">
+                    <label class="data-label lg-fix">Точка присоединения:</label>
+                    <input type="text" class="data-value stretch" name="connect_point_hn" value="@Model.Consumers_PerspectiveDev_SubPartialViewModel.connect_point_hn" id="connect_point_hn"
+                           placeholder="Наименование точки на присоединение" disabled>
+                </div>
+                <div class="data-row">
+                    <div class="data-item ">
+                        <label class="data-label lg-fix">Года реализации строительства: </label><label class="data-label sublabel">год начала</label>
+                        <input type="text" class="data-value smx-stretch" name="start_year" value="@Model.Consumers_PerspectiveDev_SubPartialViewModel.start_year" id="start_year"
+                               placeholder="Год" disabled>
+                    </div>
+                    <div class="data-item ">
+                        <label class="data-label lg-fix sublabel">год окончания</label>
+                        <input type="text" class="data-value smx-stretch" name="end_year" value="@Model.Consumers_PerspectiveDev_SubPartialViewModel.end_year" id="end_year"
+                               placeholder="Год" disabled>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="data-block border-block">
+        <h4>Тепловые нагрузки по программе</h4>
+        <div class="scroll-table-wrapper">
+            <table class="table-inp-stretch" style="width: 100%">
+                <thead>
+                    <tr>
+                        <th colspan="2"></th>
+                        <th>Технология</th>
+                        <th>Отопление</th>
+                        <th>Вентиляция</th>
+                        <th>Кондиц.</th>
+                        <th>ГВС ср.ч.</th>
+                        <th>ГВС max</th>
+                        <th>Тепловые<br>завесы</th>
+                        <th>Прочие</th>
+                        <th>ВСЕГО<br>с учетом ГВС ср.ч.</th>
+                        <th>ВСЕГО<br>с учетом ГВС мах</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td rowspan="3">в горячей воде, <span class="data-unit">Гкал/ч</span></td>
+                        <td style="position: sticky;left: 70.6px;background: white;z-index: 1;">заявленная</td>
+                        <td><input type="text" class="data-value" name="dpld_hl_tech_hw" value="@Model.Consumers_PerspectiveDev_SubPartialViewModel.dpld_hl_tech_hw" id="dpld_hl_tech_hw" disabled></td>
+                        <td><input type="text" class="data-value" name="dpld_hl_heat_hw" value="@Model.Consumers_PerspectiveDev_SubPartialViewModel.dpld_hl_heat_hw" id="dpld_hl_heat_hw" disabled></td>
+                        <td><input type="text" class="data-value" name="dpld_hl_vent_hw" value="@Model.Consumers_PerspectiveDev_SubPartialViewModel.dpld_hl_vent_hw" id="dpld_hl_vent_hw" disabled></td>
+                        <td><input type="text" class="data-value" name="dpld_hl_cond_hw" value="@Model.Consumers_PerspectiveDev_SubPartialViewModel.dpld_hl_cond_hw" id="dpld_hl_cond_hw" disabled></td>
+                        <td><input type="text" class="data-value" name="dpld_hl_gvss_hw" value="@Model.Consumers_PerspectiveDev_SubPartialViewModel.dpld_hl_gvss_hw" id="dpld_hl_gvss_hw" disabled></td>
+
+                        <td><input type="text" class="data-value" name="dpld_hl_gvsm_hw" value="@Model.Consumers_PerspectiveDev_SubPartialViewModel.dpld_hl_gvsm_hw" id="dpld_hl_gvsm_hw" disabled></td>
+                        <td><input type="text" class="data-value" name="dpld_hl_curtains_hw" value="@Model.Consumers_PerspectiveDev_SubPartialViewModel.dpld_hl_curtains_hw" id="dpld_hl_curtains_hw" disabled></td>
+                        <td><input type="text" class="data-value" name="dpld_hl_other_hw" value="@Model.Consumers_PerspectiveDev_SubPartialViewModel.dpld_hl_other_hw" id="dpld_hl_other_hw" disabled></td>
+                        <td><input type="text" class="data-value" name="dpld_hl_gvss_hw_sum" value="@Model.Consumers_PerspectiveDev_SubPartialViewModel.dpld_hl_gvss_hw_sum" id="dpld_hl_gvss_hw_sum" disabled></td>
+                        <td><input type="text" class="data-value" name="dpld_hl_gvsm_hw_sum" value="@Model.Consumers_PerspectiveDev_SubPartialViewModel.dpld_hl_gvsm_hw_sum" id="dpld_hl_gvsm_hw_sum" disabled></td>
+                    </tr>
+                    <tr>
+                        <td style="left: 70.6px;">расчетная</td>
+                        <td><input type="text" class="data-value" name="dplc_hl_tech_hw" value="@Model.Consumers_PerspectiveDev_SubPartialViewModel.dplc_hl_tech_hw" id="dplc_hl_tech_hw" disabled></td>
+                        <td><input type="text" class="data-value" name="dplc_hl_heat_hw" value="@Model.Consumers_PerspectiveDev_SubPartialViewModel.dplc_hl_heat_hw" id="dplc_hl_heat_hw" disabled></td>
+                        <td><input type="text" class="data-value" name="dplc_hl_vent_hw" value="@Model.Consumers_PerspectiveDev_SubPartialViewModel.dplc_hl_vent_hw" id="dplc_hl_vent_hw" disabled></td>
+                        <td></td>
+                        <td><input type="text" class="data-value" name="dplc_hl_gvss_hw" value="@Model.Consumers_PerspectiveDev_SubPartialViewModel.dplc_hl_gvss_hw" id="dplc_hl_gvss_hw" disabled></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td><input type="text" class="data-value" name="dplc_hl_gvss_hw_sum" value="@Model.Consumers_PerspectiveDev_SubPartialViewModel.dplc_hl_gvss_hw_sum" id="dplc_hl_gvss_hw_sum" disabled></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td style="left: 70.6px;">отличие, <span class="data-unit">%</span></td>
+                        @if (Model.Consumers_PerspectiveDev_SubPartialViewModel.dpld_dplc_hl_tech_hw_rel == -1)
+                        {
+                            <td><input type="text" class="data-value" name="dpld_dplc_hl_tech_hw_rel" value="" id="dpld_dplc_hl_tech_hw_rel" disabled></td>
+                        }
+                        else
+                        {
+                            <td><input type="text" class="data-value" name="dpld_dplc_hl_tech_hw_rel" value="@Model.Consumers_PerspectiveDev_SubPartialViewModel.dpld_dplc_hl_tech_hw_rel" id="dpld_dplc_hl_tech_hw_rel" disabled></td>
+                        }
+                        @if (Model.Consumers_PerspectiveDev_SubPartialViewModel.dpld_dplc_hl_heat_hw_rel == -1)
+                        {
+                            <td><input type="text" class="data-value" name="dpld_dplc_hl_heat_hw_rel" value="" id="dpld_dplc_hl_heat_hw_rel" disabled></td>
+                        }
+                        else
+                        {
+                            <td><input type="text" class="data-value" name="dpld_dplc_hl_heat_hw_rel" value="@Model.Consumers_PerspectiveDev_SubPartialViewModel.dpld_dplc_hl_heat_hw_rel" id="dpld_dplc_hl_heat_hw_rel" disabled></td>
+                        }
+                        @if (Model.Consumers_PerspectiveDev_SubPartialViewModel.dpld_dplc_hl_vent_hw_rel == -1)
+                        {
+                            <td><input type="text" class="data-value" name="dpld_dplc_hl_vent_hw_rel" value="" id="dpld_dplc_hl_vent_hw_rel" disabled></td>
+                        }
+                        else
+                        {
+                            <td><input type="text" class="data-value" name="dpld_dplc_hl_vent_hw_rel" value="@Model.Consumers_PerspectiveDev_SubPartialViewModel.dpld_dplc_hl_vent_hw_rel" id="dpld_dplc_hl_vent_hw_rel" disabled></td>
+                        }
+                        <td></td>
+                        @if (Model.Consumers_PerspectiveDev_SubPartialViewModel.dpld_dplc_hl_gvss_hw_rel == -1)
+                        {
+                            <td><input type="text" class="data-value" name="dpld_dplc_hl_gvss_hw_rel" value="" id="dpld_dplc_hl_gvss_hw_rel" disabled></td>
+                        }
+                        else
+                        {
+                            <td><input type="text" class="data-value" name="dpld_dplc_hl_gvss_hw_rel" value="@Model.Consumers_PerspectiveDev_SubPartialViewModel.dpld_dplc_hl_gvss_hw_rel" id="dpld_dplc_hl_gvss_hw_rel" disabled></td>
+                        }
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        @if (Model.Consumers_PerspectiveDev_SubPartialViewModel.dpld_dplc_hl_gvss_hw_rel_sum == -1)
+                        {
+                            <td><input type="text" class="data-value" name="dpld_dplc_hl_gvss_hw_rel_sum" value="" id="dpld_dplc_hl_gvss_hw_rel_sum" disabled></td>
+                        }
+                        else
+                        {
+                            <td><input type="text" class="data-value" name="dpld_dplc_hl_gvss_hw_rel_sum" value="@Model.Consumers_PerspectiveDev_SubPartialViewModel.dpld_dplc_hl_gvss_hw_rel_sum" id="dpld_dplc_hl_gvss_hw_rel_sum" disabled></td>
+                        }
+                        <td><input type="text" class="data-value" name="dpld_dplc_hl_gvss_hw_rel_sum" value="@Model.Consumers_PerspectiveDev_SubPartialViewModel.dpld_dplc_hl_gvss_hw_rel_sum" id="dpld_dplc_hl_gvss_hw_rel_sum" disabled></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">удельный расход тепла, <span class="data-unit">ккал/(ч · м<sup>2</sup>)</span></td>
+                        <td><input type="text" class="data-value" name="spec_hc_tech" value="@Model.Consumers_PerspectiveDev_SubPartialViewModel.spec_hc_tech" id="spec_hc_tech" disabled></td>
+                        <td><input type="text" class="data-value" name="spec_hc_heat" value="@Model.Consumers_PerspectiveDev_SubPartialViewModel.spec_hc_heat" id="spec_hc_heat" disabled></td>
+                        <td><input type="text" class="data-value" name="spec_hc_vent" value="@Model.Consumers_PerspectiveDev_SubPartialViewModel.spec_hc_vent" id="spec_hc_vent" disabled></td>
+                        <td></td>
+                        <td><input type="text" class="data-value" name="spec_hc_gvss" value="@Model.Consumers_PerspectiveDev_SubPartialViewModel.spec_hc_gvss" id="spec_hc_gvss" disabled></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td><input type="text" class="data-value" name="spec_hc_gvss_sum" value="@Model.Consumers_PerspectiveDev_SubPartialViewModel.spec_hc_gvss_sum" id="spec_hc_gvss_sum" disabled></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td rowspan="3">в паре, <span class="data-unit">т/ч</span></td>
+                        <td style="position: sticky;left: 70.6px;background: white;z-index: 1;">заявленная</td>
+                        <td><input type="text" class="data-value" name="dpld_hl_tech_steam" value="@Model.Consumers_PerspectiveDev_SubPartialViewModel.dpld_hl_tech_steam" id="dpld_hl_tech_steam" disabled></td>
+                        <td><input type="text" class="data-value" name="dpld_hl_heat_steam" value="@Model.Consumers_PerspectiveDev_SubPartialViewModel.dpld_hl_heat_steam" id="dpld_hl_heat_steam" disabled></td>
+                        <td><input type="text" class="data-value" name="dpld_hl_vent_steam" value="@Model.Consumers_PerspectiveDev_SubPartialViewModel.dpld_hl_vent_steam" id="dpld_hl_vent_steam" disabled></td>
+                        <td><input type="text" class="data-value" name="dpld_hl_cond_steam" value="@Model.Consumers_PerspectiveDev_SubPartialViewModel.dpld_hl_cond_steam" id="dpld_hl_cond_steam" disabled></td>
+                        <td><input type="text" class="data-value" name="dpld_hl_gvss_steam" value="@Model.Consumers_PerspectiveDev_SubPartialViewModel.dpld_hl_gvss_steam" id="dpld_hl_gvss_steam" disabled></td>
+
+                        <td><input type="text" class="data-value" name="dpld_hl_gvsm_steam" value="@Model.Consumers_PerspectiveDev_SubPartialViewModel.dpld_hl_gvsm_steam" id="dpld_hl_gvsm_steam" disabled></td>
+                        <td><input type="text" class="data-value" name="dpld_hl_curtains_steam" value="@Model.Consumers_PerspectiveDev_SubPartialViewModel.dpld_hl_curtains_steam" id="dpld_hl_curtains_steam" disabled></td>
+                        <td><input type="text" class="data-value" name="dpld_hl_other_steam" value="@Model.Consumers_PerspectiveDev_SubPartialViewModel.dpld_hl_other_steam" id="dpld_hl_other_steam" disabled></td>
+                        <td><input type="text" class="data-value" name="dpld_hl_gvss_steam_sum" value="@Model.Consumers_PerspectiveDev_SubPartialViewModel.dpld_hl_gvss_steam_sum" id="dpld_hl_gvss_steam_sum" disabled></td>
+                        <td><input type="text" class="data-value" name="dpld_hl_gvsm_steam_sum" value="@Model.Consumers_PerspectiveDev_SubPartialViewModel.dpld_hl_gvsm_steam_sum" id="dpld_hl_gvsm_steam_sum" disabled></td>
+                    </tr>
+                    <tr>
+                        <td style="left: 70.6px;">расчетная</td>
+                        <td><input type="text" class="data-value" name="dplc_hl_tech_steam" value="@Model.Consumers_PerspectiveDev_SubPartialViewModel.dplc_hl_tech_steam" id="dplc_hl_tech_steam" disabled></td>
+                        <td><input type="text" class="data-value" name="dplc_hl_heat_steam" value="@Model.Consumers_PerspectiveDev_SubPartialViewModel.dplc_hl_heat_steam" id="dplc_hl_heat_steam" disabled></td>
+                        <td><input type="text" class="data-value" name="dplc_hl_vent_steam" value="@Model.Consumers_PerspectiveDev_SubPartialViewModel.dplc_hl_vent_steam" id="dplc_hl_vent_steam" disabled></td>
+                        <td></td>
+                        <td><input type="text" class="data-value" name="dplc_hl_gvss_steam" value="@Model.Consumers_PerspectiveDev_SubPartialViewModel.dplc_hl_gvss_steam" id="dplc_hl_gvss_steam" disabled></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td><input type="text" class="data-value" name="dplc_hl_gvss_steam_sum" value="@Model.Consumers_PerspectiveDev_SubPartialViewModel.dplc_hl_gvss_steam_sum" id="dplc_hl_gvss_steam_sum" disabled></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td style="left: 70.6px;">отличие, <span class="data-unit">%</span></td>
+                        @if (Model.Consumers_PerspectiveDev_SubPartialViewModel.dpld_dplc_hl_tech_steam_rel == -1)
+                        {
+                            <td><input type="text" class="data-value" name="dpld_dplc_hl_tech_steam_rel" value="" id="dpld_dplc_hl_tech_steam_rel" disabled></td>
+                        }
+                        else
+                        {
+                            <td><input type="text" class="data-value" name="dpld_dplc_hl_tech_steam_rel" value="@Model.Consumers_PerspectiveDev_SubPartialViewModel.dpld_dplc_hl_tech_steam_rel" id="dpld_dplc_hl_tech_steam_rel" disabled></td>
+                        }
+                        @if (Model.Consumers_PerspectiveDev_SubPartialViewModel.dpld_dplc_hl_heat_steam_rel == -1)
+                        {
+                            <td><input type="text" class="data-value" name="dpld_dplc_hl_heat_steam_rel" value="" id="dpld_dplc_hl_heat_steam_rel" disabled></td>
+                        }
+                        else
+                        {
+                            <td><input type="text" class="data-value" name="dpld_dplc_hl_heat_steam_rel" value="@Model.Consumers_PerspectiveDev_SubPartialViewModel.dpld_dplc_hl_heat_steam_rel" id="dpld_dplc_hl_heat_steam_rel" disabled></td>
+                        }
+                        @if (Model.Consumers_PerspectiveDev_SubPartialViewModel.dpld_dplc_hl_vent_steam_rel == -1)
+                        {
+                            <td><input type="text" class="data-value" name="dpld_dplc_hl_vent_steam_rel" value="" id="dpld_dplc_hl_vent_steam_rel" disabled></td>
+                        }
+                        else
+                        {
+                            <td><input type="text" class="data-value" name="dpld_dplc_hl_vent_steam_rel" value="@Model.Consumers_PerspectiveDev_SubPartialViewModel.dpld_dplc_hl_vent_steam_rel" id="dpld_dplc_hl_vent_steam_rel" disabled></td>
+                        }
+                        <td></td>
+                        @if (Model.Consumers_PerspectiveDev_SubPartialViewModel.dpld_dplc_hl_gvss_steam_rel == -1)
+                        {
+                            <td><input type="text" class="data-value" name="dpld_dplc_hl_gvss_steam_rel" value="" id="dpld_dplc_hl_gvss_steam_rel" disabled></td>
+                        }
+                        else
+                        {
+                            <td><input type="text" class="data-value" name="dpld_dplc_hl_gvss_steam_rel" value="@Model.Consumers_PerspectiveDev_SubPartialViewModel.dpld_dplc_hl_gvss_steam_rel" id="dpld_dplc_hl_gvss_steam_rel" disabled></td>
+                        }
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        @if (Model.Consumers_PerspectiveDev_SubPartialViewModel.dpld_dplc_hl_gvss_steam_rel_sum == -1)
+                        {
+                            <td><input type="text" class="data-value" name="dpld_dplc_hl_gvss_steam_rel_sum" value="" id="dpld_dplc_hl_gvss_steam_rel_sum" disabled></td>
+                        }
+                        else
+                        {
+                            <td><input type="text" class="data-value" name="dpld_dplc_hl_gvss_steam_rel_sum" value="@Model.Consumers_PerspectiveDev_SubPartialViewModel.dpld_dplc_hl_gvss_steam_rel_sum" id="dpld_dplc_hl_gvss_steam_rel_sum" disabled></td>
+                        }
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="data-block border-block">
+        <h4>Динамика по годам программы</h4>
+        <div class="scroll-table-wrapper">
+            <table class="table-inp-stretch" style="width: 100%;white-space: nowrap;">
+                <thead>
+                    <tr>
+                        <th>
+
+                        </th>
+                        @foreach (var p_year in Model.Consumers_PerspectiveDev_YearDynamicViewModel)
+                        {
+                            <th>@p_year.perspective_year</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Объем строительства,<br><span class="data-unit">тыс. м<sup>2</sup></span></td>
+                        @foreach (var p_year in Model.Consumers_PerspectiveDev_YearDynamicViewModel)
+                        {
+                            <th><input type="text" class="data-value" name="p_year_increase_area" value="@p_year.increase_area" id="p_year_increase_area" disabled></th>
+                        }
+                    </tr>
+                    <tr>
+                        <td>Суммарная расчетная<br>тепловая нагрузка</td>
+                        <td colspan="@Model.Consumers_PerspectiveDev_YearDynamicViewModel.Count()"></td>
+                    </tr>
+                    <tr>
+                        <td>- горячая вода, <span class="data-unit">Гкал/ч</span></td>
+                        @foreach (var p_year in Model.Consumers_PerspectiveDev_YearDynamicViewModel)
+                        {
+                            <th><input type="text" class="data-value" name="p_year_calc_sum_hw" value="@p_year.calc_sum_hw" id="p_year_calc_sum_hw" disabled></th>
+                        }
+                    </tr>
+                    <tr>
+                        <td>- пар, <span class="data-unit">т/ч</span></td>
+                        @foreach (var p_year in Model.Consumers_PerspectiveDev_YearDynamicViewModel)
+                        {
+                            <th><input type="text" class="data-value" name="p_year_calc_sum_steam" value="@p_year.calc_sum_steam" id="p_year_calc_sum_steam" disabled></th>
+                        }
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="@Url.Content("~/hss/js/popup_common_scripts.js")"></script>
+<script type="text/javascript">
+
+    var onSuccessFormConsumer = function (xhr) {
+        hidePreloader();
+        if (xhr.success == true) {
+            $("#refresh_table").val(1);
+            showMessage('Данные сохранены.', 'modal', 'success');
+        }
+        else {
+            showMessage(xhr.error, 'modal', 'fault');
+        }
+    };
+
+</script>

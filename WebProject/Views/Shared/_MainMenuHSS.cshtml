@@ -1,0 +1,262 @@
+﻿@{
+    Layout = null;
+}
+
+<div class="sidebar offcanvas offcanvas-start" id="offcanvas-sidebar" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1">
+	<div class="user d-flex">
+		<img src="/hss/images/user-logo.png" title="Пользователь" alt="Логотип">
+		<a class="user-name ref-white flex-grow-1" role="button" href="#" id="fio"><span>Фамилия</span> Имя Отчество</a>
+		@*<a class="user__exit ref-white" href="#" role="button" ><svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 512 512"><title>Выход</title><path d="M304 336v40a40 40 0 01-40 40H104a40 40 0 01-40-40V136a40 40 0 0140-40h152c22.09 0 48 17.91 48 40v40M368 336l80-80-80-80M176 256h256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg></a>*@
+	</div>
+	<div class="data-block sidebar-params">
+		<div class="data-item">
+			<label for="paramCity" class="data-label">Город/ поселение</label>
+			<div class="input-group">
+				<select class="selectpicker param-city" data-width="190px" id="paramCity" name="paramCity" onchange="ChangeDbName();">
+					<option value="msk">Москва</option>
+					<option value="test">База для тестирования</option>
+				</select>
+				@*<button class="bttn bttn-square bttn-icon-add bttn-add-city" type="button"></button>*@
+			</div>
+		</div>
+		<div class="data-item">
+			<label for="data_status" class="data-label">Базовый год</label>
+			<select class="selectpicker param-year" data-width="190px" id="data_status" name="data_status" onchange="ChangeDS();">
+				@for (int i = 0; i < ViewBag.DataStatusesList.Count; i++)
+                {
+                    if (i == ViewBag.DataStatusesList.Count - 1)
+                    {
+                        <option value="@ViewBag.DataStatusesList[i].data_status" selected>@ViewBag.DataStatusesList[i].data_status_dt</option>
+                    }
+                    else
+                    {
+						<option value="@ViewBag.DataStatusesList[i].data_status">@ViewBag.DataStatusesList[i].data_status_dt</option>
+                    }
+                }
+			</select>
+		</div>
+		<p class="schema-name">Краткое наименование схемы: <span>Самая наилучшая схема из всех схем</span></p>
+		<p class="schema-approve">Решение об утверждении схемы: <span>Решение №456 от 27.04.2017</span></p>
+	</div>
+	<nav class="navbar">
+		<ul class="navbar-nav me-auto mb-2 mb-lg-0 flex-column list-unstyled">
+			<li class="nav-item">
+				<a class="nav-link btn-toggle collapsed" href="#" role="button" data-bs-toggle="collapse" data-bs-target="#tso_menu" aria-expanded="false" >
+			    Теплоснабжающие организации
+			    </a>
+			    <ul class="subnav collapse list-unstyled" id="tso_menu">
+				    <li><a class="subnav-item nav-link" data-menu-parent="#tso_menu" href="/tso" id="tso_org_list">Перечень организаций</a></li>
+					<li><a class="subnav-item nav-link" data-menu-parent="#tso_menu" href="/tso/ObjectsInService/TSOObjects" id="tso_obj_in_service">Объекты в обслуживании</a></li>
+					<li><a class="subnav-item nav-link" data-menu-parent="#tso_menu" href="/tso/HeatBalance/TZHeatBalance" id="tz_heat_balance">Тепловой баланс</a></li>
+					<li><a class="subnav-item nav-link" data-menu-parent="#tso_menu" href="/tso/CostsAndPrices/TZCostsPrices" id="tz_costs_prices">Затраты и цены</a></li>
+					<li><a class="subnav-item nav-link" data-menu-parent="#tso_menu" href="/tso/TariffConnection/TZTariffConnection" id="tz_tariff_connection">Тарифы и плата за подключение</a></li>
+					<li><a class="subnav-item nav-link" data-menu-parent="#tso_menu" href="/tso/EcologyIndicators/EcologyIndicators" id="Ecology_Indicators">Экологические показатели</a></li>
+				</ul>
+			</li>
+
+			<li class="nav-item">
+				<a class="nav-link btn-toggle collapsed" href="#" role="button" data-bs-toggle="collapse" data-bs-target="#sources_menu" aria-expanded="false" >
+			    Источники тепловой энергии
+			    </a>
+			    <ul class="subnav collapse list-unstyled" id="sources_menu">
+					<li><a class="subnav-item nav-link" href="/Sources/Sources/SourcesList" id="sourcelist">Перечень источников</a></li>
+					<li><a class="subnav-item nav-link" data-menu-parent="#sources_menu" href="/Sources/SourcesEquipments/SourcesEquipmentsList" id="SourcesEquipmentsList">Оборудование</a></li>
+					<li><a class="subnav-item nav-link" data-menu-parent="#sources_menu" href="#">Ресурсоснабжение</a></li>
+				    <li><a class="subnav-item nav-link" data-menu-parent="#sources_menu" href="#">Выдача тепловой мощности</a></li>
+				    <li><a class="subnav-item nav-link" data-menu-parent="#sources_menu" href="#">Технико-экономические показатели</a></li>
+				    <li><a class="subnav-item nav-link" data-menu-parent="#sources_menu" href="#">Статистика отказов</a></li>
+				    <li><a class="subnav-item nav-link" data-menu-parent="#sources_menu" href="#">Мероприятия по развитию</a></li>
+				    <li><a class="subnav-item nav-link" data-menu-parent="#sources_menu" href="#">Калькуляция себестоимости</a></li>
+				    <li><a class="subnav-item nav-link" data-menu-parent="#sources_menu" href="#">Экологические показатели</a></li>
+				</ul>
+			</li>
+
+			<li class="nav-item">
+				<a class="nav-link btn-toggle collapsed" href="#" role="button" data-bs-toggle="collapse" data-bs-target="#net_menu" aria-expanded="false" >
+			    Тепловые сети и объекты
+			    </a>
+			    <ul class="subnav collapse list-unstyled" id="net_menu">
+					<li><a class="subnav-item nav-link" data-menu-parent="#net_menu" href="#">Участки тепловых сетей</a></li>
+				    <li><a class="subnav-item nav-link" data-menu-parent="#net_menu" href="#">НПС и ДНС</a></li>
+				    <li><a class="subnav-item nav-link" data-menu-parent="#net_menu" href="#">Камеры и павильоны</a></li>
+				</ul>
+			</li>
+
+			<li class="nav-item">
+				<a class="nav-link btn-toggle collapsed" href="#" role="button" data-bs-toggle="collapse" data-bs-target="#hp_consumers_menu" aria-expanded="false" >
+			    Тепловые пункты и потребители
+			    </a>
+			    <ul class="subnav collapse list-unstyled" id="hp_consumers_menu">
+					<li><a class="subnav-item nav-link" data-menu-parent="#hp_consumers_menu" href="/heatPointsAndConsumers/HeatPoint/HeatPointMainView" id="hp_main_view">Тепловые пункты</a></li>
+					<li><a class="subnav-item nav-link" data-menu-parent="#hp_consumers_menu" href="/HPConsumers/Consumers/ConsumersMainView" id="consumers_main_view">Потребители</a></li>
+					<li><a class="subnav-item nav-link" data-menu-parent="#hp_consumers_menu" href="/heatPointsAndConsumers/Contract/ContractList" id="contract">Договоры на теплоснабжение</a></li>
+					<li><a class="subnav-item nav-link" data-menu-parent="#hp_consumers_menu" href="/heatPointsAndConsumers/Building/BuildingList" id="buildung">Здания</a></li>
+				</ul>
+			</li>
+
+			<li class="nav-item">
+				<a class="nav-link btn-toggle collapsed" href="#" role="button" data-bs-toggle="collapse" data-bs-target="#dict_menu" aria-expanded="false" >
+			    Справочные таблицы
+			    </a>
+			    <ul class="subnav collapse list-unstyled" id="dict_menu">
+					<li><a class="subnav-item nav-link" data-menu-parent="#dict_menu" href="/DictionaryTables/Organization/OrganizationList" id="organization">Организации</a></li>
+					<li><a class="subnav-item nav-link" data-menu-parent="#dict_menu" href="/DictionaryTables" id="TerritorialDivision">Территориальное деление</a></li>
+					<li><a class="subnav-item nav-link" data-menu-parent="#dict_menu" href="/DictionaryTables/TariffZone/TariffZoneList" id="TarifZone">Тарифные зоны</a></li>
+					<li><a class="subnav-item nav-link" data-menu-parent="#dict_menu" href="/DictionaryTables/ActiveZoneETO/ActiveZoneETOList" id="ActiveZoneETO">Зоны деятельности ЕТО</a></li>
+					<li><a class="subnav-item nav-link" data-menu-parent="#dict_menu" href="/DictionaryTables/HeatSupplySystem/HeatSupplySystemList" id="HeatSupplySystem">Системы теплоснабжения</a></li>
+					<li><a class="subnav-item nav-link" data-menu-parent="#dict_menu" href="/DictionaryTables/StandardConsumptionHeat/StandardConsumptionHeatList" id="StandardConsumptionHeat">Нормы расхода тепла</a></li>
+					<li><a class="subnav-item nav-link" data-menu-parent="#dict_menu" href="/DictionaryTables/PerspectiveDevelopmentTown/PerspectiveDevelopmentList" id="PerspectiveDevelopmentMain">Программы развития города (поселения)</a></li>
+					<li><a class="subnav-item nav-link" data-menu-parent="#dict_menu" href="/DictionaryTables/Equipment/SteamTurbineList" id="Equipments">Оборудование</a></li>
+					<li><a class="subnav-item nav-link" data-menu-parent="#dict_menu" href="/DictionaryTables/Fuel/FuelList" id="Fuel">Топливо</a></li>
+					<li><a class="subnav-item nav-link" data-menu-parent="#dict_menu" href="#">Программы развития энергообъектов</a></li>
+					<li><a class="subnav-item nav-link" data-menu-parent="#dict_menu" href="/DictionaryTables/Dict_HPSchemes/Dict_HPSchemesList" id="Dict_HPSchemes">Типы схем тепловых пунктов</a></li>
+					<li><a class="subnav-item nav-link" data-menu-parent="#dict_menu" href="/DictionaryTables/Layers/LayersList" id="Layers">Реестр слоев электронной модели</a></li>
+					<li><a class="subnav-item nav-link" data-menu-parent="#dict_menu" href="#">Температурные графики/удельные расходы</a></li>
+					<li><a class="subnav-item nav-link" data-menu-parent="#dict_menu" href="/DictionaryTables/OutPutsSources/OutPutsSourcesList" id="OutPuts">Головные выводы источников</a></li>
+					<li><a class="subnav-item nav-link" data-menu-parent="#dict_menu" href="/DictionaryTables/DiametersConsumptions/DiametersConsumptionsList" id="DiametersConsumptions">Условные диаметры</a></li>
+					<li><a class="subnav-item nav-link" data-menu-parent="#dict_menu" href="/DictionaryTables/IzolTypes/IzolTypesList" id="Dict_IzolTypes">Тепловая изоляция тепловых сетей</a></li>
+					<li><a class="subnav-item nav-link" data-menu-parent="#dict_menu" href="/DictionaryTables/NormLoss/NormLossList" id="NormLoss">Нормы плотности теплового потока</a></li>
+					<li><a class="subnav-item nav-link" data-menu-parent="#dict_menu" href="#">Удельные капитальные вложения</a></li>
+					<li><a class="subnav-item nav-link" data-menu-parent="#dict_menu" href="/DictionaryTables/CoefInflationary/CoefInflationaryList" id="CoefInflationary">Коэффициенты инфляции</a></li>
+					<li><a class="subnav-item nav-link" data-menu-parent="#dict_menu" href="/DictionaryTables/CoefCorrectionClimate/CoefCorrectionClimateList" id="CoefCorrectionClimate">Поправочные коэффициенты на климат</a></li>
+			    </ul>
+			</li>
+
+			<li class="nav-item">
+				<a class="nav-link" href="/OutputForms" id="OutputForms" data-menu-parent="none">Выходные формы</a>
+			</li>
+
+			<li class="nav-item">
+			    <a class="nav-link">Расчёты</a>
+			</li>
+
+			<li class="nav-item">
+			    <a class="nav-link">Плагины и скрипты</a>
+			</li>
+
+			<li class="nav-item">
+			    <a class="nav-link">Письма</a>
+			</li>
+			</ul>
+	</nav>
+	<div class="sidebar-close">
+		<a class="ref-white" data-bs-toggle="offcanvas" data-bs-dismiss="offcanvas-sidebar" aria-label="Close" href="#offcanvas-sidebar" role="button" aria-controls="offcanvas-sidebar">
+			<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" stroke="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
+				<path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+			</svg>
+		</a>
+	</div>
+</div>
+<div class="sidebar-open">
+	<a class="ref-white" data-bs-toggle="offcanvas" href="#offcanvas-sidebar" role="button" aria-controls="offcanvas-sidebar">
+		<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" stroke="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
+			<path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+		</svg>
+	</a>
+</div>
+
+<script type="text/javascript">
+
+	$('.param-year').selectpicker();
+	$('.param-city').selectpicker();
+
+	const MenuItemList = document.querySelectorAll('a[data-menu-parent]');
+	MenuItemList.forEach(el => {
+		el.addEventListener('click', event => {
+			let parent_id = el.getAttribute("data-menu-parent");
+			let menu_item_id = el.getAttribute("id");
+			SetActiveMenuItem(parent_id, menu_item_id);
+		})
+	});
+
+    $.ajax({
+        type: 'POST',
+        url: '@Html.Raw(Url.Action("UserName", "Home", new { Area = "" }))',
+        dataType: 'json'
+    }).done(function (result) {
+        $("#fio").html(result.userName);
+    });
+
+	$.ajax({
+		type: 'POST',
+		url: '@Html.Raw(Url.Action("GetActiveCityDS", "HSS", new { Area = "" }))',
+		dataType: 'json'
+	}).done(function (result) {
+		//$('#paramCity').val(result.db_name);
+		//$('#data_status').val(result.db_name);
+		RefreshSelectByIdWithVal('paramCity', result.db_name);
+		RefreshSelectByIdWithVal('data_status', result.data_status);
+	});
+
+	$.ajax({
+		type: 'GET',
+		url: '@Html.Raw(Url.Action("GetActiveMenuItem", "HSS", new { Area = "" }))',
+		dataType: 'json'
+	}).done(function (result) {
+		if (result.item_id !== null && result.item_id !== 'empty') {
+			$(result.item_id).addClass('show');
+			location.hash = "";
+			location.hash = "#" + result.child_item_id;
+		}
+	});
+
+	function ChangeDbName() {
+
+		$.ajax({
+			type: 'POST',
+			url: '@Html.Raw(Url.Action("ChangeDbName", "HSS", new { Area = "" }))',
+			data: {
+				db_name: $('#paramCity').val()
+			},
+			dataType: 'json'
+		}).done(function (result) {
+			window.location = window.location.href;
+		});
+	}
+
+	function ChangeDS() {
+
+		$.ajax({
+			type: 'POST',
+			url: '@Html.Raw(Url.Action("ChangeDS", "HSS", new { Area = "" }))',
+			data: {
+				data_status: $('#data_status').val()
+			},
+			dataType: 'json'
+		}).done(function (result) {
+
+			if (typeof GetPerspectiveYears === "function") { 
+				GetPerspectiveYears(1);
+			}
+			else if (typeof GetListOnPage === "function") {
+				GetListOnPage();
+			}
+
+			if (typeof GetExploitingOrgList === "function") {
+				GetExploitingOrgList(1);
+			}
+			if (typeof GetHeatEnergySourceList === "function") {
+				GetHeatEnergySourceList(1);
+			}
+
+		});
+	}
+	
+	function SetActiveMenuItem(parent_id, menu_item_id) {
+		if (!$(parent_id).hasClass('show')) {
+			parent_id = "empty";
+		}
+
+		$.ajax({
+			type: 'POST',
+			url: '@Html.Raw(Url.Action("SetActiveMenuItem", "HSS", new { Area = "" }))',
+			data: {
+				parent_id: parent_id,
+				menu_item_id: menu_item_id
+			},
+			dataType: 'json'
+		}).done(function () {
+		});
+	}
+
+</script>

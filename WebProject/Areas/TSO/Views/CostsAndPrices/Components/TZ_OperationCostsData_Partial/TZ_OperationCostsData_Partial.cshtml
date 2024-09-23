@@ -1,0 +1,80 @@
+﻿@model WebProject.Areas.TSO.Models.TZViewModel
+
+<div class="data-block scroll-block">
+	<div class="accordion data-block">
+		<div class="border-block">
+			<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel6" aria-expanded="false">Расходы на оплату труда</button>
+			<div id="panel6" class="accordion-collapse collapse">
+				<div class="accordion-body">
+					<div class="data-block">
+						@await Component.InvokeAsync("TZ_SalaryCostsData_Partial", new { tz_id = Model.tz_id, data_status = Model.data_status, perspective_year = Model.perspective_year })
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class=" border-block">
+			<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel7" aria-expanded="false">Расходы на приобретение сырья и материалов</button>
+			<div id="panel7" class="accordion-collapse collapse">
+				<div class="accordion-body">
+					<div class="data-block">
+						@await Component.InvokeAsync("TZ_MaterialsCostsData_Partial", new { tz_id = Model.tz_id, data_status = Model.data_status, perspective_year = Model.perspective_year })
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="border-block">
+			<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel8" aria-expanded="false">Расходы на оплату работ и услуг производственного характера, выполняемых по договорам со сторонними организациями</button>
+			<div id="panel8" class="accordion-collapse collapse">
+				<div class="accordion-body">
+					<div class="data-block">
+						@await Component.InvokeAsync("TZ_OtherOrgCostsData_Partial", new { tz_id = Model.tz_id, data_status = Model.data_status, perspective_year = Model.perspective_year })
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="border-block">
+			<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel9" aria-expanded="false">Расходы на оплату иных работ и услуг, выполняемых по договорам с организациями</button>
+			<div id="panel9" class="accordion-collapse collapse">
+				<div class="accordion-body">
+					<div class="data-block">
+						@await Component.InvokeAsync("TZ_OrgServiceOtherCostsData_Partial", new { tz_id = Model.tz_id, data_status = Model.data_status, perspective_year = Model.perspective_year })
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="border-block">
+			<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel10" aria-expanded="false">Расходы на ремонт основных средств, выполняемый подрядным способом</button>
+			<div id="panel10" class="accordion-collapse collapse">
+				<div class="accordion-body">
+					<div class="data-block">
+						@await Component.InvokeAsync("TZ_RepairFundingCostsData_Partial", new { tz_id = Model.tz_id, data_status = Model.data_status, perspective_year = Model.perspective_year })
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="border-block">
+			<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel11" aria-expanded="false">Расходы на вывод из эксплуатации (в том числе на консервацию) и вывод из консервации</button>
+			<div id="panel11" class="accordion-collapse collapse">
+				<div class="accordion-body">
+					<div class="data-block">
+						@await Component.InvokeAsync("TZ_DecomissionCostsData_Partial", new { tz_id = Model.tz_id, data_status = Model.data_status, perspective_year = Model.perspective_year })
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="border-block">
+			<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel12" aria-expanded="false">Прочие операционные расходы</button>
+			<div id="panel12" class="accordion-collapse collapse">
+				<div class="accordion-body">
+					<div class="data-block">
+						@await Component.InvokeAsync("TZ_OtherOperatingsCostsData_Partial", new { tz_id = Model.tz_id, data_status = Model.data_status, perspective_year = Model.perspective_year })
+						@*<div class="scroll-table-wrapper">
+							не понятно, зачем тут этот div
+						</div>*@
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript" src="@Url.Content("~/hss/js/popup_common_scripts.js")"></script>

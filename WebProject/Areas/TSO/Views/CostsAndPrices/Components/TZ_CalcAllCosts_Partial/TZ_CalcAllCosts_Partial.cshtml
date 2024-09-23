@@ -1,0 +1,18 @@
+﻿@model WebProject.Areas.TSO.Models.TZCalcAllCostsViewModel
+
+<div class="data-block">
+	<div class="data-table-block">
+		<p class="data-item">Всего расходов: <span class="mark-color" id="costs_all">@Model.costs_all</span><span class="data-unit">тыс. руб.</span></p>
+		<p class="data-item">- расходы на энергетические ресурсы: <span class="mark-color" id="costs_all_energy_res">@Model.costs_all_energy_res</span><span class="data-unit">тыс. руб.</span>, в <span class="data-unit">%</span><span class="mark-color" id="costs_all_energy_res_percent">@Model.costs_all_energy_res_percent</span></p>
+		<p class="data-item">- операционные расходы: <span class="mark-color" id="costs_operating">@Model.costs_operating</span><span class="data-unit">тыс. руб.</span>, в <span class="data-unit">%</span><span class="mark-color" id="costs_operating_percent">@Model.costs_operating_percent</span></p>
+		<p class="data-item">- неподконтрольные расходы: <span class="mark-color" id="costs_non_control">@Model.costs_non_control</span><span class="data-unit">тыс. руб.</span>, в <span class="data-unit">%</span><span class="mark-color" id="costs_non_control_percent">@Model.costs_non_control_percent</span>, в т.ч. амортизация <span class="mark-color" id="amortization">@Model.amortization</span><span class="data-unit">тыс. руб.</span></p>
+	</div>
+</div>
+<div class="data-block">
+	<div class="data-table-block">
+		<p class="data-item">Всего расходов на реализацию: <span class="mark-color" id="costs_on_realize">@Model.costs_on_realize</span><span class="data-unit">тыс. руб.</span></p>
+		<p class="data-item">Полезный отпуск продукции всего: <span class="mark-color" id="useful_release_prod_all">@Model.useful_release_prod_all</span><span class="data-unit">Гкал/год</span></p>
+		<p class="data-item">Полезный отпуск продукции на реализацию:<span class="mark-color" id="useful_release_on_realize">@Model.useful_release_on_realize</span><span class="data-unit">Гкал/год</span></p>
+		<p class="data-item">Коэффициент (доля) на реализацию: <span class="mark-color" id="coef_on_realize">@Model.coef_on_realize</span></p>
+	</div>
+</div>

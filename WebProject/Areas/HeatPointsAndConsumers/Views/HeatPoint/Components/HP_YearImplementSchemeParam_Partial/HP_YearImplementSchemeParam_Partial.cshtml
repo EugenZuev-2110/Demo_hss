@@ -1,0 +1,520 @@
+﻿@model List<WebProject.Areas.HeatPointsAndConsumers.Models.HPAddRemoveYearImplementSchemeParamDataViewModel>
+@{
+    Layout = null; string is_disabled = ViewBag.IsDisabled; short? type_selected_value = 2;
+}
+
+<form asp-controller="HeatPoint" asp-action="HpAddRemove_YearImplementSchemeParamData_Save" asp-antiforgery="true" asp-area="HeatPointsAndConsumers" class="needs-validation" novalidate
+      data-ajax-failure="onFailedFormTZ" data-ajax-success="onSuccessFormHPYearImplement" data-ajax-begin="onBeginFormTZ" data-ajax="true" data-ajax-method="POST">
+    <div class="data-block">
+        <div class="data-row">
+            <div class="data-item ms-auto">
+                <button type="submit" class="bttn bttn-square bttn-icon-save" onclick="removeRequiredAttrAll()" @is_disabled id="year_impl_save_btn"></button>
+                <button class="bttn bttn-color bttn-edit-data" type="button" disabled>Привязать данные электронной модели</button>
+            </div>
+        </div>
+        <div class="scroll-table-wrapper">
+            <table class="table-inp-stretch" style="width:100%;">
+                <thead>
+                    <tr>
+                        <th>Год</th>
+                        <th>Теплоснабжающая организация</th>
+                        <th>Статус</th>
+                        <th>УНОМ ИСТ, Источник, Вывод</th>
+                        <th>УНОМ сеть</th>
+                        <th>2 Д<sub>у</sub></th>
+                        <th>Т<sub>1</sub>/Т<sub>2</sub>,<span class="data-unit">°С</span></th>
+                        <th>№ схемы</th>
+                        <th>Схема техн.</th>
+                        <th>Т<sub>Т1</sub>/Т<sub>Т2</sub>,<span class="data-unit">°С</span></th>
+                        <th>Схема отоп.</th>
+                        <th>Т<sub>3</sub>/Т<sub>4</sub>,<span class="data-unit">°С</span></th>
+                        <th>Схема вент.</th>
+                        <th>Т<sub>3V</sub>/Т<sub>4V</sub>,<span class="data-unit">°С</span></th>
+                        <th>Схема ГВС</th>
+                        <th>Т<sub>5</sub>/Т<sub>6</sub>,<span class="data-unit">°С</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var tz_list in Model)
+                    {
+                        <input hidden asp-for="@tz_list.hp_id">
+                        <input hidden asp-for="@tz_list.data_status">
+                        <tr data-hp_status="@tz_list.add_remove_yisp_perspective_year">
+                            <td name="yisp_perspective_year" id="yisp_perspective_year">@tz_list.add_remove_yisp_perspective_year_dt</td>
+                            <td>
+                                <input type="hidden" name="add_remove_yisp_perspective_year" value="@tz_list.add_remove_yisp_perspective_year">
+                                <input type="hidden" name="add_remove_yisp_hp_tso_id" value="@tz_list.add_remove_yisp_hp_tso_id" id="add_remove_yisp_hp_tso_id@(tz_list.add_remove_yisp_perspective_year)">
+                                <div class="data-item">
+                                    <select class="data-value selectpicker stretch" name="add_remove_yisp_tso_select" id="add_remove_yisp_tso_select_@(tz_list.add_remove_yisp_perspective_year)"
+                                            onchange="ChangeSelectValuePerspectiveHP(event, @tz_list.add_remove_yisp_perspective_year, 'add_remove_yisp_tso')" data-add_remove_yisp_tso="@tz_list.add_remove_yisp_perspective_year" placeholder="Выберите..." data-width="100%" required>
+                                        <option value="0">Выберите...</option>
+                                        @foreach (var s_list in ViewBag.HpTsoList)
+                                        {
+                                            if (s_list.tso_id == tz_list.add_remove_yisp_hp_tso_id)
+                                            {
+                                                <option value="@s_list.tso_id" selected>@s_list.tso_name</option>
+                                            }
+                                            if (s_list.tso_id != tz_list.add_remove_yisp_hp_tso_id)
+                                            {
+                                                <option value="@s_list.tso_id">@s_list.tso_name</option>
+                                            }
+                                        }
+                                    </select>
+                                    <a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Выберите значение из списка"></a>
+                                </div>
+                            </td>
+                            <td>
+                                <input type="hidden" name="add_remove_yisp_hp_status_id" value="@tz_list.add_remove_yisp_hp_status_id" id="add_remove_yisp_hp_status_id_@(tz_list.add_remove_yisp_perspective_year)">
+                                <div class="data-item">
+                                    <select class="data-value selectpicker stretch" name="add_remove_yisp_status_select" id="add_remove_yisp_status_select_@(tz_list.add_remove_yisp_perspective_year)"
+                                            onchange="ChangeSelectValuePerspectiveHP(event, @tz_list.add_remove_yisp_perspective_year, 'add_remove_yisp_status')"
+                                            data-add_remove_yisp_status="@tz_list.add_remove_yisp_perspective_year" data-width="100%">
+                                        @if (tz_list.add_remove_yisp_hp_status_id != null && tz_list.add_remove_yisp_hp_status_id != 0)
+                                        {
+                                            type_selected_value = tz_list.add_remove_yisp_hp_status_id;
+                                        }
+                                        @foreach (var s_list in ViewBag.HpStatusList)
+                                        {
+                                            if (s_list.value_id == type_selected_value)
+                                            {
+                                                <option value="@s_list.value_id" selected>@s_list.value_name</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@s_list.value_id">@s_list.value_name</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </td>
+                            <td>
+                                <input type="hidden" name="add_remove_yisp_source_output_id" value="@tz_list.add_remove_yisp_source_output_id" id="add_remove_yisp_source_output_id_@(tz_list.add_remove_yisp_perspective_year)">
+                                <div class="data-item">
+                                    <select class="data-value selectpicker stretch" name="add_remove_yisp_source_output_select" id="add_remove_yisp_source_output_select_@(tz_list.add_remove_yisp_perspective_year)"
+                                            onchange="ChangeSelectValuePerspectiveHP(event, @tz_list.add_remove_yisp_perspective_year, 'add_remove_yisp_source_output')" data-add_remove_yisp_source_output="@tz_list.add_remove_yisp_perspective_year" placeholder="Выберите..." data-width="100%" required>
+                                        <option value="">Выберите...</option>
+                                        @foreach (var s_list in ViewBag.HpUnomSourceOutputList)
+                                        {
+                                            if (s_list.value_id == tz_list.add_remove_yisp_source_output_id)
+                                            {
+                                                <option value="@s_list.value_id" selected>@s_list.value_name</option>
+                                            }
+                                            if (s_list.value_id != tz_list.add_remove_yisp_source_output_id)
+                                            {
+                                                <option value="@s_list.value_id">@s_list.value_name</option>
+                                            }
+                                        }
+                                    </select>
+                                    <a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Выберите значение из списка"></a>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="data-item">
+                                    <input type="text" name="add_remove_yisp_heat_network_input" value="@tz_list.add_remove_yisp_heat_network_id" id="add_remove_yisp_heat_network_id_select_@(tz_list.add_remove_yisp_perspective_year)"
+                                           onblur="GetHpDiamHtSupplyIdList(event, @tz_list.add_remove_yisp_perspective_year, 'add_remove_yisp_heat_network')" data-add_remove_yisp_heat_network="@tz_list.add_remove_yisp_perspective_year" placeholder="Выберите..." required>
+                                    <a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Это поле должно быть заполнено"></a>
+                                </div>
+                            </td>
+                            <td>
+                                <input id="add_remove_yisp_diam_ht_supply_@(tz_list.add_remove_yisp_perspective_year)" type="text" value="@tz_list.add_remove_yisp_diam_ht_supply" placeholder="Нет данных" disabled>
+                            </td>
+                            <td>
+                                <input type="hidden" name="add_remove_yisp_temp_ht_plan_id" value="@tz_list.add_remove_yisp_temp_ht_plan_id" id="add_remove_yisp_temp_ht_plan_id_@(tz_list.add_remove_yisp_perspective_year)">
+                                <div class="data-item">
+                                    <select class="data-value selectpicker stretch" name="add_remove_yisp_temp_ht_plan_select" id="add_remove_yisp_temp_ht_plan_select_@(tz_list.add_remove_yisp_perspective_year)" placeholder="Выберите..."
+                                            onchange="ChangeSelectValuePerspectiveHP(event, @tz_list.add_remove_yisp_perspective_year, 'add_remove_yisp_temp_ht_plan')" data-add_remove_yisp_temp_ht_plan="@tz_list.add_remove_yisp_perspective_year" data-width="100%" required>
+                                        <option value="">Выберите...</option>
+                                        @foreach (var s_list in ViewBag.HpTempHtPlanList)
+                                        {
+                                            if (s_list.value_id == tz_list.add_remove_yisp_temp_ht_plan_id)
+                                            {
+                                                <option value="@s_list.value_id" selected>@s_list.value_name</option>
+                                            }
+                                            if (s_list.value_id != tz_list.add_remove_yisp_temp_ht_plan_id)
+                                            {
+                                                <option value="@s_list.value_id">@s_list.value_name</option>
+                                            }
+                                        }
+                                    </select>
+                                    <a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Выберите значение из списка"></a>
+                                </div>
+                            </td>
+                            <td>
+                                <input type="hidden" name="add_remove_yisp_hp_type_scheme_id" value="@tz_list.add_remove_yisp_hp_type_scheme_id" id="add_remove_yisp_hp_type_scheme_id_@(tz_list.add_remove_yisp_perspective_year)">
+                                <div class="data-item">
+                                    <select class="data-value selectpicker stretch" name="add_remove_yisp_hp_type_scheme_select" id="add_remove_yisp_hp_type_scheme_select_@(tz_list.add_remove_yisp_perspective_year)" placeholder="Выберите..."
+                                            onchange="ChangeSelectValuePerspectiveHP(event, @tz_list.add_remove_yisp_perspective_year, 'add_remove_yisp_hp_type_scheme')" data-add_remove_yisp_hp_type_scheme="@tz_list.add_remove_yisp_perspective_year" data-width="100%" required>
+                                        <option value="">Выберите...</option>
+                                        @foreach (var s_list in ViewBag.HpTempHtTypeSchemeList)
+                                        {
+                                            if (s_list.value_id == tz_list.add_remove_yisp_hp_type_scheme_id)
+                                            {
+                                                <option value="@s_list.value_id" selected>@s_list.value_name</option>
+                                            }
+                                            if (s_list.value_id != tz_list.add_remove_yisp_hp_type_scheme_id)
+                                            {
+                                                <option value="@s_list.value_id">@s_list.value_name</option>
+                                            }
+                                        }
+                                    </select>
+                                    <a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Выберите значение из списка"></a>
+                                </div>
+                            </td>
+                            <td>
+                                <input type="hidden" name="add_remove_yisp_tech_connect_id" value="@tz_list.add_remove_yisp_tech_connect_id" id="add_remove_yisp_tech_connect_id_@(tz_list.add_remove_yisp_perspective_year)">
+                                <div class="data-item">
+                                    <select class="data-value selectpicker stretch" name="add_remove_yisp_tech_connect_select" id="add_remove_yisp_tech_connect_select_@(tz_list.add_remove_yisp_perspective_year)" placeholder="Выберите..."
+                                            onchange="ChangeSelectValuePerspectiveHP(event, @tz_list.add_remove_yisp_perspective_year, 'add_remove_yisp_tech_connect')" data-add_remove_yisp_tech_connect="@tz_list.add_remove_yisp_perspective_year" data-width="100%" required>
+                                        <option value="">Выберите...</option>
+                                        @foreach (var s_list in ViewBag.HpConnectTypesTechList)
+                                        {
+                                            if (s_list.value_id == tz_list.add_remove_yisp_tech_connect_id)
+                                            {
+                                                <option value="@s_list.value_id" selected>@s_list.value_name</option>
+                                            }
+                                            if (s_list.value_id != tz_list.add_remove_yisp_tech_connect_id)
+                                            {
+                                                <option value="@s_list.value_id">@s_list.value_name</option>
+                                            }
+                                        }
+                                    </select>
+                                    <a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Выберите значение из списка"></a>
+                                </div>
+                            </td>
+                            <td>
+                                <input type="hidden" name="add_remove_yisp_temp_tech_plan_id" value="@tz_list.add_remove_yisp_temp_tech_plan_id" id="add_remove_yisp_temp_tech_plan_id_@(tz_list.add_remove_yisp_perspective_year)">
+                                <div class="data-item">
+                                    <select class="data-value selectpicker stretch" name="add_remove_yisp_temp_tech_plan_select" id="add_remove_yisp_temp_tech_plan_select_@(tz_list.add_remove_yisp_perspective_year)" placeholder="Выберите..."
+                                            onchange="ChangeSelectValuePerspectiveHP(event, @tz_list.add_remove_yisp_perspective_year, 'add_remove_yisp_temp_tech_plan')" data-add_remove_yisp_temp_tech_plan="@tz_list.add_remove_yisp_perspective_year" data-width="100%" required>
+                                        <option value="">Выберите...</option>
+                                        @foreach (var s_list in ViewBag.HpTempTechPlanList)
+                                        {
+                                            if (s_list.value_id == tz_list.add_remove_yisp_temp_tech_plan_id)
+                                            {
+                                                <option value="@s_list.value_id" selected>@s_list.value_name</option>
+                                            }
+                                            if (s_list.value_id != tz_list.add_remove_yisp_temp_tech_plan_id)
+                                            {
+                                                <option value="@s_list.value_id">@s_list.value_name</option>
+                                            }
+                                        }
+                                    </select>
+                                    <a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Выберите значение из списка"></a>
+                                </div>
+                            </td>
+                            <td>
+                                <input type="hidden" name="add_remove_yisp_heat_connect_id" value="@tz_list.add_remove_yisp_heat_connect_id" id="add_remove_yisp_heat_connect_id_@(tz_list.add_remove_yisp_perspective_year)">
+                                <div class="data-item">
+                                    <select class="data-value selectpicker stretch" name="add_remove_yisp_heat_connect_select" id="add_remove_yisp_heat_connect_select_@(tz_list.add_remove_yisp_perspective_year)" placeholder="Выберите..."
+                                            onchange="ChangeSelectValuePerspectiveHP(event, @tz_list.add_remove_yisp_perspective_year, 'add_remove_yisp_heat_connect')" data-add_remove_yisp_heat_connect="@tz_list.add_remove_yisp_perspective_year" data-width="100%" required>
+                                        <option value="">Выберите...</option>
+                                        @foreach (var s_list in ViewBag.HpConnectTypesHeatList)
+                                        {
+                                            if (s_list.value_id == tz_list.add_remove_yisp_heat_connect_id)
+                                            {
+                                                <option value="@s_list.value_id" selected>@s_list.value_name</option>
+                                            }
+                                            if (s_list.value_id != tz_list.add_remove_yisp_heat_connect_id)
+                                            {
+                                                <option value="@s_list.value_id">@s_list.value_name</option>
+                                            }
+                                        }
+                                    </select>
+                                    <a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Выберите значение из списка"></a>
+                                </div>
+                            </td>
+                            <td>
+                                <input type="hidden" name="add_remove_yisp_temp_heat_plan_id" value="@tz_list.add_remove_yisp_temp_heat_plan_id" id="add_remove_yisp_temp_heat_plan_id_@(tz_list.add_remove_yisp_perspective_year)">
+                                <div class="data-item">
+                                    <select class="data-value selectpicker stretch" name="add_remove_yisp_temp_heat_plan_select" id="add_remove_yisp_temp_heat_plan_select_@(tz_list.add_remove_yisp_perspective_year)" placeholder="Выберите..."
+                                            onchange="ChangeSelectValuePerspectiveHP(event, @tz_list.add_remove_yisp_perspective_year, 'add_remove_yisp_temp_heat_plan')" data-add_remove_yisp_temp_heat_plan="@tz_list.add_remove_yisp_perspective_year" data-width="100%" required>
+                                        <option value="">Выберите...</option>
+                                        @foreach (var s_list in ViewBag.HpTempHeatPlanList)
+                                        {
+                                            if (s_list.value_id == tz_list.add_remove_yisp_temp_heat_plan_id)
+                                            {
+                                                <option value="@s_list.value_id" selected>@s_list.value_name</option>
+                                            }
+                                            if (s_list.value_id != tz_list.add_remove_yisp_temp_heat_plan_id)
+                                            {
+                                                <option value="@s_list.value_id">@s_list.value_name</option>
+                                            }
+                                        }
+                                    </select>
+                                    <a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Выберите значение из списка"></a>
+                                </div>
+                            </td>
+                            <td>
+                                <input type="hidden" name="add_remove_yisp_vent_connect_id" value="@tz_list.add_remove_yisp_vent_connect_id" id="add_remove_yisp_vent_connect_id_@(tz_list.add_remove_yisp_perspective_year)">
+                                <div class="data-item">
+                                    <select class="data-value selectpicker stretch" name="add_remove_yisp_vent_connect_select" id="add_remove_yisp_vent_connect_select_@(tz_list.add_remove_yisp_perspective_year)" placeholder="Выберите..."
+                                            onchange="ChangeSelectValuePerspectiveHP(event, @tz_list.add_remove_yisp_perspective_year, 'add_remove_yisp_vent_connect')" data-add_remove_yisp_vent_connect="@tz_list.add_remove_yisp_perspective_year" data-width="100%" required>
+                                        <option value="">Выберите...</option>
+                                        @foreach (var s_list in ViewBag.HpConnectTypesVentList)
+                                        {
+                                            if (s_list.value_id == tz_list.add_remove_yisp_vent_connect_id)
+                                            {
+                                                <option value="@s_list.value_id" selected>@s_list.value_name</option>
+                                            }
+                                            if (s_list.value_id != tz_list.add_remove_yisp_vent_connect_id)
+                                            {
+                                                <option value="@s_list.value_id">@s_list.value_name</option>
+                                            }
+                                        }
+                                    </select>
+                                    <a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Выберите значение из списка"></a>
+                                </div>
+                            </td>
+                            <td>
+                                <input type="hidden" name="add_remove_yisp_temp_vent_plan_id" value="@tz_list.add_remove_yisp_temp_vent_plan_id" id="add_remove_yisp_temp_vent_plan_id_@(tz_list.add_remove_yisp_perspective_year)">
+                                <div class="data-item">
+                                    <select class="data-value selectpicker stretch" name="add_remove_yisp_temp_vent_plan_select" id="add_remove_yisp_temp_vent_plan_select_@(tz_list.add_remove_yisp_perspective_year)" placeholder="Выберите..."
+                                            onchange="ChangeSelectValuePerspectiveHP(event, @tz_list.add_remove_yisp_perspective_year, 'add_remove_yisp_temp_vent_plan')" data-add_remove_yisp_temp_vent_plan="@tz_list.add_remove_yisp_perspective_year" data-width="100%" required>
+                                        <option value="">Выберите...</option>
+                                        @foreach (var s_list in ViewBag.HpTempVentPlanList)
+                                        {
+                                            if (s_list.value_id == tz_list.add_remove_yisp_temp_vent_plan_id)
+                                            {
+                                                <option value="@s_list.value_id" selected>@s_list.value_name</option>
+                                            }
+                                            if (s_list.value_id != tz_list.add_remove_yisp_temp_vent_plan_id)
+                                            {
+                                                <option value="@s_list.value_id">@s_list.value_name</option>
+                                            }
+                                        }
+                                    </select>
+                                    <a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Выберите значение из списка"></a>
+                                </div>
+                            </td>
+                            <td>
+                                <input type="hidden" name="add_remove_yisp_hw_connect_id" value="@tz_list.add_remove_yisp_hw_connect_id" id="add_remove_yisp_hw_connect_id_@(tz_list.add_remove_yisp_perspective_year)">
+                                <div class="data-item">
+                                    <select class="data-value selectpicker stretch" name="add_remove_yisp_hw_connect_select" id="add_remove_yisp_hw_connect_select_@(tz_list.add_remove_yisp_perspective_year)" placeholder="Выберите..."
+                                            onchange="ChangeSelectValuePerspectiveHP(event, @tz_list.add_remove_yisp_perspective_year, 'add_remove_yisp_hw_connect')" data-add_remove_yisp_hw_connect="@tz_list.add_remove_yisp_perspective_year" data-width="100%" required>
+                                        <option value="">Выберите...</option>
+                                        @foreach (var s_list in ViewBag.HpConnectTypesHWList)
+                                        {
+                                            if (s_list.value_id == tz_list.add_remove_yisp_hw_connect_id)
+                                            {
+                                                <option value="@s_list.value_id" selected>@s_list.value_name</option>
+                                            }
+                                            if (s_list.value_id != tz_list.add_remove_yisp_hw_connect_id)
+                                            {
+                                                <option value="@s_list.value_id">@s_list.value_name</option>
+                                            }
+                                        }
+                                    </select>
+                                    <a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Выберите значение из списка"></a>
+                                </div>
+                            </td>
+                            <td>
+                                <input type="hidden" name="add_remove_yisp_temp_gvs_plan_id" value="@tz_list.add_remove_yisp_temp_gvs_plan_id" id="add_remove_yisp_temp_gvs_plan_id_@(tz_list.add_remove_yisp_perspective_year)">
+                                <div class="data-item">
+                                    <select class="data-value selectpicker stretch" name="add_remove_yisp_temp_gvs_plan_select" id="add_remove_yisp_temp_gvs_plan_select_@(tz_list.add_remove_yisp_perspective_year)" placeholder="Выберите..."
+                                            onchange="ChangeSelectValuePerspectiveHP(event, @tz_list.add_remove_yisp_perspective_year, 'add_remove_yisp_temp_gvs_plan')" data-add_remove_yisp_temp_gvs_plan="@tz_list.add_remove_yisp_perspective_year" data-width="100%" required>
+                                        <option value="">Выберите...</option>
+                                        @foreach (var s_list in ViewBag.HpTempHWPlanList)
+                                        {
+                                            if (s_list.value_id == tz_list.add_remove_yisp_temp_gvs_plan_id)
+                                            {
+                                                <option value="@s_list.value_id" selected>@s_list.value_name</option>
+                                            }
+                                            if (s_list.value_id != tz_list.add_remove_yisp_temp_gvs_plan_id)
+                                            {
+                                                <option value="@s_list.value_id">@s_list.value_name</option>
+                                            }
+                                        }
+                                    </select>
+                                    <a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Выберите значение из списка"></a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</form>
+
+<script type="text/javascript">
+
+    var onBeginForm = function (xhr) {
+        showPreloader();
+    };
+
+    var onFailed = function (xhr) {
+        hidePreloader();
+    };
+
+    var onSuccess = function (xhr) {
+        hidePreloader();
+    };
+
+    $(document).ready(function () {
+        removeRequiredAttrAll();
+    });
+
+    var add_remove_yisp_temp_ht_plan_select_required = true;
+    var global_array = [];
+
+    function GetHpDiamHtSupplyIdList(event, perspective_year, input_name) {
+        $.ajax({
+            url: '@Html.Raw(Url.Action("GetHpDiamHtSupplyIdValue", "HSS", new { Area = ""}))',
+            type: 'POST',
+            data: {
+                data_status: $('#data_status').val(),
+                heat_network_id: $('#add_remove_yisp_heat_network_id_select_' + perspective_year).val()
+            }
+        }).done(function (data) {
+            var add_remove_yisp_heat_network_id = document.getElementById('add_remove_yisp_heat_network_id_select_' + perspective_year);
+            if (data.list == null || data.list.length == 0) {
+                if (add_remove_yisp_heat_network_id.value == '') {
+                    return;
+                }
+                add_remove_yisp_heat_network_id.value = '';
+                add_remove_yisp_heat_network_id.placeholder = 'Неверный номер';
+                return;
+            }
+
+            var elements = document.getElementsByName(input_name + '_input');
+            var select_value = event.target.value;
+            var is_array_change = false;
+            for (var i = 0; i < elements.length; i++) {
+                var year = elements[i].getAttribute('data-' + input_name);
+                var supply_diam_by_year = data.list.find(x => x.supply_per_year == year);
+                var select_id = elements[i].getAttribute('id');
+                var str = $('#' + select_id).val();
+                var diam = $("#add_remove_yisp_diam_ht_supply_" + year).val();
+
+                if (year >= perspective_year && diam == '' && supply_diam_by_year != undefined && supply_diam_by_year.supply_per_year == year) {
+                    SetHpDiamHtSupplyTextbox(supply_diam_by_year, year);
+                    $('#' + input_name + '_id_' + year).val(select_value);
+                    $('#' + select_id).val(select_value);
+                    is_array_change = true;
+                }
+                else if (year >= perspective_year && diam != '' && is_array_change == false && supply_diam_by_year != undefined && supply_diam_by_year.supply_per_year == year) {
+                    SetHpDiamHtSupplyTextbox(data.list[i], year);
+                    $('#' + input_name + '_id_' + year).val(select_value);
+                    $('#' + select_id).val(select_value);
+                    break;
+                }
+            }
+            var yisp_diam_val = $('#add_remove_yisp_diam_ht_supply_' + perspective_year).val();
+
+            if (yisp_diam_val == null || yisp_diam_val == '') {
+                add_remove_yisp_heat_network_id.value = '';
+                add_remove_yisp_heat_network_id.placeholder = 'Неверный номер';
+            }
+        });
+    }
+
+    function SetHpDiamHtSupplyTextbox(value, perspective_year) {
+        var yisp_diam_ht_supply_textbox = document.getElementById('add_remove_yisp_diam_ht_supply_' + perspective_year);
+        yisp_diam_ht_supply_textbox.value = value.supply_diam;
+    }
+
+    var onSuccessFormHPYearImplement = function (xhr) {
+        hidePreloader();
+        if (xhr.success == true) {
+            $("#refresh_table").val(1);
+
+            if (xhr.new_tso_num != '') {
+                $("select[id=unomTpAddressList] option[value=" + $('#hp_id').val() + "]").text(xhr.new_hp_address);
+                $("#add_remove_gen_info_tso_hp_num_id").val(xhr.new_hp_num);
+                RefreshSelectById('unomTpAddressList');
+            }
+
+            showMessage('Данные сохранены.', 'modal', 'success');
+        }
+        else {
+            showMessage(xhr.error, 'modal', 'fault');
+        }
+    };
+
+    function removeRequiredAttrPost(name) {
+        global_array = getArray(name);
+        add_remove_yisp_temp_ht_plan_select_required = checkIsEmptyColumns(global_array);
+        if (add_remove_yisp_temp_ht_plan_select_required) {
+            requiredAttrSet(name, global_array, 'remove');
+            return true;
+        }
+        return false;
+    }
+
+    function checkIsEmptyColumns(array) {
+        if (array.filter(item => item === '').length == array.length) {
+            return true;
+        }
+        return false;
+    }
+
+    function requiredAttrSet(name, array, operation) {
+        var years = getArray('add_remove_yisp_perspective_year');
+        for (var i = 0; i < array.length; i++) {
+            var item = document.getElementById(name + '_' + years[i]);
+            if (operation == 'remove') {
+                $("#" + name + "_" + years[i]).removeAttr("required");
+            }
+            else if (operation == 'add') {
+                $("#" + name + "_" + years[i]).prop("required", true);
+            }
+        }
+    }
+
+    function getArray(name) {
+        var array = [];
+        var list = document.getElementsByName(name);
+        for (var i = 0; i < list.length; i++) {
+            array.push(list[i].value);
+        }
+        return array;
+    }
+
+    function ChangeSelectValuePerspectiveHP(event, perspective_year, select_name) {
+        var elements = document.getElementsByName(select_name + '_select');
+        var select_value = event.target.value;
+
+        for (var i = 0; i < elements.length; i++) {
+            var year = elements[i].getAttribute('data-' + select_name);
+            if (year >= perspective_year) {
+                var select_id = elements[i].getAttribute('id');
+                $('#' + select_name + '_id_' + year).val(select_value);
+                $('#' + select_id).val(select_value);
+                if (i == 0 && select_name == 'add_remove_yisp_tso') {
+                    var text = '';
+                    if (select_value != '0')
+                        text = $("select[id=" + select_id + "] option[value=" + select_value + "]").text();
+                    $("#hp_tso_name").val(text);
+                }
+                RefreshSelectById(select_id);
+            }
+        }
+        removeRequiredAttrAll();
+    }
+
+    function removeRequiredAttrAll() {
+        let names = [
+            'add_remove_yisp_tso_select',
+            'add_remove_yisp_status_select',
+            'add_remove_yisp_source_output_select',
+            'add_remove_yisp_heat_network_input',
+            'add_remove_yisp_temp_ht_plan_select',
+            'add_remove_yisp_hp_type_scheme_select',
+            'add_remove_yisp_tech_connect_select',
+            'add_remove_yisp_temp_tech_plan_select',
+            'add_remove_yisp_heat_connect_select',
+            'add_remove_yisp_temp_heat_plan_select',
+            'add_remove_yisp_vent_connect_select',
+            'add_remove_yisp_temp_vent_plan_select',
+            'add_remove_yisp_hw_connect_select',
+            'add_remove_yisp_temp_gvs_plan_select'
+        ];
+
+        for (var i = 0; i < names.length; i++) {
+            if (!removeRequiredAttrPost(names[i])) {
+                requiredAttrSet(names[i], global_array, 'add');
+            }
+        }
+    }
+
+</script>

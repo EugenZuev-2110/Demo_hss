@@ -1,0 +1,90 @@
+﻿@model WebProject.Areas.TSO.Models.TZMethodIndexationViewModel
+@{
+	Layout = null; string disable = "";
+}
+@if (Model.tz_id == 0)
+{
+	disable = "disabled";
+}
+<form asp-controller="CostsAndPrices" asp-action="TZMethodIndexationNVV_Save" asp-antiforgery="true" asp-area="TSO"
+	  data-ajax-failure="onFailedFormTZ" data-ajax-success="onSuccessFormTZ" data-ajax-begin="onBeginFormTZ" data-ajax="true" data-ajax-method="POST">
+	<input type="hidden" name="tz_id" value="@Model.tz_id" />
+	<input type="hidden" name="data_status" value="@Model.data_status" />
+	<input type="hidden" name="perspective_year" value="@Model.perspective_year" />
+	<table class="table-inp-stretch" style="width:100%;">
+		<thead>
+			<tr>
+				<th rowspan="2"></th>
+				<th colspan="3">План</th>
+			</tr>
+			<tr>
+				<th>I полугодие</th>
+				<th>II полугодие</th>
+				<th>Год</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>Суммарная корректировка НВВ (метод А), <span class="data-unit">тыс. руб.</span></td>
+				<td><input type="text" asp-for="@Model.total_correction_nvv_mA_plan_1" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.total_correction_nvv_mA_plan_2" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.total_correction_nvv_mA_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>Результаты деятельности до перехода к регулированию цен (тарифов)<br>на основе долгосрочных параметров регулирования, всего, <span class="data-unit">тыс. руб.</span></td>
+				<td><input type="text" asp-for="@Model.result_activity_before_reg_price_plan_1" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.result_activity_before_reg_price_plan_2" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.result_activity_before_reg_price_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- экономически обоснованные расходы, понесенные в периоды регулирования</td>
+				<td><input type="text" asp-for="@Model.economically_justified_costs_plan_1" class="data-value double" data-double="method_indexation"></td>
+				<td><input type="text" asp-for="@Model.economically_justified_costs_plan_2" class="data-value double" data-double="method_indexation"></td>
+				<td><input type="text" asp-for="@Model.economically_justified_costs_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- доходы регулируемой организации, необоснованно полученные в периоды регулирования</td>
+				<td><input type="text" asp-for="@Model.profit_regulated_organisation_plan_1" class="data-value double" data-double="method_indexation"></td>
+				<td><input type="text" asp-for="@Model.profit_regulated_organisation_plan_2" class="data-value double" data-double="method_indexation"></td>
+				<td><input type="text" asp-for="@Model.profit_regulated_organisation_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- экономия от снижения потребления энергетических ресурсов</td>
+				<td><input type="text" asp-for="@Model.economy_consump_resources_plan_1" class="data-value double" data-double="method_indexation"></td>
+				<td><input type="text" asp-for="@Model.economy_consump_resources_plan_2" class="data-value double" data-double="method_indexation"></td>
+				<td><input type="text" asp-for="@Model.economy_consump_resources_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>Суммарная корректировка НВВ, всего, <span class="data-unit">тыс. руб.</span></td>
+				<td><input type="text" asp-for="@Model.total_correction_nvv_plan_1" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.total_correction_nvv_plan_2" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.total_correction_nvv_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- корректировка с целью учёта отклонения фактических значений параметров<br>расчёта тарифов от значений, учтённых при установлении тарифов</td>
+				<td><input type="text" asp-for="@Model.correct_accounting_deviation_plan_1" class="data-value double" data-double="method_indexation"></td>
+				<td><input type="text" asp-for="@Model.correct_accounting_deviation_plan_2" class="data-value double" data-double="method_indexation"></td>
+				<td><input type="text" asp-for="@Model.correct_accounting_deviation_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- корректировка с учётом надежности и качества реализуемых товаров, подлежащая учёту в НВВ</td>
+				<td><input type="text" asp-for="@Model.correct_safety_quality_product_plan_1" class="data-value double" data-double="method_indexation"></td>
+				<td><input type="text" asp-for="@Model.correct_safety_quality_product_plan_2" class="data-value double" data-double="method_indexation"></td>
+				<td><input type="text" asp-for="@Model.correct_safety_quality_product_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- корректировка НВВ в связи с изменением (неисполнением) инвестиционной программы</td>
+				<td><input type="text" asp-for="@Model.correct_nvv_change_invest_prog_plan_1" class="data-value double" data-double="method_indexation"></td>
+				<td><input type="text" asp-for="@Model.correct_nvv_change_invest_prog_plan_2" class="data-value double" data-double="method_indexation"></td>
+				<td><input type="text" asp-for="@Model.correct_nvv_change_invest_prog_plan_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- корректировка, подлежащая учёту в НВВ и учитывающая отклонение фактических показателей<br> энергосбережения и повышения энергетической эффективности от плановых</td>
+				<td><input type="text" asp-for="@Model.correct_subj_accounting_nvv_plan_1" class="data-value double" data-double="method_indexation"></td>
+				<td><input type="text" asp-for="@Model.correct_subj_accounting_nvv_plan_2" class="data-value double" data-double="method_indexation"></td>
+				<td><input type="text" asp-for="@Model.correct_subj_accounting_nvv_plan_3" class="data-value" disabled></td>
+			</tr>
+		</tbody>
+	</table>
+	<button type="submit" class="bttn bttn-color ms-auto" @disable>Сохранить</button>
+</form>

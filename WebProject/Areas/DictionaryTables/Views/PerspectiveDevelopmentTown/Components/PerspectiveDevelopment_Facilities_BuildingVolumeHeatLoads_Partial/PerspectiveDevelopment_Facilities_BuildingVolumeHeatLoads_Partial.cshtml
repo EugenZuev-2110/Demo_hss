@@ -1,0 +1,397 @@
+﻿@using WebProject.Areas.DictionaryTables.Models
+@using WebProject.Data
+@model PerspectiveDevelopment_Facilities_BuildingVolumeHeatLoadsViewModel
+@{
+    Layout = null; string is_checked = string.Empty; string is_disabled = ViewBag.IsDisabled;
+    string is_area_disabled = Model.area_calc_type_id == 2 ? string.Empty : "disabled";
+    string is_exec_btn_1 = Model.area_calc_type_id != 2 ? string.Empty : "disabled";
+    string is_exec_btn_2 = Model.hl_calc_type_id != 4 ? string.Empty : "disabled";
+}
+
+<form asp-controller="PerspectiveDevelopmentTown" asp-action="Save" asp-antiforgery="true" asp-area="DictionaryTables" class="needs-validation" novalidate
+      data-ajax-failure="onFailedFormTZ" data-ajax-success="onSuccessFormBuildingVolumeHeatLoads" data-ajax-begin="onBeginFormTZ" data-ajax="true" data-ajax-method="POST">
+    <input hidden asp-for="@Model.consumer_id">
+    <input hidden asp-for="@Model.dev_prog_id">
+    <input hidden asp-for="@Model.data_status">
+    <input hidden asp-for="@Model.GetType().FullName">
+    <div class="data-block">
+        <div class="data-row">
+            <div class="data-item">
+                <h5>Способ определения общей площади:</h5>
+                <select class="selectpicker data-value xxl-stretch" id="area_calc_type_id" name="area_calc_type_id"
+                        placeholder="Выберите..." onchange="GetTotalDetArea()">
+                    @foreach (var tz_list in ViewBag.CalcAreaTypeList)
+                    {
+                        if (tz_list.Id == Model.area_calc_type_id)
+                        {
+                            <option value="@tz_list.Id" selected>@tz_list.area_calc_type_name</option>
+                        }
+                        else
+                        {
+                            <option value="@tz_list.Id">@tz_list.area_calc_type_name</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="data-item data-item-right">
+                <button type="button" id="execute_button_1" class="bttn" @is_exec_btn_1>Выполнить</button>
+            </div>
+        </div>
+        <div class="data-row">
+            <div class="data-item">
+                <label class="data-label">Общий объем строительства</label>
+                <input type="text" name="area" id="total_building_area" value="@Model.area" class="data-value double lg-stretch" @is_area_disabled>
+                <span class="data-unit">тыс. м<sup>2</sup></span>
+            </div>
+            <div class="data-row">
+                <div class="data-item">
+                    <label class="data-label">Сроки реализации строительства: <span class="sublabel">год начала</span></label>
+                    <input type="text" asp-for="@Model.start_year" class="data-value sm-stretch">
+                </div>
+                <div class="data-item">
+                    <label class="data-label"><span class="sublabel">год окончания</span></label>
+                    <input type="text" asp-for="@Model.end_year" class="data-value sm-stretch">
+                </div>
+            </div>
+        </div>
+        <div class="data-block border-block">
+            <div class="data-row">
+                <table class="table-inp-stretch" style="width:75%;">
+                    <thead>
+                        <tr>
+                            <th>Коэффициенты снижения нагрузки для расчета площади</th>
+                            <th>В горячей воде</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Коэффициент снижения нагрузки отопления</td>
+                            <td><div class="input-cell"><input type="text" asp-for="@Model.hw_heat_decrease_coef" class="data-value double"></div></td>
+                        </tr>
+                        <tr>
+                            <td>Коэффициент снижения нагрузки вентиляции</td>
+                            <td><div class="input-cell"><input type="text" asp-for="@Model.hw_vent_decrease_coef" class="data-value double"></div></td>
+                        </tr>
+                        <tr>
+                            <td>Коэффициент снижения нагрузки ГВС</td>
+                            <td><div class="input-cell"><input type="text" asp-for="@Model.hw_gvs_decrease_coef" class="data-value double"></div></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table-inp-stretch" style="width:75%;">
+                    <thead>
+                        <tr>
+                            <th>Проверка заявленной тепловой нагрузки и площади</th>
+                            <th>Успешно/Неуспешно</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Удельный расход теплова на 1 м<sup>2</sup> общей площади по заявленным данным</td>
+                            <td><div class="input-cell"><input type="text" asp-for="@Model.spec_hc_declared" class="data-value double" disabled></div></td>
+                        </tr>
+                        <tr>
+                            <td>Удельный расход теплова на 1 м<sup>2</sup> общей площади, расчетный</td>
+                            <td><div class="input-cell"><input type="text" asp-for="@Model.spec_hc_calculated" class="data-value double" disabled></div></td>
+                        </tr>
+                        <tr>
+                            <td>Отклонение</td>
+                            <td><div class="input-cell"><input type="text" asp-for="@Model.spec_hc_deviation" class="data-value double" disabled></div></td>
+                        </tr>
+                        <tr>
+                            <td>Отклонение норма</td>
+                            <td><div class="input-cell"><input type="text" asp-for="@Model.spec_hc_deviation_norm" class="data-value double" disabled></div></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="data-block border-block">
+            <h4>Тепловые нагрузки по программе</h4>
+            <div class="data-row">
+                <div class="data-item">
+                    <h5>Способ определения расчетной тепловой нагрузки:</h5>
+                    <select class="selectpicker data-value stretch" id="hl_calc_type_id" name="hl_calc_type_id"
+                            placeholder="Выберите..." onchange="GetHeatLoadCalcDetect()">
+                        @foreach (var tz_list in ViewBag.CalcHlDetermMethodList)
+                        {
+                            if (tz_list.Id == Model.hl_calc_type_id)
+                            {
+                                <option value="@tz_list.Id" selected>@tz_list.hl_calc_type_name</option>
+                            }
+                            else
+                            {
+                                <option value="@tz_list.Id">@tz_list.hl_calc_type_name</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="data-item data-item-right">
+                    <button type="button" id="execute_button_2" class="bttn" @is_exec_btn_2>Выполнить</button>
+                </div>
+            </div>
+            <div class="data-row">
+                <div class="data-item">
+                    <table class="table-inp-stretch" style="width:75%;">
+                        <tbody>
+                            <tr>
+                                <td>Коэффициент тепловых потерь на тепловых сетях</td>
+                                <td><div class="input-cell"><input type="text" asp-for="@Model.dp_lcc_heat_loss_heat_net_coef" class="data-value double"></div></td>
+                            </tr>
+                            <tr>
+                                <td>Коэффициент тепловых потерь на паровых сетях</td>
+                                <td><div class="input-cell"><input type="text" asp-for="@Model.dp_lcc_heat_loss_steam_net_coef" class="data-value double"></div></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="data-row">
+                <div class="data-item">
+                    <table class="table-inp-stretch" style="width:75%;">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>В горячей воде</th>
+                                <th>В паре</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Коэффициент снижения нагрузки отопления</td>
+                                <td><div class="input-cell"><input type="text" asp-for="@Model.dp_lcc_hw_heat_decrease_coef" class="data-value double"></div></td>
+                                <td><div class="input-cell"><input type="text" asp-for="@Model.dp_lcc_steam_heat_decrease_coef" class="data-value double"></div></td>
+                            </tr>
+                            <tr>
+                                <td>Коэффициент снижения нагрузки вентиляции</td>
+                                <td><div class="input-cell"><input type="text" asp-for="@Model.dp_lcc_hw_vent_decrease_coef" class="data-value double"></div></td>
+                                <td><div class="input-cell"><input type="text" asp-for="@Model.dp_lcc_steam_vent_decrease_coef" class="data-value double"></div></td>
+                            </tr>
+                            <tr>
+                                <td>Коэффициент снижения нагрузки ГВС</td>
+                                <td><div class="input-cell"><input type="text" asp-for="@Model.dp_lcc_hw_gvs_decrease_coef" class="data-value double"></div></td>
+                                <td><div class="input-cell"><input type="text" asp-for="@Model.dp_lcc_steam_gvs_decrease_coef" class="data-value double"></div></td>
+                            </tr>
+                            <tr>
+                                <td>Коэффициент снижения нагрузки технологии</td>
+                                <td><div class="input-cell"><input type="text" asp-for="@Model.dp_lcc_hw_tech_decrease_coef" class="data-value double"></div></td>
+                                <td><div class="input-cell"><input type="text" asp-for="@Model.dp_lcc_steam_tech_decrease_coef" class="data-value double"></div></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="scroll-table-wrapper">
+            <table class="table-inp-stretch" style="width: 100%">
+                <thead>
+                    <tr>
+                        <th colspan="2"></th>
+                        <th>Технология</th>
+                        <th>Отопление</th>
+                        <th>Вентиляция</th>
+                        <th>Кондиц.</th>
+                        <th>ГВС ср.ч.</th>
+                        <th>ГВС max</th>
+                        <th>Тепловые<br>завесы</th>
+                        <th>Прочие</th>
+                        <th>ВСЕГО<br>с учетом ГВС ср.ч.</th>
+                        <th>ВСЕГО<br>с учетом ГВС мах</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td rowspan="6">в горячей воде, <span class="data-unit">Гкал/ч</span></td>
+                        <td style="position: sticky;left: 70.6px;background: white;z-index: 1;">в заявке на ТП</td>
+                        <td><input type="text" asp-for="@Model.dpld_hl_tech_hw" class="data-value double"></td>
+                        <td><input type="text" asp-for="@Model.dpld_hl_heat_hw" class="data-value double"></td>
+                        <td><input type="text" asp-for="@Model.dpld_hl_vent_hw" class="data-value double"></td>
+                        <td><input type="text" asp-for="@Model.dpld_hl_cond_hw" class="data-value double"></td>
+                        <td><input type="text" asp-for="@Model.dpld_hl_gvss_hw" class="data-value double"></td>
+                        <td><input type="text" asp-for="@Model.dpld_hl_gvsm_hw" class="data-value double"></td>
+                        <td><input type="text" asp-for="@Model.dpld_hl_curtains_hw" class="data-value double"></td>
+                        <td><input type="text" asp-for="@Model.dpld_hl_other_hw" class="data-value double"></td>
+                        <td><input type="text" asp-for="@Model.dpld_hl_gvss_hw_sum" class="data-value double"></td>
+                        <td><input type="text" asp-for="@Model.dpld_hl_gvsm_hw_sum" class="data-value double"></td>
+                    </tr>
+                    <tr>
+                        <td style="position: sticky;left: 70.6px;background: white;z-index: 1;">в договоре ТП</td>
+                        <td><input type="text" asp-for="@Model.dpl_contr_hl_tech_hw" class="data-value double"></td>
+                        <td><input type="text" asp-for="@Model.dpl_contr_hl_heat_hw" class="data-value double"></td>
+                        <td><input type="text" asp-for="@Model.dpl_contr_hl_vent_hw" class="data-value double"></td>
+                        <td><input type="text" asp-for="@Model.dpl_contr_hl_cond_hw" class="data-value double"></td>
+                        <td><input type="text" asp-for="@Model.dpl_contr_hl_gvss_hw" class="data-value double"></td>
+                        <td><input type="text" asp-for="@Model.dpl_contr_hl_gvsm_hw" class="data-value double"></td>
+                        <td><input type="text" asp-for="@Model.dpl_contr_hl_curtains_hw" class="data-value double"></td>
+                        <td><input type="text" asp-for="@Model.dpl_contr_hl_other_hw" class="data-value double"></td>
+                        <td><input type="text" asp-for="@Model.dpl_contr_hl_gvss_hw_sum" class="data-value double"></td>
+                        <td><input type="text" asp-for="@Model.dpl_contr_hl_gvsm_hw_sum" class="data-value double"></td>
+                    </tr>
+                    <tr>
+                        <td style="left: 70.6px;">привед. заявл.</td>
+                        <td><input type="text" asp-for="@Model.equal_hl_tech_hw" class="data-value double" disabled></td>
+                        <td><input type="text" asp-for="@Model.equal_hl_heat_hw" class="data-value double" disabled></td>
+                        <td><input type="text" asp-for="@Model.equal_hl_vent_hw" class="data-value double" disabled></td>
+                        <td></td>
+                        <td><input type="text" asp-for="@Model.equal_hl_gvss_hw" class="data-value double" disabled></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td><input type="text" asp-for="@Model.equal_hl_gvss_hw_sum" class="data-value double" disabled></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td style="left: 70.6px;">расчетная</td>
+                        <td><input type="text" asp-for="@Model.dplc_hl_tech_hw" class="data-value double"></td>
+                        <td><input type="text" asp-for="@Model.dplc_hl_heat_hw" class="data-value double"></td>
+                        <td><input type="text" asp-for="@Model.dplc_hl_vent_hw" class="data-value double"></td>
+                        <td></td>
+                        <td><input type="text" asp-for="@Model.dplc_hl_gvss_hw" class="data-value double"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td><input type="text" asp-for="@Model.dplc_hl_gvss_hw_sum" class="data-value double" disabled></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td style="left: 70.6px;">отличие, <span class="data-unit">%</span></td>
+                        <td><input type="text" asp-for="@Model.dpld_dplc_hl_tech_hw_rel" class="data-value double" disabled></td>
+                        <td><input type="text" asp-for="@Model.dpld_dplc_hl_heat_hw_rel" class="data-value double" disabled></td>
+                        <td><input type="text" asp-for="@Model.dpld_dplc_hl_vent_hw_rel" class="data-value double" disabled></td>
+                        <td></td>
+                        <td><input type="text" asp-for="@Model.dpld_dplc_hl_gvss_hw_rel" class="data-value double" disabled></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td><input type="text" asp-for="@Model.dpld_dplc_hl_gvss_hw_rel_sum" class="data-value double" disabled></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>удельный расход тепла, <span class="data-unit">ккал/(ч · м<sup>2</sup>)</span></td>
+                        <td><input type="text" asp-for="@Model.spec_hc_tech" class="data-value double" disabled></td>
+                        <td><input type="text" asp-for="@Model.spec_hc_heat" class="data-value double" disabled></td>
+                        <td><input type="text" asp-for="@Model.spec_hc_vent" class="data-value double" disabled></td>
+                        <td></td>
+                        <td><input type="text" asp-for="@Model.spec_hc_gvss" class="data-value double" disabled></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td><input type="text" asp-for="@Model.spec_hc_gvss_sum" class="data-value double" disabled></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td rowspan="6">в паре, <span class="data-unit">т/ч</span></td>
+                        <td style="position: sticky;left: 70.6px;background: white;z-index: 1;">в заявке на ТП</td>
+                        <td><input type="text" asp-for="@Model.dpld_hl_tech_steam" class="data-value double"></td>
+                        <td><input type="text" asp-for="@Model.dpld_hl_heat_steam" class="data-value double"></td>
+                        <td><input type="text" asp-for="@Model.dpld_hl_vent_steam" class="data-value double"></td>
+                        <td><input type="text" asp-for="@Model.dpld_hl_cond_steam" class="data-value double"></td>
+                        <td><input type="text" asp-for="@Model.dpld_hl_gvss_steam" class="data-value double"></td>
+                        <td><input type="text" asp-for="@Model.dpld_hl_gvsm_steam" class="data-value double"></td>
+                        <td><input type="text" asp-for="@Model.dpld_hl_curtains_steam" class="data-value double"></td>
+                        <td><input type="text" asp-for="@Model.dpld_hl_other_steam" class="data-value double"></td>
+                        <td><input type="text" asp-for="@Model.dpld_hl_gvss_steam_sum" class="data-value double"></td>
+                        <td><input type="text" asp-for="@Model.dpld_hl_gvsm_steam_sum" class="data-value double"></td>
+                    </tr>
+                    <tr>
+                        <td style="position: sticky;left: 70.6px;background: white;z-index: 1;">в договоре ТП</td>
+                        <td><input type="text" asp-for="@Model.dpl_contr_hl_tech_steam" class="data-value double"></td>
+                        <td><input type="text" asp-for="@Model.dpl_contr_hl_heat_steam" class="data-value double"></td>
+                        <td><input type="text" asp-for="@Model.dpl_contr_hl_vent_steam" class="data-value double"></td>
+                        <td><input type="text" asp-for="@Model.dpl_contr_hl_cond_steam" class="data-value double"></td>
+                        <td><input type="text" asp-for="@Model.dpl_contr_hl_gvss_steam" class="data-value double"></td>
+                        <td><input type="text" asp-for="@Model.dpl_contr_hl_gvsm_steam" class="data-value double"></td>
+                        <td><input type="text" asp-for="@Model.dpl_contr_hl_curtains_steam" class="data-value double"></td>
+                        <td><input type="text" asp-for="@Model.dpl_contr_hl_other_steam" class="data-value double"></td>
+                        <td><input type="text" asp-for="@Model.dpl_contr_hl_gvss_steam_sum" class="data-value double"></td>
+                        <td><input type="text" asp-for="@Model.dpl_contr_hl_gvsm_steam_sum" class="data-value double"></td>
+                    </tr>
+                    <tr>
+                        <td style="left: 70.6px;">привед. заявл.</td>
+                        <td><input type="text" asp-for="@Model.equal_hl_tech_steam" class="data-value double" disabled></td>
+                        <td><input type="text" asp-for="@Model.equal_hl_heat_steam" class="data-value double" disabled></td>
+                        <td><input type="text" asp-for="@Model.equal_hl_vent_steam" class="data-value double" disabled></td>
+                        <td></td>
+                        <td><input type="text" asp-for="@Model.equal_hl_gvss_steam" class="data-value double" disabled></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td><input type="text" asp-for="@Model.equal_hl_gvss_steam_sum" class="data-value double" disabled></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td style="left: 70.6px;">расчетная</td>
+                        <td><input type="text" asp-for="@Model.dplc_hl_tech_steam" class="data-value double"></td>
+                        <td><input type="text" asp-for="@Model.dplc_hl_heat_steam" class="data-value double"></td>
+                        <td><input type="text" asp-for="@Model.dplc_hl_vent_steam" class="data-value double"></td>
+                        <td></td>
+                        <td><input type="text" asp-for="@Model.dplc_hl_gvss_steam" class="data-value double"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td><input type="text" asp-for="@Model.dplc_hl_gvss_steam_sum" class="data-value double" disabled></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td style="left: 70.6px;">отличие, <span class="data-unit">%</span></td>
+                        <td><input type="text" asp-for="@Model.dpld_dplc_hl_tech_steam_rel" class="data-value double" disabled></td>
+                        <td><input type="text" asp-for="@Model.dpld_dplc_hl_heat_steam_rel" class="data-value double" disabled></td>
+                        <td><input type="text" asp-for="@Model.dpld_dplc_hl_vent_steam_rel" class="data-value double" disabled></td>
+                        <td></td>
+                        <td><input type="text" asp-for="@Model.dpld_dplc_hl_gvss_steam_rel" class="data-value double" disabled></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td><input type="text" asp-for="@Model.dpld_dplc_hl_gvss_steam_rel_sum" class="data-value double" disabled></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="data-row">
+        <button type="submit" class="bttn bttn-color ms-auto" id="per_dev_facil_gen_info_save_btn" @is_disabled>Сохранить</button>
+    </div>
+</form>
+
+<script type="text/javascript" src="@Url.Content("~/hss/js/popup_common_scripts.js")"></script>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        GetTotalDetArea();
+    });
+
+    var onSuccessFormBuildingVolumeHeatLoads = function (xhr) {
+        hidePreloader();
+
+        if (xhr.success) {
+            showMessage('Данные сохранены.', 'modal', 'success');
+        }
+        else {
+            showMessage(xhr.error, 'modal', 'fault');
+        }
+        $("#refresh_table").val(1);
+    };
+
+    function GetTotalDetArea() {
+        if ($('#area_calc_type_id').val() == '2') {
+            document.querySelector('#total_building_area').removeAttribute("disabled");
+            document.querySelector('#execute_button_1').setAttribute("disabled", "disabled");
+        }
+        else {
+            document.querySelector('#total_building_area').setAttribute("disabled", "disabled");
+            document.querySelector('#execute_button_1').removeAttribute("disabled");
+        }
+    }
+
+    function GetHeatLoadCalcDetect() {
+        if ($('#hl_calc_type_id').val() == '4') {
+            document.querySelector('#execute_button_2').setAttribute("disabled", "disabled");
+        }
+        else {
+            document.querySelector('#execute_button_2').removeAttribute("disabled");
+        }
+    }
+
+</script>

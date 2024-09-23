@@ -1,0 +1,104 @@
+﻿@model WebProject.Areas.TSO.Models.TZSocialDeductionCostsViewModel
+@{
+	Layout = null;
+}
+<table class="table-inp-stretch" style="width:100%;">
+	<thead>
+		<tr>
+			<th rowspan="2"></th>
+			<th colspan="3">Факт</th>
+			<th colspan="3">План</th>
+		</tr>
+		<tr>
+			<th>I полугодие</th>
+			<th>II полугодие</th>
+			<th>Год</th>
+			<th>I полугодие</th>
+			<th>II полугодие</th>
+			<th>Год</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>Всего отчислений, <span class="data-unit">тыс. руб.</span></td>
+			<td><input type="text" asp-for="@Model.cost_social_deduction_all_fact_1" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.cost_social_deduction_all_fact_2" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.cost_social_deduction_all_fact_3" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.cost_social_deduction_all_plan_1" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.cost_social_deduction_all_plan_2" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.cost_social_deduction_all_plan_3" class="data-value" disabled></td>
+		</tr>
+		<tr>
+			<td>- производственные рабочие</td>
+			<td><input type="text" asp-for="@Model.cost_social_deduction_prod_fact_1" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.cost_social_deduction_prod_fact_2" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.cost_social_deduction_prod_fact_3" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.cost_social_deduction_prod_plan_1" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.cost_social_deduction_prod_plan_2" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.cost_social_deduction_prod_plan_3" class="data-value" disabled></td>
+		</tr>
+		<tr>
+			<td>- ремонтный персонал</td>
+			<td><input type="text" asp-for="@Model.cost_social_deduction_repair_fact_1" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.cost_social_deduction_repair_fact_2" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.cost_social_deduction_repair_fact_3" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.cost_social_deduction_repair_plan_1" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.cost_social_deduction_repair_plan_2" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.cost_social_deduction_repair_plan_3" class="data-value" disabled></td>
+		</tr>
+		<tr>
+			<td>- цеховый персонал</td>
+			<td><input type="text" asp-for="@Model.cost_social_deduction_shop_fact_1" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.cost_social_deduction_shop_fact_2" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.cost_social_deduction_shop_fact_3" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.cost_social_deduction_shop_plan_1" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.cost_social_deduction_shop_plan_2" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.cost_social_deduction_shop_plan_3" class="data-value" disabled></td>
+		</tr>
+		<tr>
+			<td>- административно-управленческий персонал</td>
+			<td><input type="text" asp-for="@Model.cost_social_deduction_manage_fact_1" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.cost_social_deduction_manage_fact_2" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.cost_social_deduction_manage_fact_3" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.cost_social_deduction_manage_plan_1" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.cost_social_deduction_manage_plan_2" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.cost_social_deduction_manage_plan_3" class="data-value" disabled></td>
+		</tr>
+		<tr>
+			<td>- прочий персонал</td>
+			<td><input type="text" asp-for="@Model.cost_social_deduction_other_fact_1" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.cost_social_deduction_other_fact_2" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.cost_social_deduction_other_fact_3" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.cost_social_deduction_other_plan_1" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.cost_social_deduction_other_plan_2" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.cost_social_deduction_other_plan_3" class="data-value" disabled></td>
+		</tr>
+		<tr>
+			<td>Средняя списочная численность персонала, <span class="data-unit">чел.</span></td>
+			<td><input type="text" asp-for="@Model.avg_count_workers_fact_1" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.avg_count_workers_fact_2" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.avg_count_workers_fact_3" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.avg_count_workers_plan_1" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.avg_count_workers_plan_2" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.avg_count_workers_plan_3" class="data-value" disabled></td>
+		</tr>
+		<tr>
+			<td>Среднемесячная оплата труда с учетом отчислений, <span class="data-unit">руб./мес.</span></td>
+			<td><input type="text" asp-for="@Model.avg_salary_fact_1" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.avg_salary_fact_2" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.avg_salary_fact_3" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.avg_salary_plan_1" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.avg_salary_plan_2" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.avg_salary_plan_3" class="data-value" disabled></td>
+		</tr>
+		<tr>
+			<td>Средний процент отчислений, <span class="data-unit">%</span></td>
+			<td><input type="text" asp-for="@Model.avg_procent_deduction_fact_1" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.avg_procent_deduction_fact_2" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.avg_procent_deduction_fact_3" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.avg_procent_deduction_plan_1" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.avg_procent_deduction_plan_2" class="data-value" disabled></td>
+			<td><input type="text" asp-for="@Model.avg_procent_deduction_plan_3" class="data-value" disabled></td>
+		</tr>
+	</tbody>
+</table>

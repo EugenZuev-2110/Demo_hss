@@ -1,0 +1,112 @@
+﻿@model DataBase.Models.DictionaryTables.DataBaseDictionaryTablesModel.Dict_Diameters_Consumptions
+
+@{
+	string btn_disable = string.Empty;
+}
+@if (Model.Id == 0)
+{
+	btn_disable = "disabled";
+}
+<div class="modal-dialog modal-dialog-centered">
+	<div class="modal-content">
+		<div class="modal-header">
+			<h3 class="modal-title" id="editDataLabel">Условный диаметр трубопроводов</h3>
+			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="RefreshTable()"></button>
+		</div>
+		<div class="modal-body">
+			<form class="needs-validation" novalidate asp-controller="DiametersConsumptions" asp-action="DiametersConsumptions_Save" asp-antiforgery="true" asp-area="DictionaryTables" id="DiametersConsumptions_form"
+			data-ajax-failure="onFailedFormTZ" data-ajax-success="onSuccessFormDiameters" data-ajax-begin="onBeginFormTZ" data-ajax="true" data-ajax-method="POST">
+			<input type="hidden" name="Id" value="@Model.Id" id="diameter_id" />
+			<div class="data-block static-block data-params">
+				<div class="data-row">
+					<div class="data-item">
+						<label class="data-label">Уникальный номер условного диаметра</label>
+						<select class="selectpicker data-value xxl-stretch" data-live-search="true" id="paramNumberDiameter" placeholder="Выберите УНОМ условного диаметра">
+							@foreach (var diam in ViewBag.DiametersConsumptionsList)
+							{
+								if(diam.Id == Model.Id)
+								{
+										<option value="@diam.Id" selected>@diam.Id (@diam.cond_ht_net_diam мм)</option>
+								}
+								else{
+										<option value="@diam.Id">@diam.Id (@diam.cond_ht_net_diam мм)</option>
+							}}
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="data-block">
+				<div class="data-row">
+					<div class="data-item">
+						<label class="data-label xxl-fix">Условный диаметр (Д<sub>у</sub>)</label>
+							<input type="text" class="data-value smx-fix double" name="cond_ht_net_diam" required value="@Model.cond_ht_net_diam">
+							<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Это поле должно быть заполнено"></a>
+						<span class="data-unit">мм</span>
+					</div>
+					<div class="data-item">
+						<label class="data-label xxl-fix">Номинальная пропускная способность при удельной потере на трение 5 кгс/м<sup>2</sup> · м</label>
+							<input type="text" class="data-value smx-fix double" name="consumption" required value="@Model.consumption">
+							<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Это поле должно быть заполнено"></a>
+						<span class="data-unit">т/ч</span>
+					</div>
+				</div>
+				<div class="data-row">
+					<div class="data-item">
+						<label class="data-label xxl-fix">Диаметр трубопровода: <span class="sublabel">внутренний</span></label>
+							<input type="text" class="data-value smx-fix double" name="ht_net_in_diam" required value="@Model.ht_net_in_diam">
+							<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Это поле должно быть заполнено"></a>
+						<span class="data-unit">мм</span>
+					</div>
+					<div class="data-item">
+						<label class="data-label"><span class="sublabel">внешний</span></label>
+							<input type="text" class="data-value smx-fix double" nae="ht_net_out_diam" name="ht_net_out_diam" required value="@Model.ht_net_out_diam">
+							<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Это поле должно быть заполнено"></a>
+						<span class="data-unit">мм</span>
+					</div>
+				</div>
+			</div>
+			</form>
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="bttn" data-bs-dismiss="modal">Отмена</button>
+			<button type="submit" class="bttn bttn-color" form="DiametersConsumptions_form">Сохранить</button>
+			<button type="button" class="bttn bttn-color" @btn_disable onclick="OpenDiametersConsumptions(@Model.Id, 'copy')">Создать копию</button>
+		</div>
+	</div>
+</div>
+<script type="text/javascript" src="@Url.Content("~/hss/js/popup_common_scripts.js")"></script>
+<script>
+
+	$(document).ready(function () {
+		document.querySelector('#paramNumberDiameter').addEventListener('change', (event) => {
+			OpenDiametersConsumptions($("#paramNumberDiameter").val());
+		});
+	});
+
+	function RefreshTable() {
+		if ($("#refresh_diameter_table").val() === "1") {
+			$("#refresh_diameter_table").val(0);
+			GetListOnPage();
+		}
+	}
+
+	var onSuccessFormDiameters = function (xhr) {
+		if (xhr.success == true) {
+			showMessage('Данные сохранены.', 'modal', 'success');
+			$("#refresh_diameter_table").val(1);
+			if(xhr.is_new == true)
+			{
+				OpenDiametersConsumptions(xhr.diam_id);
+			}
+		}
+		else {
+			if (xhr.message === undefined) {
+				xhr.message = 'Ошибка сохранения данных'
+			}
+			showMessage(xhr.message, 'modal', 'fault');
+		}
+		hidePreloader();
+	};
+
+
+</script>

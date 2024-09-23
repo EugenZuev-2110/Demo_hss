@@ -1,0 +1,227 @@
+﻿.approved {
+    background-color: #9ACD32;
+}
+
+input.value-error {
+    background-color: white;
+    background-image: url(/images/invalid_line.gif);
+    background-repeat: repeat-x;
+    background-position: bottom;
+    /*border-color: #c30;*/
+    border: 1px solid #f00;
+}
+
+/*#crm-tasks-table table tr td:first-child {
+    white-space: nowrap;
+}*/
+
+.modal-dialog.modal-large {
+    width: 65%;
+    margin-left: 22%;
+}
+
+a {
+    cursor: pointer;
+}
+
+.ajax-loading {
+    /*display:    none;
+    position:   fixed;
+    z-index:    1000;
+    top:        0;
+    left:       0;
+    height:     100%;
+    width:      100%;
+    background: rgba( 255, 255, 255, .8 ) 
+                url('http://sampsonresume.com/labs/pIkfp.gif') 
+                50% 50% 
+                no-repeat;*/
+    text-align: center;
+}
+
+#page-preloader {
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background: #000;
+    z-index: 100500;
+}
+
+    #page-preloader .corp-spinner {
+        width: 32px;
+        height: 32px;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        background: url('/images/loader.gif') no-repeat 50% 50%;
+        margin: -16px 0 0 -16px;
+    }
+
+.subtotal {
+    background: aliceblue;
+}
+
+    .subtotal > td:not(:first-child) {
+        text-align: center;
+    }
+
+.table-fixed thead {
+    width: 97%;
+}
+
+.table-fixed tbody {
+    height: 230px;
+    overflow-y: auto;
+    width: 100%;
+}
+
+.table-fixed thead, .table-fixed tbody, .table-fixed tr, .table-fixed td, .table-fixed th {
+    display: block;
+}
+
+    .table-fixed tbody td, .table-fixed thead > tr > th {
+        float: left;
+        border-bottom-width: 0;
+    }
+
+#header-fixed {
+    position: fixed;
+    top: 60px;
+    display: none;
+    background-color: white;
+    table-layout: fixed;
+    word-wrap: break-word;
+}
+
+.ul-scroll {
+    max-height: 450px !important;
+    overflow: auto !important;
+    overflow-x: hidden !important;
+    padding: 0;
+    margin: 0;
+    border-right: 1px solid #22262e !important;
+}
+
+    .ul-scroll::-webkit-scrollbar {
+        width: .2em;
+    }
+
+    .ul-scroll::-webkit-scrollbar-track {
+        -webkit-box-shadow: inset 0 0 6px darkgray;
+    }
+
+    .ul-scroll::-webkit-scrollbar-thumb {
+        background-color: cornflowerblue;
+    }
+
+tr.canceled {
+    background-color: lightpink;
+}
+
+div.flex {
+    display: inline-flex !important;
+}
+
+table.text-center tr > td:not(.head-row):not(.head-row-level-2), table.text-center tr > th:not(.head-row):not(.head-row-level-2) {
+    text-align: center;
+}
+
+/*.dayOfWeek {
+    width: 100px;
+}*/
+
+.th-dayOfWeek {
+    max-width: 80px;
+}
+
+#timesheet-table {
+    table-layout: fixed;
+    word-wrap: break-word;
+}
+
+tr.head-row > td:first-of-type {
+    text-align: left !important;
+}
+
+tr.head-row td span {
+    margin-right: 5px;
+}
+
+tr.head-row-level-2 > td:first-of-type {
+    text-align: left !important;
+    padding-left: 20px !important;
+}
+
+tr.head-row-level-2 td span {
+    margin-right: 5px;
+}
+
+/*.unit-project-row {
+    display: none;
+}
+
+.archive-project-row {
+    display: none;
+}*/
+
+.button-exel {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+    .button-exel div {
+        border-bottom: 1px solid #E5E5E5;
+        width: 100%;
+        padding-top: 1px;
+    }
+
+        .button-exel div a {
+            background: #A1D2B1;
+            color: #fff;
+            font-size: 13px;
+            margin-left: 15px;
+        }
+
+.show-count {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+    .show-count div {
+        width: 100%;
+    }
+
+.clear-both {
+    clear: both;
+}
+
+.icon-pulse {
+    animation: blur 2s ease-out infinite;
+}
+
+@keyframes blur {
+    from {
+        text-shadow:0px 0px 10px #fff,
+                    0px 0px 10px #fff, 
+                    0px 0px 25px #fff,
+                    0px 0px 25px #fff,
+                    0px 0px 25px #fff,
+                    0px 0px 25px #fff,
+                    0px 0px 25px #fff,
+                    0px 0px 25px #fff,
+                    0px 0px 50px #fff,
+                    0px 0px 50px #fff,
+                    0px 0px 50px #7B96B8,
+                    0px 0px 150px #7B96B8,
+                    0px 10px 100px #7B96B8,
+                    0px 10px 100px #7B96B8,
+                    0px 10px 100px #7B96B8,
+                    0px 10px 100px #7B96B8,
+                    0px -10px 100px #7B96B8,
+                    0px -10px 100px #7B96B8;
+    }
+}
+
+

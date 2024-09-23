@@ -1,0 +1,41 @@
+﻿@model List<WebProject.Areas.TSO.Models.TZInputEnergyPlanViewModel>
+
+<table class="table-inp-stretch" style="width:100%;">
+	<thead>
+		<tr>
+			<th>УНОМ ТЗ - Наименование ТСО</th>
+			<th>Виды<br>деятельности 
+				<a class="info" data-bs-toggle="tooltip" data-bs-custom-class="info-tooltip" data-bs-html="true"
+				   data-bs-title='<ul class="list-unstyled">
+									<li>К > 25 - Комбинированное производство, более 25 МВт</li>
+									<li>К < 25 - Комбинированное производство, менее 25 МВт</li>
+									<li>НК - Некомбинированное производство</li>
+									<li>П - Передача</li>
+									<li>С - Сбыт</li>
+									<li>ДП - Договор поставки</li>
+								</ul>'
+				</a>
+			</th>
+			<th>Место<br>покупки тепла<br>(коллектор, сеть)</th>
+			<th>Период<br>(I и II пол.,<br>год)</th>
+			<th>Объем покупки<br>тепла, <span class="data-unit">Гкал</span></th>
+			<th>Тариф (цена)<br>тепловой энергии,<br><span class="data-unit">руб./Гкал</span></th>
+			<th>Стоимость<br>покупного тепла<span class="data-unit">тыс. руб.</span></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var table_list in Model)
+		{
+			<tr>
+				<td><input type="text" class="data-value" value="@table_list.tz_tso_name" disabled></td>
+				<td><input type="text" class="data-value" value="@table_list.activity_types" disabled></td>
+				<td><input type="text" class="data-value" value="@table_list.buy_place_name" disabled></td>
+				<td><input type="text" class="data-value" value="@table_list.period_name" disabled></td>
+				<td><input type="text" class="data-value" value="@table_list.volume_buy_energy_plan" disabled></td>
+				<td><input type="text" class="data-value" value="@table_list.tariff_tso" disabled></td>
+				<td><input type="text" class="data-value" value="@table_list.costs_buy_energy_plan" disabled></td>
+			</tr>
+		}
+	</tbody>
+</table>
+<script type="text/javascript" src="@Url.Content("~/hss/js/datatables_common_scripts.js")"></script>

@@ -1,0 +1,108 @@
+﻿@model WebProject.Areas.DictionaryTables.Models.CalcCoefViewModel
+
+<form class="needs-validation" novalidate asp-controller="StandardConsumptionHeat" asp-action="CalcCoef_Save" asp-antiforgery="true" asp-area="DictionaryTables" id="ZoneETO_form"
+   data-ajax-failure="onFailedForm" data-ajax-success="onSuccessFormCoef" data-ajax-begin="onBeginForm" data-ajax="true" data-ajax-method="POST">
+				<input type="hidden" name="data_status" value="@Model.data_status"/>
+		<div class="data-block">
+			<div class="data-row">
+				<div class="col-12 col-xl-6">
+					<div class="data-item me-xl-3">
+						<label class="data-label xl-stretch">Коэффициент, учитывающий увеличение расхода тепловой энергии на отопление и вентиляцию зданий в расчётном режиме при отсутствии тепловых поступлений от солнечной радиации</label>
+						<label class="data-label smx-fix">К<sub>рад</sub>=</label>
+					<input type="text" class="data-value smx-auto double" name="coef_rad" value="@Model.coef_rad" />
+					</div>
+				</div>
+				<div class="col-12 col-xl-6">
+					<div class="data-block border-block ms-xl-3">
+						<h4>Коэффициенты потерь в тепловых сетях</h4>
+						<div class="data-table-block">
+							<div class="data-item">
+								<h5 class="data-label xl-auto"></h5>
+								<h5 class="data-label text-center">Водяная теплосеть</h5>
+								<h5 class="data-label text-center">Паропроводы</h5>
+							</div>
+							<div class="data-item">
+								<label class="data-label">Коэффициент тепловых потерь на тепловых сетях</label>
+							<div class="data-value"><input type="text" class="data-value double" name="coef_heat_loss_heat_network" value="@Model.coef_heat_loss_heat_network"></div>
+							<div class="data-value"><input type="text" class="data-value double" name="coef_heat_loss_steam_network" value="@Model.coef_heat_loss_steam_network"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="data-row">
+				<div class="col-12 col-xl-6">
+					<div class="data-block border-block me-xl-3">
+						<h4>Коэффициенты снижения заявленных величин тепловых нагрузок</h4>
+						<div class="data-table-block">
+							<div class="data-item">
+								<h5 class="data-label xl-auto"></h5>
+								<h5 class="data-label text-center">В горячей воде</h5>
+								<h5 class="data-label text-center">В паре</h5>
+							</div>
+							<div class="data-item">
+								<label class="data-label">Коэффициент снижения нагрузки отопления</label>
+							<div class="data-value"><input type="text" class="data-value double" name="coef_hw_heat_decrease" value="@Model.coef_hw_heat_decrease"></div>
+							<div class="data-value"><input type="text" class="data-value double" name="coef_steam_heat_decrease" value="@Model.coef_steam_heat_decrease"></div>
+							</div>
+							<div class="data-item">
+								<label class="data-label">Коэффициент снижения нагрузки вентиляции</label>
+							<div class="data-value"><input type="text" class="data-value double" name="coef_hw_vent_decrease" value="@Model.coef_hw_vent_decrease"></div>
+							<div class="data-value"><input type="text" class="data-value double" name="coef_steam_vent_decrease" value="@Model.coef_steam_vent_decrease"></div>
+							</div>
+							<div class="data-item">
+								<label class="data-label">Коэффициент снижения нагрузки ГВС</label>
+							<div class="data-value"><input type="text" class="data-value double" name="coef_hw_gvs_decrease" value="@Model.coef_hw_gvs_decrease"></div>
+							<div class="data-value"><input type="text" class="data-value double" name="coef_steam_gvs_decrease" value="@Model.coef_steam_gvs_decrease"></div>
+							</div>
+							<div class="data-item">
+								<label class="data-label">Коэффициент снижения нагрузки технологии</label>
+							<div class="data-value"><input type="text" class="data-value double" name="coef_hw_tech_decrease" value="@Model.coef_hw_tech_decrease"></div>
+							<div class="data-value"><input type="text" class="data-value double" name="coef_steam_tech_decrease" value="@Model.coef_steam_tech_decrease"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-12 col-xl-6">
+					<div class="data-block border-block ms-xl-3">
+						<h4>Коэффициенты потерь теплоты трубопроводами систем ГВС</h4>
+						<div class="data-table-block">
+							<div class="data-item">
+								<h5 class="data-label xl-auto"></h5>
+								<h5 class="data-label text-center">При наличии<br>разводящих сетей<br>ГВС после ЦТП</h5>
+								<h5 class="data-label text-center">Без разводящих<br>ГВС</h5>
+							</div>
+							<div class="data-item">
+								<label class="data-label">с изолированными стояками без полотенцесушителей</label>
+							<div class="data-value"><input type="text" class="data-value double" name="coef_heat_loss_systems_gvs_insulated_risers_gvs" value="@Model.coef_heat_loss_systems_gvs_insulated_risers_gvs"></div>
+							<div class="data-value"><input type="text" class="data-value double" name="coef_heat_loss_systems_gvs_insulated_risers" value="@Model.coef_heat_loss_systems_gvs_insulated_risers"></div>
+							</div>
+							<div class="data-item">
+								<label class="data-label">с изолированными стояками с полотенцесушителями</label>
+							<div class="data-value"><input type="text" class="data-value double" name="coef_heat_loss_systems_gvs_insulated_risers_heated_towel_rail_gvs" value="@Model.coef_heat_loss_systems_gvs_insulated_risers_heated_towel_rail_gvs"></div>
+							<div class="data-value"><input type="text" class="data-value double" name="coef_heat_loss_systems_gvs_insulated_risers_heated_towel_rail" value="@Model.coef_heat_loss_systems_gvs_insulated_risers_heated_towel_rail"></div>
+							</div>
+							<div class="data-item">
+								<label class="data-label">с неизолированными стояками с полотенцесушителями</label>
+							<div class="data-value"><input type="text" class="data-value double" name="coef_heat_loss_systems_gvs_uninsulated_risers_heated_towel_rail_gvs" value="@Model.coef_heat_loss_systems_gvs_uninsulated_risers_heated_towel_rail_gvs"></div>
+							<div class="data-value"><input type="text" class="data-value double" name="coef_heat_loss_systems_gvs_uninsulated_risers_heated_towel_rail" value="@Model.coef_heat_loss_systems_gvs_uninsulated_risers_heated_towel_rail"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="data-row">
+				<div class="data-item ">
+					<label class="data-label">Допустимое процентное отклонение удельного расхода тепла</label>
+				<input type="text" class="data-value smx-auto double" name="percent_devition_specific_heat_consumption" value="@Model.percent_devition_specific_heat_consumption">
+					<span class="data-unit">%</span>
+				</div>
+				<div class="data-item-right">
+					<button class="bttn bttn-color ms-auto">Сохранить</button>
+				</div>
+			</div>
+		</div>
+</form>
+
+<script type="text/javascript" src="@Url.Content("~/hss/js/popup_common_scripts.js")"></script>

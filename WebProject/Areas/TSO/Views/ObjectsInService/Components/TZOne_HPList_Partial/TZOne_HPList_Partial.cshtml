@@ -1,0 +1,70 @@
+﻿@model List<WebProject.Areas.TSO.Models.TZOneHPDataListViewModel>
+@{
+	Layout = null;
+	int cnt_columns = 16;
+}
+
+
+<div class="table-buttons tzHPTable-buttons"></div>
+<table id="tzHPTable" class="display compact" style="width:100%">
+	<thead>
+		<tr>
+			<th rowspan="2">УНОМ ТП</th>
+			<th rowspan="2">УНОМ СТ</th>
+			<th rowspan="2">УНОМ ЕТО</th>
+			<th rowspan="2">Обозначение теплового пункта на схеме</th>
+			<th rowspan="2">Номер теплового пункта</th>
+			<th rowspan="2">Тип теплового пункта</th>
+			<th rowspan="2">Округ</th>
+			<th rowspan="2">Район</th>
+			<th rowspan="2">Адрес месторасположения</th>
+			<th rowspan="2">Установленная мощность тепловая мощность, Гкал/ч</th>
+			<th colspan="2">Расчетная подключенная тепловая нагрузка</th>
+			<th rowspan="2">Статус теплового пункта</th>
+			<th colspan="2">Организация собственник</th>
+			<th rowspan="2">Объект относится к бесхозяйному имуществу</th>
+		</tr>
+		<tr>
+			<th>в паре, т/ч</th>
+			<th>в горячей воде, Гкал/ч</th>
+			<th>ИНН</th>
+			<th>Наименование</th>
+		</tr>
+		<tr class="filter-row ">
+			@for (int i = 0; i < @cnt_columns; i++)
+			{
+				if (i == 0)
+				{
+					<th class="dtfc-fixed-left" style="left:0; position:sticky;"><input type="text" class="filter-col-0" /></th>
+				}
+				else
+				{
+					<th><input type="text" class="filter-col-@i" /></th>
+				}
+			}
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var hp_list in Model)
+		{
+			<tr>
+				<td>@hp_list.heat_point_id</td>
+				<td>@hp_list.unom_hss</td>
+				<td>@hp_list.unom_eto</td>
+				<td>@hp_list.hp_name</td>
+				<td>@hp_list.tso_hp_num</td>
+				<td>@hp_list.type_name</td>
+				<td>@hp_list.region_short</td>
+				<td>@hp_list.district_name</td>
+				<td>@hp_list.address</td>
+				<td>@hp_list.inst_heat_power</td>
+				<td>@hp_list.calc_hl_steam_hp</td>
+				<td>@hp_list.calc_hl_hw_hp</td>
+				<td>@hp_list.hp_status_name</td>
+				<td>@hp_list.inn_org_owner</td>
+				<td>@hp_list.org_owner</td>
+				<td>@hp_list.obj_vacant_prop</td>
+			</tr>
+		}
+	</tbody>
+</table>

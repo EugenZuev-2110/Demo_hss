@@ -1,0 +1,55 @@
+﻿@model List<WebProject.Areas.DictionaryTables.Models.PistonInstallationsViewmodel>
+@{
+	int cnt_columns = 6;
+}
+
+<h3>Поршневые установки</h3>
+<div class="table-block">
+	<input type="hidden" value="0" id="refresh_PistonInstallations_table" />
+	<div class="table-buttons PistonInstallationsTable-buttons"></div>
+	<table id="PistonInstallationsTable" class="display compact table-clicked" style="width:100%">
+		<thead>
+			<tr>
+				<th>УНОМ поршневой установки</th>
+				<th>Марка оборудования</th>
+				<th>Завод изготовитель</th>
+				<th>Установленная электрическая мощность<span class="data-unit">(МВт)</span></th>
+				<th>Установленная тепловая мощность<span class="data-unit">(Гкал/ч)</span></th>
+				<th>Парковый ресурс<span class="data-unit">(тыс.ч)</span></th>
+			</tr>
+			<tr class="filter-row ">
+				@for (int i = 0; i < @cnt_columns; i++)
+				{
+					if (i == 0)
+					{
+						<th class="dtfc-fixed-left" style="left:0; position:sticky;"><input type="text" class="filter-col-0" /></th>
+					}
+					else
+					{
+						<th><input type="text" class="filter-col-@i" /></th>
+					}
+				}
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var Piston in Model)
+            {
+				<tr onclick="OpenPopup(@Piston.equip_id, 'OpenPopupPistonInstallations', 'PistonInstallationsDataPopup')">
+                    <td>@Piston.unom_equip</td>
+                    <td>@Piston.mark</td>
+                    <td>@Piston.manufacturer</td>
+                    <td>@Piston.inst_electric_power</td>
+                    <td>@Piston.inst_heat_power</td>
+                    <td>@Piston.park_resources</td>
+                </tr>
+            }
+		</tbody>
+	</table>
+</div>
+<div class="data-row table-summary">
+	<div class="data-item rows-count">
+		<h5>Всего записей:</h5>
+		<p><span class="mark-color" id="all_cnt_rows"></span></p>
+	</div>
+</div>
+<script type="text/javascript" src="@Url.Content("~/hss/js/datatables_common_scripts.js")"></script>		

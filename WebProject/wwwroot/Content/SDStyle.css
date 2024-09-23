@@ -1,0 +1,19 @@
+﻿
+body .wrapper{
+    padding: 5px 5px 5px 5px;
+    margin: 50px auto auto auto;
+    border-style: solid;
+    border-color: lightgrey;
+}
+
+body header{
+    padding: 20px 0;
+}
+
+.container
+{
+    max-width: 80%;
+}
+.bootstrap-select {
+    width: 280px !important;
+}

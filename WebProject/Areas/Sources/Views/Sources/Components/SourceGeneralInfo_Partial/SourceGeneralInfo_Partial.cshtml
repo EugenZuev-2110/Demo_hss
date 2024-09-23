@@ -1,0 +1,208 @@
+﻿@model WebProject.Areas.Sources.Models.SourceGeneralInfoViewModel
+
+<div class="data-block">
+	<form class="needs-validation" novalidate asp-controller="Sources" asp-action="Save" asp-antiforgery="true" asp-area="Sources" id="source_form"
+			data-ajax-failure="onFailedForm" data-ajax-success="onSuccessFormSource" data-ajax-begin="onBeginForm" data-ajax="true" data-ajax-method="POST">
+				<input type="hidden" name="source_id" value="@Model.source_id" id="source_id"/>
+				<input type="hidden" name="data_status" value="@Model.data_status" id="data_status" />
+				<input type="hidden" name="source_unom" value="@Model.source_unom" id="source_unom" />
+				<input type="hidden" name="tz_id" value="@Model.tz_id" id="tz_id" />
+				<input type="hidden" name="source_type_name" value="@Model.source_type_name" id="source_type_name" />
+				<input hidden asp-for="@Model.GetType().FullName">
+	<div class="data-row">
+		<div class="col-12 col-lg-6">
+			<div class="data-block me-lg-3">
+				<div class="data-item ">
+					<label class="data-label xl-fix">Наименование</label>
+					<input type="text" class="data-value md-stretch" required value="@Model.source_name" name="source_name" placeholder="Введите наименование">
+						<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Это поле должно быть заполнено"></a>
+				</div>
+				<div class="data-item ">
+					<label class="data-label xl-fix">Адрес</label>
+					<input type="text" class="data-value md-stretch" required value="@Model.address" name="address" id="address" placeholder="Введите адрес">
+						<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Это поле должно быть заполнено"></a>
+				</div>
+				<div class="data-item">
+					<label class="data-label xl-fix">Тип источника</label>
+					<select class="selectpicker data-value stretch" required data-live-search="true" value="@Model.source_type_id" name="source_type_id" data-size="5" placeholder="Выберите тип источника">
+						@foreach (var type in ViewBag.SourceType)
+						{
+							if(type.value_id == Model.source_type_id)
+							{
+								<option value="@type.value_id" selected>@type.value_name</option>
+							}
+							else
+							{
+								<option value="@type.value_id">@type.value_name</option>
+							}
+						}
+						
+						 
+					</select>
+						<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Выберите значение из списка"></a>
+				</div>
+				<div class="data-item">
+					<label class="data-label xl-fix">Тарифная зона</label>
+					<select class="selectpicker data-value stretch" data-live-search="true" data-size="5" placeholder="Выберите тарифную зону">
+						@foreach (var tz in ViewBag.TZ)
+						{
+							if(tz.tz_id == Model.tz_id)
+							{
+								<option value="@tz.tz_id" selected>@tz.tz_name</option>
+							}
+							else
+							{
+								<option value="@tz.tz_id">@tz.tz_name</option>
+							}
+						}
+						
+						
+					</select>
+				</div>
+				<div class="data-item">
+					<label class="data-label xl-fix">Организация собственник</label>
+						<select class="selectpicker data-value stretch" data-live-search="true" value="@Model.org_owner_id" data-size="5" name="org_owner_id" id="org_own_source" placeholder="Выберите организацию">
+						@foreach (var org in ViewBag.OrgList)
+						{
+							if(org.value_id == Model.org_owner_id)
+							{
+								<option value="@org.value_id" selected>@org.value_name</option>
+							}
+							else
+							{
+								<option value="@org.value_id">@org.value_name</option>
+							}
+						}
+						
+						
+					</select>
+				</div>
+				<div class="data-row">
+					<label class="data-item">
+						<span class="data-label xl-fix">Бесхозяйный источник</span>
+						@if (Model.obj_vacant_prop == true)
+						{
+								<input type="checkbox" value="@(Model.obj_vacant_prop == true ? "true" : "false")" name="obj_vacant_prop" class="data-check" onchange="CB_Change(this)" checked>
+						}
+						else
+						{
+								<input type="checkbox" value="false" name="obj_vacant_prop" class="data-check" onchange="CB_Change(this)">
+						}
+					</label>
+					<label class="data-item">
+						<span class="data-label xl-fix">Ветхий источник</span>
+						@if(Model.obj_old_prop == true)
+						{
+								<input type="checkbox" value="@(Model.obj_old_prop == true ? "true" : "false")" name="obj_old_prop" class="data-check" onchange="CB_Change(this)" checked>
+						}
+						else
+						{
+								<input type="checkbox" value="false" name="obj_old_prop" class="data-check" onchange="CB_Change(this)">
+						}
+						
+					</label>
+				</div>
+				<div class="data-row">
+					<div class="data-item ">
+						<label class="data-label xl-fix">Физический износ</label>
+							<input type="text" class="data-value smx-stretch" value="@Model.phys_wear" name="phys_wear" placeholder="Введите износ">
+						<span class="data-unit">%</span>
+					</div>
+					<div class="data-item ">
+						<label class="data-label xl-fix">Амортизационный износ</label>
+							<input type="text" class="data-value smx-stretch" value="@Model.amortis_wear" name="amortis_wear" placeholder="Введите износ">
+						<span class="data-unit">%</span>
+					</div>
+				</div>
+				<div class="data-row">
+					<div class="data-item ">
+						<label class="data-label xl-fix">Год ввода в эксплуатацию</label>
+						<input type="number" class="data-value md-stretch" value="@Model.start_year_expl" name="start_year_expl" placeholder="Введите дату">
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-12 col-lg-6">
+			<div class="data-block ms-lg-3">
+				<div class="data-item">
+					<label class="data-label xl-fix">Район (поселение)</label>
+					<select class="selectpicker data-value stretch" data-live-search="true" required value="@Model.district_id" name="district_id" data-size="5" placeholder="Выберите район">
+						@foreach (var distr in ViewBag.District)
+						{
+							if (distr.value_id == Model.district_id)
+							{
+								<option value="@distr.value_id" selected>@distr.value_name</option>
+							}
+							else
+							{
+								<option value="@distr.value_id">@distr.value_name</option>
+							}
+						}
+					</select>
+						<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Выберите значение из списка"></a>
+				</div>
+				<div class="data-item">
+					<label class="data-label xl-fix">Кадастровый номер ЗУ</label>
+					<input type="text" class="data-value stretch" name="kadnum_zu" value="@Model.kadnum_zu" placeholder="Введите кадастровый номер ЗУ">
+				</div>
+				<div class="data-item">
+					<label class="data-label xl-fix">Кадастровый номер ОКС</label>
+					<input type="text" class="data-value stretch" name="kadnum_oks" value="@Model.kadnum_oks" placeholder="Введите кадастровый номер ОКС">
+				</div>
+				<div class="data-item">
+					<label class="data-label xl-fix">ФИАС ЗУ</label>
+					<input type="text" class="data-value stretch" name="fias_zu" value="@Model.fias_zu" placeholder="Введите номер ФИАС ЗУ">
+				</div>
+				<div class="data-item">
+					<label class="data-label xl-fix">ФИАС ОКС</label>
+					<input type="text" class="data-value stretch" name="fias_build" value="@Model.fias_build" placeholder="Введите номер ОКС">
+				</div>
+			</div>
+		</div>
+		<button type="submit" id="genInfo_save" class="bttn bttn-color ms-auto">Сохранить</button>
+	</div>
+	</form>
+</div>
+
+<script type="text/javascript" src="@Url.Content("~/hss/js/popup_common_scripts.js")"></script>
+<script type="text/javascript">
+	$(document).ready(function () {
+		let par_elem = document.getElementById("org_own_source").parentElement;
+		par_elem.querySelector("input.form-control[type=search]").addEventListener('keyup', (event) => {
+			GetOrgOwnerInnListByChars(event.target.value, $('#data_status').val());
+		});
+	});
+
+	function GetOrgOwnerInnListByChars(input_chars, data_status) {
+		debugger
+		$.ajax({
+			url: '@Html.Raw(Url.Action("GetOrgOwnerInnListByChars", "HSS", new { Area = ""}))',
+			type: 'POST',
+			data: { chars: input_chars, data_status: data_status }
+		}).done(function (data) {
+			changeSelectByOtherSelectOrgOwnerInnList(data.list, "org_own_source", input_chars);
+		});
+	}
+
+	function changeSelectByOtherSelectOrgOwnerInnList(newSelect, select_id, input_chars) {
+		var select = $('#' + select_id);
+		$(select).find('option').remove();
+		if (newSelect.length !== 0) {
+			for (var i = 0; i < newSelect.length; i++) {
+				$(select).append('<option value=' + newSelect[i].value_id + '>' + newSelect[i].value_name + '</option>');
+			}
+		} else {
+			$(select).append('<option value="">' + "Нет записей" + '</option>');
+		}
+		$(select).selectpicker('destroy');
+		$(select).selectpicker();
+		$(select).selectpicker('open');
+		let par_elem = document.getElementById("org_own_source").parentElement;
+		par_elem.querySelector("input.form-control[type=search]").value = input_chars;
+		par_elem.querySelector("input.form-control[type=search]").addEventListener('keyup', (event) => {
+			GetOrgOwnerInnListByChars(event.target.value, $('#data_status').val());
+		});
+	}
+
+	
+</script>

@@ -1,0 +1,281 @@
+﻿<div class="data-block workspace">
+	<input type="hidden" value="1" id="hide_clocks"></input>
+	<div class="data-block title-block">
+		<div class="data-row">
+			<ul class="breadcrumb">
+				<li class="breadcrumb-item"><a class="ref-color" href="index.html">Главная</a></li>
+				<li class="breadcrumb-item">Справочники - Нормы расхода тепла</li>
+			</ul>
+		</div>
+		<h1 class="title">Нормы расхода тепла</h1>
+	</div>
+
+	<div class="data-block main-content">
+		<div class="accordion data-block" >
+			<!---->
+			<div class="border-block">
+				<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel1" aria-expanded="false">Укрупнённые удельные расходы тепла на 1 м<sup>2</sup> площади</button>
+				<div id="panel1" class="accordion-collapse collapse">
+					<div class="accordion-body">
+						<div class="data-block">
+							<div class="data-row">
+								<div class="data-item-right">
+									<button class="bttn bttn-color" disabled type="button">Выгрузить</button>
+								</div>
+							</div>
+							<div class="data-row">
+								<div class="data-item">
+									<label class="data-label">Округ / район (поселение)</label>
+									<select class="selectpicker data-value xxl-stretch" id="DistrictRegionList" data-live-search="true" data-size="5" placeholder="Выберите...">
+										@foreach (var distr in ViewBag.Distric)
+										{
+											<option value="@distr.value_id">@distr.value_name</option>
+										}
+									</select>
+								</div>
+								<div class="data-row align-self-center">
+									<label class="data-label">Размерность:</label>
+									<label class="data-item">
+										<span class="data-label sublabel">ккал/(ч · м<sup>2</sup>)</span>
+										<input type="radio" name="consumptionUnit" id="consumptionUnit" value="1" onclick="Update('consumptionUnit1m')" checked class="data-check">
+									</label>
+									<label class="data-item">
+										<span class="data-label sublabel">Гкал/(год · м<sup>2</sup>)</span>
+										<input type="radio" name="consumptionUnit" id="consumptionUnit" value="2" onclick="Update('consumptionUnitYear')" class="data-check">
+									</label>
+								</div>
+							</div>
+							<div class="data-block border-block" id="TotalCalcConsumption">
+								@await Component.InvokeAsync("TotalCalcConsumption_Partial")
+							</div>
+							<div class="data-block border-block" id="SpecificHeatConsumption">
+								
+							@await Component.InvokeAsync("SpecificHeatConsumption_Partial")
+							</div>
+							<div class="data-block border-block" id="CalcConsumptionGVS">
+								@await Component.InvokeAsync("CalcConsumptionGVS_Partial")
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!---->
+			<div class="border-block">
+			<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel2" aria-expanded="false">Характеристики зданий по их назначению</button>
+			<div id="panel2" class="accordion-collapse collapse">
+				<div class="accordion-body">
+					<div class="data-row static-block">
+						<label class="data-label">Назначение здания </label>
+						<select class="selectpicker data-value lg-fix" data-live-search="true" data-size="5" id="PurporseTypeBuild" placeholder="Выберите..." data-container=".workspace">
+							@foreach (var purporse in ViewBag.PurporseTypeBuild)
+							{
+								if (purporse.value_id == 1)
+								{
+									<option value="@purporse.value_id" selected>@purporse.value_name</option>
+								}
+								else
+								{
+									<option value="@purporse.value_id">@purporse.value_name</option>
+								}
+
+							}
+						</select>
+					</div>
+						<div class="data-block" id="BuildingCharact">
+						@await Component.InvokeAsync("BuildingCharacteristics_Partial")
+					</div>
+				</div>
+			</div>
+			</div>
+			<!---->
+			<div class=" border-block">
+				<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel3" aria-expanded="false">Коэффициенты, учитываемые в расчётах</button>
+				<div id="panel3" class="accordion-collapse collapse">
+					<div class="accordion-body">
+						@await Component.InvokeAsync("CoefCalculation_Partial")
+					</div>
+				</div>
+			</div>
+			<!---->
+			<div class="border-block">
+				<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel4" aria-expanded="false">Коэффициенты отношения отопительно-вентиляционной тепловой нагрузки</button>
+				<div id="panel4" class="accordion-collapse collapse">
+					<div class="accordion-body">
+						<div class="data-block">
+							@await Component.InvokeAsync("CoefHeatventHeatLoad_Partial")
+						</div>
+					</div>
+				</div>
+			</div>
+			<!---->
+			<div class="border-block">
+				<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel5" aria-expanded="false">Коэффициенты энергоэффективности потребления тепла (снижение в % относительно базового года схемы)</button>
+				<div id="panel5" class="accordion-collapse collapse">
+					<div class="accordion-body">
+						<div class="data-block" id="CoefEnergyEfficiency">
+							@await Component.InvokeAsync("CoefEnergyEfficiency_Partial")
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+</div>
+
+<script>
+	$(document).ready(function () {
+		setTimeout(function () {
+			$('#StandardConsumptionHeat').addClass('active');
+		}, 500);
+
+		//TableInit('oksParamsTable', 'full');
+
+	});
+	document.querySelector('#PurporseTypeBuild').addEventListener('change', (event) => {
+		GetListOnPageBuildingCharacteristics();
+	});
+
+	document.querySelector('#DistrictRegionList').addEventListener('change', (event) => {
+		GetListOnPageSpecificHeatConsumption();
+		GetListOnPageTotalCalcConsumption();
+		GetListOnPageCalcConsumptionGVS();
+	});
+
+	function Update(cb)
+	{
+		debugger;
+		if (cb == 'consumptionUnit1m') {
+			$('input[name="consumptionUnit"]:checked').val(1);
+		}
+		if (cb == 'consumptionUnitYear') {
+			$('input[name="consumptionUnit"]').val(2);
+		}
+		var t = $('input[name="consumptionUnit"]').val()
+		GetListOnPageSpecificHeatConsumption();
+		GetListOnPageTotalCalcConsumption();
+		GetListOnPageCalcConsumptionGVS();
+	}
+
+	function GetListOnPageCoefEnergyEfficiency() {
+		showPreloader();
+		$.ajax({
+
+			type: 'GET',
+			url: '@Html.Raw(Url.Action("OnGetCallCoefEnergyEfficiency_PartialViewComponent", "StandardConsumptionHeat", new { Area = "DictionaryTables" }))',
+			data: {
+				data_status: $('#data_status').val()
+			},
+			dataType: 'html'
+		})
+			.done(function (result) {
+				var div = $('#CoefEnergyEfficiency');
+				div.html("");
+				div.html(result);
+				hidePreloader();
+			});
+	}
+
+	function GetListOnPageBuildingCharacteristics() {
+		showPreloader();
+		$.ajax({
+
+			type: 'GET',
+			url: '@Html.Raw(Url.Action("OnGetCallBuildingCharacteristics_PartialViewComponent", "StandardConsumptionHeat", new { Area = "DictionaryTables" }))',
+			data: {
+				data_status: $('#data_status').val(),
+				PurporseTypeBuild: $('#PurporseTypeBuild').val()
+			},
+			dataType: 'html'
+		})
+			.done(function (result) {
+				var div = $('#BuildingCharact');
+				div.html("");
+				div.html(result);
+				hidePreloader();
+			});
+	}
+
+
+	function GetListOnPageSpecificHeatConsumption() {
+		var t = $('#consumptionUnit').val()
+		showPreloader();
+		$.ajax({
+
+			type: 'GET',
+			url: '@Html.Raw(Url.Action("OnGetCallSpecificHeatConsumption_PartialViewComponent", "StandardConsumptionHeat", new { Area = "DictionaryTables" }))',
+			data: {
+				data_status: $('#data_status').val(),
+				district_id: $('#DistrictRegionList').val(),
+				consumptionUnit: $('#consumptionUnit').val()
+			},
+			dataType: 'html'
+		})
+			.done(function (result) {
+				var div = $('#SpecificHeatConsumption');
+				div.html("");
+				div.html(result);
+				hidePreloader();
+			});
+	}
+	function GetListOnPageTotalCalcConsumption() {
+		showPreloader();
+		$.ajax({
+
+			type: 'GET',
+			url: '@Html.Raw(Url.Action("OnGetCallTotalCalcConsumption_PartialViewComponent", "StandardConsumptionHeat", new { Area = "DictionaryTables" }))',
+			data: {
+				data_status: $('#data_status').val(),
+				district_id: $('#DistrictRegionList').val(),
+				consumptionUnit: $('#consumptionUnit').val()
+			},
+			dataType: 'html'
+		})
+			.done(function (result) {
+				var div = $('#TotalCalcConsumption');
+				div.html("");
+				div.html(result);
+				hidePreloader();
+			});
+	}
+	function GetListOnPageCalcConsumptionGVS() {
+		var t = $('#consumptionUnit').val()
+		showPreloader();
+		$.ajax({
+
+			type: 'GET',
+			url: '@Html.Raw(Url.Action("OnGetCallCalcConsumptionGVS_PartialViewComponent", "StandardConsumptionHeat", new { Area = "DictionaryTables" }))',
+			data: {
+				data_status: $('#data_status').val(),
+				district_id: $('#DistrictRegionList').val(),
+				consumptionUnit: $('#consumptionUnit').val()
+			},
+			dataType: 'html'
+		})
+			.done(function (result) {
+				var div = $('#CalcConsumptionGVS');
+				div.html("");
+				div.html(result);
+				hidePreloader();
+			});
+	}
+
+		var onSuccessFormCoef = function (xhr) {
+		hidePreloader();
+		if (xhr.success == true) {
+			showMessage('Данные сохранены.', 'modal', 'success');
+		}
+		else {
+			showMessage('Ошибка сохранения данных.', 'modal', 'fault');
+		}
+	};
+
+
+	function GetListOnPage() {
+		GetListOnPageSpecificHeatConsumption();
+		GetListOnPageTotalCalcConsumption();
+		GetListOnPageCalcConsumptionGVS();
+		GetListOnPageBuildingCharacteristics();
+		GetListOnPageCoefEnergyEfficiency();
+	}
+</script>

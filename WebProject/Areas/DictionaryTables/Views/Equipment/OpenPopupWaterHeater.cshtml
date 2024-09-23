@@ -1,0 +1,196 @@
+﻿@model WebProject.Areas.DictionaryTables.Models.WaterHeaterOneDataViewmodel
+@{
+    string btn_disable = string.Empty;
+}
+@if (Model.equip_id == 0)
+{
+    btn_disable = "disabled";
+}
+
+<div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title" id="editDataLabel">Редактирование данных водоподогревателя</h3>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" onclick="RefreshTable();" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form class="needs-validation" novalidate asp-controller="Equipment" asp-action="Equipment_Save" asp-antiforgery="true" asp-area="DictionaryTables" id="WaterHeater_form"
+                  data-ajax-failure="onFailedForm" data-ajax-success="onSuccessFormWaterHeater" data-ajax-begin="onBeginForm" data-ajax="true" data-ajax-method="POST">
+                <input type="hidden" name="equip_id" value="@Model.equip_id" id="equip_id" />
+                <input type="hidden" name="unom_equip" value="@Model.unom_equip" id="unom_equip" />
+                <input type="hidden" name="equip_type_id" value="@Model.equip_type_id" id="equip_type_id" />
+                <div class="data-block static-block">
+                    <div class="data-row">
+                        <div class="data-item">
+                            <label class="data-label xl-fix">Уникальный номер оборудования в справочнике</label>
+                            <select class="selectpicker data-value xxl-stretch" data-live-search="true" placeholder="Выберите УНОМ оборудования" id="paramNumberWaterHeater">
+                                @if (@Model.equip_id == 0 || ViewBag.Action_for == "copy")
+                                {
+                                    <option value="" selected disabled>При добавлении нового оборудования, УНОМ генерируется автоматически</option>
+                                }
+                                @foreach (var equip in ViewBag.EquipList)
+                                {
+                                    if (equip.equip_id == Model.equip_id)
+                                    {
+                                        <option value="@equip.equip_id" selected>@equip.unom_equip</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@equip.equip_id">@equip.unom_equip</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="data-row">
+                        <div class="data-item">
+                            <label class="data-label xl-fix">Марка оборудования</label>
+                            <input type="text" class="data-value xxl-stretch" value="@Model.mark" name="mark" required>
+                            <a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Это поле должно быть заполнено"></a>
+                        </div>
+                    </div>
+                    <div class="data-row">
+                        <div class="data-item">
+                            <label class="data-label xl-fix">Завод изготовитель</label>
+                            <input type="text" class="data-value xxl-stretch" value="@Model.manufacturer" name="manufacturer" required>
+                            <a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Это поле должно быть заполнено"></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="data-block">
+                    <h4>Паспортные технические параметры оборудования</h4>
+                    <div class="data-row">
+                        <label class="data-label">Тип теплообменника:</label>
+                        <div class="data-row">
+                            <label class="data-item">
+                                <span class="data-label">кожухотрубный</span>
+                                @if (Model.equip_id > 0 || ViewBag.Action_for == "copy")
+                                {
+                                    string is_checked = string.Empty;
+                                    @if (Model.htexch_type_id == 1)
+                                    {
+                                        is_checked = "checked";
+                                    }
+                                    <input type="radio" value="@(Model.htexch_type_id == 1  ? 1 : 1)" name="htexch_type_id" class="data-check" @is_checked onchange="CheckBox_Change('CheckBox_skin')">
+                                }
+                                else
+                                {
+                                    <input type="radio" value="1" name="htexch_type_id" checked class="data-check">
+                                }
+                            </label>
+                            <label class="data-item">
+                                <span class="data-label">пластинчатый</span>
+                                @if (Model.equip_id > 0 || ViewBag.Action_for == "copy")
+                                {
+                                    string is_checked = string.Empty;
+                                    @if (Model.htexch_type_id == 2)
+                                    {
+                                        is_checked = "checked";
+                                    }
+                                    <input type="radio" value="@(Model.htexch_type_id == 2  ? 2 : 1)" name="htexch_type_id" class="data-check" @is_checked onchange="CheckBox_Change('CheckBox_plastic')">
+                                }
+                                else
+                                {
+                                    <input type="radio" value="1" name="htexch_type_id" class="data-check">
+                                }
+                            </label>
+                        </div>
+
+                    </div>
+                    <div class="data-row">
+                        <div class="data-table-block">
+                            <div class="data-item">
+                                <label class="data-label lm-fix">Поверхность теплообмена</label>
+                                <input type="text" class="data-value sm-fix" value="@Model.heat_exchange_surface" name="heat_exchange_surface" required>
+                                <a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Это поле должно быть заполнено"></a>
+                                <span class="data-unit">м<sup>2</sup></span>
+                            </div>
+                            <div class="data-item">
+                                <label class="data-label">Количество секций</label>
+                                <input type="text" class="data-value sm-fix" value="@Model.section_count" name="section_count" required>
+                                <a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Это поле должно быть заполнено"></a>
+                                <span class="data-unit">шт</span>
+                            </div>
+                            <div class="data-item">
+                                <label class="data-label">Диаметр кожуха</label>
+                                <input type="text" class="data-value sm-fix" value="@Model.casing_diameter" name="casing_diameter" required>
+                                <a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Это поле должно быть заполнено"></a>
+                                <span class="data-unit">м</span>
+                            </div>
+                            <div class="data-item">
+                                <label class="data-label">Длинна секции</label>
+                                <input type="text" class="data-value sm-fix" value="@Model.length_section" name="length_section" required>
+                                <a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Это поле должно быть заполнено"></a>
+                                <span class="data-unit">м</span>
+                            </div>
+                        </div>
+                        <div class="data-table-block">
+                            <div class="data-item">
+                                <label class="data-label lm-fix">Максимальная температура на выходе</label>
+                                <input type="text" class="data-value sm-fix" value="@Model.max_temp_out" name="max_temp_out" required>
+                                <a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Это поле должно быть заполнено"></a>
+                                <span class="data-unit">°С</span>
+                            </div>
+                            <div class="data-item">
+                                <label class="data-label">Теплопроизводительность</label>
+                                <input type="text" class="data-value sm-fix" value="@Model.inst_heat_power" name="inst_heat_power" required>
+                                <a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Это поле должно быть заполнено"></a>
+                                <span class="data-unit">Гкал/ч</span>
+                            </div>
+                            <div class="data-item">
+                                <label class="data-label">Расход сетевой воды - номинальный</label>
+                                <input type="text" class="data-value sm-fix" value="@Model.net_water_consump_nom" name="net_water_consump_nom" required>
+                                <a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Это поле должно быть заполнено"></a>
+                                <span class="data-unit">т/ч</span>
+                            </div>
+                            <div class="data-item">
+                                <label class="data-label">- максимальный</label>
+                                <input type="text" class="data-value sm-fix" value="@Model.net_water_consump_max" name="net_water_consump_max" required>
+                                <a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Это поле должно быть заполнено"></a>
+                                <span class="data-unit">т/ч</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="bttn" data-bs-dismiss="modal">Отмена</button>
+            <button type="submit" class="bttn bttn-color" form="WaterHeater_form">Сохранить</button>
+            <button type="button" class="bttn bttn-color" onclick="OpenPopup(@Model.equip_id, 'OpenPopupWaterHeater', 'WaterHeaterDataPopup', 'copy')" @btn_disable>Создать копию</button>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        document.querySelector('#paramNumberWaterHeater').addEventListener('change', (event) => {
+            OpenPopup($("#paramNumberWaterHeater").val(), 'OpenPopupWaterHeater', 'WaterHeaterDataPopup');
+        });
+    });
+    function RefreshTable() {
+        if ($("#refresh_WaterHeater_table").val() === "1") {
+            $("#refresh_WaterHeater_table").val(0);
+            GetListOnPage();
+        }
+    }
+    var onSuccessFormWaterHeater = function (xhr) {
+        debugger
+        if (xhr.success == true) {
+            showMessage('Данные сохранены.', 'modal', 'success');
+            $("#refresh_WaterHeater_table").val(1);
+            if (xhr.is_new == true) {
+                OpenPopup(xhr.equip_id, 'OpenPopupWaterHeater', 'WaterHeaterDataPopup');
+            }
+        }
+            hidePreloader();
+        
+    };
+        function CheckBox_Change(cb) {
+            if (cb == 'CheckBox_skin') {
+                $('input[name="htexch_type_id"]:checked').val(1);
+            }
+            if (cb == 'CheckBox_plastic') {
+                $('input[name="htexch_type_id"]:checked').val(2);
+            }
+        };
+</script>

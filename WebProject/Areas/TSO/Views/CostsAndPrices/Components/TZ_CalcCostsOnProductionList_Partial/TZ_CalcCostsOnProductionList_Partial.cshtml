@@ -1,0 +1,416 @@
+﻿@model List<WebProject.Areas.TSO.Models.TZCalcCostsOnProductionDataViewModel>
+@{
+	Layout = null;
+	int cnt_columns = 147;
+}
+<div class="table-block">
+	<div class="table-buttons tzProductionCostsTable-buttons"></div>
+	<input type="hidden" value="0" id="refresh_table" />
+	<table id="tzProductionCostsTable" class="display compact table-clicked" style="width:100%">
+		<thead>
+			<tr>
+				<th rowspan="4">УНОМ ТЗ</th>
+				<th rowspan="4">Территория действия тарифной зоны</th>
+				<th rowspan="4">КОД ТСО</th>
+				<th rowspan="4">Наименование ТСО</th>
+				<th rowspan="4">
+					Виды регулируемой деятельности
+					<a class="info" data-bs-toggle="tooltip" data-bs-custom-class="info-tooltip" data-bs-html="true"
+					   data-bs-title='<ul class="list-unstyled">
+									<li>К > 25 - Комбинированное производство, более 25 МВт</li>
+									<li>К < 25 - Комбинированное производство, менее 25 МВт</li>
+									<li>НК - Некомбинированное производство</li>
+									<li>П - Передача</li>
+									<li>С - Сбыт</li>
+									<li>ДП - Договор поставки</li>
+								</ul>'
+					</a>
+				</th>
+				<th rowspan="4">ВСЕГО расходов (факт), тыс. руб.</th>
+				<th rowspan="4">ВСЕГО расходов, тыс. руб.</th>
+				<th colspan="48">Расходы на приобретение (производство) энергетических ресурсов (факт)</th>
+				<th colspan="11">Операционные расходы (факт)</th>
+				<th colspan="8">Неподконтрольные расходы (факт)</th>
+				<th colspan="3">Структура расходов (факт), %</th>
+				<th colspan="48">Расходы на приобретение (производство) энергетических ресурсов (план)</th>
+				<th colspan="11">Операционные расходы (план)</th>
+				<th colspan="8">Неподконтрольные расходы (план)</th>
+				<th colspan="3">Структура расходов (план), %</th>
+			</tr>
+			<tr>
+				<th rowspan="3">ВСЕГО расходы на приобретение (производство) энергетических ресурсов, тыс. руб.</th>
+				<th colspan="6">топливо на технологические цели</th>
+				<th colspan="21">электроэнергия на технологические цели и хозяйственные нужды</th>
+				<th colspan="10">теплоэнергия на технологические цели и хозяйственные нужды, затраты на транспорт тепловой энергии</th>
+				<th colspan="3">исходная вода</th>
+				<th colspan="3">водоотведение</th>
+				<th colspan="3">теплоноситель</th>
+				<th rowspan="3">расходы, связанные с созданием нормативных запасов топлива, тыс. руб.</th>
+				<th rowspan="3">ВСЕГО операционные расходы, тыс. руб.</th>
+				<th colspan="3">расходы на оплату труда</th>
+				<th rowspan="3">расходы на приобретение сырья и материалов, тыс. руб.</th>
+				<th colspan="4">расходы на работы и услуги по договорам со сторонними организациями</th>
+				<th rowspan="3">расходы на вывод из эксплуатации (в том числе на консервацию) и вывод из консервации, тыс. руб.</th>
+				<th rowspan="3">прочие операционные расходы, тыс. руб.</th>
+				<th rowspan="3">ВСЕГО неподконтрольные расходы, тыс. руб.</th>
+				<th colspan="2">отчисления на соц. нужды от заработной платы</th>
+				<th rowspan="3">амортизация основных средств и нематериальных активов, тыс. руб.</th>
+				<th rowspan="3">расходы на уплату налогов, сборов и других обязательных платежей, тыс. руб.</th>
+				<th rowspan="3">расходы на оплату услуг, оказываемых организациями, осуществляющими регулируемые виды деятельности, тыс. руб.</th>
+				<th rowspan="3">налог на прибыль, тыс. руб.</th>
+				<th rowspan="3">прочие неподконтрольные расходы, тыс. руб.</th>
+				<th rowspan="3">Расходы на приобретение (производство) энергетических ресурсов</th>
+				<th rowspan="3">Операционные расходы</th>
+				<th rowspan="3">Неподконтрольные расходы</th>
+
+				<th rowspan="3">ВСЕГО расходы на приобретение (производство) энергетических ресурсов, тыс. руб.</th>
+				<th colspan="6">топливо на технологические цели</th>
+				<th colspan="21">электроэнергия на технологические цели и хозяйственные нужды</th>
+				<th colspan="10">теплоэнергия на технологические цели и хозяйственные нужды, затраты на транспорт тепловой энергии</th>
+				<th colspan="3">исходная вода</th>
+				<th colspan="3">водоотведение</th>
+				<th colspan="3">теплоноситель</th>
+				<th rowspan="3">расходы, связанные с созданием нормативных запасов топлива, тыс. руб.</th>
+				<th rowspan="3">ВСЕГО операционные расходы, тыс. руб.</th>
+				<th colspan="3">расходы на оплату труда</th>
+				<th rowspan="3">расходы на приобретение сырья и материалов, тыс. руб.</th>
+				<th colspan="4">расходы на работы и услуги по договорам со сторонними организациями</th>
+				<th rowspan="3">расходы на вывод из эксплуатации (в том числе на консервацию) и вывод из консервации, тыс. руб.</th>
+				<th rowspan="3">прочие операционные расходы, тыс. руб.</th>
+				<th rowspan="3">ВСЕГО неподконтрольные расходы, тыс. руб.</th>
+				<th colspan="2">отчисления на соц. нужды от заработной платы</th>
+				<th rowspan="3">амортизация основных средств и нематериальных активов, тыс. руб.</th>
+				<th rowspan="3">расходы на уплату налогов, сборов и других обязательных платежей, тыс. руб.</th>
+				<th rowspan="3">расходы на оплату услуг, оказываемых организациями, осуществляющими регулируемые виды деятельности, тыс. руб.</th>
+				<th rowspan="3">налог на прибыль, тыс. руб.</th>
+				<th rowspan="3">прочие неподконтрольные расходы, тыс. руб.</th>
+				<th rowspan="3">Расходы на приобретение (производство) энергетических ресурсов</th>
+				<th rowspan="3">Операционные расходы</th>
+				<th rowspan="3">Неподконтрольные расходы</th>
+			</tr>
+			<tr>
+				<th rowspan="2">всего расходов за топливо, тыс. руб.</th>
+				<th rowspan="2">объем, тыс. ту.т.</th>
+				<th rowspan="2">средняя цена, руб./т.у.т.</th>
+				<th rowspan="2">вид топлива</th>
+				<th colspan="2">удельный расход условного топлива, кг у.т./Гкал</th>
+				<th rowspan="2">всего расходов за электроэнергию и мощность, тыс. руб.</th>
+				<th colspan="5">низкое напряжение НН (0,4 кВ и ниже)</th>
+				<th colspan="5">среднее напряжение СН-2 (1-20 кВ)</th>
+				<th colspan="5">среднее напряжение СН-1 (35 кВ)</th>
+				<th colspan="5">высокое напряжение ВН (110 кВ и выше)</th>
+				<th rowspan="2">всего расходов за тепловую энергию, тыс. руб.</th>
+				<th colspan="3">покупная тепловая энергия с коллекторов</th>
+				<th colspan="3">покупная тепловая энергия из тепловой сети</th>
+				<th colspan="3">расходы на оплату услуг по передаче тепловой энергии</th>
+				<th rowspan="2">всего расходов за воду, тыс. руб.</th>
+				<th rowspan="2">объем, тыс. куб. м</th>
+				<th rowspan="2">цена, руб./куб. м</th>
+				<th rowspan="2">всего расходов на водоотведение, тыс. руб.</th>
+				<th rowspan="2">объем, тыс. куб. м</th>
+				<th rowspan="2">цена, руб./куб. м</th>
+				<th rowspan="2">всего расходов на теплоноситель, тыс. руб.</th>
+				<th rowspan="2">объем, тыс. куб. м</th>
+				<th rowspan="2">цена, руб./куб. м</th>
+				<th rowspan="2">всего расходов на оплату труда без отчислений, тыс. руб.</th>
+				<th rowspan="2">численность персонала, чел.</th>
+				<th rowspan="2">Среднемесячная заработная плата, руб./чел. х мес.</th>
+				<th rowspan="2">Всего расходы на оплату работ и услуг, выполняемых по договорам с организациями, тыс. руб.</th>
+				<th colspan="3">в том числе</th>
+				<th rowspan="2">%</th>
+				<th rowspan="2">тыс. руб.</th>
+
+				<th rowspan="2">всего расходов за топливо, тыс. руб.</th>
+				<th rowspan="2">объем, тыс. ту.т.</th>
+				<th rowspan="2">средняя цена, руб./т.у.т.</th>
+				<th rowspan="2">вид топлива</th>
+				<th colspan="2">удельный расход условного топлива, кг у.т./Гкал</th>
+				<th rowspan="2">всего расходов за электроэнергию и мощность, тыс. руб.</th>
+				<th colspan="5">низкое напряжение НН (0,4 кВ и ниже)</th>
+				<th colspan="5">среднее напряжение СН-2 (1-20 кВ)</th>
+				<th colspan="5">среднее напряжение СН-1 (35 кВ)</th>
+				<th colspan="5">высокое напряжение ВН (110 кВ и выше)</th>
+				<th rowspan="2">всего расходов за тепловую энергию, тыс. руб.</th>
+				<th colspan="3">покупная тепловая энергия с коллекторов</th>
+				<th colspan="3">покупная тепловая энергия из тепловой сети</th>
+				<th colspan="3">расходы на оплату услуг по передаче тепловой энергии</th>
+				<th rowspan="2">всего расходов за воду, тыс. руб.</th>
+				<th rowspan="2">объем, тыс. куб. м</th>
+				<th rowspan="2">цена, руб./куб. м</th>
+				<th rowspan="2">всего расходов на водоотведение, тыс. руб.</th>
+				<th rowspan="2">объем, тыс. куб. м</th>
+				<th rowspan="2">цена, руб./куб. м</th>
+				<th rowspan="2">всего расходов на теплоноситель, тыс. руб.</th>
+				<th rowspan="2">объем, тыс. куб. м</th>
+				<th rowspan="2">цена, руб./куб. м</th>
+				<th rowspan="2">всего расходов на оплату труда без отчислений, тыс. руб.</th>
+				<th rowspan="2">численность персонала, чел.</th>
+				<th rowspan="2">Среднемесячная заработная плата, руб./чел. х мес.</th>
+				<th rowspan="2">Всего расходы на оплату работ и услуг, выполняемых по договорам с организациями, тыс. руб.</th>
+				<th colspan="3">в том числе</th>
+				<th rowspan="2">%</th>
+				<th rowspan="2">тыс. руб.</th>
+			</tr>
+			<tr>
+				<th>расчетный</th>
+				<th>нормативный (плановый)</th>
+				<th>итого расходов НН, тыс. руб.</th>
+				<th>объем э/э, тыс. кВт.ч</th>
+				<th>цена за э/э, руб. / кВт.ч</th>
+				<th>объем э/м, МВт</th>
+				<th>цена за э/м, руб. / кВт х мес.</th>
+				<th>итого расходов СН-2, тыс. руб.</th>
+				<th>объем э/э, тыс. кВт.ч</th>
+				<th>цена за э/э, руб. / кВт.ч</th>
+				<th>объем э/м, МВт</th>
+				<th>цена за э/м, руб. / кВт х мес.</th>
+				<th>итого расходов СН-1, тыс. руб.</th>
+				<th>объем э/э, тыс. кВт.ч</th>
+				<th>цена за э/э, руб. / кВт.ч</th>
+				<th>объем э/м, МВт</th>
+				<th>цена за э/м, руб. / кВт х мес.</th>
+				<th>итого расходов ВН, тыс. руб.</th>
+				<th>объем э/э, тыс. кВт.ч</th>
+				<th>цена за э/э, руб. / кВт.ч</th>
+				<th>объем э/м, МВт</th>
+				<th>цена за э/м, руб. / кВт х мес.</th>
+				<th>итого расходов с коллекторов, тыс. руб.</th>
+				<th>объем т/э, тыс. Гкал</th>
+				<th>тариф (цена), руб. / Гкал</th>
+				<th>итого расходов с коллекторов, тыс. руб.</th>
+				<th>объем т/э, тыс. Гкал</th>
+				<th>тариф (цена), руб. / Гкал</th>
+				<th>итого расходов на оплату услуг по передаче тепловой энергии, тыс. руб.</th>
+				<th>объем транспорта т/э, тыс. Гкал</th>
+				<th>тариф (цена), руб. / Гкал</th>
+				<th>расходы на оплату работ и услуг производственного характера</th>
+				<th>оплата иных работ и услуг</th>
+				<th>расходы на ремонт основных средств, выполняемый подрядным способом</th>
+
+				<th>расчетный</th>
+				<th>нормативный (плановый)</th>
+				<th>итого расходов НН, тыс. руб.</th>
+				<th>объем э/э, тыс. кВт.ч</th>
+				<th>цена за э/э, руб. / кВт.ч</th>
+				<th>объем э/м, МВт</th>
+				<th>цена за э/м, руб. / кВт х мес.</th>
+				<th>итого расходов НН, тыс. руб.</th>
+				<th>объем э/э, тыс. кВт.ч</th>
+				<th>цена за э/э, руб. / кВт.ч</th>
+				<th>объем э/м, МВт</th>
+				<th>цена за э/м, руб. / кВт х мес.</th>
+				<th>итого расходов НН, тыс. руб.</th>
+				<th>объем э/э, тыс. кВт.ч</th>
+				<th>цена за э/э, руб. / кВт.ч</th>
+				<th>объем э/м, МВт</th>
+				<th>цена за э/м, руб. / кВт х мес.</th>
+				<th>итого расходов НН, тыс. руб.</th>
+				<th>объем э/э, тыс. кВт.ч</th>
+				<th>цена за э/э, руб. / кВт.ч</th>
+				<th>объем э/м, МВт</th>
+				<th>цена за э/м, руб. / кВт х мес.</th>
+				<th>итого расходов с коллекторов, тыс. руб.</th>
+				<th>объем т/э, тыс. Гкал</th>
+				<th>тариф (цена), руб. / Гкал</th>
+				<th>итого расходов с коллекторов, тыс. руб.</th>
+				<th>объем т/э, тыс. Гкал</th>
+				<th>тариф (цена), руб. / Гкал</th>
+				<th>итого расходов на оплату услуг по передаче тепловой энергии, тыс. руб.</th>
+				<th>объем транспорта т/э, тыс. Гкал</th>
+				<th>тариф (цена), руб. / Гкал</th>
+				<th>расходы на оплату работ и услуг производственного характера</th>
+				<th>оплата иных работ и услуг</th>
+				<th>расходы на ремонт основных средств, выполняемый подрядным способом</th>
+			</tr>
+			<tr class="filter-row ">
+				@for (int i = 0; i < @cnt_columns; i++)
+				{
+					if (i == 0)
+					{
+						<th class="dtfc-fixed-left" style="left:0; position:sticky;"><input type="text" class="filter-col-0" /></th>
+					}
+					else
+					{
+						<th><input type="text" class="filter-col-@i" /></th>
+					}
+				}
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var tz_list in Model)
+			{
+				<tr ondblclick="OpenPopupCostsPrices(@tz_list.tz_id, @tz_list.perspective_year, '/TSO/CostsAndPrices/OpenCostsPrices', 'TZCostsPricesDataPopup');">
+					<td>@tz_list.unom_tz</td>
+					<td>@tz_list.territory</td>
+					<td>@tz_list.code_tso</td>
+					<td>@tz_list.short_name</td>
+					<td>@tz_list.activity_types</td>
+					<td>@tz_list.costs_all_fact</td>
+					<td>@tz_list.costs_all_plan</td>
+					<td>@tz_list.costs_all_energy_resources_fact</td>
+					<td>@tz_list.price_all_fuel_fact</td>
+					<td>@tz_list.volume_all_fuel_fact</td>
+					<td>@tz_list.avg_price_all_fuel_fact</td>
+					<td>@tz_list.fuels_fact</td>
+					<td>@tz_list.spec_consump_fuel_calc_fact</td>
+					<td>@tz_list.norm_consump_fuel_plan</td>
+					<td>@tz_list.costs_all_elenergy_fact</td>
+					<td>@tz_list.costs_low_voltage_fact</td>
+					<td>@tz_list.volume_low_voltage_electricity_fact</td>
+					<td>@tz_list.price_low_voltage_electricity_fact</td>
+					<td>@tz_list.volume_low_voltage_el_power_fact</td>
+					<td>@tz_list.price_low_voltage_el_power_fact</td>
+					<td>@tz_list.costs_medium1_voltage_fact</td>
+					<td>@tz_list.volume_medium1_voltage_electricity_fact</td>
+					<td>@tz_list.price_medium1_voltage_electricity_fact</td>
+					<td>@tz_list.volume_medium1_voltage_el_power_fact</td>
+					<td>@tz_list.price_medium1_voltage_el_power_fact</td>
+					<td>@tz_list.costs_medium2_voltage_fact</td>
+					<td>@tz_list.volume_medium2_voltage_electricity_fact</td>
+					<td>@tz_list.price_medium2_voltage_electricity_fact</td>
+					<td>@tz_list.volume_medium2_voltage_el_power_fact</td>
+					<td>@tz_list.price_medium2_voltage_el_power_fact</td>
+					<td>@tz_list.costs_high_voltage_fact</td>
+					<td>@tz_list.volume_high_voltage_electricity_fact</td>
+					<td>@tz_list.price_high_voltage_electricity_fact</td>
+					<td>@tz_list.volume_high_voltage_el_power_fact</td>
+					<td>@tz_list.price_high_voltage_el_power_fact</td>
+					<td>@tz_list.costs_heat_energy_all_fact</td>
+					<td>@tz_list.costs_buy_he_collect_fact</td>
+					<td>@tz_list.volume_buy_he_collect_fact</td>
+					<td>@tz_list.price_buy_he_collect_fact</td>
+					<td>@tz_list.costs_buy_he_network_fact</td>
+					<td>@tz_list.volume_buy_he_network_fact</td>
+					<td>@tz_list.price_buy_he_network_fact</td>
+					<td>@tz_list.costs_heattrans_service_fact</td>
+					<td>@tz_list.tso_transfer_volume_fact</td>
+					<td>@tz_list.price_heattrans_fact</td>
+					<td>@tz_list.costs_cold_water_fact</td>
+					<td>@tz_list.volume_cold_water_fact</td>
+					<td>@tz_list.price_cold_water_fact</td>
+					<td>@tz_list.costs_water_dispos_fact</td>
+					<td>@tz_list.volume_water_dispos_fact</td>
+					<td>@tz_list.price_water_dispos_fact</td>
+					<td>@tz_list.costs_heatcarrier_fact</td>
+					<td>@tz_list.volume_heatcarrier_fact</td>
+					<td>@tz_list.price_heatcarrier_fact</td>
+					<td>@tz_list.costs_fuel_reserve_fact</td>
+					<td>@tz_list.costs_all_operating_fact</td>
+					<td>@tz_list.costs_all_salary_fact</td>
+					<td>@tz_list.avg_count_workers_fact</td>
+					<td>@tz_list.avg_salary_fact</td>
+					<td>@tz_list.cost_materials_all_fact</td>
+					<td>@tz_list.cost_org_service_all_fact</td>
+					<td>@tz_list.costs_other_org_product_fact</td>
+					<td>@tz_list.cost_org_other_service_fact</td>
+					<td>@tz_list.cost_repair_fact</td>
+					<td>@tz_list.cost_decomission_fact</td>
+					<td>@tz_list.costs_other_operatings_fact</td>
+					<td>@tz_list.costs_all_uncontroll_fact</td>
+					<td>@tz_list.procent_social_deduction_fact</td>
+					<td>@tz_list.cost_social_deduction_fact</td>
+					<td>@tz_list.costs_amortization_fact</td>
+					<td>@tz_list.cost_req_pay_all_fact</td>
+					<td>@tz_list.cost_reg_org_service_fact</td>
+					<td>@tz_list.cost_income_tax_fact</td>
+					<td>@tz_list.cost_uncontrol_other_all_fact</td>
+					<td>@tz_list.procent_costs_all_elenergy_fact</td>
+					<td>@tz_list.procent_costs_all_operating_fact</td>
+					<td>@tz_list.procent_costs_all_uncontroll_fact</td>
+
+					<td>@tz_list.costs_all_energy_resources_plan</td>
+					<td>@tz_list.price_all_fuel_plan</td>
+					<td>@tz_list.volume_all_fuel_plan</td>
+					<td>@tz_list.avg_price_all_fuel_plan</td>
+					<td>@tz_list.fuels_plan</td>
+					<td>@tz_list.spec_consump_fuel_calc_plan</td>
+					<td>@tz_list.norm_consump_fuel_plan</td>
+					<td>@tz_list.costs_all_elenergy_plan</td>
+					<td>@tz_list.costs_low_voltage_plan</td>
+					<td>@tz_list.volume_low_voltage_electricity_plan</td>
+					<td>@tz_list.price_low_voltage_electricity_plan</td>
+					<td>@tz_list.volume_low_voltage_el_power_plan</td>
+					<td>@tz_list.price_low_voltage_el_power_plan</td>
+					<td>@tz_list.costs_medium1_voltage_plan</td>
+					<td>@tz_list.volume_medium1_voltage_electricity_plan</td>
+					<td>@tz_list.price_medium1_voltage_electricity_plan</td>
+					<td>@tz_list.volume_medium1_voltage_el_power_plan</td>
+					<td>@tz_list.price_medium1_voltage_el_power_plan</td>
+					<td>@tz_list.costs_medium2_voltage_plan</td>
+					<td>@tz_list.volume_medium2_voltage_electricity_plan</td>
+					<td>@tz_list.price_medium2_voltage_electricity_plan</td>
+					<td>@tz_list.volume_medium2_voltage_el_power_plan</td>
+					<td>@tz_list.price_medium2_voltage_el_power_plan</td>
+					<td>@tz_list.costs_high_voltage_plan</td>
+					<td>@tz_list.volume_high_voltage_electricity_plan</td>
+					<td>@tz_list.price_high_voltage_electricity_plan</td>
+					<td>@tz_list.volume_high_voltage_el_power_plan</td>
+					<td>@tz_list.price_high_voltage_el_power_plan</td>
+					<td>@tz_list.costs_heat_energy_all_plan</td>
+					<td>@tz_list.costs_buy_he_collect_plan</td>
+					<td>@tz_list.volume_buy_he_collect_plan</td>
+					<td>@tz_list.price_buy_he_collect_plan</td>
+					<td>@tz_list.costs_buy_he_network_plan</td>
+					<td>@tz_list.volume_buy_he_network_plan</td>
+					<td>@tz_list.price_buy_he_network_plan</td>
+					<td>@tz_list.costs_heattrans_service_plan</td>
+					<td>@tz_list.tso_transfer_volume_plan</td>
+					<td>@tz_list.price_heattrans_plan</td>
+					<td>@tz_list.costs_cold_water_plan</td>
+					<td>@tz_list.volume_cold_water_plan</td>
+					<td>@tz_list.price_cold_water_plan</td>
+					<td>@tz_list.costs_water_dispos_plan</td>
+					<td>@tz_list.volume_water_dispos_plan</td>
+					<td>@tz_list.price_water_dispos_plan</td>
+					<td>@tz_list.costs_heatcarrier_plan</td>
+					<td>@tz_list.volume_heatcarrier_plan</td>
+					<td>@tz_list.price_heatcarrier_plan</td>
+					<td>@tz_list.costs_fuel_reserve_plan</td>
+					<td>@tz_list.costs_all_operating_plan</td>
+					<td>@tz_list.costs_all_salary_plan</td>
+					<td>@tz_list.avg_count_workers_plan</td>
+					<td>@tz_list.avg_salary_plan</td>
+					<td>@tz_list.cost_materials_all_plan</td>
+					<td>@tz_list.cost_org_service_all_plan</td>
+					<td>@tz_list.costs_other_org_product_plan</td>
+					<td>@tz_list.cost_org_other_service_plan</td>
+					<td>@tz_list.cost_repair_plan</td>
+					<td>@tz_list.cost_decomission_plan</td>
+					<td>@tz_list.costs_other_operatings_plan</td>
+					<td>@tz_list.costs_all_uncontroll_plan</td>
+					<td>@tz_list.procent_social_deduction_plan</td>
+					<td>@tz_list.cost_social_deduction_plan</td>
+					<td>@tz_list.costs_amortization_plan</td>
+					<td>@tz_list.cost_req_pay_all_plan</td>
+					<td>@tz_list.cost_reg_org_service_plan</td>
+					<td>@tz_list.cost_income_tax_plan</td>
+					<td>@tz_list.cost_uncontrol_other_all_plan</td>
+					<td>@tz_list.procent_costs_all_elenergy_plan</td>
+					<td>@tz_list.procent_costs_all_operating_plan</td>
+					<td>@tz_list.procent_costs_all_uncontroll_plan</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>
+<div class="data-row table-summary">
+	<div class="data-item rows-count">
+		<h5>Всего записей:</h5>
+		<p><span class="mark-color" id="all_cnt_rows"></span></p>
+	</div>
+	<div class="data-block">
+		<h5>Условно переменные затраты:</h5>
+		<div class="data-table-block">
+			<p class="data-item">план - <span class="mark-color" id="change_costs_plan"></span><span class="data-unit"> тыс.руб.; </span><span class="mark-color">4</span><span class="data-unit"> руб./(Гкал/ч)</span></p>
+			<p class="data-item">факт - <span class="mark-color" id="change_costs_fact"></span><span class="data-unit"> тыс.руб.; </span><span class="mark-color">4</span><span class="data-unit"> руб./(Гкал/ч)</span></p>
+		</div>
+	</div>
+	<div class="data-block">
+		<h5>Условно постоянные затраты:</h5>
+		<div class="data-table-block">
+			<p class="data-item">план - <span class="mark-color" id="permanent_costs_plan"></span><span class="data-unit"> тыс.руб.; </span><span class="mark-color">4</span><span class="data-unit"> руб./(Гкал/ч)</span></p>
+			<p class="data-item">факт - <span class="mark-color" id="permanent_costs_fact"></span><span class="data-unit"> тыс.руб.; </span><span class="mark-color">4</span><span class="data-unit"> руб./(Гкал/ч)</span></p>
+		</div>
+	</div>
+</div>
+<script type="text/javascript" src="@Url.Content("~/hss/js/datatables_common_scripts.js")"></script>

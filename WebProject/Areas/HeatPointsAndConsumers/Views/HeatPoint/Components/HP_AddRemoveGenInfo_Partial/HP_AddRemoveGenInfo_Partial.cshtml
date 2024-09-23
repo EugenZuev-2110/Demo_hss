@@ -1,0 +1,282 @@
+﻿@model WebProject.Areas.HeatPointsAndConsumers.Models.HPAddRemoveGenInfoDataViewModel
+
+@{
+    Layout = null; string is_checked = string.Empty;
+}
+
+<form asp-controller="HeatPoint" asp-action="HpAddRemove_GenInfoData_Save" asp-antiforgery="true" asp-area="HeatPointsAndConsumers" id="hp_gen_info_form" class="needs-validation" novalidate
+      data-ajax-failure="onFailedFormTZ" data-ajax-success="onSuccessFormHPGenInfo" data-ajax-begin="onBeginFormTZ" data-ajax="true" data-ajax-method="POST">
+    <input hidden asp-for="@Model.hp_id">
+    <input hidden asp-for="@Model.data_status">
+    <input hidden name="is_deleted" id="is_deleted_hp_gen_info" value="@Model.is_deleted">
+    <div class="data-block">
+        <div class="data-row">
+            <div class="col-12 col-lg-6">
+                <div class="data-block me-lg-3">
+                    <div class="data-item">
+                        <label class="data-label xl-fix">Обозначение на схеме</label>
+                        <input type="text" class="data-value stretch" name="add_remove_gen_info_hp_name" value="@Model.add_remove_gen_info_hp_name" placeholder="Введите номер или обозначение">
+                    </div>
+                    <div class="data-item">
+                        <label class="data-label xl-fix">Номер теплопункта</label>
+                        <input type="text" class="data-value stretch" id="add_remove_gen_info_tso_hp_num_id" name="add_remove_gen_info_tso_hp_num" value="@Model.add_remove_gen_info_tso_hp_num" placeholder="Введите номер теплопункта">
+                    </div>
+                    <div class="data-item">
+                        <label class="data-label xl-fix">Адрес</label>
+                        <input type="text" class="data-value stretch" name="add_remove_gen_info_hp_address" value="@Model.add_remove_gen_info_hp_address" placeholder="Введите адрес" required>
+                        <a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Это поле должно быть заполнено"></a>
+                    </div>
+                    <div class="data-row">
+                        <div class="data-item stretch">
+                            <label class="data-label xl-fix">Размещение ТП</label>
+                            <select class="selectpicker data-value stretch" id="add_remove_gen_info_hp_location_id" name="add_remove_gen_info_hp_location_id"
+                                    data-live-search="true" placeholder="Выберите размещение ТП">
+                                @foreach (var tz_list in ViewBag.HpLocations)
+                                {
+                                    if (tz_list.value_id == Model.add_remove_gen_info_hp_location_id)
+                                    {
+                                        <option value="@tz_list.value_id" selected>@tz_list.value_name</option>
+                                    }
+                                    if (tz_list.value_id != Model.add_remove_gen_info_hp_location_id)
+                                    {
+                                        <option value="@tz_list.value_id">@tz_list.value_name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="data-item fix-80">
+                            <label class="data-label xl-fix">Тип ТП</label>
+                            <select class="selectpicker data-value stretch" id="add_remove_gen_info_hp_type_id" name="add_remove_gen_info_hp_type_id"
+                                    data-live-search="true" placeholder="Выберите тип ТП">
+                                @foreach (var tz_list in ViewBag.HpTypeLocations)
+                                {
+                                    if (tz_list.value_id == Model.add_remove_gen_info_hp_type_id)
+                                    {
+                                        <option value="@tz_list.value_id" selected>@tz_list.value_name</option>
+                                    }
+                                    if (tz_list.value_id != Model.add_remove_gen_info_hp_type_id)
+                                    {
+                                        <option value="@tz_list.value_id">@tz_list.value_name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="data-item">
+                        <label class="data-label xl-fix">Организация собственник и ИНН организации</label>
+                        <select class="selectpicker data-value stretch" name="add_remove_gen_info_hp_org_owner_id" id="add_remove_gen_info_hp_org_owner_id"
+                                data-live-search="true" placeholder="Введите название организации или ИНН">
+                            @foreach (var tz_list in ViewBag.OrgOwnerInn)
+                            {
+                                if (tz_list.value_id == Model.add_remove_gen_info_hp_org_owner_id)
+                                {
+                                    <option value="@tz_list.value_id" selected>@tz_list.value_name</option>
+                                }
+                                if (tz_list.value_id != Model.add_remove_gen_info_hp_org_owner_id)
+                                {
+                                    <option value="@tz_list.value_id">@tz_list.value_name</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="data-row">
+                        <div class="data-item">
+                            <label class="data-label xl-fix">Бесхозяйный тепловой пункт</label>
+                            @if (Model.add_remove_gen_info_is_ownerless_hp_id)
+                            {
+                                is_checked = "checked";
+                                <input type="checkbox" class="data-value data-check" name="add_remove_gen_info_is_ownerless_hp_id" value="@(Model.add_remove_gen_info_is_ownerless_hp_id == true ? "true" : "false")" @is_checked onchange="CB_Change(this)">
+                            }
+                            else
+                            {
+                                <input type="checkbox" class="data-value data-check" name="add_remove_gen_info_is_ownerless_hp_id" value="false" onchange="CB_Change(this)">
+                            }
+                        </div>
+                        <div class="data-item">
+                            <label class="data-label xl-fix">Ветхий тепловой пункт</label>
+                            @if (Model.add_remove_gen_info_is_dilapidated_hp)
+                            {
+                                is_checked = "checked";
+                                <input type="checkbox" class="data-value data-check" name="add_remove_gen_info_is_dilapidated_hp" value="@(Model.add_remove_gen_info_is_dilapidated_hp == true ? "true" : "false")" @is_checked onchange="CB_Change(this)">
+                            }
+                            else
+                            {
+                                <input type="checkbox" class="data-value data-check" name="add_remove_gen_info_is_dilapidated_hp" value="false" onchange="CB_Change(this)">
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-lg-6">
+                <div class="data-block ms-lg-3">
+                    <div class="data-item">
+                        <label class="data-label xl-fix">Район (поселение)</label>
+                        <select class="selectpicker data-value stretch" name="add_remove_gen_info_district_hp_id" id="add_remove_gen_info_district_hp_id"
+                                value="@Model.add_remove_gen_info_district_hp_id" data-live-search="true" placeholder="Выберите район или поселение" required>
+                            @foreach (var tz_list in ViewBag.HpDistricts)
+                            {
+                                if (tz_list.value_id == Model.add_remove_gen_info_district_hp_id)
+                                {
+                                    <option value="@tz_list.value_id" selected>@tz_list.value_name</option>
+                                }
+                                if (tz_list.value_id != Model.add_remove_gen_info_district_hp_id)
+                                {
+                                    <option value="@tz_list.value_id">@tz_list.value_name</option>
+                                }
+                            }
+                        </select>
+                        <a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Выберите значение из списка"></a>
+                    </div>
+                    <div class="data-item">
+                        <label class="data-label xl-fix">Кадастровый номер ЗУ</label>
+                        <input type="text" class="data-value stretch" name="add_remove_gen_info_kad_num_zu" value="@Model.add_remove_gen_info_kad_num_zu" placeholder="Введите кадастровый номер ЗУ">
+                    </div>
+                    <div class="data-item">
+                        <label class="data-label xl-fix">Кадастровый номер ОКС</label>
+                        <input type="text" class="data-value stretch" name="add_remove_gen_info_kad_num_oks" value="@Model.add_remove_gen_info_kad_num_oks" placeholder="Введите кадастровый номер ОКС">
+                    </div>
+                    <div class="data-item">
+                        <label class="data-label xl-fix">ФИАС ЗУ</label>
+                        <input type="text" class="data-value stretch" name="add_remove_gen_info_fias_zu" value="@Model.add_remove_gen_info_fias_zu" placeholder="Введите номер ФИАС ЗУ">
+                    </div>
+                    <div class="data-item">
+                        <label class="data-label xl-fix">ФИАС ОКС</label>
+                        <input type="text" class="data-value stretch" name="add_remove_gen_info_fias_oks" value="@Model.add_remove_gen_info_fias_oks" placeholder="Введите номер ФИАС ОКС">
+                    </div>
+                    <div class="data-item">
+                        <label class="data-label xl-fix">Тарифная зона</label>
+                        <select class="selectpicker data-value stretch" name="add_remove_gen_info_tz_id" id="add_remove_gen_info_tz_id"
+                                data-live-search="true" placeholder="Выберите ТЗ">
+                            @foreach (var tz_list in ViewBag.TariffZones)
+                            {
+                                if (tz_list.tz_id == Model.add_remove_gen_info_tz_id)
+                                {
+                                    <option value="@tz_list.tz_id" selected>@tz_list.tz_name</option>
+                                }
+                                if (tz_list.tz_id != Model.add_remove_gen_info_tz_id)
+                                {
+                                    <option value="@tz_list.tz_id">@tz_list.tz_name</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="data-row">
+            <div class="data-item stretch">
+                <label class="data-label xl-fix">Год ввода в эксплуатацию</label>
+                <input type="number" class="data-value md-stretch" name="add_remove_gen_info_start_year_expl" value="@Model.add_remove_gen_info_start_year_expl" placeholder="Введите дату">
+            </div>
+            <div class="data-item stretch">
+                <label class="data-label xl-fix">Год проведения реконструкции</label>
+                <input type="number" class="data-value md-stretch" name="add_remove_gen_info_last_year_reconstr" value="@Model.add_remove_gen_info_last_year_reconstr" placeholder="Введите дату">
+            </div>
+            <div class="data-item stretch">
+                <label class="data-label xl-fix">Год ликвидации/сноса</label>
+                <input type="number" class="data-value md-stretch" name="add_remove_gen_info_liqiudate_year" value="@Model.add_remove_gen_info_liqiudate_year" placeholder="Введите дату">
+            </div>
+        </div>
+        <div class="data-row">
+            <button type="submit" class="bttn bttn-color ms-auto" id="hp_gen_info_save_btn">Сохранить</button>
+        </div>
+    </div>
+</form>
+
+<script type="text/javascript" src="@Url.Content("~/hss/js/popup_common_scripts.js")"></script>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        let par_elem = document.getElementById("add_remove_gen_info_hp_org_owner_id").parentElement;
+        par_elem.querySelector("input.form-control[type=search]").addEventListener('keyup', (event) => {
+            GetOrgOwnerInnListByChars(event.target.value, $('#data_status').val());
+        });
+    });
+
+    function GetOrgOwnerInnListByChars(input_chars, data_status) {
+        $.ajax({
+            url: '@Html.Raw(Url.Action("GetOrgOwnerInnListByChars", "HSS", new { Area = ""}))',
+            type: 'POST',
+            data: { chars: input_chars, data_status: data_status }
+        }).done(function (data) {
+            changeSelectByOtherSelectOrgOwnerInnList(data.list, "add_remove_gen_info_hp_org_owner_id", input_chars);
+        });
+    }
+
+    function changeSelectByOtherSelectOrgOwnerInnList(newSelect, select_id, input_chars) {
+        var select = $('#' + select_id);
+        $(select).find('option').remove();
+        if (newSelect.length !== 0) {
+            for (var i = 0; i < newSelect.length; i++) {
+                $(select).append('<option value=' + newSelect[i].value_id + '>' + newSelect[i].value_name + '</option>');
+            }
+        } else {
+            $(select).append('<option value="">' + "Нет записей" + '</option>');
+        }
+        $(select).selectpicker('destroy');
+        $(select).selectpicker();
+        $(select).selectpicker('open');
+        let par_elem = document.getElementById("add_remove_gen_info_hp_org_owner_id").parentElement;
+        par_elem.querySelector("input.form-control[type=search]").value = input_chars;
+        par_elem.querySelector("input.form-control[type=search]").addEventListener('keyup', (event) => {
+            GetOrgOwnerInnListByChars(event.target.value, $('#data_status').val());
+        });
+    }
+
+    var onSuccessFormHPGenInfo = function (xhr) {
+        hidePreloader();
+
+        if (xhr.success && xhr.is_deleted == true && xhr._is_new_hp != true) {
+            showMessage('Данные удалены.', 'modal', 'success');
+            document.getElementById("open_hp_add_remove_del_but").disabled = true;
+            document.getElementById("year_impl_save_btn").disabled = true;
+            document.getElementById("hp_gen_info_save_btn").disabled = true;
+            document.getElementById("hp_automatiz_save_btn").disabled = true;
+            document.getElementById("hp_equip_partial_save_btn").disabled = true;
+
+            var arr_1 = document.getElementsByClassName("hp_equip_acc_res_save_btn");
+            var arr_2 = document.getElementsByClassName("hp_equip_acc_res_delete_btn");
+            for (var i = 0; i < arr_1.length; i++) {
+                arr_1[i].disabled = true;
+                arr_2[i].disabled = true;
+            }
+
+            var arr_3 = document.getElementsByClassName("hp_equip_pump_save_btn");
+            var arr_4 = document.getElementsByClassName("hp_equip_pump_delete_btn");
+            for (var i = 0; i < arr_3.length; i++) {
+                arr_3[i].disabled = true;
+                arr_4[i].disabled = true;
+            }
+
+            var arr_5 = document.getElementsByClassName("hp_equip_he_save_btn");
+            var arr_6 = document.getElementsByClassName("hp_equip_he_delete_btn");
+            for (var i = 0; i < arr_5.length; i++) {
+                arr_5[i].disabled = true;
+                arr_6[i].disabled = true;
+            }
+
+            var arr_7 = document.getElementsByClassName("hp_docs_phootage_save_btn");
+            var arr_8 = document.getElementsByClassName("hp_docs_phootage_delete_btn");
+            for (var i = 0; i < arr_7.length; i++) {
+                arr_7[i].disabled = true;
+                arr_8[i].disabled = true;
+            }
+
+            document.getElementById("hp_num_sign_save_btn").disabled = true;
+        }
+        else if (xhr.success && xhr.is_deleted != true && xhr._is_new_hp != true) {
+            showMessage('Данные сохранены.', 'modal', 'success');
+            $("select[id=unomTpAddressList] option[value=" + $('#hp_id').val() + "]").text(xhr.address);
+            RefreshSelectById('unomTpAddressList');
+        }
+        else if (xhr.success && xhr._is_new_hp == true) {
+            showMessage('Данные добавлены.', 'modal', 'success');
+            OpenPopupHeatPointAddRemove(xhr.heat_point_id);
+        }
+        else {
+            showMessage(xhr.error, 'modal', 'fault');
+        }
+        $("#refresh_table").val(1);
+    };
+
+</script>

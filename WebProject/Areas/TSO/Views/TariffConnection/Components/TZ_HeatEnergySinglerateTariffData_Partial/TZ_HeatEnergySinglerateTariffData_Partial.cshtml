@@ -1,0 +1,61 @@
+﻿@model WebProject.Areas.TSO.Models.SingleStageTariffUnit
+@{
+	Layout = null; string disable = "";
+}
+@if (Model.tz_id == 0)
+{
+	disable = "disabled";
+}
+<form asp-controller="TariffConnection" asp-action="TZSingleStageTariff_Save" asp-antiforgery="true" asp-area="TSO" id="tz_other_org_costs_form"
+	  data-ajax-failure="onFailedFormTZ" data-ajax-success="onSuccessFormTZ" data-ajax-begin="onBeginFormTZ" data-ajax="true" data-ajax-method="POST">
+	<input type="hidden" name="tz_id" value="@Model.tz_id" />
+	<input type="hidden" name="data_status" value="@Model.data_status" />
+	<input type="hidden" name="perspective_year" value="@Model.perspective_year" />
+
+	<input hidden asp-for="@Model.useful_release_tso_salers_plan_per_1" data-type="tso">
+	<input hidden asp-for="@Model.useful_release_buget_cons_plan_per_1" data-type="budgetcons">
+	<input hidden asp-for="@Model.useful_release_public_plan_per_1" data-type="public">
+	<input hidden asp-for="@Model.useful_release_other_cons_plan_per_1" data-type="other">
+	<input hidden asp-for="@Model.useful_release_tso_salers_plan_per_2" data-type="tso">
+	<input hidden asp-for="@Model.useful_release_buget_cons_plan_per_2" data-type="budgetcons">
+	<input hidden asp-for="@Model.useful_release_public_plan_per_2" data-type="public">
+	<input hidden asp-for="@Model.useful_release_other_cons_plan_per_2" data-type="other">
+
+	<table class="table-inp-stretch" style="width:100%;">
+		<thead>
+			<tr>
+				<th></th>
+				<th>I полугодие</th>
+				<th>II полугодие</th>
+				<th>Год</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>ТСО-перепродавцы, <span class="data-unit">руб./Гкал без НДС</span></td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.tariff_tso_per_1" class="data-value double" data-type="tso" data-double="he_hw_singlerate_tariff"></div></td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.tariff_tso_per_2" class="data-value double" data-type="tso" data-double="he_hw_singlerate_tariff"></div></td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.tariff_tso_per_3" class="data-value" data-type="tso" disabled></div></td>
+			</tr>
+			<tr>
+				<td>бюджетные потребители, <span class="data-unit">руб./Гкал без НДС</span></td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.tariff_budgetcons_per_1" class="data-value double" data-type="budgetcons" data-double="he_hw_singlerate_tariff"></div></td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.tariff_budgetcons_per_2" class="data-value double" data-type="budgetcons" data-double="he_hw_singlerate_tariff"></div></td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.tariff_budgetcons_per_3" class="data-value" data-type="budgetcons" disabled></div></td>
+			</tr>
+			<tr>
+				<td>население, <span class="data-unit">руб./Гкал без НДС</span></td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.tariff_public_per_1" class="data-value double" data-type="public" data-double="he_hw_singlerate_tariff"></div></td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.tariff_public_per_2" class="data-value double" data-type="public" data-double="he_hw_singlerate_tariff"></div></td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.tariff_public_per_3" class="data-value" data-type="public" disabled></div></td>
+			</tr>
+			<tr>
+				<td>прочие, <span class="data-unit">руб./Гкал без НДС</span></td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.tariff_other_per_1" class="data-value double" data-type="other" data-double="he_hw_singlerate_tariff"></div></td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.tariff_other_per_2" class="data-value double" data-type="other" data-double="he_hw_singlerate_tariff"></div></td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.tariff_other_per_3" class="data-value" data-type="other" disabled></div></td>
+			</tr>
+		</tbody>
+	</table>
+	<button type="submit" class="bttn bttn-color ms-auto">Сохранить</button>
+</form>

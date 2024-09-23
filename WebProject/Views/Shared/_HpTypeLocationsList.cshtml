@@ -1,0 +1,33 @@
+﻿<label class="data-label">Тип ТП:</label>
+<select class="selectpicker data-value lg-stretch" data-live-search="true" id="hp_type_locations" name="hp_type_locations" placeholder="Выберите тип ТП">
+</select>
+
+<script type="text/javascript">
+
+    GetHpTypeLocationsList(0);
+
+    function GetHpTypeLocationsList(is_change_ds) {
+        $.ajax({
+            url: '@Html.Raw(Url.Action("GetHpTypeLocations", "HSS", new { Area = "" }))',
+            type: 'POST'
+        }).done(function (data) {
+            changeSelectHpTypeLocations(data.list, is_change_ds);
+        });
+    }
+
+    function changeSelectHpTypeLocations(newSelect, is_change_ds) {
+        var select = $('#hp_type_locations');
+        $(select).find('option').remove();
+        if (newSelect.length !== 0) {
+            $(select).append('<option selected value=' + newSelect[0].value_id + '>' + newSelect[0].value_name + '</option>');
+            for (var i = 1; i < newSelect.length; i++) {
+                $(select).append('<option value=' + newSelect[i].value_id + '>' + newSelect[i].value_name + '</option>');
+            }
+        } else {
+            $(select).append('<option value="">' + "Пусто" + '</option>');
+        }
+        $(select).selectpicker('destroy');
+        $(select).selectpicker();
+    }
+
+</script>

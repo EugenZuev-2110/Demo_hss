@@ -1,0 +1,123 @@
+﻿@model WebProject.Areas.TSO.Models.TZExpenses_IPHS_CA_ViewModel
+@{
+	Layout = null; string disable = "";
+}
+@if (Model.tz_id == 0)
+{
+	disable = "disabled";
+}
+<form asp-controller="CostsAndPrices" asp-action="TZExpenses_IPHS_CA_Save" asp-antiforgery="true" asp-area="TSO"
+	  data-ajax-failure="onFailedFormTZ" data-ajax-success="onSuccessFormTZ" data-ajax-begin="onBeginFormTZ" data-ajax="true" data-ajax-method="POST">
+	<input type="hidden" name="tz_id" value="@Model.tz_id" />
+	<input type="hidden" name="data_status" value="@Model.data_status" />
+	<input type="hidden" name="finance_type_id" value="1" />
+	<table class="table-inp-stretch" style="width:100%;">
+		<thead>
+			<tr>
+				<th></th>
+				<th>I полугодие</th>
+				<th>II полугодие</th>
+				<th>Год</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>Фактические расходы, всего, <span class="data-unit">тыс. руб.</span></td>
+				<td><input type="text" value="@Model.expenses_all_fact_1" id="expenses_all_iphc_fact_1" class="data-value" disabled></td>
+				<td><input type="text" value="@Model.expenses_all_fact_2" id="expenses_all_iphc_fact_2" class="data-value" disabled></td>
+				<td><input type="text" value="@Model.expenses_all_fact_3" id="expenses_all_iphc_fact_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>1. Прибыль (расходы на капитальные вложения (инвестиции) - собственные средства, <span class="data-unit">тыс. руб.</span></td>
+				<td><input type="text" asp-for="@Model.profit_own_funds_fact_1" id="profit_own_funds_iphc_fact_1" class="data-value double" data-double="iphc"></td>
+				<td><input type="text" asp-for="@Model.profit_own_funds_fact_2" id="profit_own_funds_iphc_fact_2" class="data-value double" data-double="iphc"></td>
+				<td><input type="text" asp-for="@Model.profit_own_funds_fact_3" id="profit_own_funds_iphc_fact_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>2. Амортизационные отчисления, <span class="data-unit">тыс. руб.</span></td>
+				<td><input type="text" value="@Model.amortization_all_fact_1" id="amortization_all_iphc_fact_1" class="data-value" disabled></td>
+				<td><input type="text" value="@Model.amortization_all_fact_2" id="amortization_all_iphc_fact_2" class="data-value" disabled></td>
+				<td><input type="text" value="@Model.amortization_all_fact_3" id="amortization_all_iphc_fact_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- амортизация на финансирование капитальных вложений</td>
+				<td><input type="text" asp-for="@Model.amortization_finance_invest_fact_1" id="amortization_finance_invest_iphc_fact_1" class="data-value double" data-double="iphc"></td>
+				<td><input type="text" asp-for="@Model.amortization_finance_invest_fact_2" id="amortization_finance_invest_iphc_fact_2" class="data-value double" data-double="iphc"></td>
+				<td><input type="text" asp-for="@Model.amortization_finance_invest_fact_3" id="amortization_finance_invest_iphc_fact_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- амортизационные отчисления, направленные на погашение и обслуживание кредитов и заёмных средств</td>
+				<td><input type="text" asp-for="@Model.amortization_deduction_on_credit_fact_1" id="amortization_deduction_on_credit_iphc_fact_1" class="data-value double" data-double="iphc"></td>
+				<td><input type="text" asp-for="@Model.amortization_deduction_on_credit_fact_2" id="amortization_deduction_on_credit_iphc_fact_2" class="data-value double" data-double="iphc"></td>
+				<td><input type="text" asp-for="@Model.amortization_deduction_on_credit_fact_3" id="amortization_deduction_on_credit_iphc_fact_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>3. Бюджетные средства, <span class="data-unit">тыс. руб.</span></td>
+				<td><input type="text" value="@Model.budget_all_fact_1" id="budget_all_iphc_fact_1" class="data-value" disabled></td>
+				<td><input type="text" value="@Model.budget_all_fact_2" id="budget_all_iphc_fact_2" class="data-value" disabled></td>
+				<td><input type="text" value="@Model.budget_all_fact_3" id="budget_all_iphc_fact_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- федеральный бюджет</td>
+				<td><input type="text" asp-for="@Model.federal_budget_fact_1" id="federal_budget_iphc_fact_1" class="data-value double" data-double="iphc"></td>
+				<td><input type="text" asp-for="@Model.federal_budget_fact_2" id="federal_budget_iphc_fact_2" class="data-value double" data-double="iphc"></td>
+				<td><input type="text" asp-for="@Model.federal_budget_fact_3" id="federal_budget_iphc_fact_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- региональный бюджет</td>
+				<td><input type="text" asp-for="@Model.regional_budget_fact_1" id="regional_budget_iphc_fact_1" class="data-value double" data-double="iphc"></td>
+				<td><input type="text" asp-for="@Model.regional_budget_fact_2" id="regional_budget_iphc_fact_2" class="data-value double" data-double="iphc"></td>
+				<td><input type="text" asp-for="@Model.regional_budget_fact_3" id="regional_budget_iphc_fact_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- местный бюджет</td>
+				<td><input type="text" asp-for="@Model.local_budget_fact_1" id="local_budget_iphc_fact_1" class="data-value double" data-double="iphc"></td>
+				<td><input type="text" asp-for="@Model.local_budget_fact_2" id="local_budget_iphc_fact_2" class="data-value double" data-double="iphc"></td>
+				<td><input type="text" asp-for="@Model.local_budget_fact_3" id="local_budget_iphc_fact_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>4. Привлечённые средства (расходы на погашение и обслуживание заёмных средств), <span class="data-unit">тыс. руб.</span></td>
+				<td><input type="text" value="@Model.attracted_funds_all_fact_1" id="attracted_funds_all_iphc_fact_1" class="data-value" disabled></td>
+				<td><input type="text" value="@Model.attracted_funds_all_fact_2" id="attracted_funds_all_iphc_fact_2" class="data-value" disabled></td>
+				<td><input type="text" value="@Model.attracted_funds_all_fact_3" id="attracted_funds_all_iphc_fact_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- кредиты</td>
+				<td><input type="text" asp-for="@Model.attracted_credits_fact_1" id="attracted_credits_iphc_fact_1" class="data-value double" data-double="iphc"></td>
+				<td><input type="text" asp-for="@Model.attracted_credits_fact_2" id="attracted_credits_iphc_fact_2" class="data-value double" data-double="iphc"></td>
+				<td><input type="text" asp-for="@Model.attracted_credits_fact_3" id="attracted_credits_iphc_fact_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- займы</td>
+				<td><input type="text" asp-for="@Model.attracted_loans_fact_1" id="attracted_loans_iphc_fact_1" class="data-value double" data-double="iphc"></td>
+				<td><input type="text" asp-for="@Model.attracted_loans_fact_2" id="attracted_loans_iphc_fact_2" class="data-value double" data-double="iphc"></td>
+				<td><input type="text" asp-for="@Model.attracted_loans_fact_3" id="attracted_loans_iphc_fact_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- прочие привлечённые средства</td>
+				<td><input type="text" asp-for="@Model.attracted_other_funds_fact_1" id="attracted_other_funds_iphc_fact_1" class="data-value double" data-double="iphc"></td>
+				<td><input type="text" asp-for="@Model.attracted_other_funds_fact_2" id="attracted_other_funds_iphc_fact_2" class="data-value double" data-double="iphc"></td>
+				<td><input type="text" asp-for="@Model.attracted_other_funds_fact_3" id="attracted_other_funds_iphc_fact_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>- средства, полученные от реализации ценных бумаг</td>
+				<td><input type="text" asp-for="@Model.attracted_received_funds_securities_fact_1" id="attracted_received_funds_securities_iphc_fact_1" class="data-value double" data-double="iphc"></td>
+				<td><input type="text" asp-for="@Model.attracted_received_funds_securities_fact_2" id="attracted_received_funds_securities_iphc_fact_2" class="data-value double" data-double="iphc"></td>
+				<td><input type="text" asp-for="@Model.attracted_received_funds_securities_fact_3" id="attracted_received_funds_securities_iphc_fact_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>5. Плата за подключение, <span class="data-unit">тыс. руб.</span></td>
+				<td><input type="text" asp-for="@Model.connection_charge_fact_1" id="connection_charge_iphc_fact_1" class="data-value double" data-double="iphc"></td>
+				<td><input type="text" asp-for="@Model.connection_charge_fact_2" id="connection_charge_iphc_fact_2" class="data-value double" data-double="iphc"></td>
+				<td><input type="text" asp-for="@Model.connection_charge_fact_3" id="connection_charge_iphc_fact_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>6. Прочие средства, <span class="data-unit">тыс. руб.</span></td>
+				<td><input type="text" asp-for="@Model.other_means_fact_1" id="other_means_iphc_fact_1" class="data-value double" data-double="iphc"></td>
+				<td><input type="text" asp-for="@Model.other_means_fact_2" id="other_means_iphc_fact_2" class="data-value double" data-double="iphc"></td>
+				<td><input type="text" asp-for="@Model.other_means_fact_3" id="other_means_iphc_fact_3" class="data-value" disabled></td>
+			</tr>
+		</tbody>
+	</table>
+	<button type="submit" class="bttn bttn-color ms-auto" @disable>Сохранить</button>
+</form>

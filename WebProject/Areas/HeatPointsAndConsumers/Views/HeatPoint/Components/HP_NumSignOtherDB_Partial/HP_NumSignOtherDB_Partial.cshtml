@@ -1,0 +1,55 @@
+﻿@model WebProject.Areas.HeatPointsAndConsumers.Models.HPAddRemove_NumSignOtherDbViewModel
+
+@{
+	Layout = null; string is_disabled = ViewBag.IsDisabled;
+}
+
+<form asp-controller="HeatPoint" asp-action="HpAddRemove_NumSignOtherDb_Save" asp-antiforgery="true" asp-area="HeatPointsAndConsumers" id="tz_other_org_costs_form" class="needs-validation" novalidate
+   data-ajax-failure="onFailedFormTZ" data-ajax-success="onSuccessFormHP" data-ajax-begin="onBeginFormTZ" data-ajax="true" data-ajax-method="POST">
+
+	<input hidden name="heat_point_id" value="@Model.heat_point_id">
+	<input hidden name="data_status" value="@Model.data_status">
+	<div class="data-row">
+		<div class="data-item ">
+			<label class="data-label">MUID</label>
+			<input type="text" class="data-value stretch" name="muid" value="@Model.muid" placeholder="Наименование номер MUID">
+		</div>
+		<div class="data-item ">
+			<label class="data-label">LOTUS ID</label>
+			<input type="text" class="data-value stretch" name="lotus_id" value="@Model.lotus_id" placeholder="Наименование номер LOTUS ID">
+		</div>
+		<div class="data-item ">
+			<label class="data-label">KASU_ID</label>
+			<input type="text" class="data-value stretch" name="kasu_id" value="@Model.kasu_id" placeholder="Наименование номер KASU_ID">
+		</div>
+	</div>
+	<div class="data-row">
+		<div class="data-item ">
+			<label class="data-label">KASU_COMPOSITE_ID</label>
+			<input type="text" class="data-value stretch" name="kasu_composite_id" value="@Model.kasu_composite_id" placeholder="Наименование номер KASU_COMPOSITE_ID">
+		</div>
+		<div class="data-item ">
+			<label class="data-label">KASU_MAP_ID</label>
+			<input type="text" class="data-value stretch" name="kasu_map_id" value="@Model.kasu_map_id" placeholder="Наименование номер KASU_MAP_ID">
+		</div>
+	</div>
+	<div class="data-row">
+		<button type="submit" class="bttn bttn-color ms-auto" @is_disabled id="hp_num_sign_save_btn">Сохранить</button>
+	</div>
+</form>
+
+<script type="text/javascript" src="@Url.Content("~/hss/js/popup_common_scripts.js")"></script>
+<script type="text/javascript">
+
+	var onSuccessFormHP = function (xhr) {
+		hidePreloader();
+		if (xhr.success == true) {
+			$("#refresh_table").val(1);
+			showMessage('Данные сохранены.', 'modal', 'success');
+		}
+		else {
+			showMessage(xhr.error, 'modal', 'fault');
+		}
+	};
+
+</script>

@@ -1,0 +1,186 @@
+﻿@model List<WebProject.Areas.HeatPointsAndConsumers.Models.HPAddRemoveHP_PumpMappsDataViewModel>
+
+@{
+	Layout = null; int row_count = 0;
+}
+
+<div class="forms-block">
+	@foreach (var item in Model)
+	{
+
+		<form style="display: none;" asp-controller="HeatPoint" asp-action="HpAddRemove_Pump_Save" asp-antiforgery="true" asp-area="HeatPointsAndConsumers" id="form2_@(++row_count)" data-ajax-failure="onFailedForm"
+			data-ajax-success="onSuccessFormHP_PumpPart" data-ajax-begin="onBeginForm" data-ajax="true" data-ajax-method="POST" class="needs-validation form-row" novalidate>
+			@Html.AntiForgeryToken()
+		</form>
+	}
+</div>
+
+@{ row_count = 0; }
+
+
+			<input type="hidden" value="0" id="refresh_table_pump_parts" />
+			<table id="pumpTable" class="display nowrap compact table-inp-stretch" style="width:100%">
+				<thead>
+					<tr>
+						<th>№ п/п</th>
+						<th>Вид насосного оборудования</th>
+						<th>Марка</th>
+						<th>G<sub>У</sub>, <span class="data-unit">т/ч</span></th>
+						<th>Кол-во, <span class="data-unit">шт.</span></th>
+						<th>Напор насоса, <span class="data-unit">м в. ст.</span></th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach (var item in Model)
+					{
+						string is_disabled = string.Empty;
+						string is_disabled_2 = string.Empty;
+						if (item.pump_num == 0)
+						{
+							is_disabled = "disabled";
+						}
+						if (item.heat_point_id == 0)
+						{
+							is_disabled_2 = "disabled";
+						}
+
+						<input hidden name="heat_point_id" value="@item.heat_point_id" form="form2_@(++row_count)">
+						<input hidden name="data_status" value="@item.data_status" form="form2_@(row_count)">
+						<input hidden name="pump_num" value="@item.pump_num" form="form2_@(row_count)">
+						<input hidden name="is_deleted" id="is_deleted2_@(row_count)" value="@item.is_deleted" form="form2_@(row_count)">
+						<tr>
+							<td>@(row_count)</td>
+							<td>
+								<div class="data-item">
+									<select class="selectpicker data-value" data-container="#editHeatPointAddRemoveDataPopup" form="form2_@(row_count)" name="type_pump_id" id="type_pump_id_@row_count" placeholder="Выберите значение" required>
+										@foreach (var tz_list in ViewBag.PumpTypes)
+										{
+											if (tz_list.Id == item.type_pump_id)
+											{
+											<option value="@tz_list.Id" selected>@tz_list.pump_type_name</option>
+											}
+											if (tz_list.Id != item.type_pump_id)
+											{
+											<option value="@tz_list.Id">@tz_list.pump_type_name</option>
+											}
+										}
+									</select>
+									<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Выберите значение из списка"></a>
+								</div>
+							</td>
+							<td>
+								<div class="data-item">
+						<select class="selectpicker data-value" data-container="#editHeatPointAddRemoveDataPopup" form="form2_@(row_count)" name="equip_id" id="equip_id2_@row_count" data-live-search="true" placeholder="Выберите значение" required onchange="GetDataBySelectedMark2(@row_count)">
+							@foreach (var tz_list in ViewBag.PumpMarks)
+										{
+											if (tz_list.value_id == item.equip_id)
+											{
+												<option value="@tz_list.value_id" selected>@tz_list.value_name</option>
+											}
+											if (tz_list.value_id != item.equip_id)
+											{
+												<option value="@tz_list.value_id">@tz_list.value_name</option>
+											}
+										}
+									</select>
+									<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Выберите значение из списка"></a>
+								</div>
+							</td>
+							<td><input type="text" class="data-value double" value="@item.pump_capacity" form="form2_@(row_count)" name="pump_capacity" id="pump_capacity_@row_count" onkeyup="Refresh_CapasitySum()"></td>
+							<td><input type="number" class="data-value" value="@item.pump_count" form="form2_@(row_count)" name="pump_count" id="pump_count_@row_count" onkeyup="Refresh_CapasitySum()"></td>
+							<td><input type="text" class="data-value double" value="@item.pump_press" form="form2_@(row_count)" name="pump_press" id="pump_press_@row_count"></td>
+							<td>
+					<button class="bttn bttn-square bttn-icon-save hp_equip_pump_save_btn" type="submit" form="form2_@(row_count)" title="Сохранить" @is_disabled_2></button>
+					<button class="bttn bttn-square bttn-icon-del hp_equip_pump_delete_btn" type="button" form="form2_@(row_count)" onclick="DeleteRow2(@row_count)" title="Удалить" @is_disabled></button>
+							</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		
+
+<script type="text/javascript">
+
+	var row_cnt = 0;
+
+	$(document).ready(function () {
+		Refresh_CapasitySum();
+	});
+
+	var onSuccessFormHP_PumpPart = function (xhr) {
+		hidePreloader();
+		$("#refresh_table_pump_parts").val(1);
+		if (xhr.success && xhr.is_deleted) {			
+			showMessage('Данные удалены.', 'modal', 'success');	
+		}
+		else if (xhr.success && !xhr.is_deleted){
+			showMessage('Данные сохранены.', 'modal', 'success');
+		}
+		else {
+			showMessage(xhr.error, 'modal', 'fault');
+		}
+		GetListOnPageHP_PumpPart();
+	};
+
+	function DeleteRow2(row_num){
+		$('#is_deleted2_' + row_num).val(true);
+		$('#form2_' + row_num).submit();
+	}
+
+	function Refresh_CapasitySum() {
+		var sum = 0.0;
+		var floor = Math.floor;
+		let items = document.getElementsByName('pump_capacity');
+
+		for (var i = 1; i <= items.length; i++) {
+			var ih_power = $('#pump_capacity_' + i).val();
+			var he_count = $('#pump_count_' + i).val();
+
+			if (ih_power != '' && he_count != '') {
+				sum += (floor(parseFloat(ih_power)) * floor(parseFloat(he_count)));
+			}
+		}
+
+		$('#capasity_sum').val(sum);
+	}
+
+
+	function GetListOnPageHP_PumpPart() {
+		showPreloader();
+		$.ajax({
+			type: 'GET',
+			url: '@Html.Raw(Url.Action("OnGetHP_EquipmentPart_Pump_ViewComponent", "HeatPoint", new { Area = "HeatPointsAndConsumers" }))',
+			data: {
+				data_status: $('#data_status').val(),
+				heat_point_id: $('#heat_point_id').val()
+			},
+			dataType: 'html'
+		})
+			.done(function (result) {
+				var div = $('#HP_EquipmentPart_Pump');
+				div.html("");
+				div.html(result);
+				$('.selectpicker').selectpicker();
+				hidePreloader();
+			});
+	}
+
+	function GetDataBySelectedMark2(row_count) {
+		row_cnt = row_count;
+		var option = document.getElementById("equip_id2_" + row_cnt);
+		var id = option.value;
+
+		$.ajax({
+			type: 'POST',
+			url: '@Html.Raw(Url.Action("GetHPPumpByMark", "HSS", new { Area = ""}))',
+			data: { equip_id: id },
+			dataType: 'json'
+		})
+		.done(function(result){
+			$('#pump_capacity_' + row_cnt).val(result.item.capacity);
+			$('#pump_press_' + row_cnt).val(result.item.pump_press);
+		});
+	}
+
+</script>

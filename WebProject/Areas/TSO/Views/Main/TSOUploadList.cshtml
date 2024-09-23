@@ -1,0 +1,114 @@
+﻿<div class="data-block workspace">
+    <div class="data-block title-block">
+        <div class="data-row">
+
+            <ul class="breadcrumb">
+                <li class="breadcrumb-item"><a class="ref-color" href="#!">Главная</a></li>
+                <li class="breadcrumb-item"><a class="ref-color" href="/tso">Теплоснабжающие организации - Перечень организаций</a></li>
+                <li class="breadcrumb-item">Загрузка данных</li>
+            </ul>
+        </div>
+        <h1 class="title">Теплоснабжающие и теплосетевые организации</h1>
+    </div>
+
+    <div class="data-block main-content">
+        <div class="data-row table-params">
+            <div class="data-item">
+                <label class="data-label">Файл загрузки</label>
+                <form class="needs-validation" novalidate asp-controller="Main" asp-action="TSOSaveFileToDB" asp-antiforgery="true" asp-area="TSO" id="tso_upload_form"
+							enctype="multipart/form-data" data-ajax-failure="onFailedForm" data-ajax-success="onSuccessForm" data-ajax-begin="onBeginForm" data-ajax="true" data-ajax-method="POST">
+				    <input type="hidden" name="data_status" id="data_status_tso_upl" />
+                    <input class="data-value" accept="application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" type="file" id="upload_file" name="upload_file" onchange="$('#data_status_tso_upl').val($('#data_status').val()); $('#tso_upload_form').submit();">
+                </form>
+            </div>
+            @*<div class="data-item">
+                <label for="paramCalcYear" class="data-label">Год схемы, на который загружаются данные</label>
+                <select class="selectpicker param-calc-year" data-width="140px" id="paramCalcYear" value="2022">
+                    <option value="2020">01.01.2021</option>
+                    <option value="2021">01.01.2022</option>
+                    <option value="2022" selected>01.01.2023</option>
+                    <option value="2023">01.01.2024</option>
+                </select>
+            </div>*@
+            <div class="data-item">
+                <div class="note">Базовый год - <span class="note-base-year" id="base_year_info"></span>;</div>
+            </div>
+        </div>
+
+        <div style="display: none;" id="tso_div_table">
+            @await Component.InvokeAsync("TSO_UploadedList_Partial")
+        </div>
+    </div>
+</div>
+
+@section pageJs {
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            setTimeout(function () {
+                $('#tso_org_list').addClass('active');
+            }, 500);
+
+            TableInit('tsoUploadTable', 'full');
+            RefreshBaseYearInfo();
+        });
+
+        function RefreshBaseYearInfo() {
+            $.ajax({
+                type: 'POST',
+                url: '@Html.Raw(Url.Action("GetActiveDS", "HSS", new { Area = "" }))',
+                dataType: 'json'
+            }).done(function (result) {
+
+                let base_year = result.data_status - 1;
+                let base_year_info = base_year + ' (01.01.' + result.data_status + ')';
+                $("#base_year_info").html(base_year_info);
+            });
+        }
+
+        function GetListOnPage() {
+
+            showPreloader();
+
+            $.ajax({
+                type: 'GET',
+                url: '@Html.Raw(Url.Action("OnGetCallTSO_UploadedList_PartialViewComponent", "Main", new { Area = "TSO" }))',
+                data: {
+                    data_status: $('#data_status').val()
+                },
+                dataType: 'html'
+            })
+                .done(function (result) {
+                    var div = $('#tso_div_table');
+                    div.html("");
+                    div.html(result);
+                    TableInit('tsoUploadTable', 'full');
+                    hidePreloader();
+                });
+
+            RefreshBaseYearInfo();
+            $("#upload_file").val('');
+        }
+
+        var onFailedForm = function (xhr) {
+            hidePreloader();
+            showMessage(xhr.responseText, 'modal', 'fault');
+        };
+
+        var onBeginForm = function (xhr) {
+            showPreloader();
+        };
+
+        var onSuccessForm = function (xhr) {
+            hidePreloader();
+            if (xhr.success == true) {
+                showMessage('Данные сохранены.', 'modal', 'success');
+                GetListOnPage();
+            }
+            else
+                showMessage('Произошла ошибка. Обратитесь к администратору.', 'modal', 'fault');
+        };
+
+    </script>
+}

@@ -1,0 +1,241 @@
+﻿@model WebProject.Areas.DictionaryTables.Models.HeatSupplySystemOneDataViewModel
+
+@{
+	string btn_disable = string.Empty;
+	string is_disabled = "disabled";
+}
+@if (Model.hss_id == 0)
+{
+	btn_disable = "disabled";
+}
+
+<div class="modal-dialog modal-dialog-centered">
+	<div class="modal-content">
+		<div class="modal-header">
+			<h3 class="modal-title" id="editDataLabel">Система теплоснабжения</h3>
+			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="RefreshTable()"></button>
+		</div>
+		<div class="modal-body">
+			<form class="needs-validation" novalidate asp-controller="HeatSupplySystem" asp-action="HSS_Save" asp-antiforgery="true" asp-area="DictionaryTables" id="HSS_form"
+	  data-ajax-failure="onFailedFormHSS" data-ajax-success="onSuccessFormHSS" data-ajax-begin="onBeginFormHSS" data-ajax="true" data-ajax-method="POST">
+				<input type="hidden" name="hss_id" value="@Model.hss_id" id="HSS_eto_id" />
+				<input type="hidden" name="unom_hss" value="@Model.unom_hss" id="HSS_unom_eto" />
+
+				<div class="data-block static-block data-params">
+					<div class="data-row">
+						<div class="data-item">
+							<label class="data-label">Уникальный номер системы теплоснабжения</label>
+							<select class="selectpicker data-value xxl-stretch" data-live-search="true" placeholder="Выберите УНОМ системы теплоснабжения" id="ParamNumberHss">
+								@if (@Model.hss_id == 0 || ViewBag.Action_for == "copy")
+								{
+									<option value="" selected disabled>При добавлении новоой системы теплоснабжения, УНОМ генерируется автоматически</option>
+								}
+								@foreach (var hss in ViewBag.HSSList)
+								{
+									if (hss.hss_id == Model.hss_id && ViewBag.Action_for != "copy")
+									{
+										<option value="@hss.hss_id" selected>@hss.unom_hss</option>
+									}
+									else
+									{
+										<option value="@hss.hss_id">@hss.unom_hss</option>
+									}
+								}
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="data-block">
+
+					<div class="data-block border-block">
+						<div class="data-row">
+
+							<div class="data-item">
+								<label class="data-label">Район (поселение)</label>
+								<select class="selectpicker data-value lg-stretch truncate-value" name="distr_id" data-live-search="true" placeholder="Выберите..." multiple="true" data-container="#HSSDataPopup" data-size="5" required>
+									@if (Model.HSSDistrictList == null || Model.HSSDistrictList.Count == 0)
+									{
+										foreach (var distr in Model.districts)
+										{
+											<option value="@distr.id">@distr.distr_name</option>
+										}
+									}
+									@if (Model.HSSDistrictList != null && Model.HSSDistrictList.Count > 0)
+									{
+										foreach (var district in Model.hss_distr)
+										{
+											<option value="@district" selected>@Model.districts.Where(x => x.id == district).Select(x => x.distr_name).FirstOrDefault()</option>
+										}
+										foreach (var distr in Model.districts.Where(x => !Model.hss_distr.Any(y => y == x.id)))
+										{
+											<option value="@distr.id">@distr.distr_name</option>
+										}
+									}
+								</select>
+								<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Выберите значение из списка"></a>
+							</div>
+
+						</div>
+						<table id="HSSdistrictsTable" class="display compact table-inp-stretch dataTable no-footer dtfc-has-left" style="width:100%">
+							<thead>
+								<tr>
+									<th>Округ</th>
+									<th>Районы</th>
+								</tr>
+							</thead>
+							<tbody>
+								@foreach (var distr in Model.HSSDistrictList)
+								{
+									<tr>
+										<td>@distr.region</td>
+										<td>@distr.territories</td>
+									</tr>
+								}
+							</tbody>
+						</table>
+					</div>
+					<div class="data-row">
+						<div class="data-item">
+							<label class="data-label lm-fix">Номер ЕТО</label>
+							<select class="selectpicker data-value xl-stretch" name="eto_id" data-live-search="true" placeholder="Выберите..." data-size="5" required>
+									@foreach (var eto in ViewBag.EtoList)
+									{
+										if(Model.eto_id == eto.eto_id)
+										{
+											<option value="@eto.eto_id" selected>@eto.unom_eto</option>
+										}
+										else
+										{
+											<option value="@eto.eto_id">@eto.unom_eto</option>
+										}
+									}
+							</select>
+							<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Выберите значение из списка"></a>
+
+						</div>
+					</div>
+					<div class="data-row">
+						<div class="data-item">
+							<label class="data-label lm-fix">Уникальный номер слоя электронной модели</label>
+							<select class="selectpicker data-value lg-stretch" data-live-search="true" name="layer_id" disabled placeholder="Выберите..." >
+								@foreach (var layer in ViewBag.LayerList)
+								{
+									if(layer.Id == Model.layer_id)
+									{
+										<option value="@layer.Id" selected>@layer.layer_unom</option>
+									}
+									else
+									{
+										<option value="@layer.Id">@layer.layer_unom</option>
+									}
+								}
+							</select>
+						</div>
+						<div class="data-item">
+							<label class="data-label lm-fix" >SYS объекта в электронном слое</label>
+							<input type="text" name="layer_sys" value="@Model.layer_sys" disabled class="data-value md-stretch">
+						</div>
+					</div>
+					<div class="data-row">
+						<label class="data-item">
+							<span class="data-label lm-fix">Система теплоснабжения ликвидирована</span>
+							@if (Model.hss_id >= 0)
+							{
+								string is_checked = string.Empty;
+
+								@if (Model.is_liquidated == true)
+								{
+									is_checked = "checked";
+									is_disabled = "";
+								}
+								<input type="checkbox" value="@(Model.is_liquidated == true ? "true" : "false")" name="is_liquidated" id="checkbox_liquidation" class="data-check" @is_checked onchange="CB_Change(this)" onclick="CheckCB()">
+							}
+							else
+							{
+								<input type="checkbox" value="false" name="is_liquidated" id="checkbox_liquidation" class="data-check" onchange="CB_Change(this)" onclick="CheckCB()">
+							}
+						</label>
+						<div class="data-item">
+							<label class="data-label lm-fix">Год ликвидации</label>
+							<input type="number" class="data-value stretch" id="year_liquidation" name="year_liquidation" value="@Model.year_liquidation" @is_disabled required>
+							<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Это поле должно быть заполнено"></a>
+						</div>
+					</div>
+					<div class="data-row">
+						<div class="data-item">
+							<label class="data-label lm-fix">Причина ликвидации</label>
+							<input type="text" class="data-value xxl-stretch" id="reason_liquidation" required name="reason_liquidation" value="@Model.reason_liquidation" @is_disabled >
+							<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Это поле должно быть заполнено"></a>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="bttn" data-bs-dismiss="modal">Отмена</button>
+			<button type="submit" class="bttn bttn-color" form="HSS_form">Сохранить</button>
+			<button type="button" class="bttn bttn-color" id="btnCopyHSS" @btn_disable onclick="OpenPopupHSS(@Model.hss_id, 'copy'); ">Создать копию</button>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript" src="@Url.Content("~/hss/js/popup_common_scripts.js")"></script>
+<script>
+
+	$(document).ready(function () {
+		document.querySelector('#ParamNumberHss').addEventListener('change', (event) => {
+			OpenPopupHSS($("#ParamNumberHss").val());
+		});
+	});
+
+	function CheckCB() {
+		var checkbox_liq = document.getElementById("checkbox_liquidation");
+		if (checkbox_liq.checked) {
+			document.getElementById("year_liquidation").disabled = false;
+			document.getElementById("reason_liquidation").disabled = false;
+		}
+		else {
+			document.getElementById("year_liquidation").disabled = true;
+			document.getElementById("year_liquidation").value = '';
+			document.getElementById("reason_liquidation").disabled = true;
+			document.getElementById("reason_liquidation").value = '';
+		}
+	}
+
+
+	var onBeginFormHSS = function (xhr) {
+		showPreloader();
+	};
+
+	var onFailedFormHSS = function (xhr) {
+		showMessage('Ошибка сохранения данных.', 'modal', 'success');
+		hidePreloader();
+	};
+
+	var onSuccessFormHSS = function (xhr) {
+		if (xhr.success == true) {
+			showMessage('Данные сохранены.', 'modal', 'success');
+			if(xhr.is_new)
+			{
+				OpenPopupHSS(xhr.hss_id);
+			}
+			$("#refresh_hss_table").val(1);
+
+		}
+		else {
+			if (xhr.message === undefined) {
+				xhr.message = 'Ошибка сохранения данных'
+			}
+			showMessage(xhr.message, 'modal', 'fault');
+		}
+		hidePreloader();
+	};
+
+	function RefreshTable() {
+		if ($("#refresh_hss_table").val() === "1") {
+			$("#refresh_hss_table").val(0);
+			GetListOnPage();
+		}
+	}
+
+</script>

@@ -1,0 +1,268 @@
+﻿@model WebProject.Areas.TSO.Models.HeatEnergyTariffSteam
+@{
+	Layout = null; string disable = "";
+}
+@if (Model.tz_id == 0)
+{
+	disable = "disabled";
+}
+<form asp-controller="TariffConnection" asp-action="TZHeatEnergyTariffSteam_Save" asp-antiforgery="true" asp-area="TSO" 
+	data-ajax-failure="onFailedFormTZ" data-ajax-success="onSuccessFormTZ" data-ajax-begin="onBeginFormTZ" data-ajax="true" data-ajax-method="POST">
+	<input type="hidden" name="tz_id" value="@Model.tz_id" />
+	<input type="hidden" name="data_status" value="@Model.data_status" />
+	<input type="hidden" name="perspective_year" value="@Model.perspective_year" />
+	<table class="table-inp-stretch" style="width:100%;">
+		<thead>
+			<tr>
+				<th rowspan="2"></th>
+				<th colspan="3">P = 1,2-2,5 кг/см<sup>2</sup></th>
+				<th colspan="3">P = 2,5-7 кг/см<sup>2</sup></th>
+				<th colspan="3">P = 7-13 кг/см<sup>2</sup></th>
+				<th colspan="3">P > 13 кг/см<sup>2</sup></th>
+			</tr>
+			<tr>
+				<th style="position: static;">I полугодие</th>
+				<th>II полугодие</th>
+				<th>Год</th>
+				<th>I полугодие</th>
+				<th>II полугодие</th>
+				<th>Год</th>
+				<th>I полугодие</th>
+				<th>II полугодие</th>
+				<th>Год</th>
+				<th>I полугодие</th>
+				<th>II полугодие</th>
+				<th>Год</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>Экономически обоснованный тариф<br>на тепловую энергию,<span class="data-unit">руб./Гкал без НДС</span></td>
+				<td><input type="text" asp-for="@Model.tariff_econom_justified_p1_per_1" class="data-value double" data-type="econom_justified" data-double="he_steam_singlerate_tariff_1"></td>
+				<td><input type="text" asp-for="@Model.tariff_econom_justified_p1_per_2" class="data-value double" data-type="econom_justified" data-double="he_steam_singlerate_tariff_1"></td>
+				<td><input type="text" asp-for="@Model.tariff_econom_justified_p1_per_3" class="data-value" data-type="econom_justified" disabled></td>
+				<td><input type="text" asp-for="@Model.tariff_econom_justified_p2_per_1" class="data-value double" data-type="econom_justified" data-double="he_steam_singlerate_tariff_2"></td>
+				<td><input type="text" asp-for="@Model.tariff_econom_justified_p2_per_2" class="data-value double" data-type="econom_justified" data-double="he_steam_singlerate_tariff_2"></td>
+				<td><input type="text" asp-for="@Model.tariff_econom_justified_p2_per_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.tariff_econom_justified_p3_per_1" class="data-value double" data-type="econom_justified" data-double="he_steam_singlerate_tariff_3"></td>
+				<td><input type="text" asp-for="@Model.tariff_econom_justified_p3_per_2" class="data-value double" data-type="econom_justified" data-double="he_steam_singlerate_tariff_3"></td>
+				<td><input type="text" asp-for="@Model.tariff_econom_justified_p3_per_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.tariff_econom_justified_p4_per_1" class="data-value double" data-type="econom_justified" data-double="he_steam_singlerate_tariff_4"></td>
+				<td><input type="text" asp-for="@Model.tariff_econom_justified_p4_per_2" class="data-value double" data-type="econom_justified" data-double="he_steam_singlerate_tariff_4"></td>
+				<td><input type="text" asp-for="@Model.tariff_econom_justified_p4_per_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>Объем тепловой энергии<br> в паре (всего),<span class="data-unit">Гкал</span></td>
+				<td><input type="text" asp-for="@Model.volume_he_p1_per_1" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.volume_he_p1_per_2" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.volume_he_p1_per_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.volume_he_p2_per_1" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.volume_he_p2_per_2" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.volume_he_p2_per_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.volume_he_p3_per_1" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.volume_he_p3_per_2" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.volume_he_p3_per_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.volume_he_p4_per_1" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.volume_he_p4_per_2" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.volume_he_p4_per_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<th>включая:</th>
+			</tr>
+			<tr>
+				<td>Полезный отпуск в паре на собственное<br> производство предприятия</td>
+				<td><input type="text" asp-for="@Model.useful_release_ownprod_needs_p1_per_1" class="data-value double" data-type="ownprod_needs" data-double="he_steam_singlerate_tariff_1"></td>
+				<td><input type="text" asp-for="@Model.useful_release_ownprod_needs_p1_per_2" class="data-value double" data-type="ownprod_needs" data-double="he_steam_singlerate_tariff_1"></td>
+				<td><input type="text" asp-for="@Model.useful_release_ownprod_needs_p1_per_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.useful_release_ownprod_needs_p2_per_1" class="data-value double" data-type="ownprod_needs" data-double="he_steam_singlerate_tariff_2"></td>
+				<td><input type="text" asp-for="@Model.useful_release_ownprod_needs_p2_per_2" class="data-value double" data-type="ownprod_needs" data-double="he_steam_singlerate_tariff_2"></td>
+				<td><input type="text" asp-for="@Model.useful_release_ownprod_needs_p2_per_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.useful_release_ownprod_needs_p3_per_1" class="data-value double" data-type="ownprod_needs" data-double="he_steam_singlerate_tariff_3"></td>
+				<td><input type="text" asp-for="@Model.useful_release_ownprod_needs_p3_per_2" class="data-value double" data-type="ownprod_needs" data-double="he_steam_singlerate_tariff_3"></td>
+				<td><input type="text" asp-for="@Model.useful_release_ownprod_needs_p3_per_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.useful_release_ownprod_needs_p4_per_1" class="data-value double" data-type="ownprod_needs" data-double="he_steam_singlerate_tariff_4"></td>
+				<td><input type="text" asp-for="@Model.useful_release_ownprod_needs_p4_per_2" class="data-value double" data-type="ownprod_needs" data-double="he_steam_singlerate_tariff_4"></td>
+				<td><input type="text" asp-for="@Model.useful_release_ownprod_needs_p4_per_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>Полезный отпуск в паре<br> на хозяйственные нужды предприятия</td>
+				<td><input type="text" asp-for="@Model.useful_release_household_needs_p1_per_1" class="data-value double" data-type="household_needs" data-double="he_steam_singlerate_tariff_1"></td>
+				<td><input type="text" asp-for="@Model.useful_release_household_needs_p1_per_2" class="data-value double" data-type="household_needs" data-double="he_steam_singlerate_tariff_1"></td>
+				<td><input type="text" asp-for="@Model.useful_release_household_needs_p1_per_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.useful_release_household_needs_p2_per_1" class="data-value double" data-type="household_needs" data-double="he_steam_singlerate_tariff_2"></td>
+				<td><input type="text" asp-for="@Model.useful_release_household_needs_p2_per_2" class="data-value double" data-type="household_needs" data-double="he_steam_singlerate_tariff_2"></td>
+				<td><input type="text" asp-for="@Model.useful_release_household_needs_p2_per_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.useful_release_household_needs_p3_per_1" class="data-value double" data-type="household_needs" data-double="he_steam_singlerate_tariff_3"></td>
+				<td><input type="text" asp-for="@Model.useful_release_household_needs_p3_per_2" class="data-value double" data-type="household_needs" data-double="he_steam_singlerate_tariff_3"></td>
+				<td><input type="text" asp-for="@Model.useful_release_household_needs_p3_per_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.useful_release_household_needs_p4_per_1" class="data-value double" data-type="household_needs" data-double="he_steam_singlerate_tariff_4"></td>
+				<td><input type="text" asp-for="@Model.useful_release_household_needs_p4_per_2" class="data-value double" data-type="household_needs" data-double="he_steam_singlerate_tariff_4"></td>
+				<td><input type="text" asp-for="@Model.useful_release_household_needs_p4_per_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>Средневзвешенный тариф с учетом<br> инвестиционной составляющей,<span class="data-unit">руб./Гкал</span></td>
+				<td><input type="text" asp-for="@Model.tariff_weighted_invest_p1_per_1" class="data-value double" data-type="weighted_invest" data-double="he_steam_singlerate_tariff_1"></td>
+				<td><input type="text" asp-for="@Model.tariff_weighted_invest_p1_per_2" class="data-value double" data-type="weighted_invest" data-double="he_steam_singlerate_tariff_1"></td>
+				<td><input type="text" asp-for="@Model.tariff_weighted_invest_p1_per_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.tariff_weighted_invest_p2_per_1" class="data-value double" data-type="weighted_invest" data-double="he_steam_singlerate_tariff_2"></td>
+				<td><input type="text" asp-for="@Model.tariff_weighted_invest_p2_per_2" class="data-value double" data-type="weighted_invest" data-double="he_steam_singlerate_tariff_2"></td>
+				<td><input type="text" asp-for="@Model.tariff_weighted_invest_p2_per_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.tariff_weighted_invest_p3_per_1" class="data-value double" data-type="weighted_invest" data-double="he_steam_singlerate_tariff_3"></td>
+				<td><input type="text" asp-for="@Model.tariff_weighted_invest_p3_per_2" class="data-value double" data-type="weighted_invest" data-double="he_steam_singlerate_tariff_3"></td>
+				<td><input type="text" asp-for="@Model.tariff_weighted_invest_p3_per_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.tariff_weighted_invest_p4_per_1" class="data-value double" data-type="weighted_invest" data-double="he_steam_singlerate_tariff_4"></td>
+				<td><input type="text" asp-for="@Model.tariff_weighted_invest_p4_per_2" class="data-value double" data-type="weighted_invest" data-double="he_steam_singlerate_tariff_4"></td>
+				<td><input type="text" asp-for="@Model.tariff_weighted_invest_p4_per_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>Инвестиционная составляющая,<span class="data-unit">руб./Гкал</span></td>
+				<td><input type="text" asp-for="@Model.invest_component_p1_per_1" class="data-value double" data-type="invest_component" data-double="he_steam_singlerate_tariff_1"></td>
+				<td><input type="text" asp-for="@Model.invest_component_p1_per_2" class="data-value double" data-type="invest_component" data-double="he_steam_singlerate_tariff_1"></td>
+				<td><input type="text" asp-for="@Model.invest_component_p1_per_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.invest_component_p2_per_1" class="data-value double" data-type="invest_component" data-double="he_steam_singlerate_tariff_2"></td>
+				<td><input type="text" asp-for="@Model.invest_component_p2_per_2" class="data-value double" data-type="invest_component" data-double="he_steam_singlerate_tariff_2"></td>
+				<td><input type="text" asp-for="@Model.invest_component_p2_per_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.invest_component_p3_per_1" class="data-value double" data-type="invest_component" data-double="he_steam_singlerate_tariff_3"></td>
+				<td><input type="text" asp-for="@Model.invest_component_p3_per_2" class="data-value double" data-type="invest_component" data-double="he_steam_singlerate_tariff_3"></td>
+				<td><input type="text" asp-for="@Model.invest_component_p3_per_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.invest_component_p4_per_1" class="data-value double" data-type="invest_component" data-double="he_steam_singlerate_tariff_4"></td>
+				<td><input type="text" asp-for="@Model.invest_component_p4_per_2" class="data-value double" data-type="invest_component" data-double="he_steam_singlerate_tariff_4"></td>
+				<td><input type="text" asp-for="@Model.invest_component_p4_per_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<th>ТСО-перепродавцы:</th>
+			</tr>
+			<tr>
+				<td>Тариф на тепловую энергию,<span class="data-unit">руб./Гкал</span></td>
+				<td><input type="text" asp-for="@Model.tariff_tso_p1_per_1" class="data-value double" data-type="tariff_tso" data-double="he_steam_singlerate_tariff_1"></td>
+				<td><input type="text" asp-for="@Model.tariff_tso_p1_per_2" class="data-value double" data-type="tariff_tso" data-double="he_steam_singlerate_tariff_1"></td>
+				<td><input type="text" asp-for="@Model.tariff_tso_p1_per_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.tariff_tso_p2_per_1" class="data-value double" data-type="tariff_tso" data-double="he_steam_singlerate_tariff_2"></td>
+				<td><input type="text" asp-for="@Model.tariff_tso_p2_per_2" class="data-value double" data-type="tariff_tso" data-double="he_steam_singlerate_tariff_2"></td>
+				<td><input type="text" asp-for="@Model.tariff_tso_p2_per_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.tariff_tso_p3_per_1" class="data-value double" data-type="tariff_tso" data-double="he_steam_singlerate_tariff_3"></td>
+				<td><input type="text" asp-for="@Model.tariff_tso_p3_per_2" class="data-value double" data-type="tariff_tso" data-double="he_steam_singlerate_tariff_3"></td>
+				<td><input type="text" asp-for="@Model.tariff_tso_p3_per_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.tariff_tso_p4_per_1" class="data-value double" data-type="tariff_tso" data-double="he_steam_singlerate_tariff_4"></td>
+				<td><input type="text" asp-for="@Model.tariff_tso_p4_per_2" class="data-value double" data-type="tariff_tso" data-double="he_steam_singlerate_tariff_4"></td>
+				<td><input type="text" asp-for="@Model.tariff_tso_p4_per_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>Объем тепловой энергии (в паре), <span class="data-unit">Гкал</span></td>
+				<td><input type="text" asp-for="@Model.volume_he_tso_p1_per_1" class="data-value double" data-type="volume_he_tso" data-double="he_steam_singlerate_tariff_1"></td>
+				<td><input type="text" asp-for="@Model.volume_he_tso_p1_per_2" class="data-value double" data-type="volume_he_tso" data-double="he_steam_singlerate_tariff_1"></td>
+				<td><input type="text" asp-for="@Model.volume_he_tso_p1_per_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.volume_he_tso_p2_per_1" class="data-value double" data-type="volume_he_tso" data-double="he_steam_singlerate_tariff_2"></td>
+				<td><input type="text" asp-for="@Model.volume_he_tso_p2_per_2" class="data-value double" data-type="volume_he_tso" data-double="he_steam_singlerate_tariff_2"></td>
+				<td><input type="text" asp-for="@Model.volume_he_tso_p2_per_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.volume_he_tso_p3_per_1" class="data-value double" data-type="volume_he_tso" data-double="he_steam_singlerate_tariff_3"></td>
+				<td><input type="text" asp-for="@Model.volume_he_tso_p3_per_2" class="data-value double" data-type="volume_he_tso" data-double="he_steam_singlerate_tariff_3"></td>
+				<td><input type="text" asp-for="@Model.volume_he_tso_p3_per_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.volume_he_tso_p4_per_1" class="data-value double" data-type="volume_he_tso" data-double="he_steam_singlerate_tariff_4"></td>
+				<td><input type="text" asp-for="@Model.volume_he_tso_p4_per_2" class="data-value double" data-type="volume_he_tso" data-double="he_steam_singlerate_tariff_4"></td>
+				<td><input type="text" asp-for="@Model.volume_he_tso_p4_per_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<th>Бюджетные потребители:</th>
+			</tr>
+			<tr>
+				<td>Тариф на тепловую энергию, <span class="data-unit">руб./Гкал</span></td>
+				<td><input type="text" asp-for="@Model.tariff_budgetcons_p1_per_1" class="data-value double" data-type="tariff_budgetcons" data-double="he_steam_singlerate_tariff_1"></td>
+				<td><input type="text" asp-for="@Model.tariff_budgetcons_p1_per_2" class="data-value double" data-type="tariff_budgetcons" data-double="he_steam_singlerate_tariff_1"></td>
+				<td><input type="text" asp-for="@Model.tariff_budgetcons_p1_per_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.tariff_budgetcons_p2_per_1" class="data-value double" data-type="tariff_budgetcons" data-double="he_steam_singlerate_tariff_2"></td>
+				<td><input type="text" asp-for="@Model.tariff_budgetcons_p2_per_2" class="data-value double" data-type="tariff_budgetcons" data-double="he_steam_singlerate_tariff_2"></td>
+				<td><input type="text" asp-for="@Model.tariff_budgetcons_p2_per_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.tariff_budgetcons_p3_per_1" class="data-value double" data-type="tariff_budgetcons" data-double="he_steam_singlerate_tariff_3"></td>
+				<td><input type="text" asp-for="@Model.tariff_budgetcons_p3_per_2" class="data-value double" data-type="tariff_budgetcons" data-double="he_steam_singlerate_tariff_3"></td>
+				<td><input type="text" asp-for="@Model.tariff_budgetcons_p3_per_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.tariff_budgetcons_p4_per_1" class="data-value double" data-type="tariff_budgetcons" data-double="he_steam_singlerate_tariff_4"></td>
+				<td><input type="text" asp-for="@Model.tariff_budgetcons_p4_per_2" class="data-value double" data-type="tariff_budgetcons" data-double="he_steam_singlerate_tariff_4"></td>
+				<td><input type="text" asp-for="@Model.tariff_budgetcons_p4_per_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>Объем тепловой энергии (в паре), <span class="data-unit">Гкал</span></td>
+				<td><input type="text" asp-for="@Model.volume_he_budgetcons_p1_per_1" class="data-value double" data-type="volume_he_budgetcons" data-double="he_steam_singlerate_tariff_1"></td>
+				<td><input type="text" asp-for="@Model.volume_he_budgetcons_p1_per_2" class="data-value double" data-type="volume_he_budgetcons" data-double="he_steam_singlerate_tariff_1"></td>
+				<td><input type="text" asp-for="@Model.volume_he_budgetcons_p1_per_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.volume_he_budgetcons_p2_per_1" class="data-value double" data-type="volume_he_budgetcons" data-double="he_steam_singlerate_tariff_2"></td>
+				<td><input type="text" asp-for="@Model.volume_he_budgetcons_p2_per_2" class="data-value double" data-type="volume_he_budgetcons" data-double="he_steam_singlerate_tariff_2"></td>
+				<td><input type="text" asp-for="@Model.volume_he_budgetcons_p2_per_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.volume_he_budgetcons_p3_per_1" class="data-value double" data-type="volume_he_budgetcons" data-double="he_steam_singlerate_tariff_3"></td>
+				<td><input type="text" asp-for="@Model.volume_he_budgetcons_p3_per_2" class="data-value double" data-type="volume_he_budgetcons" data-double="he_steam_singlerate_tariff_3"></td>
+				<td><input type="text" asp-for="@Model.volume_he_budgetcons_p3_per_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.volume_he_budgetcons_p4_per_1" class="data-value double" data-type="volume_he_budgetcons" data-double="he_steam_singlerate_tariff_4"></td>
+				<td><input type="text" asp-for="@Model.volume_he_budgetcons_p4_per_2" class="data-value double" data-type="volume_he_budgetcons" data-double="he_steam_singlerate_tariff_4"></td>
+				<td><input type="text" asp-for="@Model.volume_he_budgetcons_p4_per_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<th>Население:</th>
+			</tr>
+			<tr>
+				<td>Тариф на тепловую энергию, <span class="data-unit">руб./Гкал</span></td>
+				<td><input type="text" asp-for="@Model.tariff_public_p1_per_1" class="data-value double" data-type="tariff_public" data-double="he_steam_singlerate_tariff_1"></td>
+				<td><input type="text" asp-for="@Model.tariff_public_p1_per_2" class="data-value double" data-type="tariff_public" data-double="he_steam_singlerate_tariff_1"></td>
+				<td><input type="text" asp-for="@Model.tariff_public_p1_per_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.tariff_public_p2_per_1" class="data-value double" data-type="tariff_public" data-double="he_steam_singlerate_tariff_2"></td>
+				<td><input type="text" asp-for="@Model.tariff_public_p2_per_2" class="data-value double" data-type="tariff_public" data-double="he_steam_singlerate_tariff_2"></td>
+				<td><input type="text" asp-for="@Model.tariff_public_p2_per_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.tariff_public_p3_per_1" class="data-value double" data-type="tariff_public" data-double="he_steam_singlerate_tariff_3"></td>
+				<td><input type="text" asp-for="@Model.tariff_public_p3_per_2" class="data-value double" data-type="tariff_public" data-double="he_steam_singlerate_tariff_3"></td>
+				<td><input type="text" asp-for="@Model.tariff_public_p3_per_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.tariff_public_p4_per_1" class="data-value double" data-type="tariff_public" data-double="he_steam_singlerate_tariff_4"></td>
+				<td><input type="text" asp-for="@Model.tariff_public_p4_per_2" class="data-value double" data-type="tariff_public" data-double="he_steam_singlerate_tariff_4"></td>
+				<td><input type="text" asp-for="@Model.tariff_public_p4_per_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>Объем тепловой энергии (в паре), <span class="data-unit">Гкал</span></td>
+				<td><input type="text" asp-for="@Model.volume_he_public_p1_per_1" class="data-value double" data-type="volume_he_public" data-double="he_steam_singlerate_tariff_1"></td>
+				<td><input type="text" asp-for="@Model.volume_he_public_p1_per_2" class="data-value double" data-type="volume_he_public" data-double="he_steam_singlerate_tariff_1"></td>
+				<td><input type="text" asp-for="@Model.volume_he_public_p1_per_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.volume_he_public_p2_per_1" class="data-value double" data-type="volume_he_public" data-double="he_steam_singlerate_tariff_2"></td>
+				<td><input type="text" asp-for="@Model.volume_he_public_p2_per_2" class="data-value double" data-type="volume_he_public" data-double="he_steam_singlerate_tariff_2"></td>
+				<td><input type="text" asp-for="@Model.volume_he_public_p2_per_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.volume_he_public_p3_per_1" class="data-value double" data-type="volume_he_public" data-double="he_steam_singlerate_tariff_3"></td>
+				<td><input type="text" asp-for="@Model.volume_he_public_p3_per_2" class="data-value double" data-type="volume_he_public" data-double="he_steam_singlerate_tariff_3"></td>
+				<td><input type="text" asp-for="@Model.volume_he_public_p3_per_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.volume_he_public_p4_per_1" class="data-value double" data-type="volume_he_public" data-double="he_steam_singlerate_tariff_4"></td>
+				<td><input type="text" asp-for="@Model.volume_he_public_p4_per_2" class="data-value double" data-type="volume_he_public" data-double="he_steam_singlerate_tariff_4"></td>
+				<td><input type="text" asp-for="@Model.volume_he_public_p4_per_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<th>Прочие:</th>
+			</tr>
+			<tr>
+				<td>Тариф на тепловую энергию, <span class="data-unit">руб./Гкал</span></td>
+				<td><input type="text" asp-for="@Model.tariff_other_p1_per_1" class="data-value double" data-type="tariff_other" data-double="he_steam_singlerate_tariff_1"></td>
+				<td><input type="text" asp-for="@Model.tariff_other_p1_per_2" class="data-value double" data-type="tariff_other" data-double="he_steam_singlerate_tariff_1"></td>
+				<td><input type="text" asp-for="@Model.tariff_other_p1_per_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.tariff_other_p2_per_1" class="data-value double" data-type="tariff_other" data-double="he_steam_singlerate_tariff_2"></td>
+				<td><input type="text" asp-for="@Model.tariff_other_p2_per_2" class="data-value double" data-type="tariff_other" data-double="he_steam_singlerate_tariff_2"></td>
+				<td><input type="text" asp-for="@Model.tariff_other_p2_per_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.tariff_other_p3_per_1" class="data-value double" data-type="tariff_other" data-double="he_steam_singlerate_tariff_3"></td>
+				<td><input type="text" asp-for="@Model.tariff_other_p3_per_2" class="data-value double" data-type="tariff_other" data-double="he_steam_singlerate_tariff_3"></td>
+				<td><input type="text" asp-for="@Model.tariff_other_p3_per_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.tariff_other_p4_per_1" class="data-value double" data-type="tariff_other" data-double="he_steam_singlerate_tariff_4"></td>
+				<td><input type="text" asp-for="@Model.tariff_other_p4_per_2" class="data-value double" data-type="tariff_other" data-double="he_steam_singlerate_tariff_4"></td>
+				<td><input type="text" asp-for="@Model.tariff_other_p4_per_3" class="data-value" disabled></td>
+			</tr>
+			<tr>
+				<td>Объем тепловой энергии (в паре), <span class="data-unit">Гкал</span></td>
+				<td><input type="text" asp-for="@Model.volume_he_other_p1_per_1" class="data-value double" data-type="volume_he_other" data-double="he_steam_singlerate_tariff_1"></td>
+				<td><input type="text" asp-for="@Model.volume_he_other_p1_per_2" class="data-value double" data-type="volume_he_other" data-double="he_steam_singlerate_tariff_1"></td>
+				<td><input type="text" asp-for="@Model.volume_he_other_p1_per_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.volume_he_other_p2_per_1" class="data-value double" data-type="volume_he_other" data-double="he_steam_singlerate_tariff_2"></td>
+				<td><input type="text" asp-for="@Model.volume_he_other_p2_per_2" class="data-value double" data-type="volume_he_other" data-double="he_steam_singlerate_tariff_2"></td>
+				<td><input type="text" asp-for="@Model.volume_he_other_p2_per_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.volume_he_other_p3_per_1" class="data-value double" data-type="volume_he_other" data-double="he_steam_singlerate_tariff_3"></td>
+				<td><input type="text" asp-for="@Model.volume_he_other_p3_per_2" class="data-value double" data-type="volume_he_other" data-double="he_steam_singlerate_tariff_3"></td>
+				<td><input type="text" asp-for="@Model.volume_he_other_p3_per_3" class="data-value" disabled></td>
+				<td><input type="text" asp-for="@Model.volume_he_other_p4_per_1" class="data-value double" data-type="volume_he_other" data-double="he_steam_singlerate_tariff_4"></td>
+				<td><input type="text" asp-for="@Model.volume_he_other_p4_per_2" class="data-value double" data-type="volume_he_other" data-double="he_steam_singlerate_tariff_4"></td>
+				<td><input type="text" asp-for="@Model.volume_he_other_p4_per_3" class="data-value" disabled></td>
+			</tr>
+		</tbody>
+	</table>
+	<button type="submit" class="bttn bttn-color ms-auto">Сохранить</button>
+</form>
+

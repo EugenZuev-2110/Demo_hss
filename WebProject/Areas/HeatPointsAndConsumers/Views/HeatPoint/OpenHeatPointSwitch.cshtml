@@ -1,0 +1,283 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+@{
+	string btn_disable = string.Empty; string is_checked = string.Empty; string field_disable = string.Empty;
+}
+
+<div class="modal-dialog modal-dialog-centered">
+	<form asp-controller="HeatPoint" asp-action="HpSwitching_Save" asp-antiforgery="true" asp-area="HeatPointsAndConsumers" id="hp_switching_form"
+	data-ajax-failure="onFailedFormTZ" data-ajax-success="onSuccessFormTZ" data-ajax-begin="onBeginFormTZ" data-ajax="true" data-ajax-method="POST">
+		<input type="hidden" name="hp_data_status" id="hp_data_status" />
+	<div class="modal-content">
+		<div class="modal-header">
+			<h3 class="modal-title" id="editDataLabel">Переключение тепловых пунктов</h3>
+			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		</div>
+		<div class="modal-body">
+			<div class="data-block static-block data-params">
+				<div class="data-row">
+					<div class="data-item stretch">
+						<label class="data-label">Уникальный(ые) номер(а) ТП:</label>
+							<input class="selectpicker data-value xxl-stretch" name="hpSwitchParamNumberTso" id="hpSwitchParamNumberTso" data-live-search="true" placeholder="Выберите один или несколько УНОМ ТП, которые будут переключаться" required>
+					</div>
+				</div>
+				<div class="data-row">
+					<div class="data-item stretch">
+						<label class="data-label">Уникальный номер источника и наименование после переключений:</label>
+							<select class="selectpicker data-value xxl-stretch" name="hpSwitchSourcesList" id="hpSwitchSourcesList" data-live-search="true" placeholder="УНОМ ИСТ - Наименование источника" required>
+							@foreach (var tz_list in ViewBag.TZSourcesList)
+							{
+								<option value="@tz_list.value_id" data-source-name="@tz_list.source_name" data-source-unom="@tz_list.source_unom">@tz_list.value_name</option>
+							}
+						</select>
+					</div>
+				</div>
+				<div class="data-row">
+					<div class="data-item stretch">
+						<label class="data-label">Наименование головного вывода источника после переключений:</label>
+							<select class="selectpicker data-value xxl-stretch" name="hpSwitchSourceHeadsList" id="hpSwitchSourceHeadsList" data-live-search="true" placeholder="Наименование вывода" required></select>
+					</div>
+				</div>
+				<div class="data-row">
+					<div class="data-item">
+						<label class="data-label">Расчётный год схемы: <span class="sublabel">начало переключений</span></label>
+							<select class="selectpicker md-fix" name="hpSwitchSourcePerspectiveYearsListStart" id="hpSwitchSourcePerspectiveYearsListStart">
+							@foreach (var tz_list in ViewBag.PerspectiveYearsList)
+							{
+								<option value="@tz_list.perspective_year">@tz_list.perspective_year_dt</option>
+							}
+						</select>
+					</div>
+					<div class="data-item">
+						<label class="data-label"><span class="sublabel">окончание переключений</span></label>
+							<select class="selectpicker md-fix" name="hpSwitchSourcePerspectiveYearsListFinish" id="hpSwitchSourcePerspectiveYearsListFinish">
+							@foreach (var tz_list in ViewBag.PerspectiveYearsList)
+							{
+								<option value="@tz_list.perspective_year">@tz_list.perspective_year_dt</option>
+							}
+						</select>
+					</div>
+					<div class="data-item data-item-right">
+						<button type="button" class="bttn bttn-square bttn-icon-sync" onclick="GetListSwitchHPTable();"></button>
+					</div>
+				</div>
+			</div>
+			<div class="scroll-block-wrapper">
+				<div class="data-row scroll-block">
+					<div class="col-12 col-xl-4" >
+						<div class="data-block border-block me-xl-1" id="HpDataListTableDiv">
+							<h4>Перечень переключаемых тепловых пунктов</h4>
+							<table class="display compact table-clicked" style="width:100%">
+								<thead>
+									<tr>
+										<th>УНОМ ТП</th>
+										<th>Наименование</th>
+										<th>∑ Q<sup>РГ до переключения</sup>, <span class="data-unit">Гкал/ч</span></th>
+										<th>∑ Q<sup>РГ после переключения</sup>, <span class="data-unit">Гкал/ч</span></th>
+										<th>Тип</th>
+									</tr>
+								</thead>
+							</table>
+							<div class="data-row">
+								<p class="data-item">Количество: <span class="mark-color">0</span><span class="data-unit"> шт.</span></p>
+								<p class="data-item">∑ Q<sup>РГ</sup><sub>пер</sub>: <span class="mark-color">0</span><span class="data-unit"> Гкал/ч</span></p>
+							</div>
+						</div>
+					</div>
+					<div class="col-12 col-xl-8">
+						<div class="data-block  border-block ms-xl-1">
+							<div class="data-row">
+								<h4>УНОМ ТП - <span id="unomHP"></span></h4>
+								<h4>Наименование ТП - <span id="nameHP"></span></h4>
+							</div>
+							<table>
+								<thead>
+									<tr>
+										<th></th>
+										<th colspan="4">До переключения</th>
+										<th colspan="4">После переключения</th>
+									</tr>
+									<tr>
+										<th>Год</th>
+										<th>УНОМ ИСТ</th>
+										<th>Наименование</th>
+										<th>Вывод</th>
+										<th>∑ Q<sup>РГ</sup></th>
+										<th>УНОМ ИСТ</th>
+										<th>Наименование</th>
+										<th>Вывод</th>
+										<th>∑ Q<sup>РГ</sup></th>
+									</tr>
+								</thead>
+								<tbody id="HpDataListHeatWaterTableDiv"></tbody>
+							</table>
+						</div>
+							<div class="data-row table-summary">
+								<div class="data-item rows-count">
+									<h5>Всего записей:</h5>
+									<p><span class="mark-color" id="all_cnt_rows"></span></p>
+								</div>
+								<div class="data-table-block">
+									<p class="data-item">Стоимость основных средств, относимых на источники производства тепловой энергии: <span class="mark-color" id="fixed_assets_cost_prod"></span><span class="data-unit"> тыс.руб.</span></p>
+									<p class="data-item">Стоимость основных средств, относимых на передачу тепловой энергии: <span class="mark-color" id="fixed_assets_cost_transfer"></span><span class="data-unit"> тыс.руб.</span></p>
+									<p class="data-item">Численность обслуживаемого населения: <span class="mark-color" id="count_service_public"></span><span class="data-unit"> чел.</span></p>
+								</div>
+								<div class="data-table-block">
+									<p class="data-item">Количество абонентов: <span class="mark-color" id="count_abonent"></span><span class="data-unit"> тыс.шт.</span></p>
+									<p class="data-item">Износ основных средств: <span class="mark-color" id="fixed_assets_wear"></span><span class="data-unit"> %</span></p>
+								</div>
+							</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="bttn" data-bs-dismiss="modal">Отмена</button>
+			<button type="submit" class="bttn bttn-color">Переключить</button>
+		</div>
+	</div>
+	</form>
+</div>
+<script type="text/javascript" src="@Url.Content("~/hss/js/popup_common_scripts.js")"></script>
+<script type="text/javascript">
+
+	var heat_point_id_global = -1;
+	var heat_point_name_global = '';
+
+	document.querySelector('#hpSwitchSourcesList').addEventListener('change', (event) => {
+		$('#hp_data_status').val($('#data_status').val());
+		GetUnomOutputs(event.target.value);
+		UpdateHPTableRows();
+		if (heat_point_id_global != -1 && heat_point_name_global != '') {
+			ShowHeatPointsByAllYears(heat_point_id_global, heat_point_name_global);
+		}
+	});
+
+	document.querySelector('#hpSwitchSourceHeadsList').addEventListener('change', (event) => {
+		UpdateHPTableRows();
+		if (heat_point_id_global != -1 && heat_point_name_global != ''){
+			ShowHeatPointsByAllYears(heat_point_id_global, heat_point_name_global);
+		}		
+	});
+
+	document.querySelector('#hpSwitchSourcePerspectiveYearsListStart').addEventListener('change', (event) => {
+		SetEndYearListCorrect();
+		UpdateHPTableRows();
+		if (heat_point_id_global != -1 && heat_point_name_global != '') {
+			ShowHeatPointsByAllYears(heat_point_id_global, heat_point_name_global);
+		}
+	});
+
+	document.querySelector('#hpSwitchSourcePerspectiveYearsListFinish').addEventListener('change', (event) => {
+		SetEndYearListCorrect();
+		UpdateHPTableRows();
+		if (heat_point_id_global != -1 && heat_point_name_global != '') {
+			ShowHeatPointsByAllYears(heat_point_id_global, heat_point_name_global);
+		}
+	});
+
+	function SetEndYearListCorrect(){
+		if ($('#hpSwitchSourcePerspectiveYearsListStart').val() > $('#hpSwitchSourcePerspectiveYearsListFinish').val()) {
+			$('#hpSwitchSourcePerspectiveYearsListFinish').val($('#hpSwitchSourcePerspectiveYearsListStart').val());
+			RefreshSelectById('hpSwitchSourcePerspectiveYearsListFinish');
+		}
+	}
+
+	function GetUnomOutputs(source_id) {
+		$.ajax({
+			url: '@Html.Raw(Url.Action("GetUnomOutputs", "HSS", new { Area = ""}))',
+			type: 'POST',
+			data: { source_id: source_id }
+		}).done(function (data) {
+			changeSelectByOtherSelectUnomOutputsList(data.list, "hpSwitchSourceHeadsList");
+		});
+	}
+
+	function changeSelectByOtherSelectUnomOutputsList(newSelect, select_id) {
+		var select = $('#' + select_id);
+		$(select).find('option').remove();
+		if (newSelect.length !== 0) {
+			for (var i = 0; i < newSelect.length; i++) {
+				$(select).append('<option value=' + newSelect[i].value_id + '>' + newSelect[i].value_name + '</option>');
+			}
+		} else {
+			$(select).append('<option value="">' + "Нет записей" + '</option>');
+		}
+		$(select).selectpicker('destroy');
+		$(select).selectpicker();
+		$(select).selectpicker('open');
+	}
+
+	function GetListSwitchHPTable() {
+		let heat_point_id_list = $('#hpSwitchParamNumberTso').val();
+		let data_status = $('#data_status').val();
+		let perspective_year_before = $('#hpSwitchSourcePerspectiveYearsListStart').val();
+		let perspective_year_after = $('#hpSwitchSourcePerspectiveYearsListFinish').val();
+
+		$.ajax({
+			url: '@Html.Raw(Url.Action("OnGetHeatPointSwitchDataList_PartialViewComponent", "HeatPoint", new { Area = "HeatPointsAndConsumers"}))',
+			type: 'GET',
+			data: {
+				heat_point_id_list: heat_point_id_list,
+				data_status: data_status,
+				perspective_year_before: perspective_year_before,
+				perspective_year_after: perspective_year_after
+			},
+			dataType: 'html'
+		}).done(function (result) {
+			var div = $('#HpDataListTableDiv');
+			div.html("");
+			div.html(result);
+			TableInit('hpSwitchTable', 'simple-scroll', '40vh', 1);
+			hidePreloader();
+		});
+	}
+
+	function ShowHeatPointsByAllYears(heat_point_id, heat_point_name) {
+		heat_point_id_global = heat_point_id;
+		heat_point_name_global = heat_point_name;
+
+		let data_status = $('#data_status').val();
+		document.querySelector('#unomHP').innerText = heat_point_id;
+		document.querySelector('#nameHP').innerText = heat_point_name;		
+		$.ajax({
+			url: '@Html.Raw(Url.Action("OnGetHpHeatWaterSumByAllYears_PartialViewComponent", "HeatPoint", new { Area = "HeatPointsAndConsumers"}))',
+			type: 'GET',
+			data: {
+				heat_point_id: heat_point_id,
+				data_status: data_status
+			},
+			dataType: 'html'
+		}).done(function (result) 
+		{
+			var div = $('#HpDataListHeatWaterTableDiv');
+			div.html("");
+			div.html(result);
+			UpdateHPTableRows();
+			hidePreloader();
+		});
+	}
+
+	function UpdateHPTableRows(){
+		let perspective_year_before = $('#hpSwitchSourcePerspectiveYearsListStart').val();
+		let perspective_year_after = $('#hpSwitchSourcePerspectiveYearsListFinish').val();
+		let switch_source = $('#hpSwitchSourcesList :selected');
+		let switch_source_output_value = $('#hpSwitchSourceHeadsList :selected').text();
+
+		if (switch_source.text() != '') {
+			var switch_source_name = switch_source.attr('data-source-name');
+			var switch_source_unom = switch_source.attr('data-source-unom');
+
+			for (var i = perspective_year_before; i <= perspective_year_after; i++) {
+				$('#unom_source_' + i).text(switch_source_unom);
+				$('#owner_name_' + i).text(switch_source_name);
+				$('#output_' + i).text(switch_source_output_value);
+			}
+		}
+	}
+
+</script>

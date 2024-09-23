@@ -1,0 +1,584 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model WebProject.Areas.Events.Models.EventViewModel
+<link rel="stylesheet" href="~/Content/bootstrap-select.css" />
+@{
+    string selectedValue = string.Empty;
+}
+
+<style>
+    .my_lbl_cls_popup {
+        width: 24%;
+    }
+    .btn-group.bootstrap-select {
+        width: 315px !important;
+    }
+    .error {
+        color: red;
+    }
+    .my_lbl_cls_popup_select {
+        width: 26%;
+        padding-right: 20px !important;
+    }
+
+    textarea {
+        white-space:pre-wrap;
+        margin-left:0px; 
+        text-align:left;
+    }
+    .inp-marg-top-60 {
+        margin-top: 60px;
+    }
+    .inp-marg-top-45 {
+        margin-top: 45px;
+    }
+
+    .inp-marg-top-30 {
+        margin-top: 30px;
+    }
+
+    .inp-marg-top-10 {
+        margin-top: 10px;
+    }
+</style>
+
+<div class="row" id="row-open-fd">
+    <div class="col-md-12">
+        <form asp-controller="Home" asp-action="EventUpdate" asp-antiforgery="true"
+            data-ajax-failure="onFailed" data-ajax-success="onSuccess" data-ajax="true" data-ajax-method="POST" id="event_form" class="form-horizontal">
+            <div on class="panel-body" style="padding-left: 15px; padding-right: 15px; padding-top: 30px; padding-bottom: 30px;">
+                <div class="row">
+                    <div style="width: 550px">
+                        <div class="form-group">
+                            <div class="validation-summary-errors" style="display: none">
+                                <ul>
+                                    <li id="validation_error" style="color: red; font-size: 16px; "></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <input type="hidden" name="Id" value="@Model.Id" />
+                        <input type="hidden" name="action_for" value="@Model.action_for" />
+                        <input type="hidden" name="object_type" value="@Model.object_type" />
+                        <input type="hidden" name="year" value="@Model.year" />
+                        <input type="hidden" name="unom" value="@Model.unom" />
+                        @if (Model.Id > 0)
+                        {
+                            <div class="form-group">
+                                <label class="col-md-3 control-label my_lbl_cls_popup">УНОМ:</label>
+                                <div class="col-md-9">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                        <input type="text" class="form-control required" value="@Model.unom" disabled>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        <div class="form-group">
+                            <label class="col-md-3 control-label my_lbl_cls_popup">№ проекта ИП:</label>
+                            <div class="col-md-9">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <input type="text" class="form-control" name="ip_num" value="@Model.ip_num">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label my_lbl_cls_popup_select">Городская собственность (аренда да/нет):</label>
+                            <select class="selectpicker inp-marg-top-30" data-show-subtext="true" data-live-search="true" name="is_city_own" id="is_city_own">
+                                @if (@Model.Id == 0 || Model.is_city_own == null)
+                                {
+                                    <option value="" selected disabled>Выберите значение</option>
+                                }
+                                @if (Model.is_city_own == true)
+                                {
+                                    <option value="true" selected>Да</option>
+                                    <option value="false">Нет</option>
+                                    <option value="null">-</option>
+                                }
+                                else if (Model.is_city_own == false)
+                                {
+                                    <option value="false" selected>Нет</option>
+                                    <option value="true">Да</option>
+                                    <option value="null">-</option>
+                                }
+                                else
+                                {
+                                    <option value="false">Нет</option>
+                                    <option value="true">Да</option>
+                                }
+                            </select>
+                        </div>
+                        @if (Model.object_type == 1)
+                        {
+                            <div class="form-group">
+                                <label class="col-md-3 control-label my_lbl_cls_popup">Id оборудования:</label>
+                                <div class="col-md-9">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                        @*<input type="number" class="form-control" name="equip_id" id="equip_id" value="@Model.equip_id">*@
+                                        <input type="number" class="form-control" asp-for="equip_id" >
+                                        @*<span asp-validation-for="equip_id"></span>*@
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label my_lbl_cls_popup">Затраты до:</label>
+                                <div class="col-md-9">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                        <input type="text" class="form-control double" name="cost_before" value="@Model.cost_before">
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        @if (Model.object_type == 2 || Model.object_type == 3)
+                        {
+                            <div class="form-group">
+                                <label class="col-md-3 control-label my_lbl_cls_popup">Sys:</label>
+                                <div class="col-md-9">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                        <input type="text" class="form-control" name="sys" value="@Model.sys">
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        <div class="form-group">
+                            <label class="col-md-3 control-label my_lbl_cls_popup_select">№ источника:</label>
+                            <select class="selectpicker" data-show-subtext="true" data-live-search="true" name="source_num" id="source_num">
+                                @if (@Model.Id == 0 || Model.source_num == null)
+                                {
+                                    <option value="" selected disabled>Выберите источник</option>
+                                }
+                                @foreach (var sources in ViewBag.SourcesList)
+                                {
+                                    if (sources.s_num == Model.source_num)
+                                    {
+                                        <option value="@sources.s_num" selected>@sources.source_name</option>
+                                    }
+                                    if (sources.s_num != Model.source_num)
+                                    {
+                                        <option value="@sources.s_num">@sources.source_name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        @if (Model.object_type > 1)
+                        {
+                            <div class="form-group">
+                                <label class="col-md-3 control-label my_lbl_cls_popup_select">Код ТСО:</label>
+                                <select class="selectpicker" data-show-subtext="true" data-live-search="true" name="tso_code" id="tso_code">
+                                    @if (@Model.Id == 0 || Model.tso_code == null)
+                                    {
+                                        <option value="" selected disabled>Выберите ТСО</option>
+                                    }
+                                    @foreach (var tso in ViewBag.TSOList)
+                                    {
+                                        if (tso.tso_code == Model.tso_code)
+                                        {
+                                            <option value="@tso.tso_code" selected>@tso.org_name</option>
+                                        }
+                                        if (tso.tso_code != Model.tso_code)
+                                        {
+                                            <option value="@tso.tso_code">@tso.org_name</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        }
+                        @if (Model.object_type > 1)
+                        {
+                            <div class="form-group">
+                                <label class="col-md-3 control-label my_lbl_cls_popup_select">Наименование объекта:</label>
+                                <select class="selectpicker" data-show-subtext="true" data-live-search="true" name="obj_code" id="obj_code">
+                                    @if (@Model.Id == 0 || Model.obj_code == null)
+                                    {
+                                        <option value="" selected disabled>Выберите код объекта</option>
+                                    }
+                                    @foreach (var object_codes in ViewBag.ObjectsCodes)
+                                    {
+                                        if (object_codes.Id == Model.obj_code)
+                                        {
+                                            <option value="@object_codes.Id" selected>@object_codes.name</option>
+                                        }
+                                        if (object_codes.Id != Model.obj_code)
+                                        {
+                                            <option value="@object_codes.Id">@object_codes.name</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        }
+                        @if (Model.object_type == 1 || Model.object_type == 2)
+                        {
+                            <div class="form-group">
+                                <label class="col-md-3 control-label my_lbl_cls_popup_select">Наименование назначения:</label>
+                                <select class="selectpicker" data-show-subtext="true" data-live-search="true" name="purpose_code" id="purpose_code">
+                                    @if (@Model.Id == 0 || Model.purpose_code == null)
+                                    {
+                                        <option value="" selected disabled>Выберите код назначения</option>
+                                    }
+                                    @foreach (var purpose_codes in ViewBag.PurposeCodes)
+                                    {
+                                        if (purpose_codes.Id == Model.purpose_code)
+                                        {
+                                            <option value="@purpose_codes.Id" selected>@purpose_codes.name</option>
+                                        }
+                                        if (purpose_codes.Id != Model.purpose_code)
+                                        {
+                                            <option value="@purpose_codes.Id">@purpose_codes.name</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        }
+                        @if (Model.object_type != 3)
+                        {
+                            <div class="form-group">
+                                <label class="col-md-3 control-label my_lbl_cls_popup_select">Наименование вида мероприятия:</label>
+                                <select class="selectpicker inp-marg-top-10" data-show-subtext="true" data-live-search="true" name="type_code" id="type_code">
+                                    @if (@Model.Id == 0 || Model.purpose_code == null)
+                                    {
+                                        <option value="" selected disabled>Выберите код вида мероприятия</option>
+                                    }
+                                    @foreach (var evtypes_codes in ViewBag.EventTypes)
+                                    {
+                                        if (evtypes_codes.Id == Model.type_code)
+                                        {
+                                            <option value="@evtypes_codes.Id" selected>@evtypes_codes.name</option>
+                                        }
+                                        if (evtypes_codes.Id != Model.type_code)
+                                        {
+                                            <option value="@evtypes_codes.Id">@evtypes_codes.name</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        }
+                        <div class="form-group">
+                            <label class="col-md-3 control-label my_lbl_cls_popup_select">Наименование источника финансирования:</label>
+                            <select class="selectpicker inp-marg-top-10" data-show-subtext="true" data-live-search="true" name="sfinance_code" id="sfinance_code">
+                                @if (@Model.Id == 0 || Model.sfinance_code == null)
+                                {
+                                    <option value="" selected disabled>Выберите код источника финансирования</option>
+                                }
+                                @foreach (var sfinance_codes in ViewBag.SFinanceCodes)
+                                {
+                                    if (sfinance_codes.Id == Model.sfinance_code)
+                                    {
+                                        <option value="@sfinance_codes.Id" selected>@sfinance_codes.name</option>
+                                    }
+                                    if (sfinance_codes.Id != Model.sfinance_code)
+                                    {
+                                        <option value="@sfinance_codes.Id">@sfinance_codes.name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label my_lbl_cls_popup">Планируемый срок реализации (начало):</label>
+                            <div class="col-md-9">
+                                <div class="input-group inp-marg-top-10">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <input type="text" class="form-control" name="start_realize_year" value="@Model.start_realize_year">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label my_lbl_cls_popup">Планируемый срок реализации (конец):</label>
+                            <div class="col-md-9">
+                                <div class="input-group inp-marg-top-10">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <input type="text" class="form-control" name="end_realize_year" value="@Model.end_realize_year">
+                                </div>
+                            </div>
+                        </div>
+                        @if (Model.object_type > 1)
+                        {
+                            <div class="form-group">
+                                <label class="col-md-3 control-label my_lbl_cls_popup">Адрес начала:</label>
+                                <div class="col-md-9">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                        <input type="text" class="form-control" name="address_start" value="@Model.address_start">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label my_lbl_cls_popup">Адрес конца:</label>
+                                <div class="col-md-9">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                        <input type="text" class="form-control" name="address_end" value="@Model.address_end">
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        @if (Model.object_type == 2 || Model.object_type == 3)
+                        {
+                            <div class="form-group">
+                                <label class="col-md-3 control-label my_lbl_cls_popup">Протяжённость до:</label>
+                                <div class="col-md-9">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                        <input type="text" class="form-control double" name="length_before" value="@Model.length_before">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label my_lbl_cls_popup">Протяжённость после:</label>
+                                <div class="col-md-9">
+                                    <div class="input-group inp-marg-top-10">
+                                        <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                        <input type="text" class="form-control double" name="length_after" value="@Model.length_after">
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        @if (Model.object_type < 4)
+                        {
+                            <div class="form-group">
+                                @if (Model.object_type == 1)
+                                {
+                                    <label class="col-md-3 control-label my_lbl_cls_popup">Мощность до:</label>
+                                }
+                                else
+                                {
+                                    <label class="col-md-3 control-label my_lbl_cls_popup">Диаметр до:</label>
+                                }
+                                <div class="col-md-9">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                        <input type="text" class="form-control double" name="d_p_before" value="@Model.d_p_before">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @if (Model.object_type == 1)
+                                {
+                                    <label class="col-md-3 control-label my_lbl_cls_popup">Мощность после:</label>
+                                }
+                                else
+                                {
+                                    <label class="col-md-3 control-label my_lbl_cls_popup">Диаметр после:</label>
+                                }
+                                <div class="col-md-9">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                        <input type="text" class="form-control double" name="d_p_after" value="@Model.d_p_after">
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        @if (Model.object_type == 1 || Model.object_type == 4)
+                        {
+                            <div class="form-group">
+                                <label class="col-md-3 control-label my_lbl_cls_popup">Наименование мероприятия:</label>
+                                <div class="col-md-9">
+                                    <div class="input-group inp-marg-top-10">
+                                        <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                        <input type="text" class="form-control" name="event_name" value="@Model.event_name">
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        @if (Model.object_type > 1)
+                        {
+                            <div class="form-group">
+                                <label class="col-md-3 control-label my_lbl_cls_popup_select">Округ:</label>
+                                <select class="selectpicker" data-show-subtext="true" data-live-search="true" name="reg_id" id="reg_id">
+                                    @if (@Model.Id == 0 || Model.reg_id == null)
+                                    {
+                                        <option value="" selected disabled>Выберите округ</option>
+                                    }
+                                    @foreach (var regions in ViewBag.DistrictsList)
+                                    {
+                                        if (regions.Id == Model.reg_id)
+                                        {
+                                            <option value="@regions.Id" selected>@regions.district_name</option>
+                                        }
+                                        if (regions.Id != Model.reg_id)
+                                        {
+                                            <option value="@regions.Id">@regions.district_name</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        }
+                        @if (Model.object_type == 3)
+                        {
+                            <div class="form-group">
+                                <label class="col-md-3 control-label my_lbl_cls_popup">Год прокладки ТС:</label>
+                                <div class="col-md-9">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                        <input type="text" class="form-control" name="year_of_laying" value="@Model.year_of_laying">
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        @if (Model.object_type > 1)
+                        {
+                            <div class="form-group">
+                                <label class="col-md-3 control-label my_lbl_cls_popup">Кап. вложения в текущ. ценах:</label>
+                                <div class="col-md-9">
+                                    <div class="input-group inp-marg-top-10">
+                                        <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                        <input type="text" class="form-control double" name="cap_invest" value="@Model.cap_invest">
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel-footer" style="padding-bottom: 40px">
+                <button type="submit" class="btn btn-primary pull-right" id="btnSave">Сохранить</button>
+                <div id="Results"></div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.17.0/jquery.validate.min.js"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.validation.unobtrusive/3.2.10/jquery.validate.unobtrusive.min.js"></script>
+
+<script type="text/javascript">
+
+    $(document).on('keydown', function(e){
+        if(e.ctrlKey && e.which === 83){ // Check for the Ctrl key being pressed, and if the key = [S] (83)
+            e.preventDefault();
+            $('form').submit();
+            return false;
+        }
+    });
+
+    $(document).ready(function () {
+        $("input.double[type=text]").keydown(function (e) {
+
+            var theEvent = e || window.event;
+            var key = theEvent.keyCode || theEvent.which;
+            key = String.fromCharCode(key);
+            if (key.length == 0) return;
+            var regex = /^[0-9.,\b]+$/;
+            if (!regex.test(key)) {
+                theEvent.returnValue = false;
+                if (theEvent.preventDefault) theEvent.preventDefault();
+            }
+
+            var keyCode = e.which ? e.which : event.keyCode;
+            if (keyCode == 110 || keyCode == 190 || keyCode == 191) {
+                e.preventDefault();
+                var value = $(this).val();
+                if (value.includes(","))
+                    $(this).val(value + "");
+                else 
+                    $(this).val(value + ",");
+            }
+        });
+
+        var elem = document.getElementById('event_form');
+        elem.addEventListener("submit", function (e) {
+            if ($(this).valid()) {
+                document.getElementById("btnSave").disabled = true;
+            }
+        }, true);
+
+        $('.selectpicker').selectpicker({
+            size: 3
+        });
+
+
+        function checkValidate() {
+        var form = $('form');
+
+            $.each(form, function () {
+                $(this).validate({
+                    ignore: [],
+                    errorClass: 'error',
+                    validClass: 'success',
+                    rules: {
+                        //appeal_date: {
+                        //    required: true
+                        //},
+                        //category_id: {
+                        //    required: true
+                        //},
+                        //appeal_number: {
+                        //    required: true,
+                        //    normalizer: function normalizer(value) {
+                        //        return $.trim(value);
+                        //    }
+                        //},
+                        //appeal_desc_short: {
+                        //    required: true,
+                        //    normalizer: function normalizer(value) {
+                        //        return $.trim(value);
+                        //    }
+                        //},
+                        //unom_num: {
+                        //    required: true,
+                        //    normalizer: function normalizer(value) {
+                        //        return $.trim(value);
+                        //    }
+                        //}
+                    },
+                    errorElement: 'span',
+                    errorPlacement: function (error, element) {
+                        var placement = $(element).data('error');
+                        if (placement) {
+                            $(placement).append(error);
+                        } else {
+                            error.insertBefore(element);
+                        }
+                    },
+                    messages: {
+                        //unom_num: 'Введите номер УНОМа',
+                        //category_id: 'Выберите категорию',
+                        //appeal_date: 'Введите дату обращения',
+                        //appeal_number: 'Введите номер обращения',
+                        //appeal_desc_short: 'Введите краткое содержание обращения'
+                    }
+                });
+            });
+        }
+        checkValidate();
+
+    });
+        
+        var onFailed = function(context){
+            $("#modal-open-fd").modal('hide');
+        };
+
+        var onSuccess = function(success){
+            
+            if (success.success == true) {
+                ajaxStart();
+                $.ajax({
+                    type: 'GET',
+                    url: 'Events/Home/OnGetCallEventsListViewComponent',
+                    data: {
+                        year: Number($("#year").val()),
+                        object_type: $('#object_type').val()
+                    },
+                    dataType: 'html'
+                })
+                    .done(function (result) {
+                        var div = $('.panel-body');
+                        div.html("");
+                        div.html(result);
+                        $("#modal-open-fd").modal('hide');
+
+                        ajaxStop();
+                    });
+            }
+            else {
+                document.getElementById("btnSave").disabled = false;
+                $('.validation-summary-errors').show();
+                $("#validation_error").text(success.error);
+                //window.scrollTo(0, 0);
+                document.getElementById("row-open-fd").scrollIntoView();
+            }
+        };
+
+</script>

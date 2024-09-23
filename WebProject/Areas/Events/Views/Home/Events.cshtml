@@ -1,0 +1,188 @@
+﻿@{
+    ViewData["Title"] = "Мероприятия";
+}
+<link rel="stylesheet" type="text/css" id="theme" href="~/Content/theme-default.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
+<style>
+    .animate__zoomInDown {
+      animation-duration: 2s; 
+    }
+    .animate__rollIn {
+      animation-duration: 2s; 
+    }
+    .animate__slideInRight {
+      animation-duration: 2s; 
+    }
+
+    .nav-tabs {
+        margin-top: 10px !important;
+        margin-left: 15px;
+    }
+</style>
+
+<div id="partial-content">
+
+    <div class="panel panel-default">
+        <div id="panel panel-default">
+            <fieldset>
+                <div style="margin: 20px 20px 10px; width: 800px;">
+                    <div class="form-group">
+                        <label class="control-label">Выберите год:</label>
+                        <select class="selectpicker" data-show-subtext="true" data-live-search="true" name="year" id="year">
+                            @for (int i = 0; i < ViewBag.YearsList.Count; i++)
+                            {
+                                if (i == ViewBag.YearsList.Count - 1)
+                                {
+                                    <option value="@ViewBag.YearsList[i].year" selected>@ViewBag.YearsList[i].year</option>
+                                }
+                                else
+                                {
+                                    <option value="@ViewBag.YearsList[i].year">@ViewBag.YearsList[i].year</option>
+                                }
+                            }
+                        </select>
+                        <input type="hidden" name="object_type" id="object_type" value="1" />
+                    </div>
+                    @*<button class="btn btn-default animate__animated animate__rollIn" onclick="LoadTable()">Загрузить</button>*@
+                    <button class="btn btn-default animate__animated animate__slideInRight exportExcelFull" id="excelFull">Выгрузить в Excel</button>
+                    @*<label for="start">Поиск по УНОМу или Исполнителю</label>
+                    <input style="width: 100%" type="text" onkeypress="return Search(event)" name="searchText" />*@
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <div style="display: -webkit-inline-box; margin: 10px 20px 0px; width: 500px;">
+                    <button class="btn btn-default animate__animated animate__zoomInDown" style="font-weight: bold; font-style: italic; font-size: large; color: darkblue; background-color: cyan;" onclick="EventOpen(-1, 'new', -1, 0);">Добавить Мероприятие</button>
+                </div>
+            </fieldset>
+        </div>
+
+        @*<ul class="nav nav-pills nav-fill">
+          <li class="nav-item">
+            <a class="nav-link active" href="#!" >Источники</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#!">Сети из<br/> перспективы</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#!">Ветхие<br/> сети</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#!">Перевод на<br/> закрытую схему</a>
+          </li>
+        </ul>*@
+        
+        <ul class="nav nav-tabs">
+            <li class="nav-item active" id="nav_item_1">
+                <a class="nav-link" data-objtype="1" href="#!">Источники</a>
+            </li>
+            <li class="nav-item" id="nav_item_2">
+                <a class="nav-link" data-objtype="2" href="#!">Сети из перспективы</a>
+            </li>
+            <li class="nav-item" id="nav_item_3">
+                <a class="nav-link" data-objtype="3" href="#!">Ветхие сети</a>
+            </li>
+            <li class="nav-item" id="nav_item_4">
+                <a class="nav-link" data-objtype="4" href="#!">Перевод на закрытую схему</a>
+            </li>
+        </ul>
+
+        
+
+        <div class="panel-body">
+           @* @await Component.InvokeAsync("EventsList")*@
+        </div>
+    </div>
+
+</div>
+
+@section modalsection {
+<div id="modal-section">
+    <div id="modal-open-fd" class="modal fade" data-backdrop="static" tabindex='-1'>
+        @*onclick="TableOff();"*@
+        <div class="modal-dialog modal-large" style="width: 550px; margin-left: 35%">
+            <div class="modal-content">
+                <div id="modal-open-fd-header" class="modal-header">
+                    <button class="close" type="button" data-dismiss="modal">×</button>
+                    <h4 class="modal-title"></h4>
+                </div>
+                <div id="div-open-fd"></div>
+            </div>
+        </div>
+    </div>
+</div>
+}
+
+@section pageJs {
+    <script type="text/javascript">
+
+        $body = $("body");
+
+        function ajaxStart() {
+            $body.addClass("loading");
+        }
+        function ajaxStop() {
+            $body.removeClass("loading");
+        }
+
+        $('.nav-item').on("click", function (event) {
+            $('.nav-item').removeClass('active');
+            var nav_item = event.target.parentNode;
+            nav_item.className = nav_item.className + " active";
+            var obj_type = event.target.getAttribute("data-objtype");
+            $('#object_type').val(obj_type);
+            ajaxStart();
+            $.ajax({
+                type: 'GET',
+                url: 'Events/Home/OnGetCallEventsListViewComponent',
+                data: {
+                    year: Number($("#year").val()),
+                    object_type: Number(obj_type)
+                },
+                dataType: 'html'
+            })
+                .done(function (result) {
+                    var div = $('.panel-body');
+                    div.html("");
+                    div.html(result);
+
+                    ajaxStop();
+                });
+
+            //alert();
+        });
+
+        $(document).ready(function () {
+
+            $("#events").addClass("active");
+
+            $('.datepicker').datepicker({
+                format: "dd.mm.yyyy",
+                autoclose: true,
+                language: 'ru'
+            });
+
+            ajaxStart();
+            $.ajax({
+                type: 'GET',
+                url: 'Events/Home/OnGetCallEventsListViewComponent',
+                data: {
+                    year: Number($("#year").val()),
+                    object_type: $('#object_type').val()
+                },
+                dataType: 'html'
+            })
+                .done(function (result) {
+                    var div = $('.panel-body');
+                    div.html("");
+                    div.html(result);
+
+                    ajaxStop();
+                });
+
+        });
+
+    </script>
+}
+

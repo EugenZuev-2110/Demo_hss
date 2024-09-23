@@ -1,0 +1,131 @@
+﻿@model WebProject.Areas.HPConsumers.Models.ConsumerAddRemoveGenInfoDataViewModel
+
+@{
+    Layout = null; string is_checked = string.Empty;
+}
+
+<form asp-controller="Consumers" asp-action="ConsumerAddRemove_GenInfoData_Save" asp-antiforgery="true" asp-area="HPConsumers" id="consumers_gen_info_form" class="needs-validation" novalidate
+      data-ajax-failure="onFailedFormTZ" data-ajax-success="onSuccessFormConsumersGenInfo" data-ajax-begin="onBeginFormTZ" data-ajax="true" data-ajax-method="POST">
+    <input hidden asp-for="@Model.consumer_id">
+    <input hidden asp-for="@Model.data_status">
+    <input hidden name="is_deleted" id="is_deleted_consumer_gen_info" value="@Model.is_deleted">
+    <div class="data-block">
+        <div class="data-row">
+            <div class="data-item">
+                <label class="data-label lg-fix">Управляющая организация / ИНН организации:</label>
+                <select class="selectpicker data-value stretch" name="add_remove_gen_info_cons_org_owner_id" id="add_remove_gen_info_cons_org_owner_id"
+                        data-live-search="true" placeholder="Введите название организации или ИНН">
+                    @foreach (var tz_list in ViewBag.OrgOwnerInn)
+                    {
+                        if (tz_list.value_id == Model.add_remove_gen_info_cons_org_owner_id)
+                        {
+                            <option value="@tz_list.value_id" selected>@tz_list.value_name</option>
+                        }
+                        if (tz_list.value_id != Model.add_remove_gen_info_cons_org_owner_id)
+                        {
+                            <option value="@tz_list.value_id">@tz_list.value_name</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="data-item">
+                <label class="data-label lg-fix">Здание:</label>
+                <select class="selectpicker data-value stretch" id="add_remove_gen_info_building_id" name="add_remove_gen_info_building_id"
+                        data-live-search="true" placeholder="Выберите здание" required>
+                    @foreach (var tz_list in ViewBag.Buildings)
+                    {
+                        if (tz_list.building_id == Model.add_remove_gen_info_building_id)
+                        {
+                            <option value="@tz_list.building_id" selected>@tz_list.unom_building</option>
+                        }
+                        if (tz_list.building_id != Model.add_remove_gen_info_building_id)
+                        {
+                            <option value="@tz_list.building_id">@tz_list.unom_building</option>
+                        }
+                    }
+                </select>
+                <a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Выберите значение из списка"></a>
+            </div>
+        </div>
+        <div class="data-row">
+            <button type="submit" class="bttn bttn-color ms-auto" id="consumers_gen_info_save_btn">Сохранить</button>
+        </div>
+    </div>
+</form>
+
+<script type="text/javascript" src="@Url.Content("~/hss/js/popup_common_scripts.js")"></script>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        let par_elem = document.getElementById("add_remove_gen_info_cons_org_owner_id").parentElement;
+        par_elem.querySelector("input.form-control[type=search]").addEventListener('keyup', (event) => {
+            GetOrgOwnerInnListByCharsConsumers(event.target.value, $('#data_status').val());
+        });
+    });
+
+    function GetOrgOwnerInnListByCharsConsumers(input_chars, data_status) {
+        $.ajax({
+            url: '@Html.Raw(Url.Action("GetOrgOwnerInnListByChars", "HSS", new { Area = ""}))',
+            type: 'POST',
+            data: { chars: input_chars, data_status: data_status }
+        }).done(function (data) {
+            changeSelectByOtherSelectOrgOwnerInnList(data.list, "add_remove_gen_info_cons_org_owner_id", input_chars);
+        });
+    }
+
+    function changeSelectByOtherSelectOrgOwnerInnList(newSelect, select_id, input_chars) {
+        var select = $('#' + select_id);
+        $(select).find('option').remove();
+        if (newSelect.length !== 0) {
+            for (var i = 0; i < newSelect.length; i++) {
+                $(select).append('<option value=' + newSelect[i].value_id + '>' + newSelect[i].value_name + '</option>');
+            }
+        } else {
+            $(select).append('<option value="">' + "Нет записей" + '</option>');
+        }
+        $(select).selectpicker('destroy');
+        $(select).selectpicker();
+        $(select).selectpicker('open');
+        let par_elem = document.getElementById("add_remove_gen_info_cons_org_owner_id").parentElement;
+        par_elem.querySelector("input.form-control[type=search]").value = input_chars;
+        par_elem.querySelector("input.form-control[type=search]").addEventListener('keyup', (event) => {
+            GetOrgOwnerInnListByCharsConsumers(event.target.value, $('#data_status').val());
+        });
+    }
+
+    var onSuccessFormConsumersGenInfo = function (xhr) {
+        hidePreloader();
+
+        if (xhr.success && xhr.is_deleted == true && xhr._is_new_consumer != true) {
+            showMessage('Данные удалены.', 'modal', 'success');
+            document.querySelector('#open_consumer_add_remove_del_but').disabled = true;
+            document.querySelector('#consumer_year_impl_save_btn').disabled = true;
+            document.querySelector('#consumer_dest_rel_cat_hs_save_btn').disabled = true;
+            document.querySelector('#consumers_gen_info_save_btn').disabled = true;
+            document.querySelector('#consumer_heat_loads_supply_contract_save_btn').disabled = true;
+            document.querySelector('#consumer_year_heat_consumption_save_btn').disabled = true;
+            document.getElementById("consumer_num_sign_save_btn").disabled = true;
+        }
+        else if (xhr.success && xhr.is_deleted != true && xhr._is_new_consumer != true) {
+            showMessage('Данные сохранены.', 'modal', 'success');
+            $("select[id=add_remove_gen_info_unom_addr] option[value=" + xhr.consumer_id + "]").text(xhr.unom);
+            RefreshSelectById('add_remove_gen_info_unom_addr');
+            $("#add_remove_gen_info_district_id").val(xhr.district);
+        }
+        else if (xhr.success && xhr._is_new_consumer == true) {
+            showMessage('Данные добавлены.', 'modal', 'success');
+            OpenPopupConsumersAddRemove(xhr.consumer_id);
+        }
+        else {
+            showMessage(xhr.error, 'modal', 'fault');
+        }
+        $("#refresh_table").val(1);
+    };
+
+    //function UpdateConsumerBuildingsDistrict(event) {
+    //    var select_value = event.target.value;
+    //    var text = $("select[id=add_remove_gen_info_cons_building_id] option[value=" + select_value + "]").text();
+    //    $("#add_remove_gen_info_district_id").val(text);
+    //}
+
+</script>

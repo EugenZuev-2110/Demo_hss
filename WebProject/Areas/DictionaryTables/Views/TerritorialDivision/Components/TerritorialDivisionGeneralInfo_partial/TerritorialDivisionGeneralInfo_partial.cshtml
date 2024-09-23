@@ -1,0 +1,110 @@
+﻿@model WebProject.Areas.DictionaryTables.Models.TerritorialDivisionGeneralInfoDataOneViewModel
+
+<input type="hidden" value="0" id="refresh_terrDivision_table" />
+<form asp-controller="TerritorialDivision" asp-action="TerritorialDivisionGeneralInfo_Save" asp-antiforgery="true" asp-area="DictionaryTables" id="terrDivisionGeneral_form"
+   data-ajax-failure="onFailedFormTZ" data-ajax-success="onSuccessFormTerrDivisionGeneral" data-ajax-begin="onBeginFormTZ" data-ajax="true" data-ajax-method="POST">
+	<div class="data-row">
+		<div class="data-item">
+			<input type="hidden" name="unom_p" value="@Model.unom_p" id="terrDivision_unom_input" />
+			<input type="hidden" name="data_status" value="@Model.data_status" id="terrDivision_data_input" />
+			<input type="hidden" name="Id" value="@Model.Id" id="terrDivision_id_input" />
+			<input type="hidden" name="district_num" value="@Model.district_num" id="terrDivision_distr_num_input" />
+
+			<label class="data-label lg-fix">Наименование округа: <span class="sublabel">полное</span></label>
+			<select class="selectpicker data-value lg-stretch" name="region_id" data-size="5" id="paramNumberRegion" data-live-search="true" placeholder="Выберите значение" required>
+				@foreach(var reg in ViewBag.RegionList)
+				{
+					if(Model != null && reg.region_id == Model.region_id)
+					{
+						<option value="@reg.region_id" selected>@reg.region_name (@reg.region_short)</option>
+					}
+					else
+					{
+						<option value="@reg.region_id">@reg.region_name (@reg.region_short)</option>
+					}
+				}
+				</select>
+		</div>
+
+	</div>
+	<div class="data-row">
+		<div class="data-item">
+			<label class="data-label lg-fix">Наименование района (поселения)</label>
+			<input type="text" class="data-value xxl-stretch" asp-for="@Model.district_name" id="distr_name" required>
+		</div>
+	</div>
+	<div class="data-row">
+		<div class="data-item">
+			<label class="data-label lg-fix">Уникальный номер слоя электронной модели</label>
+			<select class="selectpicker data-value lg-stretch" id="paramNumberELModel" data-live-search="true" placeholder="Выберите значение" disabled>
+				<option value="2020">2020</option>
+				<option value="2021">2021</option>
+				<option value="2022">2022</option>
+			</select>
+		</div>
+		<div class="data-item">
+			<label class="data-label lg-fix">SYS объекта в электронном слое</label>
+			<input type="text" class="data-value lg-stretch" disabled>
+		</div>
+	</div>
+	<button type="submit" class="bttn bttn-color ms-auto" style="float: right;" form="terrDivisionGeneral_form" id="btnSubmitTerrDivisionGeneralInfo">Сохранить</button>
+</form>
+
+<script type="text/javascript">
+	
+	var onSuccessFormTerrDivisionGeneral = function (xhr) 
+	{
+		if (xhr.success == true) {
+			showMessage('Данные сохранены.', 'modal', 'success');
+			if (xhr.is_new_district === 1)
+			{
+				UpdatePartial(xhr.distr_id);
+			}
+				$("#terrDivisionClimatic_id_input").val(xhr.distr_id);
+				$("#terrDivisionPopulate_id_input").val(xhr.distr_id);
+				let select_id = "paramNumberDistr";
+				$('#' + select_id).val(xhr.unom_distr);
+				$('#' + select_id).append('<option value=' + xhr.distr_id + ' selected>' + xhr.unom_distr + '</option>');
+				
+			RefreshSelectById(select_id);
+		}
+		else
+		{
+			if (xhr.message === undefined)
+			{
+				xhr.message = 'Ошибка сохранения данных'
+			}
+			showMessage(xhr.message, 'modal', 'fault');
+		}
+		hidePreloader();
+	};
+
+
+	function UpdatePartial(distr_id)
+	{
+		showPreloader();
+		document.getElementById("btnSubmitTerrDivisionClimatic").disabled = false;
+		document.getElementById("btnSubmitTerrDivisionPopulate").disabled = false;
+
+		$.ajax(
+		{
+			type: 'GET',
+			url: '@Html.Raw(Url.Action("OnGetCallTerritorialDivisionClimatic_PartialViewComponent", "TerritorialDivision", new { Area = "DictionaryTables" }))',
+			data: 
+			{
+				data_status: $('#data_status').val(),
+				perspective_year: $('#perspective_year').val(),
+				distr_id: distr_id
+			},
+			dataType: 'html'
+		})
+			.done(function (result) 
+			{
+				var div = $('#climatic_div');
+				div.html("");
+				div.html(result);
+			});
+
+	
+	}
+</script>

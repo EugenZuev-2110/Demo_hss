@@ -1,0 +1,65 @@
+﻿@model List<WebProject.Areas.TSO.Models.TZOnePSDataListViewModel>
+@{
+	Layout = null;
+	int cnt_columns = 14;
+}
+
+
+<div class="table-buttons tzPSTable-buttons"></div>
+<table id="tzPSTable" class="display compact" style="width:100%">
+	<thead>
+		<tr>
+			<th rowspan="2">УНОМ НАС</th>
+			<th rowspan="2">УНОМ СТ</th>
+			<th rowspan="2">УНОМ ЕТО</th>
+			<th rowspan="2">Наименование насосо-перекачивающей станции (НПС)</th>
+			<th rowspan="2">Схема присоединения насосов к магистральным трубопроводам</th>
+			<th rowspan="2">Округ</th>
+			<th rowspan="2">Район</th>
+			<th rowspan="2">Адрес месторасположения</th>
+			<th rowspan="2">Производительность, т/ч</th>
+			<th rowspan="2">Наличие телемеханики</th>
+			<th colspan="2">Организация собственник</th>
+			<th rowspan="2">Статус насосной станции</th>
+			<th rowspan="2">Объект относится к бесхозяйному имуществу</th>
+		</tr>
+		<tr>
+			<th>ИНН</th>
+			<th>Наименование</th>
+		</tr>
+		<tr class="filter-row ">
+			@for (int i = 0; i < @cnt_columns; i++)
+			{
+				if (i == 0)
+				{
+					<th class="dtfc-fixed-left" style="left:0; position:sticky;"><input type="text" class="filter-col-0" /></th>
+				}
+				else
+				{
+					<th><input type="text" class="filter-col-@i" /></th>
+				}
+			}
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var ps_list in Model)
+		{
+			<tr>
+				<td>@ps_list.pump_station_id</td>
+				<td>@ps_list.unom_hss</td>
+				<td>@ps_list.unom_eto</td>
+				<td>@ps_list.pump_station_name</td>
+				<td>@ps_list.pump_scheme_connect_name</td>
+				<td>@ps_list.region_short</td>
+				<td>@ps_list.district_name</td>
+				<td>@ps_list.address</td>
+				<td>@ps_list.sum_pump_capacity_ps</td>
+				<td>@ps_list.avail_telemech</td>
+				<td>@ps_list.inn_org_owner</td>
+				<td>@ps_list.org_owner</td>
+				<td>@ps_list.pump_station_status_name</td>
+				<td>@ps_list.obj_vacant_prop</td>
+			</tr>
+		}
+	</tbody>
+</table>

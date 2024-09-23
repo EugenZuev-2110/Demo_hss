@@ -1,0 +1,1388 @@
+﻿@using WebProject.Data
+@model WebProject.Models.ObjectDescriptionViewModel
+
+@{
+    ViewData["Title"] = "УНОМЫ";
+}
+
+<style>
+    .frst-label {
+        width: 17%
+    }
+    .frst-label41 {
+        width: 41%
+    }
+    .main-lbl {
+        padding-bottom: 10px;
+    }
+    .panel-new {
+        border: 1px solid transparent;
+        border-radius: 10px;
+        border-color: #ddd;
+    }
+    .col-md-6 {
+        width: 100%;
+    }
+    .panel-grid {
+        display: grid;
+    }
+    .form-group-grid {
+        display: grid;
+        width: 600px;
+    }
+    .form-group-block {
+        width: 600px;
+    }
+    .div-flex {
+        display: flex;
+    }
+    .lbl-font-12 {
+        font-size: 12px; 
+        padding-top: 0px !important;
+    }
+    .lbl-font-11 {
+        font-size: 11px; 
+        padding-top: 0px !important;
+    }
+    .inp-marg-top-15 {
+        margin-top: 15px;
+    }
+    .inp-marg-top-30 {
+        margin-top: 30px;
+    }
+    .inp-marg-top-45 {
+        margin-top: 45px;
+    }
+    .input-group-w250 {
+        width: 250px;
+    }
+    .bootstrap-select {
+        width: 305px !important;
+    }
+    .col-md-6 {
+        margin-bottom: inherit;
+    }
+
+    hr {
+        display: block;
+        height: 1px;
+        border: 0;
+        border-top: 1px solid #ccc;
+        margin: 1em 0;
+        padding: 0;
+        margin-left: 15px;
+    }
+    .error {
+        color: red;
+    }
+    .div-popup-success-mini {
+        height: 150px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        font-size: x-large;
+    }
+
+</style>
+
+<div>
+    <div style="font-size: xx-large; text-decoration-line: underline;">Уном обращения: @Model.unom_num</div>
+    @if (Model.unom_category_id == 2)
+        {
+            <div style="font-size: x-large;">Наименование локальной схемы: @Model.object_id</div>
+        }
+        else if (Model.unom_category_id == 1)
+        {
+            <div style="font-size: x-large;">ConsumerId: <a href="#!" style="cursor: pointer;" onclick="navigator.clipboard.writeText('@Model.object_id')">@Model.object_id</a>, Адрес: @Model.object_address</div>
+        }
+        <div style="font-size: x-large;">Ссылка на папку: <a href="#!" onclick="window.open('/@Model.directory_link')">Открыть папку</a></div>
+    <form asp-controller="Home" asp-action="ObjectDescriptionUpdate" data-ajax-failure="onFailed" data-ajax-success="onSuccess"
+        data-ajax="true" data-ajax-method="POST" id="form-obj-upd" class="form-horizontal" asp-antiforgery="true">
+        <input type="hidden" name="unom_num" id="unom_num" value="@Model.unom_num" />
+        <input type="hidden" name="itemId" id="itemId" value="@Model.itemId"/>
+        <input type="hidden" name="unom_category_id" id="unom_category_id" value="@Model.unom_category_id"/>
+        <input type="hidden" name="object_type_id" id="object_type_id" value="@Model.object_type_id"/>
+            @foreach (var sections in @Model.sections_id)
+            {
+                <input type="hidden" name="sections_id" id="sections_id" value="@sections"/>
+            }
+            @if (Model.sections_id.Contains(1))
+            {
+                <div class="panel-new panel-default panel-grid">
+                    @*<label class="col-md-3 control-label main-lbl">Связь с базой данных и Zulu:</label>*@
+                    <div class="div-flex">
+                        <div class="form-group form-group-grid">
+                            @*@if (!@Model.unom_category_id.In(2,5))
+                            {
+                                <div class="col-md-6">
+                                    <label class="col-md-3 control-label frst-label41">Адрес объекта/территории:</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                        @if (Model.unom_category_id == 1 && Model.object_type_id == 1)
+                                        {
+                                            <textarea class="form-control" rows="3" id="address" disabled>@Model.loads.address</textarea>
+                                            <input type="hidden" name="address" id="address_h" value="@Model.loads.address"/>
+                                        }
+                                        else {
+                                            <textarea class="form-control" rows="3" id="address" name="address">@Model.obj_desc.address</textarea>
+                                        }
+                                    </div>
+                                </div>
+                            }*@
+                            @if (Model.unom_category_id == 1)
+                            {
+                                <label class="col-md-7 control-label main-lbl">Связь с инвестиционной программой:</label>
+                                <div class="col-md-6">
+                                    <label class="col-md-3 control-label frst-label41">Номер проекта:</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                        <input type="text" class="form-control" value="@Model.loads.project_num_ip" disabled>
+                                        <input type="hidden" name="project_num_ip" value="@Model.loads.project_num_ip">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="col-md-3 control-label frst-label41 lbl-font-12">Срок реализации<br> мероприятия:</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                        <input type="text" class="form-control" value="@Model.loads.realiz_period_ip" disabled>
+                                        <input type="hidden" name="realiz_period_ip" value="@Model.loads.realiz_period_ip">
+                                    </div>
+                                </div>
+                                <hr/>
+                            }
+                        @*</div>
+                        <div class="form-group form-group-block">*@
+                            @if (Model.unom_category_id == 2)
+                            {
+                                <div class="col-md-6">
+                                    <label class="col-md-3 control-label frst-label41">Код ЕТО:</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                        <input type="text" class="form-control" value="@Model.ksio.eto_num_ksio" disabled>
+                                        <input type="hidden" name="eto_num_ksio" id="eto_num_h" value="@Model.ksio.eto_num_ksio"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="col-md-3 control-label frst-label41">Наименование ЕТО:</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                        <input type="text" class="form-control" value="@Model.ksio.eto_name_ksio" disabled>
+                                        <input type="hidden" name="eto_name_ksio" id="eto_name_h" value="@Model.ksio.eto_name_ksio"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="col-md-3 control-label frst-label41 lbl-font-12">Код системы<br> теплоснабжения:</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                        <input type="text" class="form-control" value="@Model.ksio.hssn_num_ksio" disabled>
+                                        <input type="hidden" name="hssn_num_ksio" id="hssn_num_h" value="@Model.ksio.hssn_num_ksio"/>
+                                    </div>
+                                </div>
+                            }
+                            else 
+                            {
+                                <div class="col-md-6">
+                                    <label class="col-md-3 control-label frst-label41">Код ЕТО:</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                        <input type="text" class="form-control" value="@Model.source.eto_num" disabled>
+                                        <input type="hidden" name="eto_num" id="eto_num_h" value="@Model.source.eto_num"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="col-md-3 control-label frst-label41">Наименование ЕТО:</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                        <input type="text" class="form-control" value="@Model.source.eto_name" disabled>
+                                        <input type="hidden" name="eto_name" id="eto_name_h" value="@Model.source.eto_name"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="col-md-3 control-label frst-label41 lbl-font-12">Код системы<br> теплоснабжения:</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                        <input type="text" class="form-control" value="@Model.source.hssn_num" disabled>
+                                        <input type="hidden" name="hssn_num" id="hssn_num_h" value="@Model.source.hssn_num"/>
+                                    </div>
+                                </div>
+                            }
+                            @if (Model.unom_category_id == 1)
+                            {
+                                <hr/>
+                                <div class="col-md-6">
+                                    <label class="col-md-3 control-label frst-label41">Уном мероприятия:</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                        <input type="text" class="form-control" value="@Model.loads.unom_event" disabled>
+                                        <input type="hidden" name="unom_event" value="@Model.loads.unom_event">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="col-md-3 control-label frst-label41 lbl-font-12">Точка присоединения<br> (тепловая камера):</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                        <input type="text" class="form-control" name="connect_point" value="@Model.obj_desc.connect_point">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="col-md-3 control-label frst-label41 lbl-font-12">Резерв пропускной способности<br> в точке присоединения, т/ч:</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                        <input type="number" class="form-control" name="bandwidth_reserve" value="@Model.hn_events.bandwidth_reserve">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="col-md-3 control-label frst-label41">Тепловой пункт:</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                        <input type="text" class="form-control" value="@Model.loads.hp_name" disabled>
+                                        <input type="hidden" name="hp_name" value="@Model.loads.hp_name">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="col-md-3 control-label frst-label41 lbl-font-12">Sys участка<br> тепловой сети в Zulu:</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                        <textarea class="form-control" rows="3" disabled>@Model.loads.sys_heat_network</textarea>
+                                        @*<input type="text" class="form-control" value="@Model.obj_desc.sys_heat_network" disabled>*@
+                                        <input type="hidden" name="sys_heat_network" value="@Model.loads.sys_heat_network">
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    @*<hr/>*@
+                </div>
+            }
+            @if (Model.sections_id.Contains(2) && Model.object_type_id == 1)
+            {
+                <div class="panel-new panel-default panel-grid">
+                    <label class="col-md-3 control-label main-lbl">Описание объекта капитального строительства:</label>
+                    <div class="form-group form-group-grid">
+                        <label class="col-md-5 control-label main-lbl">Общие сведения объекта:</label>
+                        <div class="col-md-6">
+                            <label class="col-md-3 control-label frst-label41">Округ:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                <input type="text" class="form-control" value="@Model.loads.region_name" disabled/>
+                                <input type="hidden" name="region_name" value="@Model.loads.region_name"/>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="col-md-3 control-label frst-label41">Назначение объекта:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                @*<input type="text" class="form-control" value="@Model.loads.building_purpose" id="building_purpose" disabled>*@
+                                <textarea class="form-control" rows="3" id="building_purpose" disabled>@Model.loads.building_purpose</textarea>
+                                <input type="hidden" name="building_purpose" id="building_purpose_h" value="@Model.loads.building_purpose"/>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="col-md-3 control-label frst-label41">Площадь (фактическая):</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                <input type="text" class="form-control load-mask" value="@Model.loads.fact_area" disabled>
+                                <input type="hidden" name="fact_area" id="fact_area_h" value="@Model.loads.fact_area"/>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="col-md-3 control-label frst-label41">Площадь (заявленная):</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                <input type="text" class="form-control load-mask" value="@Model.loads.decl_area" disabled>
+                                <input type="hidden" name="decl_area" id="decl_area_h" value="@Model.loads.decl_area"/>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="col-md-3 control-label frst-label41">АИП:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                <input type="text" class="form-control" value="@Model.loads.exists_aip" disabled>
+                                <input type="hidden" name="exists_aip" id="is_aip_h" value="@Model.loads.exists_aip"/>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="col-md-3 control-label frst-label41 lbl-font-12">Фактический срок<br> присоединения объекта:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                <input type="text" class="form-control" value="@Model.loads.fact_start" disabled>
+                                <input type="hidden" name="fact_start" id="fact_start_h" value="@Model.loads.fact_start"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="div-flex"> @*class="panel-body"*@
+                        <div class="form-group form-group-grid">
+                            <label class="col-md-7 control-label main-lbl">Заявленные тепловые нагрузки:</label>
+                            <div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41">З_Нагр_Отоп:</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <input type="text" class="form-control load-mask" value="@Model.loads.d_heat" disabled>
+                                    <input type="hidden" name="d_heat" id="d_heat_h" value="@Model.loads.d_heat"/>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41">З_Нагр_Вент:</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <input type="text" class="form-control load-mask" value="@Model.loads.d_vent" disabled>
+                                    <input type="hidden" name="d_vent" id="d_vent_h" value="@Model.loads.d_vent"/>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41">З_Нагр_ГВСмакс.ч.:</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <input type="text" class="form-control load-mask" value="@Model.loads.d_gvs_m" disabled>
+                                    <input type="hidden" name="d_gvs_m" id="d_gvs_m_h" value="@Model.loads.d_gvs_m"/>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41">З_Нагр_ГВСср.ч.:</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <input type="text" class="form-control load-mask" value="@Model.loads.d_gvs_a" disabled>
+                                    <input type="hidden" name="d_gvs_a" id="d_gvs_a_h" value="@Model.loads.d_gvs_a"/>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41">З_Нагр_Тепл.зав:</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <input type="text" class="form-control load-mask" value="@Model.loads.d_heat_curtain" disabled>
+                                    <input type="hidden" name="d_heat_curtain" id="d_heat_curtain_h" value="@Model.loads.d_heat_curtain"/>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41">З_Нагр_Конд:</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <input type="text" class="form-control load-mask" value="@Model.loads.d_cond" disabled>
+                                    <input type="hidden" name="d_cond" id="d_cond_h" value="@Model.loads.d_cond"/>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41">З_Нагр_Прочее:</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <input type="text" class="form-control load-mask" value="@Model.loads.d_other" disabled>
+                                    <input type="hidden" name="d_other" id="d_other_h" value="@Model.loads.d_other"/>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41">З_Нагр_Всего (с ГВСмакс.ч.):</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <input type="text" class="form-control load-mask" value="@Model.loads.d_sum_gvs_m" disabled>
+                                    <input type="hidden" name="d_sum_gvs_m" id="d_sum_gvs_m_h" value="@Model.loads.d_sum_gvs_m"/>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41">З_Нагр_Всего (с ГВСср.ч.):</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <input type="text" class="form-control load-mask" value="@Model.loads.d_sum_gvs_a" disabled>
+                                    <input type="hidden" name="d_sum_gvs_a" id="d_sum_gvs_a_h" value="@Model.loads.d_sum_gvs_a"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-block" style="width: 560px;">
+                            <label class="col-md-7 control-label main-lbl">Расчётные тепловые нагрузки:</label>
+                            <div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41">Р_Нагр_Отоп:</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <input type="text" class="form-control load-mask" value="@Model.loads.c_heat" disabled>
+                                    <input type="hidden" name="c_heat" id="c_heat_h" value="@Model.loads.c_heat"/>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41">Р_Нагр_Вент:</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <input type="text" class="form-control load-mask" value="@Model.loads.c_vent" disabled>
+                                    <input type="hidden" name="c_vent" id="c_vent_h" value="@Model.loads.c_vent"/>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41">Р_Нагр_ГВСср.ч.:</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <input type="text" class="form-control load-mask" value="@Model.loads.c_gvs_a" disabled>
+                                    <input type="hidden" name="c_gvs_a" id="c_gvs_a_h" value="@Model.loads.c_gvs_a"/>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41">Р_Нагр_Техн:</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <input type="text" class="form-control load-mask" value="@Model.loads.c_tech" disabled>
+                                    <input type="hidden" name="c_tech" id="c_tech_h" value="@Model.loads.c_tech"/>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41">Р_Нагр_Всего (с ГВСср.ч.):</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <input type="text" class="form-control load-mask" value="@Model.loads.c_sum_gvs_a" disabled>
+                                    <input type="hidden" name="c_sum_gvs_a" id="c_sum_gvs_a_h" value="@Model.loads.c_sum_gvs_a"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-block">
+                            <label class="col-md-8 control-label main-lbl">Анализ удельных показателей теплопотребления:</label>
+                            <div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41">З_удел (отоп+вент):</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <input type="text" class="form-control load-mask" value="@Model.loads.d_spec_heat_vent" disabled>
+                                    <input type="hidden" name="d_spec_heat_vent" id="d_spec_heat_vent_h" value="@Model.loads.d_spec_heat_vent"/>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41">З_удел_ГВСср.ч.:</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <input type="text" class="form-control load-mask" value="@Model.loads.d_spec_gvs_a" disabled>
+                                    <input type="hidden" name="d_spec_gvs_a" id="d_spec_gvs_a_h" value="@Model.loads.d_spec_gvs_a"/>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41">З_удел_Общ:</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <input type="text" class="form-control load-mask" value="@Model.loads.d_spec_all" disabled>
+                                    <input type="hidden" name="d_spec_all" id="d_spec_all_h" value="@Model.loads.d_spec_all"/>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41">Р_удел (отоп+вент):</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <input type="text" class="form-control load-mask" value="@Model.loads.c_spec_heat_vent" disabled>
+                                    <input type="hidden" name="c_spec_heat_vent" id="c_spec_heat_vent_h" value="@Model.loads.c_spec_heat_vent"/>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41">Р_удел_ГВСср.ч.:</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <input type="text" class="form-control load-mask" value="@Model.loads.c_spec_gvs_a" disabled>
+                                    <input type="hidden" name="c_spec_gvs_a" id="c_spec_gvs_a_h" value="@Model.loads.c_spec_gvs_a"/>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41">Р_удел_Общ:</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <input type="text" class="form-control load-mask" value="@Model.loads.c_spec_all" disabled>
+                                    <input type="hidden" name="c_spec_all" id="c_spec_all_h" value="@Model.loads.c_spec_all"/>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41">Отклон_удел_ГВСср.ч.:</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <input type="text" class="form-control load-mask" value="@Model.loads.spec_dev_gvs_a" disabled>
+                                    <input type="hidden" name="spec_dev_gvs_a" id="spec_dev_gvs_a_h" value="@Model.loads.spec_dev_gvs_a"/>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41">Отклон_удел_Отоп.+вент.:</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <input type="text" class="form-control load-mask" value="@Model.loads.spec_dev_heat_vent" disabled>
+                                    <input type="hidden" name="spec_dev_heat_vent" id="spec_dev_heat_vent_h" value="@Model.loads.spec_dev_heat_vent"/>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41">Отклон_удел_Сум:</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <input type="text" class="form-control load-mask" value="@Model.loads.spec_dev_sum" disabled>
+                                    <input type="hidden" name="spec_dev_sum" id="spec_dev_sum_h" value="@Model.loads.spec_dev_sum"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            @if (Model.sections_id.Contains(3)) 
+            {
+                <div class="panel-new panel-default panel-grid">
+                    <label class="col-md-3 control-label main-lbl">Описание источника:</label>
+                    <div class="form-group form-group-grid">
+                        <label class="col-md-5 control-label main-lbl">Источник:</label>
+                        <input type="hidden" name="source_num" id="source_num" value="@Model.source.source_num"/>
+                        <div class="col-md-6">
+                            <label class="col-md-3 control-label frst-label41">Наименование источника:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                <input type="text" class="form-control" value="@Model.source.source_name" disabled>
+                                <input type="hidden" name="source_name" id="source_name_h" value="@Model.source.source_name"/>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="col-md-3 control-label frst-label41">Адрес источника:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                <input type="text" class="form-control" value="@Model.source.source_address" disabled>
+                                <input type="hidden" name="source_address" id="source_address_h" value="@Model.source.source_address"/>
+                            </div>
+                        </div>
+                        <label class="col-md-5 control-label main-lbl">Характеристики источника:</label>
+                        @*<div class="col-md-6">
+                            <label class="col-md-3 control-label frst-label41">Qуст эл, МВт:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                <input type="text" class="form-control load-mask" value="@Model.source.q_inst_electr" disabled>
+                                <input type="hidden" name="q_inst_electr" id="q_inst_electr_h" value="@Model.source.q_inst_electr"/>
+                            </div>
+                        </div>*@
+                        <div class="col-md-6">
+                            <label class="col-md-3 control-label frst-label41">Qуст т, Гкал/ч:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                <input type="text" class="form-control load-mask" value="@Model.source.q_inst_heat" disabled>
+                                <input type="hidden" name="q_inst_heat" id="q_inst_heat_h" value="@Model.source.q_inst_heat"/>
+                            </div>
+                        </div>
+                        @*<div class="col-md-6">
+                            <label class="col-md-3 control-label frst-label41">Q расп т:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                <input type="text" class="form-control load-mask" value="@Model.source.q_avail_heat" disabled>
+                                <input type="hidden" name="q_avail_heat" id="q_avail_heat_h" value="@Model.source.q_avail_heat"/>
+                            </div>
+                        </div>*@
+                        <div class="col-md-6">
+                            <label class="col-md-3 control-label frst-label41">Q нетто т, Гкал/ч:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                <input type="text" class="form-control load-mask" value="@Model.source.q_netto_heat" disabled>
+                                <input type="hidden" name="q_netto_heat" id="q_netto_heat_h" value="@Model.source.q_netto_heat"/>
+                            </div>
+                        </div>
+                        @if (Model.unom_category_id == 4)
+                        {
+                            <div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41 lbl-font-12">Резерв/дефицит тепловой мощности, Гкал/ч:</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <input type="text" class="form-control load-mask" value="@Model.source.q_reserve_heat" disabled>
+                                    <input type="hidden" name="q_reserve_heat" id="q_reserve_heat" value="@Model.source.q_reserve_heat"/>
+                                </div>
+                            </div>
+                        }
+                        @*<div class="col-md-6">
+                            <label class="col-md-3 control-label frst-label41">Q расч прис:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                <input type="text" class="form-control load-mask" value="@Model.source.q_calc_load_heat" disabled>
+                                <input type="hidden" name="q_calc_load_heat" id="q_calc_load_heat_h" value="@Model.source.q_calc_load_heat"/>
+                            </div>
+                        </div>*@
+                    </div>
+                </div>
+            }
+            @if (Model.sections_id.Contains(4))
+            {
+                <div class="panel-new panel-default panel-grid">
+                    <label class="col-md-3 control-label main-lbl">Теплосетевые мероприятия:</label>
+                    <div class="form-group form-group-grid">
+                        <label class="col-md-5 control-label main-lbl">Анализ мероприятий:</label>
+                        <div class="col-md-6">
+                            <label class="col-md-3 control-label frst-label41 lbl-font-12">Объект учтен<br> в утвержденной Схеме:</label>
+                            @if (Model.object_type_id == 1) {
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <input type="text" class="form-control" value="@Model.loads.is_appr_scheme_exist" disabled>
+                                    <input type="hidden" name="is_appr_scheme_exist" id="is_appr_scheme_exist_h" value="@Model.loads.is_appr_scheme_exist"/>
+                                </div>
+                            }
+                            else {
+                                <select class="selectpicker inp-marg-top-15" data-show-subtext="true" data-live-search="true" name="is_appr_scheme_exist">
+                                    @if (Model.hn_events.is_appr_scheme_exist == null)
+                                    {
+                                        <option value="" selected disabled>Выберите значение</option>
+                                    }
+                                    @if (Model.hn_events.is_appr_scheme_exist == "Да")
+                                    {
+                                        <option value="Да" selected>Да</option>
+                                        <option value="Нет">Нет</option>
+                                    }
+                                    else if (Model.hn_events.is_appr_scheme_exist == "Нет")
+                                    {
+                                        <option value="Нет" selected>Нет</option>
+                                        <option value="Да">Да</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="Нет">Нет</option>
+                                        <option value="Да">Да</option>
+                                    }
+                                </select>
+                            }
+                        </div>
+                        @*<div class="col-md-6">
+                            <label class="col-md-3 control-label frst-label41 lbl-font-12">Перечень учтенных<br> мероприятий в утвержденной схеме теплоснабжения:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                <textarea class="form-control" rows="5" name="accounted_events">@Model.hn_events.accounted_events</textarea>
+                            </div>
+                        </div>*@
+                        @*<div class="col-md-6">
+                            <label class="col-md-3 control-label frst-label41 lbl-font-12">Перечень новых мероприятий<br> для учета в схеме теплоснабжения:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                <textarea class="form-control" rows="5" name="new_events">@Model.hn_events.new_events</textarea>
+                            </div>
+                        </div>*@
+                        @*<div class="col-md-6">
+                            <label class="col-md-3 control-label frst-label41 lbl-font-12">Перечень мероприятий, разработанных ТСО:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                <textarea class="form-control" rows="5" name="tso_events">@Model.hn_events.tso_events</textarea>
+                            </div>
+                        </div>*@
+                        <div class="col-md-6">
+                            <label class="col-md-3 control-label frst-label41 lbl-font-12">Срок присоединения<br> объекта согласно заявке:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                @if (Model.object_type_id == 1)
+                                {
+                                    <input type="text" class="form-control" value="@Model.loads.decl_start" disabled>
+                                    <input type="hidden" name="decl_start" id="decl_start_h" value="@Model.loads.decl_start"/>
+                                }
+                                else {
+                                    <input type="number" class="form-control" name="decl_start" value="@Model.hn_events.decl_start" placeholder="гггг">
+                                }
+                            </div>
+                        </div>
+                        @*<div class="col-md-6">
+                            <label class="col-md-3 control-label frst-label41 lbl-font-12">Причины несоответствия мероприятий:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                <textarea class="form-control" rows="5" name="reasons_mismath_events">@Model.hn_events.reasons_mismath_events</textarea>
+                            </div>
+                        </div>*@
+                        <label class="col-md-5 control-label main-lbl">Резерв:</label>
+                        <div class="col-md-6">
+                            <label class="col-md-3 control-label frst-label41 lbl-font-12">Резерв тепловой<br> мощности, Гкал/ч:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                <input type="text" class="form-control load-mask" value="@Model.source.q_reserve_heat" disabled>
+                                <input type="hidden" name="q_reserve_heat" id="q_reserve_heat_h" value="@Model.source.q_reserve_heat"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            @if (Model.sections_id.Contains(5))
+            {
+                <div class="panel-new panel-default panel-grid">
+                    <label class="col-md-3 control-label main-lbl">Вывод из эксплуатации:</label>
+                    <div class="div-flex">
+                        <div class="form-group form-group-grid">
+                            <label class="col-md-9 control-label main-lbl">Анализ возможности теплоснабжения потребителей:</label>
+                            <div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41 lbl-font-12">Возможность теплоснабжения потребителей без изменения схемы присоединения (да/нет):</label>
+                                <select class="selectpicker inp-marg-top-15" data-show-subtext="true" data-live-search="true" name="ch_scheme_is_no_need">
+                                    @if (Model.decommissioning.ch_scheme_is_no_need == null)
+                                    {
+                                        <option value="" selected disabled>Выберите значение</option>
+                                    }
+                                    @if (Model.decommissioning.ch_scheme_is_no_need == "Да")
+                                    {
+                                        <option value="Да" selected>Да</option>
+                                        <option value="Нет">Нет</option>
+                                    }
+                                    else if (Model.decommissioning.ch_scheme_is_no_need == "Нет")
+                                    {
+                                        <option value="Нет" selected>Нет</option>
+                                        <option value="Да">Да</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="Нет">Нет</option>
+                                        <option value="Да">Да</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41 lbl-font-12">Необходимость приостановления вывода из эксплуатации с целью обеспечения потребилетей тепловой энергией:</label>
+                                <select class="selectpicker inp-marg-top-30" data-show-subtext="true" data-live-search="true" name="decom_need_pause">
+                                    @if (Model.decommissioning.decom_need_pause == null)
+                                    {
+                                        <option value="" selected disabled>Выберите значение</option>
+                                    }
+                                    @if (Model.decommissioning.decom_need_pause == "Да")
+                                    {
+                                        <option value="Да" selected>Да</option>
+                                        <option value="Нет">Нет</option>
+                                    }
+                                    else if (Model.decommissioning.decom_need_pause == "Нет")
+                                    {
+                                        <option value="Нет" selected>Нет</option>
+                                        <option value="Да">Да</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="Нет">Нет</option>
+                                        <option value="Да">Да</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41 lbl-font-12">Источники финансирования компенсационных мероприятий:</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <textarea class="form-control" rows="3" name="source_finance_events">@Model.decommissioning.source_finance_events</textarea>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41 lbl-font-12">Перечень мероприятий согласно утвержденной схеме теплоснабжения:</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <textarea class="form-control" rows="3" name="approved_list_events">@Model.decommissioning.approved_list_events</textarea>
+                                </div>
+                            </div>
+                            <label class="col-md-10 control-label main-lbl">Формирование альтернативного варианта теплоснабжения:</label>
+                            <div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41 lbl-font-12">Необходимость формирования альтернативного варианта организации теплоснабжения потребителей или компенсационных мероприятий:</label>
+                                <select class="selectpicker inp-marg-top-45" data-show-subtext="true" data-live-search="true" name="alter_var_need">
+                                    @if (Model.decommissioning.alter_var_need == null)
+                                    {
+                                        <option value="" selected disabled>Выберите значение</option>
+                                    }
+                                    @if (Model.decommissioning.alter_var_need == "Да")
+                                    {
+                                        <option value="Да" selected>Да</option>
+                                        <option value="Нет">Нет</option>
+                                    }
+                                    else if (Model.decommissioning.alter_var_need == "Нет")
+                                    {
+                                        <option value="Нет" selected>Нет</option>
+                                        <option value="Да">Да</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="Нет">Нет</option>
+                                        <option value="Да">Да</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41 lbl-font-12">Перечень мероприятий альтернативного варианта организации теплоснабжения:</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <textarea class="form-control" rows="3" name="alter_var_events">@Model.decommissioning.alter_var_events</textarea>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41 lbl-font-12">Срок реализации<br> мероприятия:</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <input type="number" class="form-control" value="@Model.decommissioning.start_realiz_event" name="start_realiz_event">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-block" style="width: 560px;">
+                            <label class="col-md-9 control-label main-lbl">Описание выводимых потребителей:</label>
+                            <div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41 lbl-font-12">Перечень потребителей, теплоснабжение коротых будет приостановлено при выводе источника/оборудования:</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <textarea class="form-control" rows="3" name="consumers_heat_pause">@Model.decommissioning.consumers_heat_pause</textarea>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41">Отопление:</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <input type="text" class="form-control load-mask" value="@Model.decommissioning.c_heat" disabled>
+                                    <input type="hidden" name="c_heat" id="c_heat_h" value="@Model.decommissioning.c_heat"/>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41">Вентиляция:</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <input type="text" class="form-control load-mask" value="@Model.decommissioning.c_vent" disabled>
+                                    <input type="hidden" name="c_vent" id="c_vent_h" value="@Model.decommissioning.c_vent"/>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41">ГВС ср.ч:</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <input type="text" class="form-control load-mask" value="@Model.decommissioning.c_gvs_a" disabled>
+                                    <input type="hidden" name="c_gvs_a" id="c_gvs_a_h" value="@Model.decommissioning.c_gvs_a"/>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41">Технология:</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <input type="text" class="form-control load-mask" value="@Model.decommissioning.c_tech" disabled>
+                                    <input type="hidden" name="c_tech" id="c_tech_h" value="@Model.decommissioning.c_tech"/>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41">Р_Нагр_Всего (с ГВСср.ч.):</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <input type="text" class="form-control load-mask" value="@Model.decommissioning.c_sum_gvs_a" disabled>
+                                    <input type="hidden" name="c_sum_gvs_a" id="c_sum_gvs_a_h" value="@Model.decommissioning.c_sum_gvs_a"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-block">
+                            <label class="col-md-9 control-label main-lbl">Вывод из эксплуатации:</label>
+                            <div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41">Перечень выводимого оборудования:</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <textarea class="form-control" rows="3" name="decom_equip_list">@Model.decommissioning.decom_equip_list</textarea>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41">Ст. № оборудования:</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <input type="text" class="form-control" value="@Model.decommissioning.st_num_equip" name="st_num_equip">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41 lbl-font-12">Срок вывода<br> из эксплуатации:</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <input type="number" class="form-control" value="@Model.decommissioning.decom_date" name="decom_date">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41 lbl-font-12">Установленная тепловая мощность выводимого<br> источника/оборудования источника, Гкал/ч:</label>
+                                <div class="input-group inp-marg-top-30">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <input type="text" class="form-control double" value="@Model.decommissioning.decom_q_inst_heat_equip" name="decom_q_inst_heat_equip">
+                                </div>
+                            </div>
+                            <label class="col-md-9 control-label main-lbl">После вывода из эксплуатации:</label>
+                            <div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41 lbl-font-12">Установленная тепловая мощность источника, Гкал/ч:</label>
+                                <div class="input-group ">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <input type="text" class="form-control double" value="@Model.decommissioning.after_decom_q_inst_heat_equip" name="after_decom_q_inst_heat_equip">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41 lbl-font-12">Тепловая мощность нетто,<br/> Гкал/ч:</label>
+                                <div class="input-group ">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <input type="text" class="form-control double" value="@Model.decommissioning.after_decom_q_netto_heat" name="after_decom_q_netto_heat">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41 lbl-font-12">Резерв/дефицит тепловой мощности, Гкал/ч:</label>
+                                <div class="input-group ">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <input type="text" class="form-control double" value="@Model.decommissioning.after_decom_q_reserve_heat" name="after_decom_q_reserve_heat">
+                                </div>
+                            </div>
+                        </div>
+                    </div>    
+                </div>
+            }
+            @if (Model.sections_id.Contains(6))
+            {
+                <div class="panel-new panel-default panel-grid">
+                    <label class="col-md-3 control-label main-lbl">КСИО:</label>
+                    <div class="div-flex">
+                        <div class="form-group form-group-grid">
+                            <label class="col-md-5 control-label main-lbl">Замечания:</label>
+                            <div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41 lbl-font-12">Замечания: Перечень объектов капитального строительства:</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <textarea class="form-control" rows="5" name="objects_list_comments">@Model.ksio.objects_list_comments</textarea>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41 lbl-font-12">Замечания: Прочие:</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <textarea class="form-control" rows="5" name="others_comments">@Model.ksio.others_comments</textarea>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41 lbl-font-12">Замечания: Разработанные мероприятия:</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <textarea class="form-control" rows="5" name="dev_events_comments">@Model.ksio.dev_events_comments</textarea>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41 lbl-font-12">Замечания: Тепловые нагрузки объектов капитального строительства:</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <textarea class="form-control" rows="5" name="heat_loads_comments">@Model.ksio.heat_loads_comments</textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-block">
+                            <label class="col-md-10 control-label main-lbl">Документ-основание для учета КСИО в Схеме теплоснабжения:</label>
+                            <div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41 lbl-font-12">КСИО учтено в разрабатываемой Актуалиации схемы теплоснабжения (Да/Нет):</label>
+                                <select class="selectpicker inp-marg-top-15" data-show-subtext="true" data-live-search="true" name="exists_like_ksio">
+                                    @if (Model.ksio.exists_like_ksio == null)
+                                    {
+                                        <option value="" selected disabled>Выберите значение</option>
+                                    }
+                                    @if (Model.ksio.exists_like_ksio == "Да")
+                                    {
+                                        <option value="Да" selected>Да</option>
+                                        <option value="Нет">Нет</option>
+                                    }
+                                    else if (Model.ksio.exists_like_ksio == "Нет")
+                                    {
+                                        <option value="Нет" selected>Нет</option>
+                                        <option value="Да">Да</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="Нет">Нет</option>
+                                        <option value="Да">Да</option>
+                                    }
+                                </select>
+                                @*<div class="input-group inp-marg-top-15">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <input type="text" class="form-control" value="@Model.ksio.exists_like_ksio" disabled>
+                                    <input type="hidden" name="exists_like_ksio" id="exists_like_ksio_h" value="@Model.ksio.exists_like_ksio"/>
+                                </div>*@
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41 lbl-font-12">Наличие согласованного проекта КСИО (замечания сняты):</label>
+                                <select class="selectpicker" data-show-subtext="true" data-live-search="true" name="ksio_is_agree">
+                                    @if (Model.ksio.ksio_is_agree == null)
+                                    {
+                                        <option value="" selected disabled>Выберите значение</option>
+                                    }
+                                    @if (Model.ksio.ksio_is_agree == "Да")
+                                    {
+                                        <option value="Да" selected>Да</option>
+                                        <option value="Нет">Нет</option>
+                                    }
+                                    else if (Model.ksio.ksio_is_agree == "Нет")
+                                    {
+                                        <option value="Нет" selected>Нет</option>
+                                        <option value="Да">Да</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="Нет">Нет</option>
+                                        <option value="Да">Да</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41 lbl-font-12">Наличие утвержденного<br> КСИО (приказ):</label>
+                                <select class="selectpicker" data-show-subtext="true" data-live-search="true" name="exists_ksio">
+                                    @if (Model.ksio.exists_ksio == null)
+                                    {
+                                        <option value="" selected disabled>Выберите значение</option>
+                                    }
+                                    @if (Model.ksio.exists_ksio == "Да")
+                                    {
+                                        <option value="Да" selected>Да</option>
+                                        <option value="Нет">Нет</option>
+                                    }
+                                    else if (Model.ksio.exists_ksio == "Нет")
+                                    {
+                                        <option value="Нет" selected>Нет</option>
+                                        <option value="Да">Да</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="Нет">Нет</option>
+                                        <option value="Да">Да</option>
+                                    }
+                                </select>
+                                @*<div class="input-group">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <input type="text" class="form-control" value="@Model.ksio.exists_ksio" disabled>
+                                    <input type="hidden" name="exists_ksio" id="exists_ksio_h" value="@Model.ksio.exists_ksio"/>
+                                </div>*@
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41 ">Дата утверждения ППТ:</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <input type="text" class="form-control mask-date-short" value="@Model.ksio.date_ppt" name="date_ppt" placeholder="мм.гггг">
+                                    @*<input type="hidden" name="date_ppt" id="date_ppt_h" value="@Model.ksio.date_ppt"/>*@
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41 lbl-font-12">Номер приказа<br> об утверждении ППТ:</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <input type="text" class="form-control" value="@Model.ksio.num_ppt" name="num_ppt">
+                                    @*<input type="hidden" name="num_ppt" id="num_ppt_h" value="@Model.ksio.num_ppt"/>*@
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41 ">Дата утверждения КСИО:</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <input type="text" class="form-control mask-date-short" value="@Model.ksio.date_ksio" name="date_ksio" placeholder="мм.гггг">
+                                    @*<input type="hidden" name="date_ksio" id="date_ksio_h" value="@Model.ksio.date_ksio"/>*@
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41 lbl-font-12">Номер приказа<br> об утверждении КСИО:</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <input type="text" class="form-control" value="@Model.ksio.num_ksio" name="num_ksio">
+                                    @*<input type="hidden" name="num_ksio" id="num_ksio_h" value="@Model.ksio.num_ksio"/>*@
+                                </div>
+                            </div>
+
+                            <label class="col-md-7 control-label main-lbl inp-marg-top-15">Описание источника теплоснабжения:</label>
+                            <div class="col-md-6 ">
+                                <label class="col-md-3 control-label frst-label41">№ источника:</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <input type="text" class="form-control" value="@Model.ksio.source_num_ksio" disabled>
+                                    <input type="hidden" name="source_num_ksio" id="source_num_ksio" value="@Model.ksio.source_num_ksio"/>
+                                </div>
+                            </div>
+                            <div class="col-md-6 ">
+                                <label class="col-md-3 control-label frst-label41">Источник:</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <input type="text" class="form-control" value="@Model.ksio.source_name_ksio" disabled>
+                                    <input type="hidden" name="source_name_ksio" id="source_name_ksio" value="@Model.ksio.source_name_ksio"/>
+                                </div>
+                            </div>
+                            <div class="col-md-6 ">
+                                <label class="col-md-3 control-label frst-label41">Адрес:</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <input type="text" class="form-control" value="@Model.ksio.source_address_ksio" disabled>
+                                    <input type="hidden" name="source_address_ksio" id="source_address_ksio" value="@Model.ksio.source_address_ksio"/>
+                                </div>
+                            </div>
+                            @*<div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41">Qуст эл, МВт:</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <input type="text" class="form-control" value="@Model.ksio.q_inst_electr_ksio" disabled>
+                                    <input type="hidden" name="q_inst_electr_ksio" id="q_inst_electr_ksio" value="@Model.ksio.q_inst_electr_ksio"/>
+                                </div>
+                            </div>*@
+                            <div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41">Qуст т, Гкал/ч:</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <input type="text" class="form-control" value="@Model.ksio.q_inst_heat_ksio" disabled>
+                                    <input type="hidden" name="q_inst_heat_ksio" id="q_inst_heat_ksio" value="@Model.ksio.q_inst_heat_ksio"/>
+                                </div>
+                            </div>
+                            @*<div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41">Q расп т:</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <input type="text" class="form-control" value="@Model.ksio.q_avail_heat_ksio" disabled>
+                                    <input type="hidden" name="q_avail_heat_ksio" id="q_avail_heat_ksio" value="@Model.ksio.q_avail_heat_ksio"/>
+                                </div>
+                            </div>*@
+                            <div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41">Q нетто т, Гкал/ч:</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <input type="text" class="form-control" value="@Model.ksio.q_netto_heat_ksio" disabled>
+                                    <input type="hidden" name="q_netto_heat_ksio" id="q_netto_heat_ksio" value="@Model.ksio.q_netto_heat_ksio"/>
+                                </div>
+                            </div>
+                            @*<div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41">Q расч прис:</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <input type="text" class="form-control" value="@Model.ksio.q_calc_load_heat_ksio" disabled>
+                                    <input type="hidden" name="q_calc_load_heat_ksio" id="q_calc_load_heat_ksio" value="@Model.ksio.q_calc_load_heat_ksio"/>
+                                </div>
+                            </div>*@
+                        </div>
+                        @*<div class="form-group form-group-block">
+                            
+                        </div>*@
+                        <div class="form-group form-group-block">
+                            <label class="col-md-7 control-label main-lbl">Тепловые нагрузки ОКС (суммарно по КСИО):</label>
+                            <div class="col-md-6 inp-marg-top-15">
+                                <label class="col-md-3 control-label frst-label41">Площадь:</label>
+                                <div class="input-group input-group-w250">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <input type="text" class="form-control load-mask" value="@Model.ksio.decl_area_ksio" disabled>
+                                    <input type="hidden" name="decl_area_ksio" id="decl_area_ksio" value="@Model.ksio.decl_area_ksio"/>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41">З_Нагр_Отоп:</label>
+                                <div class="input-group input-group-w250">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <input type="text" class="form-control load-mask" value="@Model.ksio.heat_sum" disabled>
+                                    <input type="hidden" name="heat_sum" id="heat_sum" value="@Model.ksio.heat_sum"/>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41">З_Нагр_Вент:</label>
+                                <div class="input-group input-group-w250">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <input type="text" class="form-control load-mask" value="@Model.ksio.vent_sum" disabled>
+                                    <input type="hidden" name="vent_sum" id="vent_sum" value="@Model.ksio.vent_sum"/>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41">З_Нагр_ГВСср.ч.:</label>
+                                <div class="input-group input-group-w250">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <input type="text" class="form-control load-mask" value="@Model.ksio.gvs_a_sum" disabled>
+                                    <input type="hidden" name="gvs_a_sum" id="gvs_a_sum" value="@Model.ksio.gvs_a_sum"/>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41">З_Нагр_Тепл.зав:</label>
+                                <div class="input-group input-group-w250">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <input type="text" class="form-control load-mask" value="@Model.ksio.heat_curtain_sum" disabled>
+                                    <input type="hidden" name="heat_curtain_sum" id="heat_curtain_sum" value="@Model.ksio.heat_curtain_sum"/>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41">З_Нагр_Конд:</label>
+                                <div class="input-group input-group-w250">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <input type="text" class="form-control load-mask" value="@Model.ksio.cond_sum" disabled>
+                                    <input type="hidden" name="cond_sum" id="cond_sum" value="@Model.ksio.cond_sum"/>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41">З_Нагр_Прочее:</label>
+                                <div class="input-group input-group-w250">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <input type="text" class="form-control load-mask" value="@Model.ksio.other_sum" disabled>
+                                    <input type="hidden" name="other_sum" id="other_sum" value="@Model.ksio.other_sum"/>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-md-3 control-label frst-label41 lbl-font-12">З_Нагр_Всего<br> (с ГВСср.ч.):</label>
+                                <div class="input-group input-group-w250">
+                                    <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                    <input type="text" class="form-control load-mask" value="@Model.ksio.load_sum_gvs_a" disabled>
+                                    <input type="hidden" name="load_sum_gvs_a" id="load_sum_gvs_a" value="@Model.ksio.load_sum_gvs_a"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            @if (Model.ItsExecutorOrAdmin == true)
+            {
+                <div class="panel-footer" style="padding-bottom: 40px">
+                    <button type="submit" class="btn btn-primary pull-right" id="btnSave">Сохранить</button>
+                </div>
+            }
+    </form>
+</div>
+
+@section modalsection {
+    <div id="modal-section">
+        <div id="modal-open-fd" class="modal fade">
+            @*onclick="TableOff();"*@
+            <div class="modal-dialog modal-large" style="width: 550px; margin-left: 35%">
+                <div class="modal-content">
+                    <div id="modal-open-fd-header" class="modal-header">
+                        <button class="close" type="button" data-dismiss="modal">×</button>
+                        <h4 class="modal-title"></h4>
+                    </div>
+                    <div id="div-open-fd" class="div-popup-success-mini"></div>
+                    <p style="display: flex; justify-content: center; font-size:large;"><a href="#" id="a_comback">вернуться на 2ой уровень</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+@section Scripts {
+    
+
+    @*<script src="/js/jquery.validate.min.js"></script>*@
+}
+
+@section pageJs {
+    <script type="text/javascript">
+
+        $(document).on('keydown', function(e){
+            if(e.ctrlKey && e.which === 83){ // Check for the Ctrl key being pressed, and if the key = [S] (83)
+                e.preventDefault();
+                $('form').submit();
+                return false;
+            }
+        });
+
+        $(document).ready(function () {
+
+            $("input.double[type=text]").keydown(function (e) {
+                var theEvent = e || window.event;
+                var key = theEvent.keyCode || theEvent.which;
+                key = String.fromCharCode(key);
+                if (key.length == 0) return;
+                var regex = /^[\d.,\b]+$/;
+                if (!regex.test(key)) {
+                    theEvent.returnValue = false;
+                    if (theEvent.preventDefault) theEvent.preventDefault();
+                }
+
+                var keyCode = e.which ? e.which : event.keyCode;
+                if (keyCode == 110 || keyCode == 190 || keyCode == 191) {
+                    e.preventDefault();
+                    var value = $(this).val();
+                    if (value.includes(","))
+                        $(this).val(value + "");
+                    else 
+                        $(this).val(value + ",");
+                }
+                if (keyCode == 109 || keyCode == 189) {
+                    e.preventDefault();
+                    var value = $(this).val();
+                    if (value.length == 0)
+                    {
+                        $(this).val("-");
+                    }
+                }
+            });
+
+            var elem = document.getElementById('form-obj-upd');
+            elem.addEventListener("submit", function (e) {
+                if ($(this).valid()) {
+                    document.getElementById("btnSave").disabled = true;
+                }
+            }, true);
+
+            $('.datepicker').datepicker({
+                format: "dd.mm.yyyy",
+                autoclose: true,
+                language: 'ru'
+            });
+            maskInit();
+        });
+
+        var onFailed = function(context){
+            $("#div-open-fd").text("При сохранении произошла ошибка. Обратитесь в тех.поддержку.");
+            $("#div-open-fd").addClass(' error');
+            $("#modal-open-fd").modal('show');
+            document.getElementById("btnSaveUnom").disabled = false;
+        };
+
+        var onSuccess = function(success){
+            
+            if (success.success == true) {
+                $("#div-open-fd").text("Информация сохранена!");
+                $("#div-open-fd").removeClass('error');
+                $("#modal-open-fd").modal('show');
+                var url = '@Url.Action("Items", "Home")' + "?unom_num=" + '@Model.unom_num';
+                $('#a_comback').attr('href', url);
+                //var url = '@Url.Action("ObjectDescription", "Home")' + "?itemId=" + success.itemId
+                //window.location = url;
+            }
+            else {
+                $("#div-open-fd").text("При сохранении произошла ошибка. Обратитесь в тех.поддержку.");
+                $("#div-open-fd").addClass(' error');
+                $("#modal-open-fd").modal('show');
+                document.getElementById("btnSaveUnom").disabled = false;
+            }
+        };
+
+        function maskInit() {
+            //$(".load-mask").inputmask('decimal',{
+            //    mask: "[-]9{1,5}[,99999999]",
+            //    min: -99999.99999999,
+            //    max: 99999.99999999,
+            //    allowMinus: true,
+            //    greedy: false,
+            //    definitions: {
+            //      '*': {
+            //        validator: "[-][0-9]"
+            //      }
+            //    },
+            //    rightAlign: true,
+            //    "clearIncomplete": false,
+            //    autoUnmask: true
+            //});
+            //$('.load-mask')
+            //    .inputmask({
+            //      alias: 'decimal', 
+            //      allowMinus: true,  
+            //      digits: 8, 
+            //      max: 99999,99999999,
+            //      rightAlign: true
+            //  });
+
+            $(".mask-date-short").inputmask('text',{
+                mask: "99.99.9999",
+               
+                definitions: {
+                  '*': {
+                    validator: "[0-9]"
+                  }
+                },
+                rightAlign: true,
+                "clearIncomplete": false,
+                autoUnmask: false
+            });
+        }
+
+
+        //function GetConsumerInfo() {
+        //    var consumerId = $('#consumerId').val();
+        //    var itemId = $('#itemId').val();
+
+        //    if (consumerId) {
+        //        $.ajax({
+        //            type: 'POST',
+        //            url: '@Html.Raw(Url.Action("GetConsumerInfo", "Home"))',
+        //            data: {
+        //                consumerId: consumerId,
+        //                itemId: itemId
+        //            },
+        //            dataType: 'json'
+        //        }).done(function(result) {
+        //            if (result.success) {
+        //                $('#address').val(result.consumer.address);
+        //                $('#district').val(result.consumer.district);
+        //                $('#region').val(result.consumer.region);
+        //                $('#building_purpose').val(result.consumer.building_purpose);
+        //            }
+        //        });
+        //    }
+        //    else {
+        //        $('#address').val("");
+        //        $('#district').val("");
+        //        $('#region').val("");
+        //        $('#building_purpose').val("");
+        //    }
+        //}
+
+        //$.ajax({
+        //    type: 'POST',
+        //    url: '@Html.Raw(Url.Action("GetSourceInfo", "Home"))',
+        //    dataType: 'json'
+        //}).done(function (result) {
+        //    //$("#user-name").html(result.userName);
+        //});
+    
+
+    </script>
+}
+

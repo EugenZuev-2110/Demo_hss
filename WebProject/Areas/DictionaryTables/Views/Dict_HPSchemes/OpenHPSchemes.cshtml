@@ -1,0 +1,376 @@
+﻿@model WebProject.Areas.HeatPointsAndConsumers.Models.Dict_HPSchemes
+@{
+	string btn_disable = string.Empty;
+}
+@if (Model.scheme_id == 0)
+{
+	btn_disable = "disabled";
+}
+<div class="modal-dialog modal-dialog-centered">
+	<div class="modal-content">
+		<div class="modal-header">
+			<h3 class="modal-title" id="editDataLabel">Схема теплового пункта</h3>
+			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="RefreshTable()"></button>
+		</div>
+		<form class="needs-validation"  novalidate enctype="multipart/form-data" asp-controller="Dict_HPSchemes" asp-action="HPSchemes_Save" asp-antiforgery="true" asp-area="DictionaryTables" id="HPSchemes_form"
+	 data-ajax-failure="onFailedForm" data-ajax-success="onSuccessForm" data-ajax-begin="onBeginForm" data-ajax="true" data-ajax-method="POST">
+			<input type="hidden" name="scheme_id" value="@Model.scheme_id" id="scheme_id" />
+			<input type="hidden" name="scheme_file_url" value="@Model.scheme_file_url" id="scheme_file_url" />
+			<div class="modal-body">
+			<div class="data-block static-block">
+				<div class="data-item">
+					<label class="data-label lm-fix">Уникальный номер схемы теплового пункта</label>
+						<select class="selectpicker data-value xxl-stretch" data-live-search="true" id="paramNumberHpschem" placeholder="Выберите...">
+						@foreach (var hpschem in ViewBag.HPSchemes)
+						{
+							if(hpschem == Model.scheme_id)
+							{
+								<option value="@hpschem" selected>@hpschem</option>
+							}
+							else
+							{
+								<option value="@hpschem">@hpschem</option>
+							}
+						}
+					</select>
+				</div>
+				<div class="data-item">
+					<label class="data-label lm-fix=">Файл со схемой теплового пункта</label>
+						<input type="file" accept="image/png, image/gif, image/jpeg" id="fileInput"  class="data-value xxl-stretch" name="scheme_file_url" value="@Model.scheme_file_url">
+				</div>
+			</div>
+			<div class="scroll-block-wrapper" style="max-height: 66vh;">
+				<div class="data-block scroll-block">
+						@if ((Model.scheme_id != 0 && Model.scheme_file_url != null) || ViewBag.Action_for == "copy")
+						{
+							<div class="border-block" style="width: 900px; height: 500px">
+								<h4>Схема теплового пункта</h4>
+								<img src="/hss/images/HPSchemes/@Model.scheme_file_url" style="width: 100%; height: 97%; object-fit: contain;" alt="Схема теплового пункта">
+							</div>
+						}
+						else
+						{
+							<div class="border-block">
+								<h4>Схема теплового пункта</h4>
+								<img alt="Схема теплового пункта">
+							</div>
+						}
+
+					<div class="data-block border-block">
+						<h4>Схемы присоединения тепловых нагрузок</h4>
+						<div class="data-item">
+							<label class="data-label lg-fix">Система отопления</label>
+								<select class="selectpicker data-value xxl-fix" data-live-search="true" name="heat_connect_id" required placeholder="Выберите...">
+								@foreach (var type_heat in ViewBag.ConnectTypesHeat)
+								{
+									if(type_heat.Id == Model.heat_connect_id)
+									{
+										<option value="@type_heat.Id" selected>@type_heat.heat_connect_name</option>
+									}
+									else
+									{
+										<option value="@type_heat.Id">@type_heat.heat_connect_name</option>
+									}
+								}
+							</select>
+								<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Выберите значение из списка"></a>
+						</div>
+						<div class="data-item">
+							<label class="data-label lg-fix">Система вентиляции</label>
+							<select class="selectpicker data-value xxl-fix" data-live-search="true" name="vent_connect_id" required placeholder="Выберите...">
+								@foreach (var type_vent in ViewBag.ConnectTypesVent)
+								{
+									if (type_vent.Id == Model.vent_connect_id)
+									{
+										<option value="@type_vent.Id" selected>@type_vent.vent_connect_name</option>
+									}
+									else
+									{
+										<option value="@type_vent.Id">@type_vent.vent_connect_name</option>
+
+									}
+								}
+							</select>
+								<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Выберите значение из списка"></a>
+						</div>
+						<div class="data-item">
+							<label class="data-label lg-fix">Система горячего водоснабжения</label>
+								<select class="selectpicker data-value xxl-fix" data-live-search="true" name="hw_connect_id" required placeholder="Выберите...">
+								@foreach (var type_hw in ViewBag.ConnectTypesHW)
+								{
+									if (type_hw.Id == Model.hw_connect_id)
+									{
+										<option value="@type_hw.Id" selected>@type_hw.hw_connect_name</option>
+									}
+									else
+									{
+										<option value="@type_hw.Id">@type_hw.hw_connect_name</option>
+									}
+								}
+							</select>
+								<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Выберите значение из списка"></a>
+						</div>
+					</div>
+					<div class="data-block border-block">
+						<h4>Наличие оборудования в схеме теплового пункта</h4>
+						<div class="data-row">
+							<h5 class="lg-fix">А) Регуляторы</h5>
+							<div class="data-block">
+								<label class="data-item">
+									<span class="data-label xxl-fix">Наличие регулятора температуры отопления / вентиляции</span>
+										@if (Model.scheme_id > 0 || ViewBag.Action_for == "copy")
+									{
+										string is_checked = string.Empty;
+										@if (Model.avail_reg_temp_heat_vent == true)
+											is_checked = "checked";
+											<input type="checkbox" value="@(Model.avail_reg_temp_heat_vent == true ? "true" : "false")" name="avail_reg_temp_heat_vent"  @is_checked class="data-check" onchange="CB_Change(this)">
+									}
+									else
+									{
+											<input type="checkbox" value="false" name="avail_reg_temp_heat_vent" class="data-check"  onchange="CB_Change(this)">
+									}
+								</label>
+								<label class="data-item">
+									<span class="data-label xxl-fix" >Наличие регулятора температуры горячего водоснабжения</span>
+										@if (Model.scheme_id > 0 || ViewBag.Action_for == "copy")
+									{
+										string is_checked = string.Empty;
+										@if (Model.avail_reg_temp_hw == true)
+											is_checked = "checked";
+											<input type="checkbox" value="@(Model.avail_reg_temp_hw == true ? "true" : "false")" name="avail_reg_temp_hw" @is_checked class="data-check" onchange="CB_Change(this)">
+									}
+									else
+									{
+											<input type="checkbox" value="false" name="avail_reg_temp_hw" class="data-check" onchange="CB_Change(this)">
+
+									}
+								</label>
+								<label class="data-item">
+									<span class="data-label xxl-fix" >Наличие трехходового регулятора температуры горячего водоснабжения</span>
+										@if (Model.scheme_id > 0 || ViewBag.Action_for == "copy")
+									{
+										string is_checked = string.Empty;
+										@if (Model.avail_threeway_reg_temp_hw == true)
+											is_checked = "checked";
+											<input type="checkbox" value="@(Model.avail_threeway_reg_temp_hw == true ? "true" : "false")" name="avail_threeway_reg_temp_hw" @is_checked class="data-check" onchange="CB_Change(this)">
+									}
+									else
+									{
+											<input type="checkbox" value="false" name="avail_threeway_reg_temp_hw" class="data-check" onchange="CB_Change(this)">
+
+									}
+								</label>
+								<label class="data-item">
+									<span class="data-label xxl-fix">Наличие блока смешения горячего водоснабжения</span>
+										@if (Model.scheme_id > 0 || ViewBag.Action_for == "copy")
+									{
+										string is_checked = string.Empty;
+										@if (Model.avail_mix_block_hw == true)
+											is_checked = "checked";
+											<input type="checkbox" value="@(Model.avail_mix_block_hw == true ? "true" : "false")" name="avail_mix_block_hw" @is_checked class="data-check" onchange="CB_Change(this)">
+									}
+									else
+									{
+											<input type="checkbox" value="@Model.avail_mix_block_hw" name="avail_mix_block_hw" class="data-check" onchange="CB_Change(this)">
+									}
+								</label>
+							</div>
+						</div>
+						<div class="data-row">
+							<h5 class="lg-fix">Б) Насосы</h5>
+							<div class="data-block">
+								<label class="data-item">
+									<span class="data-label xxl-fix">Наличие подпиточного насоса системы отопления / вентиляции</span>
+										@if (Model.scheme_id > 0 || ViewBag.Action_for == "copy")
+									{
+										string is_checked = string.Empty;
+										@if (Model.avail_makeup_pump_heat_vent == true)
+											is_checked = "checked";
+											<input type="checkbox" value="@(Model.avail_makeup_pump_heat_vent == true ? "true" : "false")" name="avail_makeup_pump_heat_vent" @is_checked class="data-check" onchange="CB_Change(this)">
+									}
+									else
+									{
+											<input type="checkbox" value="false" name="avail_makeup_pump_heat_vent" class="data-check" onchange="CB_Change(this)">
+									}
+								</label>
+								<label class="data-item">
+									<span class="data-label xxl-fix">Наличие циркуляционного насоса системы отопления / вентиляции (обратная линия)</span>
+										@if (Model.scheme_id > 0 || ViewBag.Action_for == "copy")
+									{
+										string is_checked = string.Empty;
+										@if (Model.avail_circul_pump_reverse_heat_vent == true)
+											is_checked = "checked";
+											<input type="checkbox" value="@(Model.avail_circul_pump_reverse_heat_vent == true ? "true" : "false")" name="avail_circul_pump_reverse_heat_vent" @is_checked class="data-check" onchange="CB_Change(this)">
+									}
+									else
+									{
+											<input type="checkbox" value="false" name="avail_circul_pump_reverse_heat_vent" class="data-check" onchange="CB_Change(this)">
+									}
+								</label>
+								<label class="data-item">
+									<span class="data-label xxl-fix">Наличие циркуляционного насоса системы отопления / вентиляции (подающая линия)</span>
+										@if (Model.scheme_id > 0 || ViewBag.Action_for == "copy")
+									{
+										string is_checked = string.Empty;
+										@if (Model.avail_circul_pump_feed_heat_vent == true)
+											is_checked = "checked";
+											<input type="checkbox" value="@(Model.avail_circul_pump_feed_heat_vent == true ? "true" : "false")" name="avail_circul_pump_feed_heat_vent" @is_checked class="data-check" onchange="CB_Change(this)">
+									}
+									else
+									{
+											<input type="checkbox" value="false" name="avail_circul_pump_feed_heat_vent" class="data-check" onchange="CB_Change(this)">
+									}
+								</label>
+								<label class="data-item">
+									<span class="data-label xxl-fix">Наличие насоса смешения системы отопления / вентиляции</span>
+										@if (Model.scheme_id > 0 || ViewBag.Action_for == "copy")
+									{
+										string is_checked = string.Empty;
+										@if (Model.avail_mix_pump_heat_vent == true)
+											is_checked = "checked";
+											<input type="checkbox" value="@(Model.avail_mix_pump_heat_vent == true ? "true" : "false")" name="avail_mix_pump_heat_vent" @is_checked class="data-check" onchange="CB_Change(this)">
+									}
+									else
+									{
+											<input type="checkbox" value="@Model.avail_mix_pump_heat_vent" name="avail_mix_pump_heat_vent" class="data-check" onchange="CB_Change(this)">
+									}
+								</label>
+								<label class="data-item">
+									<span class="data-label xxl-fix">Наличие циркуляционного насоса системы горячего водоснабжения</span>
+										@if (Model.scheme_id > 0 || ViewBag.Action_for == "copy")
+									{
+										string is_checked = string.Empty;
+										@if (Model.avail_circul_pump_hw == true)
+											is_checked = "checked";
+											<input type="checkbox" value="@(Model.avail_circul_pump_hw == true ? "true" : "false")" name="avail_circul_pump_hw" @is_checked class="data-check" onchange="CB_Change(this)">
+									}
+									else
+									{
+											<input type="checkbox" value="false" name="avail_circul_pump_hw" class="data-check" onchange="CB_Change(this)">
+									}
+								</label>
+							</div>
+						</div>
+						<div class="data-row">
+							<h5 class="lg-fix">В) Элеватор или перемычка</h5>
+							<div class="data-block">
+								<label class="data-item">
+									<span class="data-label xxl-fix">Наличие элеватора системы отопления / вентиляции</span>
+										@if (Model.scheme_id > 0 || ViewBag.Action_for == "copy")
+									{
+										string is_checked = string.Empty;
+										@if (Model.avail_elevator_heat_vent == true)
+											is_checked = "checked";
+											<input type="checkbox" value="@(Model.avail_elevator_heat_vent == true ? "true" : "false")" name="avail_elevator_heat_vent" @is_checked class="data-check" onchange="CB_Change(this)">
+									}
+									else
+									{
+											<input type="checkbox" value="false" name="avail_elevator_heat_vent" class="data-check" onchange="CB_Change(this)">
+									}
+								</label>
+								<label class="data-item">
+									<span class="data-label xxl-fix">Наличие перемычки между подающей и обратной линиями системы отопления / вентиляции</span>
+										@if (Model.scheme_id > 0 || ViewBag.Action_for == "copy")
+									{
+										string is_checked = string.Empty;
+										@if (Model.avail_jumper_reverse_feed_heat_vent == true)
+											is_checked = "checked";
+											<input type="checkbox" value="@(Model.avail_jumper_reverse_feed_heat_vent == true ? "true" : "false")" name="avail_jumper_reverse_feed_heat_vent" @is_checked class="data-check" onchange="CB_Change(this)">
+									}
+									else
+									{
+											<input type="checkbox" value="false" name="avail_jumper_reverse_feed_heat_vent" class="data-check" onchange="CB_Change(this)">
+									}
+								</label>
+							</div>
+						</div>
+						<div class="data-row">
+							<h5 class="lg-fix">Г) Шайбы</h5>
+							<div class="data-block">
+								<label class="data-item">
+									<span class="data-label xxl-fix">Наличие шайбы на подающей линии системы отопления / вентиляции</span>
+										@if (Model.scheme_id > 0 || ViewBag.Action_for == "copy")
+									{
+										string is_checked = string.Empty;
+										@if (Model.avail_washer_feed_heat_vent == true)
+											is_checked = "checked";
+											<input type="checkbox" value="@(Model.avail_washer_feed_heat_vent == true ? "true" : "false")" name="avail_washer_feed_heat_vent" @is_checked class="data-check" onchange="CB_Change(this)">
+									}
+									else
+									{
+											<input type="checkbox" value="false" name="avail_washer_feed_heat_vent" class="data-check" onchange="CB_Change(this)">
+									}
+								</label>
+								<label class="data-item">
+									<span class="data-label xxl-fix">Наличие шайбы на обратной линии системы отопления / вентиляции</span>
+										@if (Model.scheme_id > 0 || ViewBag.Action_for == "copy")
+									{
+										string is_checked = string.Empty;
+										@if (Model.avail_washer_reverse_heat_vent == true)
+											is_checked = "checked";
+											<input type="checkbox" value="@(Model.avail_washer_reverse_heat_vent == true ? "true" : "false")" name="avail_washer_reverse_heat_vent" @is_checked class="data-check" onchange="CB_Change(this)">
+									}
+									else
+									{
+											<input type="checkbox" value="false" name="avail_washer_reverse_heat_vent" class="data-check" onchange="CB_Change(this)">
+									}
+								</label>
+								<label class="data-item">
+									<span class="data-label xxl-fix">Наличие шайбы системы горячего водоснабжения</span>
+										@if (Model.scheme_id > 0 || ViewBag.Action_for == "copy")
+									{
+										string is_checked = string.Empty;
+										@if (Model.avail_washer_feed_hw == true)
+											is_checked = "checked";
+											<input type="checkbox" value="@(Model.avail_washer_feed_hw == true ? "true" : "false")" name="avail_washer_feed_hw" @is_checked class="data-check" onchange="CB_Change(this)">
+									}
+									else
+									{
+											<input type="checkbox" value="false" name="avail_washer_feed_hw" class="data-check" onchange="CB_Change(this)">
+									}
+								</label>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="bttn" data-bs-dismiss="modal">Отмена</button>
+			<button type="submit" class="bttn bttn-color">Сохранить</button>
+				<button type="button" id="submit" class="bttn bttn-color" @btn_disable onclick="OpenHPSchemes(@Model.scheme_id, 'copy')">Создать копию</button>
+		</div>
+		</form>
+	</div>
+</div>
+
+<script type="text/javascript" src="@Url.Content("~/hss/js/popup_common_scripts.js")"></script>
+<script>
+
+	$(document).ready(function () {
+		document.querySelector('#paramNumberHpschem').addEventListener('change', (event) => {
+			OpenHPSchemes($("#paramNumberHpschem").val());
+		});
+	});
+
+	
+
+	var onSuccessForm = function (xhr) {
+
+		if (xhr.success == true) {
+			debugger
+			showMessage('Данные сохранены.', 'modal', 'success');
+			$("#refresh_HPSchemes_table").val(1);
+			
+				OpenHPSchemes(xhr.scheme_id);
+			
+		}
+		else {
+			if (xhr.message === undefined) {
+				xhr.message = 'Ошибка сохранения данных'
+			}
+			showMessage(xhr.message, 'modal', 'fault');
+		}
+		hidePreloader();
+	};
+</script>

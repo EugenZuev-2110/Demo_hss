@@ -1,0 +1,128 @@
+﻿@model List<WebProject.Areas.TSO.Models.TZCalcCostsIpHsCaDataViewModel>
+@{
+	Layout = null;
+	int cnt_columns = 21;
+}
+<div class="table-block">
+	<div class="table-buttons tzCalcCostsIpHsCaTable-buttons"></div>
+	<input type="hidden" value="0" id="refresh_table" />
+	<table id="tzCalcCostsIpHsCaTable" class="display compact table-clicked" style="width:100%">
+		<thead>
+			<tr>
+				<th rowspan="3">УНОМ ТЗ</th>
+				<th rowspan="3">Территория действия тарифной зоны</th>
+				<th rowspan="3">КОД ТСО</th>
+				<th rowspan="3">Наименование ТСО</th>
+				<th rowspan="3">
+					Виды регулируемой деятельности
+					<a class="info" data-bs-toggle="tooltip" data-bs-custom-class="info-tooltip" data-bs-html="true"
+					   data-bs-title='<ul class="list-unstyled">
+									<li>К > 25 - Комбинированное производство, более 25 МВт</li>
+									<li>К < 25 - Комбинированное производство, менее 25 МВт</li>
+									<li>НК - Некомбинированное производство</li>
+									<li>П - Передача</li>
+									<li>С - Сбыт</li>
+									<li>ДП - Договор поставки</li>
+								</ul>'
+					</a>
+				</th>
+				<th colspan="7">Фактические расходы на финансирование капитальных вложений в соответствии с инвестиционной программой, тыс. руб.</th>
+				<th colspan="7">Фактические расходы на финансирование капитальных вложений в соответствии с концессионным соглашением, тыс. руб.</th>
+				<th rowspan="3">Фактический объём дотаций из всех уровней бюджета, тыс. руб.</th>
+				<th rowspan="3">Фактические доходы, полученные сверх реализации по утверждённым тарифам, тыс. руб.</th>
+			</tr>
+			<tr>
+				<th rowspan="2">ВСЕГО финансирование по ИП</th>
+				<th colspan="6">в том числе по источникам финансирования</th>
+				<th rowspan="2">ВСЕГО финансирование по ИП</th>
+				<th colspan="6">в том числе по источникам финансирования</th>
+			</tr>
+			<tr>
+				<th>прибыль (расходы на капитальные вложения (инвестиции) - собственные средства</th>
+				<th>амортизационыне отчисления</th>
+				<th>бюджетные средства</th>
+				<th>привлечённые средства</th>
+				<th>плата за подключение</th>
+				<th>прочее</th>
+				<th>прибыль (расходы на капитальные вложения (инвестиции) - собственные средства</th>
+				<th>амортизационыне отчисления</th>
+				<th>бюджетные средства</th>
+				<th>привлечённые средства</th>
+				<th>плата за подключение</th>
+				<th>прочее</th>
+			</tr>
+			<tr class="filter-row ">
+				@for (int i = 0; i < @cnt_columns; i++)
+				{
+					if (i == 0)
+					{
+						<th class="dtfc-fixed-left" style="left:0; position:sticky;"><input type="text" class="filter-col-0" /></th>
+					}
+					else
+					{
+						<th><input type="text" class="filter-col-@i" /></th>
+					}
+				}
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var tz_list in Model)
+			{
+				<tr ondblclick="OpenPopupCostsPrices(@tz_list.tz_id, @tz_list.perspective_year, '/TSO/CostsAndPrices/OpenExpenses_IPHS_CA', 'TZCostsPricesDataPopup');">
+					<td>@tz_list.unom_tz</td>
+					<td>@tz_list.territory</td>
+					<td>@tz_list.code_tso</td>
+					<td>@tz_list.short_name</td>
+					<td>@tz_list.activity_types</td>
+					<td>@tz_list.expenses_all_iphs_fact</td>
+					<td>@tz_list.profit_own_funds_iphs_fact</td>
+					<td>@tz_list.amortization_all_iphs_fact</td>
+					<td>@tz_list.budget_all_iphs_fact</td>
+					<td>@tz_list.attracted_funds_all_iphs_fact</td>
+					<td>@tz_list.connection_charge_iphs_fact</td>
+					<td>@tz_list.other_means_iphs_fact</td>
+					<td>@tz_list.expenses_all_ca_fact</td>
+					<td>@tz_list.profit_own_funds_ca_fact</td>
+					<td>@tz_list.amortization_all_ca_fact</td>
+					<td>@tz_list.budget_all_ca_fact</td>
+					<td>@tz_list.attracted_funds_all_ca_fact</td>
+					<td>@tz_list.connection_charge_ca_fact</td>
+					<td>@tz_list.other_means_ca_fact</td>
+					<td>@tz_list.actual_grants_budget_fact</td>
+					<td>@tz_list.actual_over_profit_fact</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>
+<div class="data-row table-summary">
+	<div class="data-item rows-count">
+		<h5>Всего записей:</h5>
+		<p><span class="mark-color" id="all_cnt_rows"></span></p>
+	</div>
+	<div class="data-block">
+		<h5>Фактические расходы всего:</h5>
+		<div class="data-table-block">
+			<p class="data-item"><span class="mark-color" id="sum_costs_all"></span><span class="data-unit"> тыс.руб.</span></p>
+		</div>
+	</div>
+	<div class="data-block">
+		<h5>Расходы по ИП ТС:</h5>
+		<div class="data-table-block">
+			<p class="data-item"><span class="mark-color" id="sum_costs_iphs"></span><span class="data-unit"> тыс.руб.</span></p>
+		</div>
+	</div>
+	<div class="data-block">
+		<h5>Расходы по КС:</h5>
+		<div class="data-table-block">
+			<p class="data-item"><span class="mark-color" id="sum_costs_ca"></span><span class="data-unit"> тыс.руб.</span></p>
+		</div>
+	</div>
+	<div class="data-block">
+		<h5>Объем дотаций и полученные доходы сверх реализации по утвержденным тарифам:</h5>
+		<div class="data-table-block">
+			<p class="data-item"><span class="mark-color" id="sum_grants_over_profit"></span><span class="data-unit"> тыс.руб.</span></p>
+		</div>
+	</div>
+</div>
+<script type="text/javascript" src="@Url.Content("~/hss/js/datatables_common_scripts.js")"></script>

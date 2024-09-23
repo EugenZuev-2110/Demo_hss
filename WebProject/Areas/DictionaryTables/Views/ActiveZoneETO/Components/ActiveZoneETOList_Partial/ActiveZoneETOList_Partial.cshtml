@@ -1,0 +1,55 @@
+﻿@model List<WebProject.Areas.DictionaryTables.Models.ActiveZoneETOViewModel>
+@{
+  int cnt_columns = 7;
+}
+
+<div class="table-block">
+	<input type="hidden" value="0" id="refresh_ZoneETO_table" />
+	<div class="table-buttons ETOZonesTable-buttons"></div>
+	<table id="ETOZonesTable" class="display compact table-clicked" style="width:100%">
+		<thead>
+			<tr>
+				<th>УНОМ ЕТО</th>
+				<th>Территория</th>
+				<th>Ликвидирована</th>
+				<th>Год ликвидации</th>
+				<th>Причина ликвидации</th>
+				<th>Уникальный номер слоя в электронной модели</th>
+				<th>SYS объекта в электронном слое</th>
+			</tr>
+			<tr class="filter-row ">
+				@for (int i = 0; i < @cnt_columns; i++)
+				{
+					if (i == 0)
+					{
+						<th class="dtfc-fixed-left" style="left:0; position:sticky;"><input type="text" class="filter-col-0" /></th>
+					}
+					else
+					{
+						<th><input type="text" class="filter-col-@i" /></th>
+					}
+				}
+			</tr>
+		</thead>
+		<tbody title="Двойной клик открывает форму редактирования">
+			@foreach (var eto_list in Model)
+			{
+				<tr ondblclick="OpenPopupZoneETO(@eto_list.eto_id);">
+					<td>@eto_list.unom_eto</td>
+					<td>@eto_list.territory</td>
+					<td>@eto_list.is_liquidated</td>
+					<td>@eto_list.year_liquidation</td>
+					<td>@eto_list.reason_liquidation</td>
+					<td>@eto_list.layer_id</td>
+					<td>@eto_list.layer_sys</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>
+<div class="data-row table-summary">
+	<div class="data-item rows-count">
+		<h5>Всего записей:</h5>
+		<p><span class="mark-color" id="all_cnt_rows"></span></p>
+	</div>
+</div>

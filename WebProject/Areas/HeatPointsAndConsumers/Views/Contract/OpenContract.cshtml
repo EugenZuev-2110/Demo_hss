@@ -1,0 +1,193 @@
+﻿@model WebProject.Areas.HeatPointsAndConsumers.Models.ContractOneDataViewModel
+@{
+	string btn_disable = string.Empty;
+}
+@if (Model.contract_id == 0)
+{
+	btn_disable = "disabled";
+}
+<div class="modal-dialog modal-dialog-centered">
+	<div class="modal-content">
+		<div class="modal-header">
+			<h3 class="modal-title" id="editDataLabel">Редактирование данных договора на теплоснабжение</h3>
+			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="RefreshTable();"></button>
+		</div>
+		<div class="modal-body">
+			<form class="needs-validation" novalidate asp-controller="Contract" asp-action="Contract_Save" asp-antiforgery="true" asp-area="HeatPointsAndConsumers" id="Contract_form"
+		 data-ajax-failure="onFailedForm" data-ajax-success="onSuccessFormContract" data-ajax-begin="onBeginForm" data-ajax="true" data-ajax-method="POST">
+				<input type="hidden" name="contract_id" value="@Model.contract_id" id="contract_id" />
+				<input type="hidden" name="data_status" value="@Model.data_status" id="data_status" />
+
+				<div class="data-block static-block">
+					<div class="data-row">
+						<div class="data-item">
+							<label class="data-label xl-fix">Уникальный номер договора</label>
+							<select class="selectpicker data-value xxl-stretch" data-live-search="true" placeholder="Выберите УНОМ оборудования" id="paramNumberContract">
+								@if (@Model.contract_id == 0 || ViewBag.Action_for == "copy")
+								{
+									<option value="" selected disabled>При добавлении нового договора, УНОМ генерируется автоматически</option>
+								}
+								@foreach (var contr in ViewBag.UnomContractList)
+								{
+									if (contr.value_id == Model.contract_id)
+									{
+										<option value="@contr.value_id" selected>@contr.value_name</option>
+									}
+									else
+									{
+										<option value="@contr.value_id">@contr.value_name</option>
+									}
+								}
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="data-block ms-lg-1">
+					<div class="data-block border-block">
+					<div class="data-row">
+						<label class="data-label">Статус:</label>
+						<label class="data-item">
+							<span class="data-label">действует</span>
+							@if(Model.contract_id > 0)
+							{
+									string is_checked = string.Empty;
+
+									@if (Model.contract_status_id == 1)
+									{
+										is_checked = "checked";
+									}
+                                    <input type="radio" name="contract_status_id" value="@(Model.contract_status_id == 1 ? 1 : 1)" class="data-check" id="is_liquidated" onchange="CheckBox_Change(this.id)" @is_checked>
+								}
+								else
+								{
+									<input type="radio" name="contract_status_id" value="1" id="is_liquidated" checked class="data-check">
+								}
+							</label>
+						<label class="data-item">
+							<span class="data-label">ликвидирован</span>
+								@if (Model.contract_id > 0)
+								{
+									string is_checked = string.Empty;
+
+									@if (Model.contract_status_id == 2)
+									{
+										is_checked = "checked";
+									}
+                                    <input type="radio" name="contract_status_id" value="@(Model.contract_status_id == 2 ? 2 : 1)" class="data-check" id="is_valid" onchange="CheckBox_Change(this.id)" @is_checked>
+								}
+								else
+								{
+									<input type="radio" name="contract_status_id" value="2" id="is_valid" class="data-check">
+								}
+						</label>
+					</div>
+					<div class="data-row">
+						<div class="data-table-block">
+							<div class="data-item">
+								<label class="data-label lm-fix">Номер договора</label>
+									<input type="text" class="data-value" required value="@Model.contract_num" name="contract_num">
+								<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Это поле должно быть заполнено"></a>
+							</div>
+							<div class="data-item">
+								<label class="data-label">Дата договора теплоснабжения</label>
+									<input type="date" class="data-value" required asp-for="@Model.contract_date" asp-format="{0:yyyy-MM-dd}" name="contract_date">
+								<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Это поле должно быть заполнено"></a>
+							</div>
+							<div class="data-item">
+								<label class="data-label">Дата действия договора на теплоснабжение</label>
+									<input type="date" class="data-value" required asp-for="@Model.contract_valid_date" asp-format="{0:yyyy-MM-dd}" name="contract_valid_date">
+								<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Это поле должно быть заполнено"></a>
+							</div>
+							
+						</div>
+
+							<div class="data-table-block" >
+							<div class="data-item">
+								<label class="data-label lm-fix">ТСО</label>
+								<select class="selectpicker data-value xxl-stretch" data-live-search="true" name="tso_id" required id="paramNumberSteamTurbine">
+									@if (@Model.contract_id == 0 || ViewBag.Action_for == "copy")
+									{
+										<option value="" selected disabled>Выберите ТСО</option>
+									}
+									@foreach (var tso in ViewBag.TSOList)
+									{
+											if (tso.tso_id == Model.tso_id)
+										{
+												<option value="@tso.tso_id" selected>@tso.tso_name</option>
+										}
+										else
+										{
+												<option value="@tso.tso_id">@tso.tso_name</option>
+										}
+									}
+								</select>
+									<a class="invalid-tooltip error" data-bs-toggle="tooltip" data-bs-custom-class="error-tooltip" data-bs-html="false" data-bs-title="Выберите значение из списка"></a>
+							</div>
+							<div class="data-item">
+								<label class="data-label">Наименование организации контрагент по договору</label>
+									<input type="text" class="data-value" value="@Model.org_name" name="org_name">
+							</div>
+							<div class="data-item">
+								<label class="data-label">ИНН организации контрагент по договору</label>
+									<input type="text" class="data-value  double" value="@Model.org_inn" name="org_inn">
+							</div>
+						</div>
+						
+					</div>
+						<div class="data-item data-item-right flex-wrap flex-xl-nowrap">
+							<button type="submit" class="bttn bttn-color  mb-1 mb-xl-0">Сохранить</button>
+							<button type="button" class="bttn bttn-color  mb-1 mb-xl-0" onclick="OpenPopupContract(@Model.contract_id, 'copy')" @btn_disable>Создать копию</button>
+						</div>
+					</div>
+				<div class="table-block">
+						@await Component.InvokeAsync("ContractConsumerList_Partial", new { contract_id = Model.contract_id})
+				</div>
+			</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript" src="@Url.Content("~/hss/js/datatables_common_scripts.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/hss/js/popup_common_scripts.js")"></script>
+<script>
+
+	$(document).ready(function () {
+		document.querySelector('#paramNumberContract').addEventListener('change', (event) => {
+			OpenPopupContract($("#paramNumberContract").val());
+		});
+		
+	});
+
+
+	var onSuccessFormContract = function (xhr) {
+		if (xhr.success == true) {
+			showMessage('Данные сохранены.', 'modal', 'success');
+			$("#refresh_Contract_table").val(1);
+			if (xhr.is_new == true) {
+				OpenPopupContract(xhr.contr_id);
+			}
+		}
+		else {
+			if (xhr.message === undefined) {
+				xhr.message = 'Ошибка сохранения данных'
+			}
+			showMessage(xhr.message, 'modal', 'fault');
+		}
+		hidePreloader();
+	};
+
+	function CheckBox_Change(cb)
+	{
+		debugger;
+		var name = 'contract_status_id';
+		if (cb == 'is_liquidated') {
+			document.getElementById('is_valid').checked = false;
+			$('input[name="' + name + '"]:checked').val(1);
+		}
+		if (cb == 'is_valid') {
+			document.getElementById('is_liquidated').checked = false;
+			$('input[name="' + name + '"]:checked').val(2);
+		}
+	}
+</script>

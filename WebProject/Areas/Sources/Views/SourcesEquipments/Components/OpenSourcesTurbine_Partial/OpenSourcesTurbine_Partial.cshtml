@@ -1,0 +1,272 @@
+﻿<div class="data-row">
+    <div class="data-item data-item-right">
+        <button class="bttn bttn-square bttn-icon-save" type="button"></button>
+        <button class="bttn" type="button">Применить на последующие годы</button>
+    </div>
+</div>
+<div class="table-block border-block">
+    <div class="table-buttons sourcesOpenEquipTurbineTable-buttons"></div>
+    <table id="sourcesOpenEquipTurbineTable" class="display compact" style="width:100%">
+        <thead>
+            <tr>
+                <th rowspan="2" title="Уникальный номер оборудования" class="md-fix">УНОМ ОБ</th>
+                <th colspan="9">Общие сведения</th>
+                <th colspan="4">Установленная мощность</th>
+                <th colspan="4">Ограничение установленной мощности</th>
+                <th colspan="4">Максимальная и среднегодовая нагрузка</th>
+                <th colspan="3">Вид топлива</th>
+                <th colspan="2">Дымовая труба</th>
+                <th colspan="2">Параметры пара</th>
+                <th colspan="2">Износ</th>
+                <th colspan="8">Наработка и ресурс</th>
+                <th colspan="2">Годы ЭПБ</th>
+                <th rowspan="2">Режимная карта</th>
+                <th rowspan="2"></th>
+            </tr>
+            <tr>
+                <th title="Станционный номер оборудования">СТ. №</th>
+                <th>Статус</th>
+                <th>Тип</th>
+                <th>Марка</th>
+                <th>Очер.</th>
+                <th title="Номер энергоблока">№ Э/Б</th>
+                <th title="Наименование энергоблока">Наимен. Э/Б</th>
+                <th title="Завод-изготовитель">Завод изготов.</th>
+                <th>Год ввода</th>
+                <th>N<sub>у</sub>, <span class="data-unit">МВт</span></th>
+                <th>Q<sub>у</sub>, <span class="data-unit">Гкал/ч</span></th>
+                <th>Q<sup>Т</sup><sub>у</sub>, <span class="data-unit">Гкал/ч</span></th>
+                <th>Q<sup>П</sup><sub>у</sub>, <span class="data-unit">Гкал/ч</span></th>
+                <th>N<sup>ОГ</sup><sub>у</sub>, <span class="data-unit">МВт</span></th>
+                <th>Q<sup>ОГ</sup><sub>у</sub>, <span class="data-unit">Гкал/ч</span></th>
+                <th>Q<sup>ОГ,Т</sup><sub>у</sub>, <span class="data-unit">Гкал/ч</span></th>
+                <th>Q<sup>ОГ,П</sup><sub>у</sub>, <span class="data-unit">Гкал/ч</span></th>
+                <th>N<sup>MAX</sup>, <span class="data-unit">МВт</span></th>
+                <th>N<sup>MED</sup>, <span class="data-unit">МВт</span></th>
+                <th>Q<sup>MAX</sup>, <span class="data-unit">Гкал/ч</span></th>
+                <th>Q<sup>MED</sup>, <span class="data-unit">Гкал/ч</span></th>
+                <th>Основное</th>
+                <th>Резервное</th>
+                <th>Аварийное</th>
+                <th title="Уникальный номер дымовой трубы">УНОМ ДТ</th>
+                <th title="Станционный номер дымовой трубы">СТ. №</th>
+                <th>P<sub>0</sub>, <span class="data-unit">кгс/см<sup>2</sup></span></th>
+                <th>T<sub>0</sub>, <span class="data-unit">°C</span></th>
+                <th title="Физический износ">Физич., <span class="data-unit">%</span></th>
+                <th title="Амортизационный износ">Амор., <span class="data-unit">%</span></th>
+                <th title="Парковый ресурс">Парковый рес., <span class="data-unit">тыс.ч</span></th>
+                <th title="Год достижения паркового ресурса">Год достиж. парк. рес.</th>
+                <th>Наработка, <span class="data-unit">тыс.ч</span></th>
+                <th title="Назначенный ресурс">Назнач. рес., <span class="data-unit">тыс.ч</span></th>
+                <th title="Год достижения назначенного ресурса">Год достиж. назн. рес.</th>
+                <th title="Количество продлений">Кол. продлений</th>
+                <th title="Нормативное количество пусков">Норм. кол. пуск.</th>
+                <th title="Количество пусков">Кол. пусков</th>
+                <th>Последняя</th>
+                <th>Очередная</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>ТГ-1</td>
+                <td>
+                   @*  <select class="selectpicker data-value" data-live-search="true" data-container="#editData" placeholder="Выберите...">
+                        <option value="1" selected>в работе</option>
+                        <option value="2">новый</option>
+                        <option value="3">демонтаж</option>
+                    </select> *@
+                </td>
+                <td>
+                    @* <select class="selectpicker data-value select-etype" data-live-search="true" data-container="#editData" placeholder="Выберите...">
+                        <option value="1" data-etype="T1" selected>ПСУ-90</option>
+                        <option value="2" data-etype="T1">ПСУ-130</option>
+                        <option value="3" data-etype="T2">ГТУ ПГУ</option>
+                        <option value="4" data-etype="T2">ГТ ПГУ</option>
+                    </select> *@
+                </td>
+                <td>
+                   @*  <select class="selectpicker data-value" data-live-search="true" data-container="#editData" placeholder="Выберите...">
+                        <option value="1" selected>ПТ-25-90/13</option>
+                        <option value="2">Т-100-130</option>
+                        <option value="3">SGT5-4000F</option>
+                        <option value="4">SST5-5000</option>
+                    </select> *@
+                </td>
+                <td>1</td>
+                <td></td>
+                <td></td>
+                <td>КТ3</td>
+                <td>1995</td>
+                <td>25</td>
+                <td>25</td>
+                <td>25</td>
+                <td>25</td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+                <td>25</td>
+                <td>25</td>
+                <td>25</td>
+                <td>25</td>
+                <td>
+                    @* <select class="selectpicker data-value" data-live-search="true" data-container="#editData" placeholder="Выберите...">
+                        <option value="0" title="-" selected>(пусто)</option>
+                        <option value="1" title="ПГ">природный газ</option>
+                        <option value="2" title="Д">дизельное топливо</option>
+                        <option value="3" title="М">мазут</option>
+                    </select> *@
+                </td>
+                <td>
+                   @*  <select class="selectpicker data-value" data-live-search="true" data-container="#editData" placeholder="Выберите...">
+                        <option value="0" title="-" selected>(пусто)</option>
+                        <option value="1" title="ПГ">природный газ</option>
+                        <option value="2" title="Д">дизельное топливо</option>
+                        <option value="3" title="М">мазут</option>
+                    </select> *@
+                </td>
+                <td>
+                    @* <select class="selectpicker data-value" data-live-search="true" data-container="#editData" placeholder="Выберите...">
+                        <option value="0" title="-" selected>(пусто)</option>
+                        <option value="1" title="ПГ">природный газ</option>
+                        <option value="2" title="Д">дизельное топливо</option>
+                        <option value="3" title="М">мазут</option>
+                    </select> *@
+                </td>
+                <td>
+                    @* <select class="selectpicker data-value" data-live-search="true" data-container="#editData" placeholder="Выберите...">
+                        <option value="0" title="-" selected>(пусто)</option>
+                        <option value="1">DT0001.1</option>
+                        <option value="2">DT0002.2</option>
+                        <option value="3">DT0003.3</option>
+                        <option value="4">DT0004.4</option>
+                        <option value="5">DT0005.5</option>
+                    </select> *@
+                </td>
+                <td></td>
+                <td>90</td>
+                <td>500</td>
+                <td>40</td>
+                <td>30</td>
+                <td>150,0</td>
+                <td>2015</td>
+                <td>170,0</td>
+                <td>220,0</td>
+                <td>2027</td>
+                <td>1</td>
+                <td>-</td>
+                <td>-</td>
+                <td>2022</td>
+                <td>2027</td>
+                <td>
+                    <button class="bttn bttn-square bttn-icon-goto bttn-goto-card" type="button" title="Сохранить"></button>
+                </td>
+                <td>
+                    <button class="bttn bttn-square bttn-icon-save" type="button" title="Сохранить"></button>
+                    <button class="bttn bttn-square bttn-icon-del" type="button" title="Удалить"></button>
+                </td>
+            </tr>
+            <tr>
+                <td><input type="text" class="data-value" value="90"></td>
+                <td><input type="text" class="data-value" value="ТГ-2"></td>
+                <td>
+                     <select class="selectpicker data-value" data-live-search="true" data-container="#editData" placeholder="Выберите...">
+                    <option value="1" selected>в работе</option>
+                    <option value="2">новый</option>
+                    <option value="3">демонтаж</option>
+                    </select>
+                </td>
+                <td>
+                    <select class="selectpicker data-value select-etype" data-live-search="true" data-container="#editData" placeholder="Выберите...">
+                    <option value="1" data-etype="T1" selected>ПСУ-90</option>
+                    <option value="2" data-etype="T1">ПСУ-130</option>
+                    <option value="3" data-etype="T2">ГТУ ПГУ</option>
+                    <option value="4" data-etype="T2">ГТ ПГУ</option>
+                    </select>
+                </td>
+                <td>
+                     <select class="selectpicker data-value" data-live-search="true" data-container="#editData" placeholder="Выберите...">
+                    <option value="1" selected>ПТ-25-90/13</option>
+                    <option value="2">Т-100-130</option>
+                    <option value="3">SGT5-4000F</option>
+                    <option value="4">SST5-5000</option>
+                    </select>
+                </td>
+                <td><input type="text" class="data-value" value="90"></td>
+                <td><input type="text" class="data-value" value="90"></td>
+                <td><input type="text" class="data-value" value="90"></td>
+                <td><input type="text" class="data-value" value="90"></td>
+                <td><input type="text" class="data-value" value="90"></td>
+                <td><input type="text" class="data-value" value="90"></td>
+                <td><input type="text" class="data-value" value="90"></td>
+                <td><input type="text" class="data-value" value="90"></td>
+                <td><input type="text" class="data-value" value="90"></td>
+                <td><input type="text" class="data-value" value="90"></td>
+                <td><input type="text" class="data-value" value="90"></td>
+                <td><input type="text" class="data-value" value="90"></td>
+                <td><input type="text" class="data-value" value="90"></td>
+                <td><input type="text" class="data-value" value="90"></td>
+                <td><input type="text" class="data-value" value="90"></td>
+                <td><input type="text" class="data-value" value="90"></td>
+                <td><input type="text" class="data-value" value="90"></td>
+                <td>
+                    <select class="selectpicker data-value" data-live-search="true" data-container="#editData" placeholder="Выберите...">
+                    <option value="0" title="-" selected>(пусто)</option>
+                    <option value="1" title="ПГ">природный газ</option>
+                    <option value="2" title="Д">дизельное топливо</option>
+                    <option value="3" title="М">мазут</option>
+                    </select>
+                </td>
+                <td>
+                     <select class="selectpicker data-value" data-live-search="true" data-container="#editData" placeholder="Выберите...">
+                    <option value="0" title="-" selected>(пусто)</option>
+                    <option value="1" title="ПГ">природный газ</option>
+                    <option value="2" title="Д">дизельное топливо</option>
+                    <option value="3" title="М">мазут</option>
+                    </select>
+                </td>
+                <td>
+                    <select class="selectpicker data-value" data-live-search="true" data-container="#editData" placeholder="Выберите...">
+                    <option value="0" title="-" selected>(пусто)</option>
+                    <option value="1" title="ПГ">природный газ</option>
+                    <option value="2" title="Д">дизельное топливо</option>
+                    <option value="3" title="М">мазут</option>
+                    </select>
+                </td>
+                <td>
+                    <select class="selectpicker data-value" data-live-search="true" data-container="#editData" placeholder="Выберите...">
+                    <option value="0" title="-" selected>(пусто)</option>
+                    <option value="1">DT0001.1</option>
+                    <option value="2">DT0002.2</option>
+                    <option value="3">DT0003.3</option>
+                    <option value="4">DT0004.4</option>
+                    <option value="5">DT0005.5</option>
+                    </select>
+                </td>
+                <td><input type="text" class="data-value" value="90"></td>
+                <td><input type="text" class="data-value" value="90"></td>
+                <td><input type="text" class="data-value" value="90"></td>
+                <td><input type="text" class="data-value" value="90"></td>
+                <td><input type="text" class="data-value" value="90"></td>
+                <td><input type="text" class="data-value" value="90"></td>
+                <td><input type="text" class="data-value" value="90"></td>
+                <td><input type="text" class="data-value" value="90"></td>
+                <td><input type="text" class="data-value" value="90"></td>
+                <td><input type="text" class="data-value" value="90"></td>
+                <td><input type="text" class="data-value" value="90"></td>
+                <td><input type="text" class="data-value" value="90"></td>
+                <td><input type="text" class="data-value" value="90"></td>
+                <td><input type="text" class="data-value" value="90"></td>
+                <td><input type="text" class="data-value" value="90"></td>
+                <td>
+                    <button class="bttn bttn-square bttn-icon-goto bttn-goto-card" type="button" title="Сохранить"></button>
+                </td>
+                <td>
+                    <button class="bttn bttn-square bttn-icon-save" type="button" title="Сохранить"></button>
+                    <button class="bttn bttn-square bttn-icon-del" type="button" title="Удалить"></button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

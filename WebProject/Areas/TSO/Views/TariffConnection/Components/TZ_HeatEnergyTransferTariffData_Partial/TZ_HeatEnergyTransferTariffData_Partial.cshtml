@@ -1,0 +1,81 @@
+﻿@model WebProject.Areas.TSO.Models.HeatEnergyTransfer
+@{
+	Layout = null; string disable = "";
+}
+@if (Model.tz_id == 0)
+{
+	disable = "disabled";
+}
+<form asp-controller="TariffConnection" asp-action="TZHeatEnergyTransfer_Save" asp-antiforgery="true" asp-area="TSO" id="tz_other_org_costs_form"
+	  data-ajax-failure="onFailedFormTZ" data-ajax-success="onSuccessFormTZ" data-ajax-begin="onBeginFormTZ" data-ajax="true" data-ajax-method="POST">
+	<input type="hidden" name="tz_id" value="@Model.tz_id" />
+	<input type="hidden" name="data_status" value="@Model.data_status" />
+	<input type="hidden" name="perspective_year" value="@Model.perspective_year" />
+	<input hidden asp-for="@Model.he_transfer_useful_release_ownprod_plan_per_1" data-type="ownprod">
+	<input hidden asp-for="@Model.he_transfer_useful_release_household_needs_plan_per_1" data-type="household_needs">
+	<input hidden asp-for="@Model.he_transfer_useful_release_tso_salers_plan_per_1" data-type="tso_salers">
+	<input hidden asp-for="@Model.he_transfer_useful_release_buget_cons_plan_per_1" data-type="buget_cons">
+	<input hidden asp-for="@Model.he_transfer_useful_release_public_plan_per_1" data-type="public">
+	<input hidden asp-for="@Model.he_transfer_useful_release_other_cons_plan_per_1" data-type="other_cons">
+	<input hidden asp-for="@Model.he_transfer_useful_release_ownprod_plan_per_2" data-type="ownprod">
+	<input hidden asp-for="@Model.he_transfer_useful_release_household_needs_plan_per_2" data-type="household_needs">
+	<input hidden asp-for="@Model.he_transfer_useful_release_tso_salers_plan_per_2" data-type="tso_salers">
+	<input hidden asp-for="@Model.he_transfer_useful_release_buget_cons_plan_per_2" data-type="buget_cons">
+	<input hidden asp-for="@Model.he_transfer_useful_release_public_plan_per_2" data-type="public">
+	<input hidden asp-for="@Model.he_transfer_useful_release_other_cons_plan_per_2" data-type="other_cons">
+	<table class="table-inp-stretch" style="width:100%;">
+		<thead>
+			<tr>
+				<th></th>
+				<th>I полугодие</th>
+				<th>II полугодие</th>
+				<th>Год</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>Средневзвешенный тариф с учетом инвестиционной составляющей</td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.he_transfer_tariff_weighted_invest_per_1" class="data-value double" data-type="tariff_weighted_invest" data-double="he_transfer"></div></td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.he_transfer_tariff_weighted_invest_per_2" class="data-value double" data-type="tariff_weighted_invest" data-double="he_transfer"></div></td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.he_transfer_tariff_weighted_invest_per_3" class="data-value" disabled></div></td>
+			</tr>
+			<tr>
+				<td>Инвестиционная составляющая</td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.he_transfer_invest_component_per_1" class="data-value double" data-type="invest_component" data-double="he_transfer"></div></td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.he_transfer_invest_component_per_2" class="data-value double" data-type="invest_component" data-double="he_transfer"></div></td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.he_transfer_invest_component_per_3" class="data-value" disabled></div></td>
+			</tr>
+			<tr>
+				<td>Тариф на передачу на нужды организации</td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.he_transfer_household_needs_tariff_per_1" class="data-value double" data-type="household_needs_tariff" data-double="he_transfer"></div></td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.he_transfer_household_needs_tariff_per_2" class="data-value double" data-type="household_needs_tariff" data-double="he_transfer"></div></td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.he_transfer_household_needs_tariff_per_3" class="data-value" disabled></div></td>
+			</tr>
+			<tr>
+				<td>ТСО-перепродавцы</td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.he_transfer_tariff_tso_per_1" class="data-value double" data-type="tariff_tso" data-double="he_transfer"></div></td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.he_transfer_tariff_tso_per_2" class="data-value double" data-type="tariff_tso" data-double="he_transfer"></div></td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.he_transfer_tariff_tso_per_3" class="data-value" disabled></div></td>
+			</tr>
+			<tr>
+				<td>Бюджетные потребители</td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.he_transfer_tariff_budgetcons_per_1" class="data-value double" data-type="tariff_budgetcons" data-double="he_transfer"></div></td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.he_transfer_tariff_budgetcons_per_2" class="data-value double" data-type="tariff_budgetcons" data-double="he_transfer"></div></td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.he_transfer_tariff_budgetcons_per_3" class="data-value" disabled></div></td>
+			</tr>
+			<tr>
+				<td>Население</td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.he_transfer_tariff_public_per_1" class="data-value double" data-type="tariff_public" data-double="he_transfer"></div></td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.he_transfer_tariff_public_per_2" class="data-value double" data-type="tariff_public" data-double="he_transfer"></div></td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.he_transfer_tariff_public_per_3" class="data-value" disabled></div></td>
+			</tr>
+			<tr>
+				<td>Прочие</td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.he_transfer_tariff_other_per_1" class="data-value double" data-type="tariff_other" data-double="he_transfer"></div></td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.he_transfer_tariff_other_per_2" class="data-value double" data-type="tariff_other" data-double="he_transfer"></div></td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.he_transfer_tariff_other_per_3" class="data-value" disabled></div></td>
+			</tr>
+		</tbody>
+	</table>
+	<button type="submit" class="bttn bttn-color ms-auto">Сохранить</button>
+</form>

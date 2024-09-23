@@ -1,0 +1,220 @@
+﻿<div class="data-block workspace">
+	
+	<div class="data-block title-block">
+		<div class="data-row">
+			<ul class="breadcrumb">
+				<li class="breadcrumb-item"><a class="ref-color" href="#">Главная</a></li>
+				<li class="breadcrumb-item">Справочники - Территориальное деление</li>
+			</ul>
+		</div>
+		<div class="data-row">
+			<h1 class="title">Территориальное деление</h1>
+			<div class="data-item data-item-right">
+				<button class="bttn bttn-color bttn-edit-data" type="button" onclick="OpenPopupTerrDivision(0)">Добавить/Удалить</button>
+				<a class="bttn bttn-color bttn-load-data" type="button" href="page2-2-1-2.html">Загрузить данные</a>
+			</div>
+		</div>
+		<form  asp-antiforgery="true" asp-area="DictionaryTables" id="terrDivision_UpdateValue_form"
+		 data-ajax="true" data-ajax-method="POST">
+		<div class="data-row static-block">
+			<div class="data-item">
+				<label class="data-label">Графа</label>
+				<select class="selectpicker data-value lg-fix" placeholder="Выберите графу" onchange="Selected_graph_terrDivision()" id="Select_graph">
+					<option value="layer_id">УНОМ слоя</option>
+					<option value="calc_air_temp_ht_vent">Расчетная температура наружного воздуха для систем отопления и вентиляции</option>
+					<option value="calc_air_temp_after_calc_coldest">Тоже при зарасчетном похолодании</option>
+					<option value="aver_temp_coldest_month">Средняя температура наиболее холодного месяца</option>
+					<option value="coldest_month_id">Наименование наиболее холодного месяца</option>
+					<option value="aver_temp_heat_period">Средняя температура наружного воздуха за отопительный период (нормотив)</option>
+					<option value="fact_aver_temp_heat_period">Средняя температура наружного воздуха за отопительный период (факт)</option>
+					<option value="length_heat_period">Продолжительность отопительного периода (норматив)</option>
+					<option value="fact_length_heat_period">Продолжительность отопительного периода (факт)</option>
+					<option value="aver_temp_tap_water_heat_period">Температура исходной водопроводной воды (в отопительном периоде)</option>
+					<option value="aver_temp_tap_water_notheat_period">Температура исходной водопроводной воды (в неотопительном периоде)</option>
+					<option value="length_year_prevent_off_system">Продолжительность ежегодного профилактического отключения системы теплоснобжения</option>
+				</select>
+			</div>
+			<div class="data-item" id="Input_graph_div">
+				<label class="data-label">Значение</label>
+					<input type="text" class="data-value lg-fix doubleWithDot" placeholder="Введите значение" id="Input_graph">
+			</div>
+			<div class="data-item" id="div_month" hidden>
+				<label class="data-label">Значение</label>
+					<select class="selectpicker data-value lg-fix" placeholder="Выберите месяц" id="Select_month">
+					@foreach (var month in ViewBag.Months)
+					{
+						<option value="@month.Id">@month.month_name</option>
+					}
+				</select>
+			</div>
+			<button class="bttn bttn-color" onclick="UpdateValue()">Заполнить</button>
+		</div>
+		</form>
+	</div>
+
+	<div class="data-block main-content border-block" display: none;" id="terrDivision_div_table">
+		@await Component.InvokeAsync("TerritorialDivisionList_Partial")
+	</div>
+</div>
+
+
+@section pageJs {
+	<script type="text/javascript" src="@Url.Content("~/hss/js/popup_common_scripts.js")"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function () 
+		{
+            setTimeout(function () 
+			{
+				$('#TerritorialDivision').addClass('active');
+            }, 500);
+
+			TableInit('terrDivisionTable', 'full', '50vh');
+			
+		});
+
+		function OpenPopupTerrDivision(id, action_for) 
+		{
+			showPreloader();
+			debugger
+			$.ajax(
+			{
+				type: 'POST',
+				url: '@Html.Raw(Url.Action("OpenTerrDivision", "TerritorialDivision", new { Area = "DictionaryTables" }))',
+				data: {
+					id: id,
+					data_status: $('#data_status').val(),
+					action_for: action_for
+				},
+				dataType: 'html'
+			})
+				.done(function (result) 
+				{
+					debugger
+					var div = $('#TerrDivisionDataPopup');
+					div.html("");
+					div.html(result);
+					$('.selectpicker').selectpicker();
+
+					if ($('#TerrDivisionDataPopup').is(':hidden')) {
+						showModal('TerrDivisionDataPopup');
+					}
+					hidePreloader();
+				});
+		}
+
+
+		function GetListOnPage()
+		{
+			showPreloader();
+			$.ajax(
+			{
+				type: 'GET',
+				url: '@Html.Raw(Url.Action("OnGetCallTerritorialDivisionList_PartialViewComponent", "TerritorialDivision", new { Area = "DictionaryTables" }))',
+				data: 
+				{
+					data_status: $('#data_status').val(),
+					perspective_year: $('#perspective_year').val(),
+				},
+				dataType: 'html'
+			})
+				.done(function (result)
+				{
+					var div = $('#terrDivision_div_table');
+					div.html("");
+					div.html(result);
+					TableInit('terrDivisionTable', 'full', '50vh');
+					hidePreloader();
+				});
+		}
+
+
+	function Selected_graph_terrDivision()
+	{
+			var Select_graph = document.getElementById("Select_graph");
+			var Select_graph_value = Select_graph.value;
+			var Input_graph_div = document.getElementById("Input_graph_div");
+			var div_month = document.getElementById("div_month");
+			if (Select_graph_value == 'coldest_month_id')
+			{
+				Input_graph_div.hidden = true;
+				div_month.hidden = false;
+			}
+			else
+			{
+				Input_graph_div.hidden = false;
+				div_month.hidden = true;
+			}
+	}
+
+	function UpdateValue()
+	{
+
+			const table = $('#terrDivisionTable').DataTable();
+			var filteredData = table.rows({ search: 'applied' }).data().toArray();
+			var id = '';
+			
+			for (i = 0; i < filteredData.length; i++)
+			{
+				if(i == filteredData.length - 1)
+				{
+					id += filteredData[i][0]
+				}
+				else
+				id += filteredData[i][0] + ' '
+			}
+			if ($('#div_month').is(':hidden')) 
+			{
+				var col_value = $("#Input_graph").val()
+			}
+			else
+			{
+				col_value = $("#Select_month").val()
+			}
+			$(document).ajaxStart();
+			$.ajax(
+			{
+				url: '@Html.Raw(Url.Action("TerritorialDivision_UpdateValue", "TerritorialDivision", new { Area = "DictionaryTables" }))',
+				type: 'POST',
+				data: 
+				{
+					col_name: $("#Select_graph").val(),
+					col_value: col_value,
+					data_status: $('#data_status').val(),
+					distr_unom: id
+				},
+				dataType: 'json'
+			}).done(function (result) 
+			{
+				if (result.success == true) 
+				{
+					showMessage('Данные обновлены', 'modal', 'success');
+				}
+				else 
+				{
+					showMessage("Ошибка, данные не обновлены", 'modal', 'fault');
+				}
+				$("#refresh_terrDivision_table").val(1);
+			});
+	}
+		function RefreshTable() {
+			if ($("#refresh_terrDivision_table").val() === "1") {
+				$("#refresh_terrDivision_table").val(0);
+				GetListOnPage();
+			}
+		}
+
+		var onBeginFormTerrDivision = function (xhr) {
+			showPreloader();
+		};
+
+		var onFailedFormTerrDivision = function (xhr) {
+			hidePreloader();
+		};
+
+		function GetPerspectiveYears(is_change_ds) {
+			$("#refresh_terrDivision_table").val(1);
+			RefreshTable();
+		}
+	</script>
+	}

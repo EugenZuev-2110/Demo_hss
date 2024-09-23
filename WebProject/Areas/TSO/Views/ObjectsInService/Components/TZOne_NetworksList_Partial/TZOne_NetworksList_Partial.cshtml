@@ -1,0 +1,132 @@
+﻿@model List<WebProject.Areas.TSO.Models.TZOneNetworksDataListViewModel>
+@{
+	Layout = null;
+	int cnt_columns = 23;
+}
+
+<div class="table-buttons tzNetworksTable-buttons"></div>
+<table id="tzNetworksTable" class="display compact" style="width:100%">
+	<thead>
+		<tr>
+			<th rowspan="2">УНОМ СЕТЬ</th>
+			<th rowspan="2">УНОМ СТ</th>
+			<th rowspan="2">УНОМ ЕТО</th>
+			<th colspan="2">Наименование камер участка</th>
+			<th rowspan="2">
+				Вид сети
+				<a class="info" data-bs-toggle="tooltip" data-bs-custom-class="info-tooltip" data-bs-html="true"
+				   data-bs-title='<ul class="list-unstyled">
+									<li>В1 - Водяная однотрубная</li>
+									<li>В2 - Водяная двухтрубная</li>
+									<li>В4 - Водяная четырехтрубная</li>
+									<li>В6 - Водяная шеститрубная</li>
+									<li>В8 - Водяная восьми трубная</li>
+									<li>П - Паровая</li>
+									<li>К - Конденсатопровод</li>
+								</ul>'
+					</a>
+			</th>
+			<th rowspan="2">
+				Тип водяной сети
+				<a class="info" data-bs-toggle="tooltip" data-bs-custom-class="info-tooltip" data-bs-html="true"
+				   data-bs-title='<ul class="list-unstyled">
+									<li>М - магистральная</li>
+									<li>ТВ - магистральная - тепловой ввод</li>
+									<li>РС - распределительная</li>
+									<li>РС-ОВ - распределительная сеть отопления / вентиляции</li>
+									<li>РС-ГВС - распределительная сеть горячего водоснабжения</li>
+								</ul>'
+					</a>
+			</th>
+			<th rowspan="2">Округ</th>
+			<th rowspan="2">Район</th>
+			<th colspan="2">Адрес месторасположения</th>
+			<th colspan="2">Диаметр теплопроводов (Ду), мм</th>
+			<th colspan="2">Протяженность сети, м</th>
+			<th rowspan="2">
+				Способ прокладки тепловой сети
+				<a class="info" data-bs-toggle="tooltip" data-bs-custom-class="info-tooltip" data-bs-html="true"
+				   data-bs-title='<ul class="list-unstyled">
+									<li>ПБ - Подземная бесканальная</li>
+									<li>ПК - Подземная канальная</li>
+									<li>П - Подвальная</li>
+									<li>Т - Тоннельная</li>
+									<li>Н - Надземная</li>
+								</ul>'
+					</a>
+			</th>
+			<th rowspan="2">
+				Тип канальной прокладки
+				<a class="info" data-bs-toggle="tooltip" data-bs-custom-class="info-tooltip" data-bs-html="true"
+				   data-bs-title='<ul class="list-unstyled">
+									<li>К - Проходной канал</li>
+									<li>НК - Непроходной канал</li>
+									<li>ППК - Полупроходной канал</li>
+									<li>Д - Дюкер</li>
+								</ul>'
+					</a>
+			</th>
+			<th rowspan="2">Материальная характеристика тепловой сети, кв. м</th>
+			<th rowspan="2">Объем тепловой сети, куб. м</th>
+			<th colspan="2">Организация собственник</th>
+			<th rowspan="2">Статус тепловой сети</th>
+			<th rowspan="2">Объект относится к бесхозяйному имуществу</th>
+		</tr>
+		<tr>
+			<th>начало участка</th>
+			<th>конец участка</th>
+			<th>начало участка</th>
+			<th>конец участка</th>
+			<th>подающая линия</th>
+			<th>обратная линия</th>
+			<th>по каналу участка</th>
+			<th>трубопроводов</th>
+			<th>ИНН</th>
+			<th>Наименование</th>
+		</tr>
+		<tr class="filter-row ">
+			@for (int i = 0; i < @cnt_columns; i++)
+			{
+				if (i == 0)
+				{
+					<th class="dtfc-fixed-left" style="left:0; position:sticky;"><input type="text" class="filter-col-0" /></th>
+				}
+				else
+				{
+					<th><input type="text" class="filter-col-@i" /></th>
+				}
+			}
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var networks_list in Model)
+		{
+			<tr>
+				<td>@networks_list.heat_network_id</td>
+				<td>@networks_list.unom_hss</td>
+				<td>@networks_list.unom_eto</td>
+				<td>@networks_list.start_camera_name</td>
+				<td>@networks_list.end_camera_name</td>
+				<td>@networks_list.net_type_short</td>
+				<td>@networks_list.water_net_type_short</td>
+				<td>@networks_list.region_short</td>
+				<td>@networks_list.district_name</td>
+				<td>@networks_list.start_camera_address</td>
+				<td>@networks_list.end_camera_address</td>
+				<td>@networks_list.s_cond_ht_net_diam</td>
+				<td>@networks_list.r_cond_ht_net_diam</td>
+				<td>@networks_list.length_net_channel</td>
+				<td>@networks_list.length_net_pipeline</td>
+				<td>@networks_list.net_laying_type_short</td>
+				<td>@networks_list.channel_laying_type_short</td>
+				<td>@networks_list.mat_char_net</td>
+				<td>@networks_list.volume_net</td>
+				<td>@networks_list.inn_org_owner</td>
+				<td>@networks_list.org_owner</td>
+				<td>@networks_list.net_status_name</td>
+				<td>@networks_list.obj_vacant_prop</td>
+			</tr>
+		}
+	</tbody>
+</table>
+<script type="text/javascript" src="@Url.Content("~/hss/js/datatables_common_scripts.js")"></script>

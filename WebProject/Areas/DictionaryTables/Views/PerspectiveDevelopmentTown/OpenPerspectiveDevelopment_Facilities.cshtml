@@ -1,0 +1,141 @@
+﻿@model WebProject.Areas.DictionaryTables.Models.PerspectiveDevelopment_FacilitiesHeaderViewModel
+
+@{
+    string btn_disable = string.Empty; string is_checked = string.Empty;
+}
+
+<div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title" id="editDataLabel">Объекты в программе развития города (поселения)</h3>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="RefreshTableFacility(@Model.dev_prog_id);"></button>
+        </div>
+        <div class="modal-body">
+            <div class="data-block static-block data-params">
+                <div class="data-row">
+                    <div class="data-item">
+                        <label class="data-label xl-fix">Уникальный номер потребителя:</label>
+                        <select class="selectpicker data-value xxl-stretch" data-live-search="true" id="per_dev_gen_info_unom_facility" name="per_dev_gen_info_id"
+                                placeholder="Выберите..." onchange="ChangeOpenPopupPerspectiveDevelopmentFacility(event, @Model.dev_prog_id);">
+                            @foreach (var tz_list in ViewBag.PerspectiveDevelopmentFacilityList)
+                            {
+                                if (tz_list.value_id == Model.consumer_id)
+                                {
+                                    <option value="@tz_list.value_id" selected>@tz_list.value_name</option>
+                                }
+                                if (tz_list.value_id != Model.consumer_id)
+                                {
+                                    <option value="@tz_list.value_id">@tz_list.value_name</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="data-item ">
+                        <label class="data-label xl-fix">Наименование программы</label>
+                        <input type="text" asp-for="@Model.unom_prog_name" class="data-value xxl-stretch" disabled>
+                    </div>
+                </div>
+                <div class="data-row">
+                    <div class="data-item">
+                        <label class="data-label">S:</label>
+                        <input type="text" asp-for="@Model.area" class="data-value sm-stretch" disabled>
+                        <span class="data-unit">тыс. м<sup>2</sup></span>
+                    </div>
+                    <div class="data-item">
+                        <label class="data-label">∑ Q<sub>з</sub>:</label>
+                        <input type="text" asp-for="@Model.hl_gvss_hw_sum" class="data-value sm-stretch" disabled>
+                        <span class="data-unit">Гкал/ч </span>
+                        <input type="text" asp-for="@Model.hl_gvss_steam_sum" class="data-value sm-stretch" disabled>
+                        <span class="data-unit">т/ч</span>
+                    </div>
+                    <div class="data-item">
+                        <label class="data-label">∑ Q<sub>р</sub>:</label>
+                        <input type="text" asp-for="@Model.calc_sum_hw" class="data-value sm-stretch" disabled>
+                        <span class="data-unit">Гкал/ч </span>
+                        <input type="text" asp-for="@Model.calc_sum_steam" class="data-value sm-stretch" disabled>
+                        <span class="data-unit">т/ч</span>
+                    </div>
+                </div>
+            </div>
+            <div class="scroll-block-wrapper" style="max-height: 42vh;">
+                <div class="data-block scroll-block">
+                    <div class="accordion data-block">
+                        <div class="border-block">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel6" aria-expanded="false">Общие сведения</button>
+                            <div id="panel6" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    @await Component.InvokeAsync("PerspectiveDevelopmentFacilities_GenInfo_Partial", new {dev_prog_id = Model.dev_prog_id, consumer_id = Model.consumer_id ?? 0})
+                                </div>
+                            </div>
+                        </div>
+                        <div class="border-block">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel4" aria-expanded="false">Этажность, назначение и категория надежности теплоснабжения</button>
+                            <div id="panel4" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    @await Component.InvokeAsync("PerspectiveDevelopment_Facilities_DestRelCatHS_Partial", new { consumer_id = Model.consumer_id ?? 0, dev_prog_id = Model.dev_prog_id })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="border-block">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel5" aria-expanded="false">Объем строительства и тепловые нагрузки</button>
+                            <div id="panel5" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    @await Component.InvokeAsync("PerspectiveDevelopment_Facilities_BuildingVolumeHeatLoads_Partial", new { consumer_id = Model.consumer_id ?? 0, dev_prog_id = Model.dev_prog_id })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="border-block">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel7" aria-expanded="false">Динамика основных показателей объекта по годам реализации</button>
+                            <div id="panel7" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    @await Component.InvokeAsync("PerspectiveDevelopment_Facilities_MainIndicatorDynamic_Partial", new { consumer_id = Model.consumer_id ?? 0, dev_prog_id = Model.dev_prog_id })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="@Url.Content("~/hss/js/popup_common_scripts.js")"></script>
+<script type="text/javascript">
+
+    function RefreshTableFacility(dev_prog_id) {
+        GetListOnPageFacility(dev_prog_id);
+    }
+
+    function RemoveConsumerFromDb(consumer_id, data_status) {
+        $('#is_deleted_consumer_gen_info').val(true);
+        $('#consumers_gen_info_form').submit();
+    }
+
+    function ChangeOpenPopupPerspectiveDevelopmentFacility(event, dev_prog_id) {
+        var consumer_id = event.target.value;
+        OpenPopupPerspectiveDevelopment_Facilities(consumer_id, dev_prog_id);
+    }
+
+    function GetListOnPageFacility(dev_prog_id) {
+        showPreloader();
+        let action_name = 'OnGetPerspectiveDevelopmentFacility_PartialViewComponent';
+        let table_name = 'refDevelopmentObjectTable';
+        
+        $.ajax({
+            type: 'GET',
+            url: '/DictionaryTables/PerspectiveDevelopmentTown/' + action_name,
+            data:{ dev_prog_id: dev_prog_id },
+            traditional: true,
+            dataType: 'html'
+        })
+            .done(function (result) {
+                var div = $('#per_dev_facility_list');
+                div.html("");
+                div.html(result);
+
+               // TableInit(table_name, 'full');
+                hidePreloader();
+            });
+    }
+
+</script>

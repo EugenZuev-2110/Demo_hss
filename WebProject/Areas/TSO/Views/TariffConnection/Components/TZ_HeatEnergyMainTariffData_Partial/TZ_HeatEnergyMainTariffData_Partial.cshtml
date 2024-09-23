@@ -1,0 +1,69 @@
+﻿@model WebProject.Areas.TSO.Models.HeatEnergyTariffWater
+@{
+	Layout = null; string disable = "";
+}
+@if (Model.tz_id == 0)
+{
+	disable = "disabled";
+}
+<form asp-controller="TariffConnection" asp-action="TZHeatEnergyTariffWater_Save" asp-antiforgery="true" asp-area="TSO" id="tz_other_org_costs_form"
+	  data-ajax-failure="onFailedFormTZ" data-ajax-success="onSuccessFormTZ" data-ajax-begin="onBeginFormTZ" data-ajax="true" data-ajax-method="POST">
+	<input type="hidden" name="tz_id" value="@Model.tz_id" />
+	<input type="hidden" name="data_status" value="@Model.data_status" />
+	<input type="hidden" name="perspective_year" value="@Model.perspective_year" />
+
+	<input hidden asp-for="@Model.heat_energy_tariff_water_useful_release_tso_salers_plan_per_1" data-type="tso_salers">
+	<input hidden asp-for="@Model.heat_energy_tariff_water_useful_release_buget_cons_plan_per_1" data-type="buget_cons">
+	<input hidden asp-for="@Model.heat_energy_tariff_water_useful_release_public_plan_per_1" data-type="public">
+	<input hidden asp-for="@Model.heat_energy_tariff_water_useful_release_other_cons_plan_per_1" data-type="other_cons">
+	<input hidden asp-for="@Model.heat_energy_tariff_water_useful_release_tso_salers_plan_per_2" data-type="tso_salers">
+	<input hidden asp-for="@Model.heat_energy_tariff_water_useful_release_buget_cons_plan_per_2" data-type="buget_cons">
+	<input hidden asp-for="@Model.heat_energy_tariff_water_useful_release_public_plan_per_2" data-type="public">
+	<input hidden asp-for="@Model.heat_energy_tariff_water_useful_release_other_cons_plan_per_2" data-type="other_cons">
+
+	<input hidden asp-for="@Model.heat_energy_tariff_water_convers_doublerate_to_singlerate_budjet_per_1" data-type="convers_doublerate_to_singlerate_budjet">
+	<input hidden asp-for="@Model.heat_energy_tariff_water_volume_heat_energy_budjet_per_1" data-type="volume_heat_energy_budjet">
+	<input hidden asp-for="@Model.heat_energy_tariff_water_convers_doublerate_to_singlerate_public_per_1" data-type="convers_doublerate_to_singlerate_public">
+	<input hidden asp-for="@Model.heat_energy_tariff_water_volume_heat_energy_public_per_1" data-type="volume_heat_energy_public">
+	<input hidden asp-for="@Model.heat_energy_tariff_water_convers_doublerate_to_singlerate_other_per_1" data-type="convers_doublerate_to_singlerate_other">
+	<input hidden asp-for="@Model.heat_energy_tariff_water_volume_heat_energy_other_per_1" data-type="volume_heat_energy_other">
+
+	<input hidden asp-for="@Model.heat_energy_tariff_water_convers_doublerate_to_singlerate_budjet_per_2" data-type="convers_doublerate_to_singlerate_budjet">
+	<input hidden asp-for="@Model.heat_energy_tariff_water_volume_heat_energy_budjet_per_2" data-type="volume_heat_energy_budjet">
+	<input hidden asp-for="@Model.heat_energy_tariff_water_convers_doublerate_to_singlerate_public_per_2" data-type="convers_doublerate_to_singlerate_public">
+	<input hidden asp-for="@Model.heat_energy_tariff_water_volume_heat_energy_public_per_2" data-type="volume_heat_energy_public">
+	<input hidden asp-for="@Model.heat_energy_tariff_water_convers_doublerate_to_singlerate_other_per_2" data-type="convers_doublerate_to_singlerate_other">
+	<input hidden asp-for="@Model.heat_energy_tariff_water_volume_heat_energy_other_per_2" data-type="volume_heat_energy_other">
+
+	<table class="table-inp-stretch" style="width:100%;">
+		<thead>
+			<tr>
+				<th></th>
+				<th>I полугодие</th>
+				<th>II полугодие</th>
+				<th>Год</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>Экономически обоснованный тариф на тепловую энергию</td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.heat_energy_tariff_water_econom_justified_per_1" class="data-value double" data-type="econom_justified" data-double="he_hw_main_tariff"></div></td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.heat_energy_tariff_water_econom_justified_per_2" class="data-value double" data-type="econom_justified" data-double="he_hw_main_tariff"></div></td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.heat_energy_tariff_water_econom_justified_per_3" class="data-value" disabled></div></td>
+			</tr>
+			<tr>
+				<td>Средневзвешенный тариф с учетом инвестиционной составляющей</td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.heat_energy_tariff_water_weighted_invest_per_1" class="data-value double" data-type="weighted_invest" data-double="he_hw_main_tariff"></div></td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.heat_energy_tariff_water_weighted_invest_per_2" class="data-value double" data-type="weighted_invest" data-double="he_hw_main_tariff"></div></td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.heat_energy_tariff_water_weighted_invest_per_3" class="data-value" disabled></div></td>
+			</tr>
+			<tr>
+				<td>Инвестиционная составляющая</td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.heat_energy_tariff_water_invest_component_per_1" class="data-value double" data-type="invest_component" data-double="he_hw_main_tariff"></div></td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.heat_energy_tariff_water_invest_component_per_2" class="data-value double" data-type="invest_component" data-double="he_hw_main_tariff"></div></td>
+				<td><div class="input-cell"><input type="text" asp-for="@Model.heat_energy_tariff_water_invest_component_per_3" class="data-value" disabled></div></td>
+			</tr>
+		</tbody>
+	</table>
+	<button type="submit" class="bttn bttn-color ms-auto">Сохранить</button>
+</form>

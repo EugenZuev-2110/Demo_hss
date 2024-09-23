@@ -1,0 +1,118 @@
+﻿@model WebProject.Areas.TSO.Models.TZViewModel
+
+<div class="data-block scroll-block">
+	<div class="accordion data-block">
+		<div class="border-block">
+			<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel1" aria-expanded="false">Топливо на технологические цели</button>
+			<div id="panel1" class="accordion-collapse collapse">
+				<div class="accordion-body">
+					<div class="data-block">
+						<div id="fuel_price_div" class="data-block">
+							@await Component.InvokeAsync("TZ_FuelPriceData_Partial", new { tz_id = Model.tz_id, data_status = Model.data_status, perspective_year = Model.perspective_year })
+						</div>
+						<h4>Фактические показатели</h4>
+						<div id="fuel_techneed_fact_div" class="scroll-table-wrapper">
+							@await Component.InvokeAsync("TZ_FuelTechNeedFactList_Partial", new { tz_id = Model.tz_id, data_status = Model.data_status, perspective_year = Model.perspective_year })
+						</div>
+						<h4>Плановые показатели</h4>
+						<div id="fuel_techneed_plan_div" class="scroll-table-wrapper">
+							@await Component.InvokeAsync("TZ_FuelTechNeedPlanList_Partial", new { tz_id = Model.tz_id, data_status = Model.data_status, perspective_year = Model.perspective_year })
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="border-block">
+			<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel2" aria-expanded="false">Вода (водотведение) на технологические и хозяйственные цели</button>
+			<div id="panel2" class="accordion-collapse collapse" >
+				<div class="accordion-body">
+				@*<button class="bttn bttn-square bttn-icon-save ms-auto" form="tz_output_transfer_energy_form" type="submit" title="Сохранить"></button>*@
+					<div class="data-block" id="water_need_costs_div">
+						@await Component.InvokeAsync("TZ_WaterNeedCostsData_Partial", new { tz_id = Model.tz_id, data_status = Model.data_status, perspective_year = Model.perspective_year })
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="border-block">
+			<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel3" aria-expanded="false" >Расходы, связанные с созданием нормативных запасов топлива</button>
+			<div id="panel3" class="accordion-collapse collapse" >
+				<div class="accordion-body">
+					<div class="data-block" id="fuel_reserve_costs_div">
+						@await Component.InvokeAsync("TZ_FuelReserveCostsData_Partial", new { tz_id = Model.tz_id, data_status = Model.data_status, perspective_year = Model.perspective_year })
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="border-block">
+			<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel4" aria-expanded="false">Покупка теплоносителя</button>
+			<div id="panel4" class="accordion-collapse collapse">
+				<div class="accordion-body">
+					<div class="data-block" id="heatcarrier_need_costs_div">
+						@await Component.InvokeAsync("TZ_HeatCarrierNeedCostsData_Partial", new { tz_id = Model.tz_id, data_status = Model.data_status, perspective_year = Model.perspective_year })
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="border-block">
+			<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel5" aria-expanded="false">Энергия на технологические и хозяйственные нужды</button>
+			<div id="panel5" class="accordion-collapse collapse">
+				<div class="accordion-body">
+					<div class="data-block">
+						@await Component.InvokeAsync("TZ_EnergyNeedCostsData_Partial", new { tz_id = Model.tz_id, data_status = Model.data_status, perspective_year = Model.perspective_year })
+						<div class="accordion data-block">
+							<div class="border-block">
+								<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel5-1" aria-expanded="false">Тепловая энергия на технологические и хозяйственные нужды</button>
+								<div id="panel5-1" class="accordion-collapse collapse">
+									<div class="accordion-body">
+										<div class="data-block">
+											@await Component.InvokeAsync("TZ_HeatEnergyNeedCostsData_Partial", new { tz_id = Model.tz_id, data_status = Model.data_status, perspective_year = Model.perspective_year })
+											<h4>Фактические показатели по покупке тепла</h4>
+											<div class="scroll-table-wrapper">
+												@await Component.InvokeAsync("TZ_InputEnergyFactList_Partial", new { tz_id = Model.tz_id, data_status = Model.data_status })
+											</div>
+											<h4>Плановые показатели по покупке тепла</h4>
+											<div class="scroll-table-wrapper">
+												@await Component.InvokeAsync("TZ_InputEnergyPlanList_Partial", new { tz_id = Model.tz_id, data_status = Model.data_status, perspective_year = Model.perspective_year })
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="border-block">
+								<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel5-2" aria-expanded="false" >Электроэнергия (мощность) на технологические и хозяйственные нужды</button>
+								<div id="panel5-2" class="accordion-collapse collapse">
+									<div class="accordion-body">
+										<div class="data-block">
+											@await Component.InvokeAsync("TZ_ElectroEnergyCostsData_Partial", new { tz_id = Model.tz_id, data_status = Model.data_status, perspective_year = Model.perspective_year })
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript" src="@Url.Content("~/hss/js/popup_common_scripts.js")"></script>
+<script type="text/javascript">
+
+	function UpdateFuelCosts() {
+		$.ajax({
+			type: 'GET',
+			url: '@Html.Raw(Url.Action("OnGetCallTZ_FuelPriceData_PartialViewComponent", "CostsAndPrices", new { Area = "TSO" }))',
+			data: {
+				tz_id: $('#paramNumberTZ').val(),
+				data_status: $('#data_status').val(),
+				perspective_year: $('#p_year_pop_cp').val()
+			},
+			dataType: 'html'
+		}).done(function (result) {
+			var div = $('#fuel_price_div');
+			div.html("");
+			div.html(result);
+		});
+	}
+
+</script>

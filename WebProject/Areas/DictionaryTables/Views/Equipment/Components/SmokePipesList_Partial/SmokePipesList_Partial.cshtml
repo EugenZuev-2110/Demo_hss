@@ -1,0 +1,51 @@
+﻿@model List<WebProject.Areas.DictionaryTables.Models.SmokePipesViewmodel>
+@{
+	int cnt_columns = 4;
+}
+
+<h3>Дымовые трубы</h3>
+<div class="table-block">
+	<input type="hidden" value="0" id="refresh_SmokePipes_table" />
+	<div class="table-buttons SmokePipesTable-buttons"></div>
+	<table id="SmokePipesTable" class="display compact table-clicked" style="width:100%">
+		<thead>
+			<tr>
+				<th>УНОМ дымовой трубы</th>
+				<th>Марка оборудования</th>
+				<th>Высота от уровня земли<span class="data-unit">м</span></th>
+				<th>Диаметр устья<span class="data-unit">м</span></th>
+			</tr>
+			<tr class="filter-row ">
+				@for (int i = 0; i < @cnt_columns; i++)
+				{
+					if (i == 0)
+					{
+						<th class="dtfc-fixed-left" style="left:0; position:sticky;"><input type="text" class="filter-col-0" /></th>
+					}
+					else
+					{
+						<th><input type="text" class="filter-col-@i" /></th>
+					}
+				}
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var smokePipes in Model)
+			{
+				<tr onclick="OpenPopup(@smokePipes.equip_id, 'OpenPopupSmokePipes', 'SmokePipesDataPopup')">
+				<td>@smokePipes.unom_equip</td>
+				<td>@smokePipes.mark</td>
+				<td>@smokePipes.pipe_heigh_ground_lvl</td>
+				<td>@smokePipes.diameter</td>
+			</tr>
+			}
+		</tbody>
+	</table>
+</div>
+<div class="data-row table-summary">
+	<div class="data-item rows-count">
+		<h5>Всего записей:</h5>
+		<p><span class="mark-color" id="all_cnt_rows"></span></p>
+	</div>
+</div>
+<script type="text/javascript" src="@Url.Content("~/hss/js/datatables_common_scripts.js")"></script>		

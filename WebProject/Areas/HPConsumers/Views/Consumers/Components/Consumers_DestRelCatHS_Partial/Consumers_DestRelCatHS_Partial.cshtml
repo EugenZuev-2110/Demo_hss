@@ -1,0 +1,167 @@
+﻿@model WebProject.Areas.HPConsumers.Models.Consumers_DestRelCatHSDataViewModel
+@{
+    Layout = null; string is_checked = string.Empty; string is_disabled = ViewBag.IsDisabled;
+}
+
+<form asp-controller="Consumers" asp-action="ConsumerAddRemove_DestRelCatHSData_Save" asp-antiforgery="true" asp-area="HPConsumers" class="needs-validation" novalidate
+      data-ajax-failure="onFailedFormTZ" data-ajax-success="onSuccessFormConsumersDestRelCatHS" data-ajax-begin="onBeginFormTZ" data-ajax="true" data-ajax-method="POST">
+    <input hidden asp-for="@Model.consumer_id">
+    <input hidden asp-for="@Model.data_status">
+    <div class="data-block">
+        <div class="data-row">
+            <div class="col-12 col-xxl-3">
+                <div class="data-block me-xxl-3">
+                    <div class="data-row">
+                        <label class="data-item">
+                            <span class="data-label">Потребитель относится к социальному объекту</span>
+                            @if (Model.is_in_soc_obj != null && Model.is_in_soc_obj == true)
+                                is_checked = "checked";
+                            <input type="checkbox" class="data-value data-check" name="is_in_soc_obj" value="@(Model.is_in_soc_obj == true ? "true" : "false")" @is_checked onchange="CB_Change(this)">
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-xxl-9">
+                <div class="data-row border-block ms-xxl-3">
+                    <div class="data-block stretch">
+                        <h5 class="text-end">Назначение потребителя (нагрузка):</h5>
+                        <div class="data-item ">
+                            <select class="selectpicker data-value lg-stretch" id="main_purpose_type_id" name="main_purpose_type_id"
+                                    data-live-search="true" placeholder="Выберите назначение потребителя" onchange="ChangeSelectMainPurpose(event)">
+                                @foreach (var tz_list in ViewBag.MainPurposeTypes)
+                                {
+                                    if (tz_list.Id == Model.main_purpose_type_id)
+                                    {
+                                        <option value="@tz_list.Id" selected>@tz_list.ptype_name</option>
+                                    }
+                                    if (tz_list.Id != Model.main_purpose_type_id)
+                                    {
+                                        <option value="@tz_list.Id">@tz_list.ptype_name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="data-block stretch">
+                        <h5 class="text-end">Категория надежности:</h5>
+                        <div class="data-item ">
+                            <select class="selectpicker data-value lg-stretch" id="category_rel_id" name="category_rel_id"
+                                    data-live-search="true" placeholder="Выберите назначение потребителя">
+                                @foreach (var tz_list in ViewBag.ReliabilityCategories)
+                                {
+                                    if (tz_list.Id == Model.category_rel_id)
+                                    {
+                                        <option value="@tz_list.Id" selected>@tz_list.rcat_name</option>
+                                    }
+                                    if (tz_list.Id != Model.category_rel_id)
+                                    {
+                                        <option value="@tz_list.Id">@tz_list.rcat_name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="data-block stretch">
+                        <h5 class="text-end">Назначение потребителя (потребление):</h5>
+                        <div class="data-item ">
+                            <select class="selectpicker data-value lg-stretch" id="type_prod_supply_id" name="type_prod_supply_id"
+                                    data-live-search="true" placeholder="Выберите назначение потребителя">
+                                @foreach (var tz_list in ViewBag.ProdSupplyType)
+                                {
+                                    if (tz_list.Id == Model.type_prod_supply_id)
+                                    {
+                                        <option value="@tz_list.Id" selected>@tz_list.ps_type_name</option>
+                                    }
+                                    if (tz_list.Id != Model.type_prod_supply_id)
+                                    {
+                                        <option value="@tz_list.Id">@tz_list.ps_type_name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="data-row">
+            <div class="data-item ">
+                <label class="data-label">Назначение потребителя подробно:</label>
+                <select class="selectpicker data-value lg-stretch" data-size="5" id="type_purpose_id" name="type_purpose_id"
+                        data-live-search="true" placeholder="Выберите назначение потребителя">
+                    @foreach (var tz_list in ViewBag.CalcPurposeTypes)
+                    {
+                        if (tz_list.Id == Model.type_purpose_id)
+                        {
+                            <option value="@tz_list.Id" selected>@tz_list.cpurp_type_name</option>
+                        }
+                        if (tz_list.Id != Model.type_purpose_id && tz_list.main_purpose_type_id == Model.main_purpose_type_id)
+                        {
+                            <option value="@tz_list.Id">@tz_list.cpurp_type_name</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="data-item ">
+                <label class="data-label">Наименование назначения:</label>
+                <input type="text" class="data-value stretch" id="purpose_name" name="purpose_name" value="@Model.purpose_name" placeholder="Введите наименование назначения">
+            </div>
+        </div>
+        <div class="data-row">
+            <button type="submit" class="bttn bttn-color ms-auto" id="consumer_dest_rel_cat_hs_save_btn" @is_disabled>Сохранить</button>
+        </div>
+    </div>
+</form>
+
+<script type="text/javascript" src="@Url.Content("~/hss/js/popup_common_scripts.js")"></script>
+<script type="text/javascript">
+
+    function GetSelectMainPurpose(main_purpose_type_id) {
+        $.ajax({
+            url: '@Html.Raw(Url.Action("GetCalcPurposeTypes", "Consumers", new { Area = "HPConsumers"}))',
+            type: 'POST',
+            data: { main_purpose_type_id: main_purpose_type_id }
+        }).done(function (data) {
+            UpdateSelectMainPurpose(data.list, 'type_purpose_id');
+        });
+    }
+
+    function ChangeSelectMainPurpose(event) {
+        var type_id = event.target.value;
+        GetSelectMainPurpose(type_id);
+    }
+
+    function UpdateSelectMainPurpose(newSelect, select_id) {
+        var select = $('#' + select_id);
+        $(select).find('option').remove();
+        if (newSelect.length !== 0) {
+            for (var i = 0; i < newSelect.length; i++) {
+                $(select).append('<option value=' + newSelect[i].id + '>' + newSelect[i].cpurp_type_name + '</option>');
+            }
+        } else {
+            $(select).append('<option value="">' + "Нет записей" + '</option>');
+        }
+        $(select).selectpicker('destroy');
+        $(select).selectpicker();
+        $(select).selectpicker('open');
+    }
+
+    var onSuccessFormConsumersDestRelCatHS = function (xhr) {
+        hidePreloader();
+
+        if (xhr.success && xhr.is_deleted == true && xhr._is_new_consumer != true) {
+            showMessage('Данные удалены.', 'modal', 'success');
+        }
+        else if (xhr.success && xhr.is_deleted != true && xhr._is_new_consumer != true) {
+            showMessage('Данные сохранены.', 'modal', 'success');
+        }
+        else if (xhr.success && xhr._is_new_consumer == true) {
+            showMessage('Данные добавлены.', 'modal', 'success');
+            OpenPopupConsumersAddRemove(xhr.consumer_id);
+        }
+        else {
+            showMessage(xhr.error, 'modal', 'fault');
+        }
+        $("#refresh_table").val(1);
+    };
+
+</script>
